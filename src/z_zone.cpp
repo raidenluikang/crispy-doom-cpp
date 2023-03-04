@@ -185,7 +185,7 @@ void Z_Free (void* ptr)
     if (block->id != ZONEID)
 	I_Error ("Z_Free: freed a pointer without ZONEID");
 
-    if (block->tag != PU_FREE && block->user != NULL)
+    if (block->tag != PU_FREE && block->user != nullptr)
     {
     	// clear the user's mark
 	    *block->user = 0;
@@ -193,7 +193,7 @@ void Z_Free (void* ptr)
 
     // mark as free
     block->tag = PU_FREE;
-    block->user = NULL;
+    block->user = nullptr;
     block->id = 0;
 
     // If the -zonezero flag is provided, we zero out the block on free
@@ -240,7 +240,7 @@ void Z_Free (void* ptr)
 
 //
 // Z_Malloc
-// You can pass a NULL user if the tag is < PU_PURGELEVEL.
+// You can pass a nullptr user if the tag is < PU_PURGELEVEL.
 //
 #define MINFRAGMENT		64
 
@@ -330,7 +330,7 @@ Z_Malloc
         newblock->size = extra;
 	
         newblock->tag = PU_FREE;
-        newblock->user = NULL;	
+        newblock->user = nullptr;	
         newblock->prev = base;
         newblock->next = base->next;
         newblock->next->prev = newblock;
@@ -339,7 +339,7 @@ Z_Malloc
         base->size = size;
     }
 	
-	if (user == NULL && tag >= PU_PURGELEVEL)
+	if (user == nullptr && tag >= PU_PURGELEVEL)
 	    I_Error ("Z_Malloc: an owner is required for purgable blocks");
 
     base->user = user;
@@ -507,7 +507,7 @@ void Z_ChangeTag2(void *ptr, int tag, const char *file, int line)
         I_Error("%s:%i: Z_ChangeTag: block without a ZONEID!",
                 file, line);
 
-    if (tag >= PU_PURGELEVEL && block->user == NULL)
+    if (tag >= PU_PURGELEVEL && block->user == nullptr)
         I_Error("%s:%i: Z_ChangeTag: an owner is required "
                 "for purgable blocks", file, line);
 

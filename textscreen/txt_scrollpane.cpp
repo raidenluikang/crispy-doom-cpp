@@ -26,12 +26,14 @@
 
 #include "doomkeys.hpp"
 
+#include "../utils/memory.hpp"
+
 #define SCROLLBAR_VERTICAL   (1 << 0)
 #define SCROLLBAR_HORIZONTAL (1 << 1)
 
 static int FullWidth(txt_scrollpane_t *scrollpane)
 {
-    if (scrollpane->child != NULL)
+    if (scrollpane->child != nullptr)
     {
         return scrollpane->child->w;
     }
@@ -43,7 +45,7 @@ static int FullWidth(txt_scrollpane_t *scrollpane)
 
 static int FullHeight(txt_scrollpane_t *scrollpane)
 {
-    if (scrollpane->child != NULL)
+    if (scrollpane->child != nullptr)
     {
         return scrollpane->child->h;
     }
@@ -118,7 +120,7 @@ static void TXT_ScrollPaneSizeCalc(TXT_UNCAST_ARG(scrollpane))
     TXT_CAST_ARG(txt_scrollpane_t, scrollpane);
     int scrollbars;
 
-    if (scrollpane->child != NULL)
+    if (scrollpane->child != nullptr)
     {
         TXT_CalcWidgetSize(scrollpane->child);
     }
@@ -152,13 +154,13 @@ static void TXT_ScrollPaneSizeCalc(TXT_UNCAST_ARG(scrollpane))
         ++scrollpane->widget.w;
     }
 
-    if (scrollpane->child != NULL)
+    if (scrollpane->child != nullptr)
     {
-        if (scrollpane->child->w < scrollpane->w)
+        if (static_cast<int>(scrollpane->child->w) < scrollpane->w)
         {
             scrollpane->child->w = scrollpane->w;
         }
-        if (scrollpane->child->h < scrollpane->h)
+        if (static_cast<int>(scrollpane->child->h) < scrollpane->h)
         {
             scrollpane->child->h = scrollpane->h;
         }
@@ -202,7 +204,7 @@ static void TXT_ScrollPaneDrawer(TXT_UNCAST_ARG(scrollpane))
 
     // Draw the child widget
 
-    if (scrollpane->child != NULL)
+    if (scrollpane->child != nullptr)
     {
         TXT_DrawWidget(scrollpane->child);
     }
@@ -216,7 +218,7 @@ static void TXT_ScrollPaneDestructor(TXT_UNCAST_ARG(scrollpane))
 {
     TXT_CAST_ARG(txt_scrollpane_t, scrollpane);
 
-    if (scrollpane->child != NULL)
+    if (scrollpane->child != nullptr)
     {
         TXT_DestroyWidget(scrollpane->child);
     }
@@ -229,7 +231,7 @@ static void TXT_ScrollPaneFocused(TXT_UNCAST_ARG(scrollpane), int focused)
     // Whether the child is focused depends only on whether the scroll pane
     // itself is focused. Pass through focus to the child.
 
-    if (scrollpane->child != NULL)
+    if (scrollpane->child != nullptr)
     {
         TXT_SetWidgetFocus(scrollpane->child, focused);
     }
@@ -392,7 +394,7 @@ static int TXT_ScrollPaneKeyPress(TXT_UNCAST_ARG(scrollpane), int key)
 
     result = 0;
 
-    if (scrollpane->child != NULL)
+    if (scrollpane->child != nullptr)
     {
         result = TXT_WidgetKeyPress(scrollpane->child, key);
 
@@ -509,7 +511,7 @@ static void TXT_ScrollPaneMousePress(TXT_UNCAST_ARG(scrollpane),
         return;
     }
 
-    if (scrollpane->child != NULL)
+    if (scrollpane->child != nullptr)
     {
         TXT_WidgetMousePress(scrollpane->child, x, y, b);
     }
@@ -524,7 +526,7 @@ static void TXT_ScrollPaneLayout(TXT_UNCAST_ARG(scrollpane))
     // The child widget takes the same position as the scroll pane
     // itself, but is offset by the scroll position.
 
-    if (scrollpane->child != NULL)
+    if (scrollpane->child != nullptr)
     {
         scrollpane->child->x = scrollpane->widget.x - scrollpane->x;
         scrollpane->child->y = scrollpane->widget.y - scrollpane->y;
@@ -565,9 +567,8 @@ txt_widget_class_t txt_scrollpane_class =
 txt_scrollpane_t *TXT_NewScrollPane(int w, int h, TXT_UNCAST_ARG(target))
 {
     TXT_CAST_ARG(txt_widget_t, target);
-    txt_scrollpane_t *scrollpane;
+    txt_scrollpane_t *scrollpane = create_structure<txt_scrollpane_t>();
 
-    scrollpane = malloc(sizeof(txt_scrollpane_t));
     TXT_InitWidget(scrollpane, &txt_scrollpane_class);
     scrollpane->w = w;
     scrollpane->h = h;

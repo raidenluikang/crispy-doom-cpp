@@ -269,7 +269,7 @@ void P_SpawnPhasedLight(sector_t * sector, int base, int index)
 {
     phase_t *phase;
 
-    phase = Z_Malloc(sizeof(*phase), PU_LEVSPEC, 0);
+    phase = zmalloc<decltype(    phase)>(sizeof(*phase), PU_LEVSPEC, 0);
     P_AddThinker(&phase->thinker);
     phase->sector = sector;
     if (index == -1)
@@ -310,7 +310,7 @@ void P_SpawnLightSequence(sector_t * sector, int indexStep)
     count = 1;
     do
     {
-        nextSec = NULL;
+        nextSec = nullptr;
         sec->special = LIGHT_SEQUENCE_START;    // make sure that the search doesn't back up.
         for (i = 0; i < sec->linecount; i++)
         {
@@ -344,7 +344,7 @@ void P_SpawnLightSequence(sector_t * sector, int indexStep)
     base = sector->lightlevel;
     do
     {
-        nextSec = NULL;
+        nextSec = nullptr;
         if (sec->lightlevel)
         {
             base = sec->lightlevel;

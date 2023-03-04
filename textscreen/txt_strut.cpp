@@ -21,6 +21,7 @@
 #include "txt_io.hpp"
 #include "txt_main.hpp"
 #include "txt_window.hpp"
+#include "../utils/memory.hpp"
 
 static void TXT_StrutSizeCalc(TXT_UNCAST_ARG(strut))
 {
@@ -53,15 +54,13 @@ txt_widget_class_t txt_strut_class =
     TXT_StrutDrawer,
     TXT_StrutKeyPress,
     TXT_StrutDestructor,
-    NULL,
-    NULL,
+    nullptr,
+    nullptr,
 };
 
 txt_strut_t *TXT_NewStrut(int width, int height)
 {
-    txt_strut_t *strut;
-
-    strut = malloc(sizeof(txt_strut_t));
+    txt_strut_t *strut = create_structure<txt_strut_t>();
 
     TXT_InitWidget(strut, &txt_strut_class);
     strut->width = width;

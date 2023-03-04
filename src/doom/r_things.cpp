@@ -215,7 +215,7 @@ void R_InitSpriteDefs(const char **namelist)
 		
     // count the number of sprite names
     check = namelist;
-    while (*check != NULL)
+    while (*check != nullptr)
 	check++;
 
     numsprites = check-namelist;
@@ -223,7 +223,7 @@ void R_InitSpriteDefs(const char **namelist)
     if (!numsprites)
 	return;
 		
-    sprites = Z_Malloc(numsprites *sizeof(*sprites), PU_STATIC, NULL);
+    sprites = zmalloc<decltype(    sprites)>(numsprites *sizeof(*sprites), PU_STATIC, nullptr);
 	
     start = firstspritelump-1;
     end = lastspritelump+1;
@@ -311,7 +311,7 @@ void R_InitSpriteDefs(const char **namelist)
 	// allocate space for the frames present and copy sprtemp to it
 	sprites[i].numframes = maxframe;
 	sprites[i].spriteframes = 
-	    Z_Malloc (maxframe * sizeof(spriteframe_t), PU_STATIC, NULL);
+	    Z_Malloc (maxframe * sizeof(spriteframe_t), PU_STATIC, nullptr);
 	memcpy (sprites[i].spriteframes, sprtemp, maxframe*sizeof(spriteframe_t));
     }
 
@@ -323,7 +323,7 @@ void R_InitSpriteDefs(const char **namelist)
 //
 // GAME FUNCTIONS
 //
-vissprite_t*	vissprites = NULL;
+vissprite_t*	vissprites = nullptr;
 vissprite_t*	vissprite_p;
 int		newvissprite;
 static int	numvissprites;
@@ -486,7 +486,7 @@ R_DrawVisSprite
     
     if (!dc_colormap[0])
     {
-	// NULL colormap = shadow draw
+	// nullptr colormap = shadow draw
 	colfunc = fuzzcolfunc;
     }
     else if (vis->mobjflags & MF_TRANSLATION)
@@ -726,7 +726,7 @@ void R_ProjectSprite (mobj_t* thing)
 
     // store information in a vissprite
     vis = R_NewVisSprite ();
-    vis->translation = NULL; // [crispy] no color translation
+    vis->translation = nullptr; // [crispy] no color translation
     vis->mobjflags = thing->flags;
     vis->scale = xscale<<detailshift;
     vis->gx = interpx;
@@ -757,7 +757,7 @@ void R_ProjectSprite (mobj_t* thing)
     if (thing->flags & MF_SHADOW)
     {
 	// shadow draw
-	vis->colormap[0] = vis->colormap[1] = NULL;
+	vis->colormap[0] = vis->colormap[1] = nullptr;
     }
     else if (fixedcolormap)
     {
@@ -859,7 +859,7 @@ byte *R_LaserspotColor (void)
 			return cr[CR_BLUE];
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // [crispy] generate a vissprite for the laser spot
@@ -905,7 +905,7 @@ static void R_DrawLSprite (void)
 	return;
 
     vis = R_NewVisSprite();
-    memset(vis, 0, sizeof(*vis)); // [crispy] set all fields to NULL, except ...
+    memset(vis, 0, sizeof(*vis)); // [crispy] set all fields to nullptr, except ...
     vis->patch = lump - firstspritelump; // [crispy] not a sprite patch
     vis->colormap[0] = vis->colormap[1] = fixedcolormap ? fixedcolormap : colormaps; // [crispy] always full brightness
     vis->brightmap = dc_brightmap;
@@ -1026,7 +1026,7 @@ void R_DrawPSprite (pspdef_t* psp, psprnum_t psprnum) // [crispy] differentiate 
     
     // store information in a vissprite
     vis = &avis;
-    vis->translation = NULL; // [crispy] no color translation
+    vis->translation = nullptr; // [crispy] no color translation
     vis->mobjflags = 0;
     // [crispy] weapons drawn 1 pixel too high when player is idle
     vis->texturemid = (BASEYCENTER<<FRACBITS)+FRACUNIT/4-(psp->sy2-spritetopoffset[lump]);
@@ -1054,7 +1054,7 @@ void R_DrawPSprite (pspdef_t* psp, psprnum_t psprnum) // [crispy] differentiate 
 	|| viewplayer->powers[pw_invisibility] & 8)
     {
 	// shadow draw
-	vis->colormap[0] = vis->colormap[1] = NULL;
+	vis->colormap[0] = vis->colormap[1] = nullptr;
     }
     else if (fixedcolormap)
     {

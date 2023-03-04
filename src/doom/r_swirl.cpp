@@ -51,7 +51,7 @@ void R_InitDistortedFlats()
 	{
 		int i;
 
-		offsets = I_Realloc(NULL, SEQUENCE * FLATSIZE * sizeof(*offsets));
+		offsets = I_Realloc(nullptr, SEQUENCE * FLATSIZE * sizeof(*offsets));
 		offset = offsets;
 
 		for (i = 0; i < SEQUENCE; i++)

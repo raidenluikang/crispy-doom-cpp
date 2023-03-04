@@ -1024,7 +1024,7 @@ static void RefreshBackground(void)
     pixel_t *dest;
 
     V_UseBuffer(st_backing_screen);
-    src = W_CacheLumpName(back_flat, PU_CACHE);
+    src = W_CacheLumpName_patch(back_flat, PU_CACHE);
     dest = st_backing_screen;
 
     for (y = SCREENHEIGHT-(ST_HEIGHT<<crispy->hires); y < SCREENHEIGHT; y++)
@@ -1038,7 +1038,7 @@ static void RefreshBackground(void)
     // [crispy] preserve bezel bottom edge
     if (scaledviewwidth == SCREENWIDTH)
     {
-        patch_t *const patch = W_CacheLumpName(DEH_String("brdr_b"), PU_CACHE);
+        patch_t *const patch = W_CacheLumpName_patch(DEH_String("brdr_b"), PU_CACHE);
 
         for (x = 0; x < WIDESCREENDELTA; x += 8)
         {
@@ -1094,7 +1094,7 @@ void ST_doRefresh(void)
         }
 
         // draw multiplayer armor backdrop if netgame
-        // haleyjd 20131031: BUG - vanilla is accessing a NULL pointer here when
+        // haleyjd 20131031: BUG - vanilla is accessing a nullptr pointer here when
         // playing back netdemos! It doesn't appear to draw anything, and there 
         // is no apparent ill effect on gameplay, so the best we can do is check.
         if(netgame && stback)
@@ -1129,7 +1129,7 @@ void ST_doRefresh(void)
 
             lumpnum = W_CheckNumForName(iconname);
             if(lumpnum == -1)
-                patch = W_CacheLumpName(DEH_String("STCFN063"), PU_CACHE);
+                patch = W_CacheLumpName_patch(DEH_String("STCFN063"), PU_CACHE);
             else
                 patch = W_CacheLumpNum(lumpnum, PU_STATIC);
 
@@ -1305,7 +1305,7 @@ static boolean ST_drawKeysPopup(void)
         for(pnum = 0; pnum < MAXPLAYERS/2; pnum++)
         {
             DEH_snprintf(buffer, sizeof(buffer), "stcolor%d", pnum+1);
-            colpatch = W_CacheLumpName(buffer, PU_CACHE);
+            colpatch = W_CacheLumpName_patch(buffer, PU_CACHE);
             V_DrawPatchDirect(28, y, colpatch);
             frags = ST_calcFrags(pnum);
             DEH_snprintf(buffer, sizeof(buffer), "%s%d", player_names[pnum], frags);
@@ -1322,7 +1322,7 @@ static boolean ST_drawKeysPopup(void)
         for(pnum = MAXPLAYERS/2; pnum < MAXPLAYERS; pnum++)
         {
             DEH_snprintf(buffer, sizeof(buffer), "stcolor%d", pnum+1);
-            colpatch = W_CacheLumpName(buffer, PU_CACHE);
+            colpatch = W_CacheLumpName_patch(buffer, PU_CACHE);
             V_DrawPatchDirect(158, y, colpatch);
             frags = ST_calcFrags(pnum);
             DEH_snprintf(buffer, sizeof(buffer), "%s%d", player_names[pnum], frags);
@@ -1386,7 +1386,7 @@ static boolean ST_drawKeysPopup(void)
                 // Get spawnstate sprite name and load corresponding icon
                 DEH_snprintf(sprname, sizeof(sprname), "I_%s",
                     sprnames[states[info->spawnstate].sprite]);
-                patch = W_CacheLumpName(sprname, PU_CACHE);
+                patch = W_CacheLumpName_patch(sprname, PU_CACHE);
                 V_DrawPatchDirect(x, y, patch);
                 HUlib_drawYellowText(x + ST_KEYNAME_X, y + ST_KEYNAME_Y, info->name);
             }
@@ -1424,7 +1424,7 @@ static void ST_drawCrispyHUD(void)
                              plyr->inventorycursor < plyr->numinventory;
 
     // [crispy] health
-    patch = W_CacheLumpName(DEH_String("I_MDKT"), PU_STATIC);
+    patch = W_CacheLumpName_patch(DEH_String("I_MDKT"), PU_STATIC);
     ST_drawCrispyPair(ST_HEALTHX2, ST_HEALTHY2, patch, plyr->health);
 
     // [crispy] armor
@@ -1446,7 +1446,7 @@ static void ST_drawCrispyHUD(void)
 
         lumpnum = W_CheckNumForName(iconname);
         if (lumpnum == -1)
-            patch = W_CacheLumpName(DEH_String("STCFN063"), PU_CACHE);
+            patch = W_CacheLumpName_patch(DEH_String("STCFN063"), PU_CACHE);
         else
             patch = W_CacheLumpNum(lumpnum, PU_STATIC);
 
@@ -1501,7 +1501,7 @@ static void ST_drawCrispyHUD(void)
 
             lumpnum = W_CheckNumForName(iconname);
             if (lumpnum == -1)
-                patch = W_CacheLumpName(DEH_String("STCFN063"), PU_CACHE);
+                patch = W_CacheLumpName_patch(DEH_String("STCFN063"), PU_CACHE);
             else
                 patch = W_CacheLumpNum(lumpnum, PU_STATIC);
 
@@ -1589,32 +1589,32 @@ boolean ST_DrawExternal(void)
          if(plyr->weaponowned[wp_elecbow])
          {
              V_DrawPatchDirect(38, 86, 
-                 W_CacheLumpName(DEH_String("CBOWA0"), PU_CACHE));
+                 W_CacheLumpName_patch(DEH_String("CBOWA0"), PU_CACHE));
          }
          if(plyr->weaponowned[wp_rifle])
          {
              V_DrawPatchDirect(40, 107, 
-                 W_CacheLumpName(DEH_String("RIFLA0"), PU_CACHE));
+                 W_CacheLumpName_patch(DEH_String("RIFLA0"), PU_CACHE));
          }
          if(plyr->weaponowned[wp_missile])
          {
              V_DrawPatchDirect(39, 131, 
-                 W_CacheLumpName(DEH_String("MMSLA0"), PU_CACHE));
+                 W_CacheLumpName_patch(DEH_String("MMSLA0"), PU_CACHE));
          }
          if(plyr->weaponowned[wp_hegrenade])
          {
              V_DrawPatchDirect(78, 87, 
-                 W_CacheLumpName(DEH_String("GRNDA0"), PU_CACHE));
+                 W_CacheLumpName_patch(DEH_String("GRNDA0"), PU_CACHE));
          }
          if(plyr->weaponowned[wp_flame])
          {
              V_DrawPatchDirect(80, 117, 
-                 W_CacheLumpName(DEH_String("FLAMA0"), PU_CACHE));
+                 W_CacheLumpName_patch(DEH_String("FLAMA0"), PU_CACHE));
          }
          if(plyr->weaponowned[wp_mauler])
          {
              V_DrawPatchDirect(75, 142, 
-                 W_CacheLumpName(DEH_String("TRPDA0"), PU_CACHE));
+                 W_CacheLumpName_patch(DEH_String("TRPDA0"), PU_CACHE));
          }
          
          // haleyjd 20110213: draw ammo
@@ -1630,7 +1630,7 @@ boolean ST_DrawExternal(void)
          if(plyr->powers[pw_communicator])
          {
              V_DrawPatchDirect(280, 130, 
-                 W_CacheLumpName(DEH_String("I_COMM"), PU_CACHE));
+                 W_CacheLumpName_patch(DEH_String("I_COMM"), PU_CACHE));
          }
     }
 
@@ -1703,7 +1703,7 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
 
 static void ST_loadCallback(const char *lumpname, patch_t **variable)
 {
-    *variable = W_CacheLumpName(lumpname, PU_STATIC);
+    *variable = W_CacheLumpName_patch(lumpname, PU_STATIC);
 }
 
 void ST_loadGraphics(void)
@@ -1723,7 +1723,7 @@ void ST_loadData(void)
 static void ST_unloadCallback(const char *lumpname, patch_t **variable)
 {
     W_ReleaseLumpName(lumpname);
-    *variable = NULL;
+    *variable = nullptr;
 }
 
 void ST_unloadGraphics(void)

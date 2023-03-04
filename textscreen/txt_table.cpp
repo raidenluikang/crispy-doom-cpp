@@ -25,6 +25,7 @@
 #include "txt_separator.hpp"
 #include "txt_strut.hpp"
 #include "txt_table.hpp"
+#include "../utils/memory.hpp"
 
 txt_widget_t txt_table_overflow_right;
 txt_widget_t txt_table_overflow_down;
@@ -32,10 +33,10 @@ txt_widget_t txt_table_eol;
 txt_widget_t txt_table_empty;
 
 // Returns true if the given widget in the table's widgets[] array refers
-// to an actual widget - not NULL, or one of the special overflow pointers.
+// to an actual widget - not nullptr, or one of the special overflow pointers.
 static int IsActualWidget(txt_widget_t *widget)
 {
-    return widget != NULL
+    return widget != nullptr
         && widget != &txt_table_overflow_right
         && widget != &txt_table_overflow_down;
 }
@@ -45,13 +46,12 @@ static int IsActualWidget(txt_widget_t *widget)
 void TXT_ClearTable(TXT_UNCAST_ARG(table))
 {
     TXT_CAST_ARG(txt_table_t, table);
-    int i;
 
     // Free all widgets
     // Skip over the first (num_columns) widgets in the array, as these
     // are the column struts used to control column width
 
-    for (i=table->columns; i<table->num_widgets; ++i)
+    for (size_t i=table->columns; i < table->widgets.size(); ++i)
     {
         if (IsActualWidget(table->widgets[i]))
         {
@@ -60,8 +60,8 @@ void TXT_ClearTable(TXT_UNCAST_ARG(table))
     }
 
     // Shrink the table to just the column strut widgets
-
-    table->num_widgets = table->columns;
+    table->widgets.resize(table->columns);
+    //table->num_widgets = table->columns;
 }
 
 static void TXT_TableDestructor(TXT_UNCAST_ARG(table))
@@ -73,7 +73,7 @@ static void TXT_TableDestructor(TXT_UNCAST_ARG(table))
 
 static int TableRows(txt_table_t *table)
 {
-    return (table->num_widgets + table->columns - 1) / table->columns;
+    return (static_cast<int>(table->widgets.size()) + table->columns - 1) / table->columns;
 }
 
 // Most widgets occupy just one cell of a table, but if the special
@@ -99,8 +99,8 @@ static void CellOverflowedSize(txt_table_t *table, int x, int y,
         // Every overflow cell must point to either (x, y) or another
         // overflow cell. This means the first in every row must be
         // txt_table_overflow_down.
-
-        if (y1 * table->columns + x >= table->num_widgets)
+        int num_widgets = static_cast<int>(table->widgets.size());
+        if (y1 * table->columns + x >= num_widgets)
         {
             break;
         }
@@ -114,7 +114,7 @@ static void CellOverflowedSize(txt_table_t *table, int x, int y,
 
         for (x1 = x + 1; x1 < x + *w; ++x1)
         {
-            if (y1 * table->columns + x1 >= table->num_widgets)
+            if (y1 * table->columns + x1 >= num_widgets)
             {
                 break;
             }
@@ -187,7 +187,8 @@ static void CalcRowColSizes(txt_table_t *table,
 
         for (x = 0; x < table->columns; ++x)
         {
-            if (y * table->columns + x >= table->num_widgets)
+            int num_widgets = static_cast<int>(table->widgets.size());
+            if (y * table->columns + x >= num_widgets)
                 break;
 
             widget = table->widgets[y * table->columns + x];
@@ -203,7 +204,7 @@ static void CalcRowColSizes(txt_table_t *table,
                 continue;
             }
 
-            // NULL represents an empty spacer
+            // nullptr represents an empty spacer
             if (IsActualWidget(widget))
             {
                 if (widget->h > row_heights[y])
@@ -221,8 +222,8 @@ static void CalcRowColSizes(txt_table_t *table,
         for (x = 0; x < table->columns; ++x)
         {
             unsigned int w, h;
-
-            if (y * table->columns + x >= table->num_widgets)
+            int num_widgets = static_cast<int>(table->widgets.size());
+            if (y * table->columns + x >= num_widgets)
                 break;
 
             widget = table->widgets[y * table->columns + x];
@@ -256,8 +257,8 @@ static void TXT_CalcTableSize(TXT_UNCAST_ARG(table))
 
     rows = TableRows(table);
 
-    row_heights = malloc(sizeof(int) * rows);
-    column_widths = malloc(sizeof(int) * table->columns);
+    row_heights = create_structure<unsigned int[]>(rows);
+    column_widths = create_structure<unsigned int[]>(table->columns);
 
     CalcRowColSizes(table, row_heights, column_widths);
 
@@ -281,7 +282,7 @@ static void TXT_CalcTableSize(TXT_UNCAST_ARG(table))
 
 static void FillRowToEnd(txt_table_t *table)
 {
-    while ((table->num_widgets % table->columns) != 0)
+    while ((table->widgets.size() % table->columns) != 0)
     {
         TXT_AddWidget(table, &txt_table_overflow_right);
     }
@@ -292,12 +293,11 @@ void TXT_AddWidget(TXT_UNCAST_ARG(table), TXT_UNCAST_ARG(widget))
     TXT_CAST_ARG(txt_table_t, table);
     TXT_CAST_ARG(txt_widget_t, widget);
     int is_separator;
-    int i;
 
-    // Convenience alias for NULL:
+    // Convenience alias for nullptr:
     if (widget == &txt_table_empty)
     {
-        widget = NULL;
+        widget = nullptr;
     }
     else if (widget == &txt_table_eol)
     {
@@ -314,7 +314,7 @@ void TXT_AddWidget(TXT_UNCAST_ARG(table), TXT_UNCAST_ARG(widget))
     // added at the top of a window when it is created.
     if (is_separator)
     {
-        for (i = table->num_widgets - 1; i >= 0; --i)
+        for (int i = static_cast<int>(table->widgets.size()) - 1; i >= 0; --i)
         {
             txt_widget_t *last_widget;
             last_widget = table->widgets[i];
@@ -340,10 +340,7 @@ void TXT_AddWidget(TXT_UNCAST_ARG(table), TXT_UNCAST_ARG(widget))
         FillRowToEnd(table);
     }
 
-    table->widgets = realloc(table->widgets,
-                             sizeof(txt_widget_t *) * (table->num_widgets + 1));
-    table->widgets[table->num_widgets] = widget;
-    ++table->num_widgets;
+    table->widgets.push_back(widget);
 
     // Maintain parent pointer.
     if (IsActualWidget(widget))
@@ -368,13 +365,13 @@ void TXT_AddWidgets(TXT_UNCAST_ARG(table), ...)
 
     va_start(args, TXT_UNCAST_ARG_NAME(table));
 
-    // Keep adding widgets until a NULL is reached.
+    // Keep adding widgets until a nullptr is reached.
    
     for (;;) 
     {
         widget = va_arg(args, txt_widget_t *);
 
-        if (widget == NULL)
+        if (widget == nullptr)
         {
             break;
         }
@@ -387,19 +384,17 @@ void TXT_AddWidgets(TXT_UNCAST_ARG(table), ...)
 
 static int SelectableCell(txt_table_t *table, int x, int y)
 {
-    txt_widget_t *widget;
-    int i;
-
+    
     if (x < 0 || x >= table->columns)
     {
         return 0;
     }
 
-    i = y * table->columns + x;
+    int i = y * table->columns + x;
 
-    if (i >= 0 && i < table->num_widgets)
+    if (i >= 0 && static_cast<size_t>(i) < table->widgets.size())
     {
-        widget = table->widgets[i];
+        txt_widget_t* widget = table->widgets[i];
         return IsActualWidget(widget)
             && TXT_SelectableWidget(widget)
             && widget->visible;
@@ -444,10 +439,6 @@ static int FindSelectableColumn(txt_table_t *table, int row, int start_col)
 
 static void ChangeSelection(txt_table_t *table, int x, int y)
 {
-    txt_widget_t *cur_widget;
-    txt_widget_t *new_widget;
-    int i;
-
     // No change?
 
     if (x == table->selected_x && y == table->selected_y)
@@ -457,11 +448,11 @@ static void ChangeSelection(txt_table_t *table, int x, int y)
 
     // Unfocus current widget:
 
-    i = table->selected_y * table->columns + table->selected_x;
+    int i = table->selected_y * table->columns + table->selected_x;
 
-    if (i < table->num_widgets)
+    if (i >= 0 && static_cast<size_t>(i) < table->widgets.size() )
     {
-        cur_widget = table->widgets[i];
+         txt_widget_t * cur_widget = table->widgets[i];
 
         if (table->widget.focused && IsActualWidget(cur_widget))
         {
@@ -471,12 +462,12 @@ static void ChangeSelection(txt_table_t *table, int x, int y)
 
     // Focus new widget.
 
-    new_widget = table->widgets[y * table->columns + x];
+    txt_widget_t * new_widget = table->widgets[y * table->columns + x];
 
     table->selected_x = x;
     table->selected_y = y;
 
-    if (table->widget.focused && new_widget != NULL)
+    if (table->widget.focused && new_widget != nullptr)
     {
         TXT_SetWidgetFocus(new_widget, 1);
     }
@@ -494,7 +485,7 @@ static int TXT_TableKeyPress(TXT_UNCAST_ARG(table), int key)
 
     selected = table->selected_y * table->columns + table->selected_x;
 
-    if (selected >= 0 && selected < table->num_widgets)
+    if (selected >= 0 && static_cast<size_t>(selected) < table->widgets.size())
     {
         if (IsActualWidget(table->widgets[selected])
          && TXT_SelectableWidget(table->widgets[selected])
@@ -506,14 +497,11 @@ static int TXT_TableKeyPress(TXT_UNCAST_ARG(table), int key)
 
     if (key == KEY_TAB)
     {
-        int dir;
-        int i;
-
-        dir = TXT_GetModifierState(TXT_MOD_SHIFT) ? -1 : 1;
+        const int dir = TXT_GetModifierState(TXT_MOD_SHIFT) ? -1 : 1;
 
         // Cycle through all widgets until we find one that can be selected.
-        for (i = table->selected_y * table->columns + table->selected_x + dir;
-             i >= 0 && i < table->num_widgets;
+        for (int i = table->selected_y * table->columns + table->selected_x + dir;
+             i >= 0 && static_cast<size_t>(i) < table->widgets.size();
              i += dir)
         {
             if (IsActualWidget(table->widgets[i])
@@ -699,8 +687,8 @@ static void TXT_TableLayout(TXT_UNCAST_ARG(table))
 
     rows = TableRows(table);
 
-    column_widths = malloc(sizeof(int) * table->columns);
-    row_heights = malloc(sizeof(int) * rows);
+    column_widths = create_structure<unsigned int[]>(table->columns); 
+    row_heights = create_structure<unsigned int[]>(rows);
 
     CalcRowColSizes(table, row_heights, column_widths);
 
@@ -725,7 +713,7 @@ static void TXT_TableLayout(TXT_UNCAST_ARG(table))
         {
             i = y * table->columns + x;
 
-            if (i >= table->num_widgets)
+            if (i >= 0 && static_cast<size_t>(i) >= table->widgets.size())
                 break;
 
             widget = table->widgets[i];
@@ -752,7 +740,6 @@ static void TXT_TableDrawer(TXT_UNCAST_ARG(table))
 {
     TXT_CAST_ARG(txt_table_t, table);
     txt_widget_t *widget;
-    int i;
 
     // Check the table's current selection points at something valid before
     // drawing.
@@ -761,7 +748,7 @@ static void TXT_TableDrawer(TXT_UNCAST_ARG(table))
 
     // Draw all cells
 
-    for (i=0; i<table->num_widgets; ++i)
+    for (size_t i=0; i<table->widgets.size(); ++i)
     {
         widget = table->widgets[i];
 
@@ -779,13 +766,12 @@ static void TXT_TableMousePress(TXT_UNCAST_ARG(table), int x, int y, int b)
 {
     TXT_CAST_ARG(txt_table_t, table);
     txt_widget_t *widget;
-    int i;
-
-    for (i=0; i<table->num_widgets; ++i)
+    
+    for (size_t i=0; i<table->widgets.size(); ++i)
     {
         widget = table->widgets[i];
 
-        // NULL widgets are spacers
+        // nullptr widgets are spacers
 
         if (IsActualWidget(widget))
         {
@@ -817,7 +803,6 @@ static void TXT_TableMousePress(TXT_UNCAST_ARG(table), int x, int y, int b)
 static int TXT_TableSelectable(TXT_UNCAST_ARG(table))
 {
     TXT_CAST_ARG(txt_table_t, table);
-    int i;
 
     // Is the currently-selected cell selectable?
 
@@ -828,7 +813,7 @@ static int TXT_TableSelectable(TXT_UNCAST_ARG(table))
 
     // Find the first selectable cell and set selected_x, selected_y.
 
-    for (i = 0; i < table->num_widgets; ++i)
+    for (size_t i = 0; i < table->widgets.size(); ++i)
     {
         if (IsActualWidget(table->widgets[i])
          && TXT_SelectableWidget(table->widgets[i]))
@@ -852,7 +837,7 @@ static void TXT_TableFocused(TXT_UNCAST_ARG(table), int focused)
 
     i = table->selected_y * table->columns + table->selected_x;
 
-    if (i < table->num_widgets)
+    if ( i >= 0 && static_cast<size_t>(i) < table->widgets.size())
     {
         if (IsActualWidget(table->widgets[i]))
         {
@@ -875,12 +860,10 @@ txt_widget_class_t txt_table_class =
 
 void TXT_InitTable(txt_table_t *table, int columns)
 {
-    int i;
-
     TXT_InitWidget(table, &txt_table_class);
+    table->widgets.clear();
+    table->widgets.shrink_to_fit();
     table->columns = columns;
-    table->widgets = NULL;
-    table->num_widgets = 0;
     table->selected_x = 0;
     table->selected_y = 0;
 
@@ -889,7 +872,7 @@ void TXT_InitTable(txt_table_t *table, int columns)
     // the struts are created with widths of 0 each, but this
     // function changes them.
 
-    for (i=0; i<columns; ++i)
+    for (int i=0; i<columns; ++i)
     {
         TXT_AddWidget(table, TXT_NewStrut(0, 0));
     }
@@ -897,9 +880,7 @@ void TXT_InitTable(txt_table_t *table, int columns)
 
 txt_table_t *TXT_NewTable(int columns)
 {
-    txt_table_t *table;
-
-    table = malloc(sizeof(txt_table_t));
+    txt_table_t *table = create_structure<txt_table_t>();
 
     TXT_InitTable(table, columns);
 
@@ -921,7 +902,7 @@ txt_table_t *TXT_MakeTable(int columns, ...)
         txt_widget_t *widget;
         widget = va_arg(args, txt_widget_t *);
 
-        if (widget == NULL)
+        if (widget == nullptr)
         {
             break;
         }
@@ -956,7 +937,7 @@ txt_table_t *TXT_NewHorizBox(TXT_UNCAST_ARG(first_widget), ...)
 
         widget = va_arg(args, txt_widget_t *);
 
-        if (widget == NULL)
+        if (widget == nullptr)
         {
             // End of list
 
@@ -985,7 +966,7 @@ txt_table_t *TXT_NewHorizBox(TXT_UNCAST_ARG(first_widget), ...)
 
         widget = va_arg(args, txt_widget_t *);
 
-        if (widget == NULL)
+        if (widget == nullptr)
         {
             // End of list
 
@@ -1013,19 +994,19 @@ txt_widget_t *TXT_GetSelectedWidget(TXT_UNCAST_ARG(table))
 
     index = table->selected_y * table->columns + table->selected_x;
 
-    result = NULL;
+    result = nullptr;
 
-    if (index >= 0 && index < table->num_widgets)
+    if (index >= 0 && static_cast<size_t>(index) < table->widgets.size())
     {
         result = table->widgets[index];
 
         if (!IsActualWidget(result))
         {
-            result = NULL;
+            result = nullptr;
         }
     }
 
-    if (result != NULL && result->widget_class == &txt_table_class)
+    if (result != nullptr && result->widget_class == &txt_table_class)
     {
         result = TXT_GetSelectedWidget(result);
     }
@@ -1042,7 +1023,7 @@ int TXT_SelectWidget(TXT_UNCAST_ARG(table), TXT_UNCAST_ARG(widget))
     TXT_CAST_ARG(txt_widget_t, widget);
     int i;
 
-    for (i=0; i<table->num_widgets; ++i)
+    for (i=0; i < static_cast<int>(table->widgets.size()); ++i)
     {
         if (!IsActualWidget(table->widgets[i]))
         {
@@ -1081,29 +1062,29 @@ int TXT_SelectWidget(TXT_UNCAST_ARG(table), TXT_UNCAST_ARG(widget))
 void TXT_SetTableColumns(TXT_UNCAST_ARG(table), int new_columns)
 {
     TXT_CAST_ARG(txt_table_t, table);
-    txt_widget_t **new_widgets;
-    txt_widget_t *widget;
-    int new_num_widgets;
-    int i, j, x;
+    
+    std::vector<txt_widget_t *> new_widgets;
+    
 
     // We need as many full rows as are in the current list, plus the
     // remainder from the last row.
-    new_num_widgets = (table->num_widgets / table->columns) * new_columns
-                    + (table->num_widgets % table->columns);
-    new_widgets = calloc(new_num_widgets, sizeof(txt_widget_t *));
+    const int num_widgets = static_cast<int>(table->widgets.size());
+
+    int new_num_widgets = (num_widgets / table->columns) * new_columns
+                    + (num_widgets % table->columns);
+    //new_widgets = calloc(new_num_widgets, sizeof(txt_widget_t *));
+    new_widgets.reserve(new_num_widgets);
 
     // Reset and add one by one from the old table.
-    new_num_widgets = 0;
 
-    for (i = 0; i < table->num_widgets; ++i)
+    for (int i = 0; i < static_cast<int>(table->widgets.size()); ++i)
     {
-        widget = table->widgets[i];
-        x = i % table->columns;
+        txt_widget_t * widget = table->widgets[i];
+        int x = i % table->columns;
 
         if (x < new_columns)
         {
-            new_widgets[new_num_widgets] = widget;
-            ++new_num_widgets;
+            new_widgets.push_back(widget);
         }
         else if (IsActualWidget(widget))
         {
@@ -1114,7 +1095,7 @@ void TXT_SetTableColumns(TXT_UNCAST_ARG(table), int new_columns)
         // extra widgets to reach the next row.
         if (x == table->columns - 1)
         {
-            for (j = table->columns; j < new_columns; ++j)
+            for (int j = table->columns; j < new_columns; ++j)
             {
                 // First row? We need to add struts that are used to apply
                 // the column widths.
@@ -1126,15 +1107,12 @@ void TXT_SetTableColumns(TXT_UNCAST_ARG(table), int new_columns)
                 {
                     widget = &txt_table_overflow_right;
                 }
-                new_widgets[new_num_widgets] = widget;
-                ++new_num_widgets;
+                new_widgets.push_back(widget);
             }
         }
     }
 
-    free(table->widgets);
     table->widgets = new_widgets;
-    table->num_widgets = new_num_widgets;
     table->columns = new_columns;
 }
 
@@ -1174,8 +1152,8 @@ int TXT_PageTable(TXT_UNCAST_ARG(table), int pagex, int pagey)
 
     rows = TableRows(table);
 
-    row_heights = malloc(sizeof(int) * rows);
-    column_widths = malloc(sizeof(int) * table->columns);
+    row_heights = create_structure<unsigned int[]>(rows); 
+    column_widths = create_structure<unsigned int[]>(table->columns); 
 
     CalcRowColSizes(table, row_heights, column_widths);
 

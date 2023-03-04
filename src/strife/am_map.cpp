@@ -530,12 +530,12 @@ void AM_initVariables(void)
 void AM_loadPics(void)
 {
     int i;
-    char namebuf[9];
+    char namebuf[16]{};
   
     for (i=0;i<10;i++)
     {
-        DEH_snprintf(namebuf, 9, "PLMNUM%d", i);
-        marknums[i] = W_CacheLumpName(namebuf, PU_STATIC);
+        DEH_snprintf(namebuf, 16, "PLMNUM%d", i);
+        marknums[i] = W_CacheLumpName_patch(namebuf, PU_STATIC);
     }
 
 }

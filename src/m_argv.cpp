@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "SDL_stdinc.hpp"
+#include <SDL2/SDL_stdinc.h>
 
 #include "doomtype.hpp"
 #include "d_iwad.hpp"
@@ -88,7 +88,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
     // Read the response file into memory
     handle = M_fopen(filename, "rb");
 
-    if (handle == NULL)
+    if (handle == nullptr)
     {
         printf ("\nNo such response file!");
         exit(1);
@@ -103,7 +103,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
     // at the end of the response file, in which case a '\0' will be
     // needed.
 
-    file = malloc(size + 1);
+    file = static_cast< char* >( malloc(size + 1) );
 
     i = 0;
 
@@ -123,7 +123,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
     // Create new arguments list array
 
-    newargv = malloc(sizeof(char *) * MAXARGVS);
+    newargv = static_cast< char ** > ( malloc(sizeof(char *) * MAXARGVS) );
     newargc = 0;
     memset(newargv, 0, sizeof(char *) * MAXARGVS);
 
@@ -132,7 +132,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
     for (i=0; i<argv_index; ++i)
     {
         newargv[i] = myargv[i];
-        myargv[i] = NULL;
+        myargv[i] = nullptr;
         ++newargc;
     }
 
@@ -210,17 +210,17 @@ static void LoadResponseFile(int argv_index, const char *filename)
     for (i=argv_index + 1; i<myargc; ++i)
     {
         newargv[newargc] = myargv[i];
-        myargv[i] = NULL;
+        myargv[i] = nullptr;
         ++newargc;
     }
 
     // Free any old strings in myargv which were not moved to newargv
     for (i = 0; i < myargc; ++i)
     {
-        if (myargv[i] != NULL)
+        if (myargv[i] != nullptr)
         {
             free(myargv[i]);
-            myargv[i] = NULL;
+            myargv[i] = nullptr;
         }
     }
 
@@ -437,13 +437,13 @@ const char *M_GetExecutableName(void)
     return M_BaseName(myargv[0]);
 }
 
-char *exedir = NULL;
+char *exedir = nullptr;
 
 void M_SetExeDir(void)
 {
     char *dirname;
 
     dirname = M_DirName(myargv[0]);
-    exedir = M_StringJoin(dirname, DIR_SEPARATOR_S, NULL);
+    exedir = M_StringJoin(dirname, DIR_SEPARATOR_S, nullptr);
     free(dirname);
 }

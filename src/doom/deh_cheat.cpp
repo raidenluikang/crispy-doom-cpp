@@ -63,12 +63,12 @@ static deh_cheat_t *FindCheatByName(char *name)
             return &allcheats[i];
     }
 
-    return NULL;
+    return nullptr;
 }
 
 static void *DEH_CheatStart(deh_context_t *context, char *line)
 {
-    return NULL;
+    return nullptr;
 }
 
 static void DEH_CheatParseLine(deh_context_t *context, char *line, void *tag)
@@ -91,7 +91,7 @@ static void DEH_CheatParseLine(deh_context_t *context, char *line, void *tag)
 
     cheat = FindCheatByName(variable_name);
 
-    if (cheat == NULL)
+    if (cheat == nullptr)
     {
         DEH_Warning(context, "Unknown cheat '%s'", variable_name);
         return;
@@ -120,8 +120,8 @@ static void DEH_CheatParseLine(deh_context_t *context, char *line, void *tag)
         ++i;
 
         // Absolute limit - don't exceed
-
-        if (i >= MAX_CHEAT_LEN - cheat->seq->parameter_chars)
+        int max_i_value = MAX_CHEAT_LEN - cheat->seq->parameter_chars;
+        if (max_i_value < 0 ||   i >= static_cast<unsigned>(max_i_value) )
         {
             DEH_Error(context, "Cheat sequence too long!");
             return;
@@ -137,10 +137,10 @@ static void DEH_CheatParseLine(deh_context_t *context, char *line, void *tag)
 deh_section_t deh_section_cheat =
 {
     "Cheat",
-    NULL,
+    nullptr,
     DEH_CheatStart,
     DEH_CheatParseLine,
-    NULL,
-    NULL,
+    nullptr,
+    nullptr,
 };
 

@@ -36,8 +36,8 @@ static struct
 
 void NET_WriteConnectData(net_packet_t *packet, net_connect_data_t *data)
 {
-    NET_WriteInt8(packet, data->gamemode);
-    NET_WriteInt8(packet, data->gamemission);
+    NET_WriteInt8(packet, static_cast<std::uint8_t>(data->gamemode));
+    NET_WriteInt8(packet, static_cast<std::uint8_t>(data->gamemission));
     NET_WriteInt8(packet, data->lowres_turn);
     NET_WriteInt8(packet, data->drone);
     NET_WriteInt8(packet, data->max_players);
@@ -72,8 +72,8 @@ void NET_WriteSettings(net_packet_t *packet, net_gamesettings_t *settings)
     NET_WriteInt8(packet, settings->respawn_monsters);
     NET_WriteInt8(packet, settings->episode);
     NET_WriteInt8(packet, settings->map);
-    NET_WriteInt8(packet, settings->skill);
-    NET_WriteInt8(packet, settings->gameversion);
+    NET_WriteInt8(packet, static_cast<int>(settings->skill));
+    NET_WriteInt8(packet, static_cast<int>(settings->gameversion));
     NET_WriteInt8(packet, settings->lowres_turn);
     NET_WriteInt8(packet, settings->new_sync);
     NET_WriteInt32(packet, settings->timelimit);
@@ -101,7 +101,7 @@ boolean NET_ReadSettings(net_packet_t *packet, net_gamesettings_t *settings)
            && NET_ReadInt8(packet, (unsigned int *) &settings->respawn_monsters)
            && NET_ReadInt8(packet, (unsigned int *) &settings->episode)
            && NET_ReadInt8(packet, (unsigned int *) &settings->map)
-           && NET_ReadSInt8(packet, &settings->skill)
+           && NET_ReadSInt8(packet, (signed int * ) &settings->skill)
            && NET_ReadInt8(packet, (unsigned int *) &settings->gameversion)
            && NET_ReadInt8(packet, (unsigned int *) &settings->lowres_turn)
            && NET_ReadInt8(packet, (unsigned int *) &settings->new_sync)
@@ -134,7 +134,7 @@ boolean NET_ReadQueryData(net_packet_t *packet, net_querydata_t *query)
 
     query->version = NET_ReadSafeString(packet);
 
-    success = query->version != NULL
+    success = query->version != nullptr
           && NET_ReadInt8(packet, (unsigned int *) &query->server_state)
           && NET_ReadInt8(packet, (unsigned int *) &query->num_players)
           && NET_ReadInt8(packet, (unsigned int *) &query->max_players)
@@ -153,7 +153,7 @@ boolean NET_ReadQueryData(net_packet_t *packet, net_querydata_t *query)
     // okay if it cannot be successfully read.
     query->protocol = NET_ReadProtocolList(packet);
 
-    return query->description != NULL;
+    return query->description != nullptr;
 }
 
 void NET_WriteQueryData(net_packet_t *packet, net_querydata_t *query)
@@ -162,8 +162,8 @@ void NET_WriteQueryData(net_packet_t *packet, net_querydata_t *query)
     NET_WriteInt8(packet, query->server_state);
     NET_WriteInt8(packet, query->num_players);
     NET_WriteInt8(packet, query->max_players);
-    NET_WriteInt8(packet, query->gamemode);
-    NET_WriteInt8(packet, query->gamemission);
+    NET_WriteInt8(packet, static_cast<int>(query->gamemode));
+    NET_WriteInt8(packet, static_cast<int>(query->gamemission));
     NET_WriteString(packet, query->description);
 
     // Write a list of all supported protocols. Note that the query->protocol
@@ -498,7 +498,7 @@ boolean NET_ReadWaitData(net_packet_t *packet, net_waitdata_t *data)
     {
         s = NET_ReadString(packet);
 
-        if (s == NULL || strlen(s) >= MAXPLAYERNAME)
+        if (s == nullptr || strlen(s) >= MAXPLAYERNAME)
         {
             return false;
         }
@@ -507,7 +507,7 @@ boolean NET_ReadWaitData(net_packet_t *packet, net_waitdata_t *data)
 
         s = NET_ReadString(packet);
 
-        if (s == NULL || strlen(s) >= MAXPLAYERNAME)
+        if (s == nullptr || strlen(s) >= MAXPLAYERNAME)
         {
             return false;
         }
@@ -523,9 +523,9 @@ boolean NET_ReadWaitData(net_packet_t *packet, net_waitdata_t *data)
 static boolean NET_ReadBlob(net_packet_t *packet, uint8_t *buf, size_t len)
 {
     unsigned int b;
-    int i;
+    
 
-    for (i=0; i<len; ++i)
+    for (size_t i=0; i<len; ++i)
     {
         if (!NET_ReadInt8(packet, &b))
         {
@@ -540,9 +540,8 @@ static boolean NET_ReadBlob(net_packet_t *packet, uint8_t *buf, size_t len)
 
 static void NET_WriteBlob(net_packet_t *packet, uint8_t *buf, size_t len)
 {
-    int i;
 
-    for (i=0; i<len; ++i)
+    for (size_t i=0; i<len; ++i)
     {
         NET_WriteInt8(packet, buf[i]);
     }
@@ -570,9 +569,7 @@ void NET_WritePRNGSeed(net_packet_t *packet, prng_seed_t seed)
 
 static net_protocol_t ParseProtocolName(const char *name)
 {
-    int i;
-
-    for (i = 0; i < arrlen(protocol_names); ++i)
+    for (size_t i = 0; i < arrlen(protocol_names); ++i)
     {
         if (!strcmp(protocol_names[i].name, name))
         {
@@ -591,7 +588,7 @@ net_protocol_t NET_ReadProtocol(net_packet_t *packet)
     const char *name;
 
     name = NET_ReadString(packet);
-    if (name == NULL)
+    if (name == nullptr)
     {
         return NET_PROTOCOL_UNKNOWN;
     }
@@ -602,9 +599,7 @@ net_protocol_t NET_ReadProtocol(net_packet_t *packet)
 // NET_WriteProtocol writes a single string-format protocol name to a packet.
 void NET_WriteProtocol(net_packet_t *packet, net_protocol_t protocol)
 {
-    int i;
-
-    for (i = 0; i < arrlen(protocol_names); ++i)
+    for (size_t i = 0; i < arrlen(protocol_names); ++i)
     {
         if (protocol_names[i].protocol == protocol)
         {
@@ -626,8 +621,7 @@ void NET_WriteProtocol(net_packet_t *packet, net_protocol_t protocol)
 net_protocol_t NET_ReadProtocolList(net_packet_t *packet)
 {
     net_protocol_t result;
-    unsigned int num_protocols;
-    int i;
+    unsigned int num_protocols=0;
 
     if (!NET_ReadInt8(packet, &num_protocols))
     {
@@ -636,13 +630,13 @@ net_protocol_t NET_ReadProtocolList(net_packet_t *packet)
 
     result = NET_PROTOCOL_UNKNOWN;
 
-    for (i = 0; i < num_protocols; ++i)
+    for (unsigned int i = 0; i < num_protocols; ++i)
     {
         net_protocol_t p;
         const char *name;
 
         name = NET_ReadString(packet);
-        if (name == NULL)
+        if (name == nullptr)
         {
             return NET_PROTOCOL_UNKNOWN;
         }
@@ -670,7 +664,7 @@ void NET_WriteProtocolList(net_packet_t *packet)
 
     for (i = 0; i < NET_NUM_PROTOCOLS; ++i)
     {
-        NET_WriteProtocol(packet, i);
+        NET_WriteProtocol(packet, static_cast<net_protocol_t>(i));
     }
 }
 

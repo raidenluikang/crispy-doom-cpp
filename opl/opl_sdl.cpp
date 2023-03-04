@@ -50,7 +50,7 @@ typedef struct
 // When the callback mutex is locked using OPL_Lock, callback functions
 // are not invoked.
 
-static SDL_mutex *callback_mutex = NULL;
+static SDL_mutex *callback_mutex = nullptr;
 
 // Queue of callbacks waiting to be invoked.
 
@@ -58,7 +58,7 @@ static opl_callback_queue_t *callback_queue;
 
 // Mutex used to control access to the callback queue.
 
-static SDL_mutex *callback_queue_mutex = NULL;
+static SDL_mutex *callback_queue_mutex = nullptr;
 
 // Current time, in us since startup:
 
@@ -80,7 +80,7 @@ static int opl_opl3mode;
 
 // Temporary mixing buffer used by the mixing callback.
 
-static uint8_t *mix_buffer = NULL;
+static uint8_t *mix_buffer = nullptr;
 
 // Register number that was written.
 
@@ -165,7 +165,7 @@ static void FillBuffer(uint8_t *buffer, unsigned int nsamples)
     // This seems like a reasonable assumption.  mix_buffer is
     // 1 second long, which should always be much longer than the
     // SDL mix buffer.
-    assert(nsamples < mixing_freq);
+    assert(static_cast<int>(nsamples) < mixing_freq);
 
     // OPL output is generated into temporary buffer and then mixed
     // (to avoid overflows etc.)
@@ -229,7 +229,7 @@ static void OPL_Mix_Callback(int chan, void *stream, int len, void *udata)
 
 static void OPL_SDL_Shutdown(void)
 {
-    Mix_HookMusic(NULL, NULL);
+    Mix_HookMusic(nullptr, nullptr);
 
     if (sdl_was_initialized)
     {
@@ -241,23 +241,23 @@ static void OPL_SDL_Shutdown(void)
     }
 
 /*
-    if (opl_chip != NULL)
+    if (opl_chip != nullptr)
     {
         OPLDestroy(opl_chip);
-        opl_chip = NULL;
+        opl_chip = nullptr;
     }
     */
 
-    if (callback_mutex != NULL)
+    if (callback_mutex != nullptr)
     {
         SDL_DestroyMutex(callback_mutex);
-        callback_mutex = NULL;
+        callback_mutex = nullptr;
     }
 
-    if (callback_queue_mutex != NULL)
+    if (callback_queue_mutex != nullptr)
     {
         SDL_DestroyMutex(callback_queue_mutex);
-        callback_queue_mutex = NULL;
+        callback_queue_mutex = nullptr;
     }
 }
 
@@ -298,7 +298,7 @@ static int OPL_SDL_Init(unsigned int port_base)
             return 0;
         }
 
-        if (Mix_OpenAudioDevice(opl_sample_rate, AUDIO_S16SYS, 2, GetSliceSize(), NULL, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
+        if (Mix_OpenAudioDevice(opl_sample_rate, AUDIO_S16SYS, 2, GetSliceSize(), nullptr, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
         {
             fprintf(stderr, "Error initialising SDL_mixer: %s\n", Mix_GetError());
 
@@ -343,7 +343,7 @@ static int OPL_SDL_Init(unsigned int port_base)
     }
 
     // Mix buffer: four bytes per sample (16 bits * 2 channels):
-    mix_buffer = malloc(mixing_freq * 4);
+    mix_buffer = static_cast<uint8_t*>( malloc(mixing_freq * 4) );
 
     // Create the emulator structure:
 
@@ -356,7 +356,7 @@ static int OPL_SDL_Init(unsigned int port_base)
     // Set postmix that adds the OPL music. This is deliberately done
     // as a postmix and not using Mix_HookMusic() as the latter disables
     // normal SDL_mixer music mixing.
-    Mix_RegisterEffect(MIX_CHANNEL_POST, OPL_Mix_Callback, NULL, NULL);
+    Mix_RegisterEffect(MIX_CHANNEL_POST, OPL_Mix_Callback, nullptr, nullptr);
 
     return 1;
 }

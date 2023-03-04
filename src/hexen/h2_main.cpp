@@ -220,7 +220,7 @@ static void D_SetDefaultSavePath(void)
     {
         // only get hexen.cfg path if one is not already found
 
-        if (SavePathConfig == NULL || !strcmp(SavePathConfig, ""))
+        if (SavePathConfig == nullptr || !strcmp(SavePathConfig, ""))
         {
             // If we are not using a savegame path (probably because we are on
             // Windows and not using a config dir), behave like Vanilla Hexen
@@ -371,7 +371,7 @@ void D_SetGameDescription(void)
     }
 }
 
-static const char *const loadparms[] = {"-file", "-merge", NULL}; // [crispy]
+static const char *const loadparms[] = {"-file", "-merge", nullptr}; // [crispy]
 
 //==========================================================================
 //
@@ -422,7 +422,7 @@ void D_DoomMain(void)
     }
     else
     {
-        M_SetConfigDir(NULL);
+        M_SetConfigDir(nullptr);
     }
 
     M_SetConfigFilenames("hexen.cfg", PROGRAM_PREFIX "hexen.cfg");
@@ -447,7 +447,7 @@ void D_DoomMain(void)
 
     iwadfile = D_FindIWAD(IWAD_MASK_HEXEN, &gamemission);
 
-    if (iwadfile == NULL)
+    if (iwadfile == nullptr)
     {
         I_Error("Game mode indeterminate. No IWAD was found. Try specifying\n"
                 "one with the '-iwad' command line parameter.");
@@ -497,7 +497,7 @@ void D_DoomMain(void)
     {
         char *autoload_dir;
         autoload_dir = M_GetAutoloadDir("hexen.wad", true);
-        if (autoload_dir != NULL)
+        if (autoload_dir != nullptr)
         {
             // TODO? DEH_AutoLoadPatches(autoload_dir);
             W_AutoLoadWADs(autoload_dir);
@@ -807,7 +807,7 @@ static void HandleArgs(void)
 
         free(uc_filename);
 
-        if (W_AddFile(file) != NULL)
+        if (W_AddFile(file) != nullptr)
         {
             M_StringCopy(demolumpname, lumpinfo[numlumps - 1]->name,
                          sizeof(demolumpname));
@@ -952,7 +952,7 @@ void H2_GameLoop(void)
         if (crispy->post_rendering_hook)
         {
             crispy->post_rendering_hook();
-            crispy->post_rendering_hook = NULL;
+            crispy->post_rendering_hook = nullptr;
         }
     }
 }
@@ -973,7 +973,7 @@ void H2_ProcessEvents(void)
     {
         ev = D_PopEvent();
 
-        if (ev == NULL)
+        if (ev == nullptr)
         {
             break;
         }
@@ -1052,12 +1052,12 @@ static void DrawAndBlit(void)
     {
         if (!netgame)
         {
-            V_DrawPatch(160, (viewwindowy >> crispy->hires) + 5, W_CacheLumpName("PAUSED",
+            V_DrawPatch(160, (viewwindowy >> crispy->hires) + 5, W_CacheLumpName_patch("PAUSED",
                                                               PU_CACHE));
         }
         else
         {
-            V_DrawPatch(160, 70, W_CacheLumpName("PAUSED", PU_CACHE));
+            V_DrawPatch(160, 70, W_CacheLumpName_patch("PAUSED", PU_CACHE));
         }
     }
 
@@ -1160,7 +1160,7 @@ static void PageDrawer(void)
 
     if (demosequence == 1)
     {
-        V_DrawPatch(4, 160, W_CacheLumpName("ADVISOR", PU_CACHE));
+        V_DrawPatch(4, 160, W_CacheLumpName_patch("ADVISOR", PU_CACHE));
     }
     UpdateState |= I_FULLSCRN;
 }

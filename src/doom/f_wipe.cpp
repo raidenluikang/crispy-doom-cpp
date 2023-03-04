@@ -27,6 +27,8 @@
 
 #include "f_wipe.hpp"
 
+#include "../../utils/memory.hpp"
+
 //
 //                       SCREEN WIPE PACKAGE
 //
@@ -234,7 +236,7 @@ wipe_StartScreen
   int	width,
   int	height )
 {
-    wipe_scr_start = Z_Malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_start), PU_STATIC, NULL);
+    wipe_scr_start = zmalloc<decltype(wipe_scr_start)>(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_start), PU_STATIC, nullptr);
     I_ReadScreen(wipe_scr_start);
     return 0;
 }
@@ -246,7 +248,7 @@ wipe_EndScreen
   int	width,
   int	height )
 {
-    wipe_scr_end = Z_Malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_end), PU_STATIC, NULL);
+    wipe_scr_end = zmalloc<decltype(wipe_scr_end)>(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_end), PU_STATIC, nullptr);
     I_ReadScreen(wipe_scr_end);
     V_DrawBlock(x, y, width, height, wipe_scr_start); // restore start scr.
     return 0;
@@ -262,19 +264,24 @@ wipe_ScreenWipe
   int	ticks )
 {
     int rc;
+    
     static int (*wipes[])(int, int, int) =
     {
-	wipe_initColorXForm, wipe_doColorXForm, wipe_exitColorXForm,
-	wipe_initMelt, wipe_doMelt, wipe_exitMelt
+	    wipe_initColorXForm, 
+        wipe_doColorXForm, 
+        wipe_exitColorXForm,
+	    wipe_initMelt, 
+        wipe_doMelt, 
+        wipe_exitMelt
     };
 
     // initial stuff
     if (!go)
     {
-	go = 1;
-	// wipe_scr = (pixel_t *) Z_Malloc(width*height, PU_STATIC, 0); // DEBUG
-	wipe_scr = I_VideoBuffer;
-	(*wipes[wipeno*3])(width, height, ticks);
+	    go = 1;
+	    // wipe_scr = (pixel_t *) Z_Malloc(width*height, PU_STATIC, 0); // DEBUG
+	    wipe_scr = I_VideoBuffer;
+	    (*wipes[wipeno*3])(width, height, ticks);
     }
 
     // do a piece of wipe-in
@@ -285,8 +292,8 @@ wipe_ScreenWipe
     // final stuff
     if (rc)
     {
-	go = 0;
-	(*wipes[wipeno*3+2])(width, height, ticks);
+	    go = 0;
+	    (*wipes[wipeno*3+2])(width, height, ticks);
     }
 
     return !go;

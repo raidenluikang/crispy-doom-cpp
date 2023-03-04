@@ -128,7 +128,7 @@ static void LoadGameSettings(net_gamesettings_t *settings)
 
     for (i = 0; i < MAXPLAYERS; ++i)
     {
-        playeringame[i] = i < settings->num_players;
+        playeringame[i] = static_cast<int>(i) < settings->num_players;
     }
 }
 
@@ -257,11 +257,11 @@ void D_CheckNetGame (void)
     D_RegisterLoopCallbacks(&doom_loop_interface);
 
     SaveGameSettings(&settings);
-    D_StartNetGame(&settings, NULL);
+    D_StartNetGame(&settings, nullptr);
     LoadGameSettings(&settings);
 
     DEH_printf("startskill %i  deathmatch: %i  startmap: %i  startepisode: %i\n",
-               startskill, deathmatch, startmap, startepisode);
+               static_cast<int>(startskill), deathmatch, startmap, startepisode);
 
     DEH_printf("player %i of %i (%i nodes)\n",
                consoleplayer+1, settings.num_players, settings.num_players);

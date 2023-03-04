@@ -99,7 +99,7 @@ void P_InitTerrainTypes(void)
     int size;
 
     size = (numflats + 1) * sizeof(int);
-    TerrainTypes = Z_Malloc(size, PU_STATIC, 0);
+    TerrainTypes = zmalloc<decltype(    TerrainTypes)>(size, PU_STATIC, 0);
     memset(TerrainTypes, 0, size);
     for (i = 0; TerrainTypeDefs[i].type != -1; i++)
     {
@@ -161,13 +161,13 @@ int     twoSided(int sector, int line)
 
 //==================================================================
 //
-//      Return sector_t * of sector next to current. NULL if not two-sided line
+//      Return sector_t * of sector next to current. nullptr if not two-sided line
 //
 //==================================================================
 sector_t *getNextSector(line_t * line, sector_t * sec)
 {
     if (!(line->flags & ML_TWOSIDED))
-        return NULL;
+        return nullptr;
 
     if (line->frontsector == sec)
         return line->backsector;
@@ -467,11 +467,11 @@ boolean EV_LineSearchForPuzzleItem(line_t * line, byte * args, mobj_t * mo)
                 {
                     if (arti < arti_firstpuzzitem)
                     {
-                        S_StartSound(NULL, SFX_ARTIFACT_USE);
+                        S_StartSound(nullptr, SFX_ARTIFACT_USE);
                     }
                     else
                     {
-                        S_StartSound(NULL, SFX_PUZZLE_SUCCESS);
+                        S_StartSound(nullptr, SFX_PUZZLE_SUCCESS);
                     }
                     ArtifactFlash = 4;
                 }
@@ -689,11 +689,11 @@ boolean P_ExecuteLineSpecial(int special, byte * args, line_t * line,
         case 73:               // Damage Mobj
             if (args[0])
             {
-                P_DamageMobj(mo, NULL, NULL, args[0]);
+                P_DamageMobj(mo, nullptr, nullptr, args[0]);
             }
             else
             {                   // If arg1 is zero, then guarantee a kill
-                P_DamageMobj(mo, NULL, NULL, 10000);
+                P_DamageMobj(mo, nullptr, nullptr, 10000);
             }
             buttonSuccess = 1;
             break;
@@ -1003,7 +1003,7 @@ void P_PlayerOnSpecialFlat(player_t * player, int floorType)
         case FLOOR_LAVA:
             if (!(leveltime & 31))
             {
-                P_DamageMobj(player->mo, &LavaInflictor, NULL, 10);
+                P_DamageMobj(player->mo, &LavaInflictor, nullptr, 10);
                 S_StartSound(player->mo, SFX_LAVA_SIZZLE);
             }
             break;
@@ -1169,9 +1169,9 @@ void P_SpawnSpecials(void)
     //      Init other misc stuff
     //
     for (i = 0; i < MAXCEILINGS; i++)
-        activeceilings[i] = NULL;
+        activeceilings[i] = nullptr;
     for (i = 0; i < MAXPLATS; i++)
-        activeplats[i] = NULL;
+        activeplats[i] = nullptr;
     for (i = 0; i < MAXBUTTONS; i++)
         memset(&buttonlist[i], 0, sizeof(button_t));
 
@@ -1198,5 +1198,5 @@ line_t *P_FindLine(int lineTag, int *searchPosition)
         }
     }
     *searchPosition = -1;
-    return NULL;
+    return nullptr;
 }

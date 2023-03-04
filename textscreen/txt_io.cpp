@@ -17,6 +17,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <type_traits>
 
 #include "txt_io.hpp"
 #include "txt_main.hpp"
@@ -138,11 +139,11 @@ void TXT_FGColor(txt_color_t color)
     fgcolor = color;
 }
 
-void TXT_BGColor(int color, int blinking)
+void TXT_BGColor(txt_color_t color, int blinking)
 {
     bgcolor = color;
     if (blinking)
-        bgcolor |= TXT_COLOR_BLINKING;
+        bgcolor = static_cast<txt_color_t>( static_cast<std::underlying_type_t<txt_color_t>>(bgcolor) | TXT_COLOR_BLINKING );
 }
 
 void TXT_SaveColors(txt_saved_colors_t *save)

@@ -24,7 +24,7 @@
 
 #include "doomtype.hpp"
 #include "w_file.hpp"
-
+#include "v_patch.hpp"
 
 //
 // TYPES
@@ -65,6 +65,15 @@ void W_ReadLump(lumpindex_t lump, void *dest);
 
 void *W_CacheLumpNum(lumpindex_t lump, int tag);
 void *W_CacheLumpName(const char *name, int tag);
+
+// Helper functions
+inline byte* W_CacheLumpName_byte(const char* name, int tag){
+    return static_cast<byte*>(W_CacheLumpName(name, tag));
+}
+inline patch_t* W_CacheLumpName_patch(const char* name, int tag){
+    return static_cast<patch_t*>(W_CacheLumpName(name, tag));
+}
+
 
 void W_GenerateHashTable(void);
 

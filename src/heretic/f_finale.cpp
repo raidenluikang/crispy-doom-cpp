@@ -52,8 +52,8 @@ void F_StartFinale(void)
     viewactive = false;
     automapactive = false;
     players[consoleplayer].messageTics = 1;
-    players[consoleplayer].message = NULL;
-    players[consoleplayer].centerMessage = NULL;
+    players[consoleplayer].message = nullptr;
+    players[consoleplayer].centerMessage = nullptr;
 
     switch (gameepisode)
     {
@@ -91,7 +91,7 @@ void F_StartFinale(void)
 
 boolean F_Responder(event_t * event)
 {
-    if (event->type != ev_keydown)
+    if (event->type != evtype_t::ev_keydown)
     {
         return false;
     }
@@ -101,7 +101,7 @@ boolean F_Responder(event_t * event)
         /*
         memset((byte *) 0xa0000, 0, SCREENWIDTH * SCREENHEIGHT);
         memset(I_VideoBuffer, 0, SCREENWIDTH * SCREENHEIGHT);
-        I_SetPalette(W_CacheLumpName("PLAYPAL", PU_CACHE));
+        I_SetPalette(W_CacheLumpName_byte("PLAYPAL", PU_CACHE));
         */
         return true;
     }
@@ -160,7 +160,7 @@ void F_TextWrite(void)
 //
 // erase the entire screen to a tiled background
 //
-    src = W_CacheLumpName(finaleflat, PU_CACHE);
+    src = W_CacheLumpName_byte(finaleflat, PU_CACHE);
     dest = I_VideoBuffer;
     for (y = 0; y < SCREENHEIGHT; y++)
     {
@@ -341,7 +341,7 @@ void F_DrawUnderwater(void)
                 underwawa = true;
                 V_DrawFilledBox(0, 0, SCREENWIDTH, SCREENHEIGHT, 0);
                 lumpname = DEH_String("E2PAL");
-                palette = W_CacheLumpName(lumpname, PU_STATIC);
+                palette = W_CacheLumpName_byte(lumpname, PU_STATIC);
                 I_SetPalette(palette);
                 W_ReleaseLumpName(lumpname);
                 V_DrawFullscreenRawOrPatch(W_GetNumForName(DEH_String("E2END")));
@@ -355,7 +355,7 @@ void F_DrawUnderwater(void)
             if (underwawa)
             {
                 lumpname = DEH_String("PLAYPAL");
-                palette = W_CacheLumpName(lumpname, PU_STATIC);
+                palette = W_CacheLumpName_byte(lumpname, PU_STATIC);
                 I_SetPalette(palette);
                 W_ReleaseLumpName(lumpname);
                 underwawa = false;
@@ -383,8 +383,8 @@ void F_BunnyScroll(void)
     int stage;
     static int laststage;
 
-    p1 = W_CacheLumpName("PFUB2", PU_LEVEL);
-    p2 = W_CacheLumpName("PFUB1", PU_LEVEL);
+    p1 = W_CacheLumpName_patch("PFUB2", PU_LEVEL);
+    p2 = W_CacheLumpName_patch("PFUB1", PU_LEVEL);
 
     V_MarkRect(0, 0, SCREENWIDTH, SCREENHEIGHT);
 
@@ -407,7 +407,7 @@ void F_BunnyScroll(void)
     if (finalecount < 1180)
     {
         V_DrawPatch((SCREENWIDTH - 13 * 8) / 2, (SCREENHEIGHT - 8 * 8) / 2, 0,
-                    W_CacheLumpName("END0", PU_CACHE));
+                    W_CacheLumpName_patch("END0", PU_CACHE));
         laststage = 0;
         return;
     }
@@ -417,13 +417,13 @@ void F_BunnyScroll(void)
         stage = 6;
     if (stage > laststage)
     {
-        S_StartSound(NULL, sfx_pistol);
+        S_StartSound(nullptr, sfx_pistol);
         laststage = stage;
     }
 
     M_snprintf(name, sizeof(name), "END%i", stage);
     V_DrawPatch((SCREENWIDTH - 13 * 8) / 2, (SCREENHEIGHT - 8 * 8) / 2,
-                W_CacheLumpName(name, PU_CACHE));
+                W_CacheLumpName_patch(name, PU_CACHE));
 }
 #endif
 

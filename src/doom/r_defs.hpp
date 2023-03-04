@@ -289,7 +289,7 @@ typedef struct
 
     // Sector references.
     // Could be retrieved from linedef, too.
-    // backsector is NULL for one sided lines
+    // backsector is nullptr for one sided lines
     sector_t*	frontsector;
     sector_t*	backsector;
     

@@ -289,7 +289,7 @@ menuitem_t MainMenu[]=
 menu_t  MainDef =
 {
     main_end,
-    NULL,
+    nullptr,
     MainMenu,
     M_DrawMainMenu,
     97,64,
@@ -816,7 +816,7 @@ void M_ReadSaveStrings(void)
         M_StringCopy(name, P_SaveGameFile(i), sizeof(name));
 
 	handle = M_fopen(name, "rb");
-        if (handle == NULL)
+        if (handle == nullptr)
         {
             M_StringCopy(savegamestrings[i], EMPTYSTRING, SAVESTRINGSIZE);
             LoadMenu[i].status = 0;
@@ -849,7 +849,7 @@ void M_DrawSaveLoadBottomLine(void)
   M_snprintf(pagestr, sizeof(pagestr), "page %d/%d", savepage + 1, savepage_max + 1);
   M_WriteText(ORIGWIDTH/2-M_StringWidth(pagestr)/2, y, pagestr);
 
-  dp_translation = NULL;
+  dp_translation = nullptr;
 }
 
 
@@ -862,7 +862,7 @@ void M_DrawLoad(void)
     int             i;
 	
     V_DrawPatchDirect(LoadDef_x, LoadDef_y,
-                      W_CacheLumpName(DEH_String("M_LOADG"), PU_CACHE));
+                      W_CacheLumpName_patch(DEH_String("M_LOADG"), PU_CACHE));
 
     for (i = 0;i < load_end; i++)
     {
@@ -883,17 +883,17 @@ void M_DrawSaveLoadBorder(int x,int y)
     int             i;
 	
     V_DrawPatchDirect(x - 8, y + 7,
-                      W_CacheLumpName(DEH_String("M_LSLEFT"), PU_CACHE));
+                      W_CacheLumpName_patch(DEH_String("M_LSLEFT"), PU_CACHE));
 	
     for (i = 0;i < 24;i++)
     {
 	V_DrawPatchDirect(x, y + 7,
-                          W_CacheLumpName(DEH_String("M_LSCNTR"), PU_CACHE));
+                          W_CacheLumpName_patch(DEH_String("M_LSCNTR"), PU_CACHE));
 	x += 8;
     }
 
     V_DrawPatchDirect(x, y + 7, 
-                      W_CacheLumpName(DEH_String("M_LSRGHT"), PU_CACHE));
+                      W_CacheLumpName_patch(DEH_String("M_LSRGHT"), PU_CACHE));
 }
 
 
@@ -925,7 +925,7 @@ void M_LoadGame (int choice)
     // [crispy] allow loading game while multiplayer demo playback
     if (netgame && !demoplayback)
     {
-	M_StartMessage(DEH_String(LOADNET),NULL,false);
+	M_StartMessage(DEH_String(LOADNET),nullptr,false);
 	return;
     }
 	
@@ -942,7 +942,7 @@ void M_DrawSave(void)
 {
     int             i;
 	
-    V_DrawPatchDirect(SaveDef_x, SaveDef_y, W_CacheLumpName(DEH_String("M_SAVEG"), PU_CACHE));
+    V_DrawPatchDirect(SaveDef_x, SaveDef_y, W_CacheLumpName_patch(DEH_String("M_SAVEG"), PU_CACHE));
     for (i = 0;i < load_end; i++)
     {
 	M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
@@ -988,7 +988,7 @@ static void SetDefaultSaveName(int slot)
         char *wadname = M_StringDuplicate(W_WadNameForLump(maplumpinfo));
         char *ext = strrchr(wadname, '.');
 
-        if (ext != NULL)
+        if (ext != nullptr)
         {
             *ext = '\0';
         }
@@ -1065,7 +1065,7 @@ void M_SaveGame (int choice)
 {
     if (!usergame)
     {
-	M_StartMessage(DEH_String(SAVEDEAD),NULL,false);
+	M_StartMessage(DEH_String(SAVEDEAD),nullptr,false);
 	return;
     }
 	
@@ -1087,7 +1087,7 @@ void M_QuickSaveResponse(int key)
     if (key == key_menu_confirm)
     {
 	M_DoSave(quickSaveSlot);
-	S_StartSoundOptional(NULL, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
+	S_StartSoundOptional(nullptr, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
     }
 }
 
@@ -1095,7 +1095,7 @@ void M_QuickSave(void)
 {
     if (!usergame)
     {
-	S_StartSoundOptional(NULL, sfx_mnuerr, sfx_oof); // [NS] Optional menu sounds.
+	S_StartSoundOptional(nullptr, sfx_mnuerr, sfx_oof); // [NS] Optional menu sounds.
 	return;
     }
 
@@ -1123,7 +1123,7 @@ void M_QuickLoadResponse(int key)
     if (key == key_menu_confirm)
     {
 	M_LoadSelect(quickSaveSlot);
-	S_StartSoundOptional(NULL, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
+	S_StartSoundOptional(nullptr, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
     }
 }
 
@@ -1133,7 +1133,7 @@ void M_QuickLoad(void)
     // [crispy] allow quickloading game while multiplayer demo playback
     if (netgame && !demoplayback)
     {
-	M_StartMessage(DEH_String(QLOADNET),NULL,false);
+	M_StartMessage(DEH_String(QLOADNET),nullptr,false);
 	return;
     }
 	
@@ -1160,7 +1160,7 @@ void M_DrawReadThis1(void)
 {
     inhelpscreens = true;
 
-    V_DrawPatchFullScreen(W_CacheLumpName(DEH_String("HELP2"), PU_CACHE), false);
+    V_DrawPatchFullScreen(W_CacheLumpName_patch(DEH_String("HELP2"), PU_CACHE), false);
 }
 
 
@@ -1175,14 +1175,14 @@ void M_DrawReadThis2(void)
     // We only ever draw the second page if this is 
     // gameversion == exe_doom_1_9 and gamemode == registered
 
-    V_DrawPatchFullScreen(W_CacheLumpName(DEH_String("HELP1"), PU_CACHE), false);
+    V_DrawPatchFullScreen(W_CacheLumpName_patch(DEH_String("HELP1"), PU_CACHE), false);
 }
 
 void M_DrawReadThisCommercial(void)
 {
     inhelpscreens = true;
 
-    V_DrawPatchFullScreen(W_CacheLumpName(DEH_String("HELP"), PU_CACHE), false);
+    V_DrawPatchFullScreen(W_CacheLumpName_patch(DEH_String("HELP"), PU_CACHE), false);
 }
 
 
@@ -1191,7 +1191,7 @@ void M_DrawReadThisCommercial(void)
 //
 void M_DrawSound(void)
 {
-    V_DrawPatchDirect (60, 38, W_CacheLumpName(DEH_String("M_SVOL"), PU_CACHE));
+    V_DrawPatchDirect (60, 38, W_CacheLumpName_patch(DEH_String("M_SVOL"), PU_CACHE));
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
 		 16,sfxVolume);
@@ -1251,7 +1251,7 @@ void M_DrawMainMenu(void)
     inhelpscreens = true;
 
     V_DrawPatchDirect(94, 2,
-                      W_CacheLumpName(DEH_String("M_DOOM"), PU_CACHE));
+                      W_CacheLumpName_patch(DEH_String("M_DOOM"), PU_CACHE));
 }
 
 
@@ -1265,8 +1265,8 @@ void M_DrawNewGame(void)
     // [crispy] force status bar refresh
     inhelpscreens = true;
 
-    V_DrawPatchDirect(96, 14, W_CacheLumpName(DEH_String("M_NEWG"), PU_CACHE));
-    V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_SKILL"), PU_CACHE));
+    V_DrawPatchDirect(96, 14, W_CacheLumpName_patch(DEH_String("M_NEWG"), PU_CACHE));
+    V_DrawPatchDirect(54, 38, W_CacheLumpName_patch(DEH_String("M_SKILL"), PU_CACHE));
 }
 
 void M_NewGame(int choice)
@@ -1279,7 +1279,7 @@ void M_NewGame(int choice)
 
     if (netgame && !demoplayback)
     {
-	M_StartMessage(DEH_String(NEWGAME),NULL,false);
+	M_StartMessage(DEH_String(NEWGAME),nullptr,false);
 	return;
     }
 	
@@ -1303,7 +1303,7 @@ void M_DrawEpisode(void)
     inhelpscreens = true;
 
     if (W_CheckNumForName(DEH_String("M_EPISOD")) != -1)
-    V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE));
+    V_DrawPatchDirect(54, 38, W_CacheLumpName_patch(DEH_String("M_EPISOD"), PU_CACHE));
     else
     {
       M_WriteText(54, 38, "Which Episode?");
@@ -1337,7 +1337,7 @@ void M_Episode(int choice)
     if ( (gamemode == shareware)
 	 && choice)
     {
-	M_StartMessage(DEH_String(SWSTRING),NULL,false);
+	M_StartMessage(DEH_String(SWSTRING),nullptr,false);
 	M_SetupNextMenu(&ReadDef1);
 	return;
     }
@@ -1356,13 +1356,13 @@ static const char *msgNames[2] = {"M_MSGOFF","M_MSGON"};
 
 void M_DrawOptions(void)
 {
-    V_DrawPatchDirect(108, 15, W_CacheLumpName(DEH_String("M_OPTTTL"),
+    V_DrawPatchDirect(108, 15, W_CacheLumpName_patch(DEH_String("M_OPTTTL"),
                                                PU_CACHE));
 	
     if (OptionsDef.lumps_missing == -1)
     {
     V_DrawPatchDirect(OptionsDef.x + 175, OptionsDef.y + LINEHEIGHT * detail,
-		      W_CacheLumpName(DEH_String(detailNames[detailLevel]),
+		      W_CacheLumpName_patch(DEH_String(detailNames[detailLevel]),
 			              PU_CACHE));
     }
     else
@@ -1376,7 +1376,7 @@ void M_DrawOptions(void)
     if (OptionsDef.lumps_missing == -1)
     {
     V_DrawPatchDirect(OptionsDef.x + 120, OptionsDef.y + LINEHEIGHT * messages,
-                      W_CacheLumpName(DEH_String(msgNames[showMessages]),
+                      W_CacheLumpName_patch(DEH_String(msgNames[showMessages]),
                                       PU_CACHE));
     }
     else
@@ -1402,7 +1402,7 @@ static void M_DrawMouse(void)
 {
     char mouse_menu_text[48];
 
-    V_DrawPatchDirect (60, LoadDef_y, W_CacheLumpName(DEH_String("M_MSENS"), PU_CACHE));
+    V_DrawPatchDirect (60, LoadDef_y, W_CacheLumpName_patch(DEH_String("M_MSENS"), PU_CACHE));
 
     M_WriteText(MouseDef.x, MouseDef.y + LINEHEIGHT * mouse_horiz + 6,
                 "HORIZONTAL: TURN");
@@ -1429,7 +1429,7 @@ static void M_DrawMouse(void)
     M_WriteText(MouseDef.x, MouseDef.y + LINEHEIGHT * mouse_invert + 6,
                 mouse_menu_text);
 
-    dp_translation = NULL;
+    dp_translation = nullptr;
 }
 
 // [crispy] Crispness menu
@@ -1550,7 +1550,7 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessGoto(crispness1_next, "Next Page >");
     M_DrawCrispnessGoto(crispness1_prev, "< Last Page");
 
-    dp_translation = NULL;
+    dp_translation = nullptr;
 }
 
 static void M_DrawCrispness2(void)
@@ -1577,7 +1577,7 @@ static void M_DrawCrispness2(void)
     M_DrawCrispnessGoto(crispness2_next, "Next Page >");
     M_DrawCrispnessGoto(crispness2_prev, "< Prev Page");
 
-    dp_translation = NULL;
+    dp_translation = nullptr;
 }
 
 static void M_DrawCrispness3(void)
@@ -1606,7 +1606,7 @@ static void M_DrawCrispness3(void)
     M_DrawCrispnessGoto(crispness3_next, "Next Page >");
     M_DrawCrispnessGoto(crispness3_prev, "< Prev Page");
 
-    dp_translation = NULL;
+    dp_translation = nullptr;
 }
 
 static void M_DrawCrispness4(void)
@@ -1631,7 +1631,7 @@ static void M_DrawCrispness4(void)
     M_DrawCrispnessGoto(crispness4_next, "First Page >");
     M_DrawCrispnessGoto(crispness4_prev, "< Prev Page");
 
-    dp_translation = NULL;
+    dp_translation = nullptr;
 }
 
 void M_Options(int choice)
@@ -1725,13 +1725,13 @@ void M_EndGame(int choice)
     choice = 0;
     if (!usergame)
     {
-	S_StartSoundOptional(NULL, sfx_mnuerr, sfx_oof); // [NS] Optional menu sounds.
+	S_StartSoundOptional(nullptr, sfx_mnuerr, sfx_oof); // [NS] Optional menu sounds.
 	return;
     }
 	
     if (netgame)
     {
-	M_StartMessage(DEH_String(NETEND),NULL,false);
+	M_StartMessage(DEH_String(NETEND),nullptr,false);
 	return;
     }
 	
@@ -1804,9 +1804,9 @@ void M_QuitResponse(int key)
     if (!netgame && show_endoom)
     {
 	if (gamemode == commercial)
-	    S_StartSound(NULL,quitsounds2[(gametic>>2)&7]);
+	    S_StartSound(nullptr,quitsounds2[(gametic>>2)&7]);
 	else
-	    S_StartSound(NULL,quitsounds[(gametic>>2)&7]);
+	    S_StartSound(nullptr,quitsounds[(gametic>>2)&7]);
 	I_WaitVBL(105);
     }
     I_Quit ();
@@ -1970,14 +1970,14 @@ M_DrawThermo
     }
 
     xx = x;
-    V_DrawPatchDirect(xx, y, W_CacheLumpName(DEH_String("M_THERML"), PU_CACHE));
+    V_DrawPatchDirect(xx, y, W_CacheLumpName_patch(DEH_String("M_THERML"), PU_CACHE));
     xx += 8;
     for (i=0;i<thermWidth;i++)
     {
-	V_DrawPatchDirect(xx, y, W_CacheLumpName(DEH_String("M_THERMM"), PU_CACHE));
+	V_DrawPatchDirect(xx, y, W_CacheLumpName_patch(DEH_String("M_THERMM"), PU_CACHE));
 	xx += 8;
     }
-    V_DrawPatchDirect(xx, y, W_CacheLumpName(DEH_String("M_THERMR"), PU_CACHE));
+    V_DrawPatchDirect(xx, y, W_CacheLumpName_patch(DEH_String("M_THERMR"), PU_CACHE));
 
     M_snprintf(num, 4, "%3d", thermDot);
     M_WriteText(xx + 8, y + 3, num);
@@ -1990,9 +1990,9 @@ M_DrawThermo
     }
 
     V_DrawPatchDirect((x + 8) + thermDot * 8, y,
-		      W_CacheLumpName(DEH_String("M_THERMO"), PU_CACHE));
+		      W_CacheLumpName_patch(DEH_String("M_THERMO"), PU_CACHE));
 
-    dp_translation = NULL;
+    dp_translation = nullptr;
 }
 
 
@@ -2301,7 +2301,7 @@ boolean M_Responder (event_t* ev)
         }
         else
         {
-            S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+            S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
             M_QuitDOOM(0);
         }
 
@@ -2616,7 +2616,7 @@ boolean M_Responder (event_t* ev)
 	menuactive = false;
 	}
 	messageToPrint = 0; // [crispy] moved here
-	S_StartSoundOptional(NULL, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
+	S_StartSoundOptional(nullptr, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
 	return true;
     }
 
@@ -2641,7 +2641,7 @@ boolean M_Responder (event_t* ev)
 	    if (automapactive || chat_on)
 		return false;
 	    M_SizeDisplay(0);
-	    S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
 	    return true;
 	}
         else if (key == key_menu_incscreen) // Screen size up
@@ -2649,7 +2649,7 @@ boolean M_Responder (event_t* ev)
 	    if (automapactive || chat_on)
 		return false;
 	    M_SizeDisplay(1);
-	    S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
 	    return true;
 	}
         else if (key == key_menu_help)     // Help key
@@ -2662,20 +2662,20 @@ boolean M_Responder (event_t* ev)
 	      currentMenu = &ReadDef1;
 
 	    itemOn = 0;
-	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
 	}
         else if (key == key_menu_save)     // Save
         {
 	    M_StartControlPanel();
-	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_SaveGame(0);
 	    return true;
         }
         else if (key == key_menu_load)     // Load
         {
 	    M_StartControlPanel();
-	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_LoadGame(0);
 	    return true;
         }
@@ -2684,42 +2684,42 @@ boolean M_Responder (event_t* ev)
 	    M_StartControlPanel ();
 	    currentMenu = &SoundDef;
 	    itemOn = sfx_vol;
-	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
 	}
         else if (key == key_menu_detail)   // Detail toggle
         {
 	    M_ChangeDetail(0);
-	    S_StartSoundOptional(NULL, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
         }
         else if (key == key_menu_qsave)    // Quicksave
         {
-	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_QuickSave();
 	    return true;
         }
         else if (key == key_menu_endgame)  // End game
         {
-	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_EndGame(0);
 	    return true;
         }
         else if (key == key_menu_messages) // Toggle messages
         {
 	    M_ChangeMessages(0);
-	    S_StartSoundOptional(NULL, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
         }
         else if (key == key_menu_qload)    // Quickload
         {
-	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_QuickLoad();
 	    return true;
         }
         else if (key == key_menu_quit)     // Quit DOOM
         {
-	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_QuitDOOM(0);
 	    return true;
         }
@@ -2730,7 +2730,7 @@ boolean M_Responder (event_t* ev)
 		usegamma = 0;
 	    players[consoleplayer].message = DEH_String(gammamsg[usegamma]);
 #ifndef CRISPY_TRUECOLOR
-            I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
+            I_SetPalette (W_CacheLumpName_byte (DEH_String("PLAYPAL"),PU_CACHE));
 #else
             {
 		extern void R_InitColormaps (void);
@@ -2764,7 +2764,7 @@ boolean M_Responder (event_t* ev)
 	if (key == key_menu_activate)
 	{
 	    M_StartControlPanel ();
-	    S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
 	}
 	return false;
@@ -2781,7 +2781,7 @@ boolean M_Responder (event_t* ev)
 	    if (itemOn+1 > currentMenu->numitems-1)
 		itemOn = 0;
 	    else itemOn++;
-	    S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
 	} while(currentMenu->menuitems[itemOn].status==-1);
 
 	return true;
@@ -2795,7 +2795,7 @@ boolean M_Responder (event_t* ev)
 	    if (!itemOn)
 		itemOn = currentMenu->numitems-1;
 	    else itemOn--;
-	    S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
 	} while(currentMenu->menuitems[itemOn].status==-1);
 
 	return true;
@@ -2809,19 +2809,19 @@ boolean M_Responder (event_t* ev)
 	{
             if (currentMenu->menuitems[itemOn].status == 2)
             {
-                S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
+                S_StartSoundOptional(nullptr, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
                 currentMenu->menuitems[itemOn].routine(0);
             }
             // [crispy] LR non-slider
             else if (currentMenu->menuitems[itemOn].status == 3 && !mousextobutton)
             {
-                S_StartSoundOptional(NULL, sfx_mnuact, sfx_pistol); // [NS] Optional menu sounds.
+                S_StartSoundOptional(nullptr, sfx_mnuact, sfx_pistol); // [NS] Optional menu sounds.
                 currentMenu->menuitems[itemOn].routine(0);
             }
             // [crispy] Numeric entry
             else if (currentMenu->menuitems[itemOn].status == 4 && !mousextobutton)
             {
-                S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
+                S_StartSoundOptional(nullptr, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
                 currentMenu->menuitems[itemOn].routine(0);
             }
         }
@@ -2836,19 +2836,19 @@ boolean M_Responder (event_t* ev)
 	{
             if (currentMenu->menuitems[itemOn].status == 2)
             {
-                S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
+                S_StartSoundOptional(nullptr, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
                 currentMenu->menuitems[itemOn].routine(1);
             }
             // [crispy] LR non-slider
             else if (currentMenu->menuitems[itemOn].status == 3 && !mousextobutton)
             {
-                S_StartSoundOptional(NULL, sfx_mnuact, sfx_pistol); // [NS] Optional menu sounds.
+                S_StartSoundOptional(nullptr, sfx_mnuact, sfx_pistol); // [NS] Optional menu sounds.
                 currentMenu->menuitems[itemOn].routine(1);
             }
             // [crispy] Numeric entry
             else if (currentMenu->menuitems[itemOn].status == 4 && !mousextobutton)
             {
-                S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
+                S_StartSoundOptional(nullptr, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
                 currentMenu->menuitems[itemOn].routine(1);
             }
         }
@@ -2865,19 +2865,19 @@ boolean M_Responder (event_t* ev)
 	    if (currentMenu->menuitems[itemOn].status == 2)
 	    {
 		currentMenu->menuitems[itemOn].routine(1);      // right arrow
-		S_StartSoundOptional(NULL, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
+		S_StartSoundOptional(nullptr, sfx_mnusli, sfx_stnmov); // [NS] Optional menu sounds.
 	    }
             else if (currentMenu->menuitems[itemOn].status == 4) // [crispy]
             {
                 currentMenu->menuitems[itemOn].routine(2); // enter key
                 numeric_entry_index = 0;
                 numeric_entry_str[0] = '\0';
-                S_StartSoundOptional(NULL, sfx_mnuact, sfx_pistol);
+                S_StartSoundOptional(nullptr, sfx_mnuact, sfx_pistol);
             }
 	    else
 	    {
 		currentMenu->menuitems[itemOn].routine(itemOn);
-		S_StartSoundOptional(NULL, sfx_mnuact, sfx_pistol); // [NS] Optional menu sounds.
+		S_StartSoundOptional(nullptr, sfx_mnuact, sfx_pistol); // [NS] Optional menu sounds.
 	    }
 	}
 	return true;
@@ -2888,7 +2888,7 @@ boolean M_Responder (event_t* ev)
 
 	currentMenu->lastOn = itemOn;
 	M_ClearMenus ();
-	S_StartSoundOptional(NULL, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
+	S_StartSoundOptional(nullptr, sfx_mnucls, sfx_swtchx); // [NS] Optional menu sounds.
 	return true;
     }
     else if (key == key_menu_back)
@@ -2900,7 +2900,7 @@ boolean M_Responder (event_t* ev)
 	{
 	    currentMenu = currentMenu->prevMenu;
 	    itemOn = currentMenu->lastOn;
-	    S_StartSoundOptional(NULL, sfx_mnubak, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnubak, sfx_swtchn); // [NS] Optional menu sounds.
 	}
 	return true;
     }
@@ -2917,7 +2917,7 @@ boolean M_Responder (event_t* ev)
 	    }
 	    else
 	    {
-		S_StartSoundOptional(NULL, sfx_mnuerr, sfx_oof); // [NS] Optional menu sounds.
+		S_StartSoundOptional(nullptr, sfx_mnuerr, sfx_oof); // [NS] Optional menu sounds.
 	    }
 	}
     }
@@ -2928,7 +2928,7 @@ boolean M_Responder (event_t* ev)
 	if (currentMenu == CrispnessMenus[crispness_cur])
 	{
 	    M_CrispnessPrev(0);
-	    S_StartSoundOptional(NULL, sfx_mnuact, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuact, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
 	}
 	else if (currentMenu == &LoadDef || currentMenu == &SaveDef)
@@ -2938,7 +2938,7 @@ boolean M_Responder (event_t* ev)
 		savepage--;
 		quickSaveSlot = -1;
 		M_ReadSaveStrings();
-		S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop);
+		S_StartSoundOptional(nullptr, sfx_mnumov, sfx_pstop);
 	    }
 	    return true;
 	}
@@ -2949,7 +2949,7 @@ boolean M_Responder (event_t* ev)
 	if (currentMenu == CrispnessMenus[crispness_cur])
 	{
 	    M_CrispnessNext(0);
-	    S_StartSoundOptional(NULL, sfx_mnuact, sfx_swtchn); // [NS] Optional menu sounds.
+	    S_StartSoundOptional(nullptr, sfx_mnuact, sfx_swtchn); // [NS] Optional menu sounds.
 	    return true;
 	}
 	else if (currentMenu == &LoadDef || currentMenu == &SaveDef)
@@ -2959,7 +2959,7 @@ boolean M_Responder (event_t* ev)
 		savepage++;
 		quickSaveSlot = -1;
 		M_ReadSaveStrings();
-		S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop);
+		S_StartSoundOptional(nullptr, sfx_mnumov, sfx_pstop);
 	    }
 	    return true;
 	}
@@ -2976,7 +2976,7 @@ boolean M_Responder (event_t* ev)
 	    if (currentMenu->menuitems[i].alphaKey == ch)
 	    {
 		itemOn = i;
-		S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
+		S_StartSoundOptional(nullptr, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
 		return true;
 	    }
         }
@@ -2986,7 +2986,7 @@ boolean M_Responder (event_t* ev)
 	    if (currentMenu->menuitems[i].alphaKey == ch)
 	    {
 		itemOn = i;
-		S_StartSoundOptional(NULL, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
+		S_StartSoundOptional(nullptr, sfx_mnumov, sfx_pstop); // [NS] Optional menu sounds.
 		return true;
 	    }
         }
@@ -3031,7 +3031,7 @@ static void M_DrawOPLDev(void)
     {
         p = strchr(curr, '\n');
 
-        if (p != NULL)
+        if (p != nullptr)
         {
             *p = '\0';
         }
@@ -3039,7 +3039,7 @@ static void M_DrawOPLDev(void)
         M_WriteText(0, line * 8, curr);
         ++line;
 
-        if (p == NULL)
+        if (p == nullptr)
         {
             break;
         }
@@ -3148,7 +3148,7 @@ void M_Drawer (void)
 	if (name[0] && (W_CheckNumForName(name) > 0 || alttext))
 	{
 	    if (W_CheckNumForName(name) > 0 && currentMenu->lumps_missing == -1)
-	    V_DrawPatchDirect (x, y, W_CacheLumpName(name, PU_CACHE));
+	    V_DrawPatchDirect (x, y, W_CacheLumpName_patch(name, PU_CACHE));
 	    else if (alttext)
 		M_WriteText(x, y+8-(M_StringHeight(alttext)/2), alttext);
 	}
@@ -3162,11 +3162,11 @@ void M_Drawer (void)
 	char item[4];
 	M_snprintf(item, sizeof(item), "%s>", whichSkull ? crstr[CR_NONE] : crstr[CR_DARK]);
 	M_WriteText(currentMenu->x - 8, currentMenu->y + CRISPY_LINEHEIGHT * itemOn, item);
-	dp_translation = NULL;
+	dp_translation = nullptr;
     }
     else
     V_DrawPatchDirect(x + SKULLXOFF, currentMenu->y - 5 + itemOn*LINEHEIGHT,
-		      W_CacheLumpName(DEH_String(skullName[whichSkull]),
+		      W_CacheLumpName_patch(DEH_String(skullName[whichSkull]),
 				      PU_CACHE));
 }
 
@@ -3232,7 +3232,7 @@ void M_Init (void)
     skullAnimCounter = 10;
     screenSize = screenblocks - 3;
     messageToPrint = 0;
-    messageString = NULL;
+    messageString = nullptr;
     messageLastMenuActive = menuactive;
     quickSaveSlot = -1;
 
@@ -3246,7 +3246,7 @@ void M_Init (void)
     if (gameversion >= exe_ultimate)
     {
         MainMenu[readthis].routine = M_ReadThis2;
-        ReadDef2.prevMenu = NULL;
+        ReadDef2.prevMenu = nullptr;
     }
 
     if (gameversion >= exe_final && gameversion <= exe_final2)
@@ -3364,9 +3364,9 @@ void M_Init (void)
 	const patch_t *patchl, *patchs, *patchm;
 	short captionheight, vstep;
 
-	patchl = W_CacheLumpName(DEH_String("M_LOADG"), PU_CACHE);
-	patchs = W_CacheLumpName(DEH_String("M_SAVEG"), PU_CACHE);
-	patchm = W_CacheLumpName(DEH_String("M_LSLEFT"), PU_CACHE);
+	patchl = W_CacheLumpName_patch(DEH_String("M_LOADG"), PU_CACHE);
+	patchs = W_CacheLumpName_patch(DEH_String("M_SAVEG"), PU_CACHE);
+	patchm = W_CacheLumpName_patch(DEH_String("M_LSLEFT"), PU_CACHE);
 
 	LoadDef_x = (ORIGWIDTH - SHORT(patchl->width)) / 2 + SHORT(patchl->leftoffset);
 	SaveDef_x = (ORIGWIDTH - SHORT(patchs->width)) / 2 + SHORT(patchs->leftoffset);
@@ -3436,7 +3436,7 @@ static void M_ForceLoadGameResponse(int key)
 	{
 		// [crispy] no need to end game anymore when denied to load savegame
 		//M_EndGameResponse(key_menu_confirm);
-		savewadfilename = NULL;
+		savewadfilename = nullptr;
 
 		// [crispy] reload Load Game menu
 		M_StartControlPanel();
@@ -3457,16 +3457,16 @@ void M_ForceLoadGame()
 	             "to restore ", crstr[CR_GOLD], savemaplumpinfo->name, crstr[CR_NONE], " .\n\n",
 	             "Continue to restore from\n",
 	             crstr[CR_GOLD], W_WadNameForLump(savemaplumpinfo), crstr[CR_NONE], " ?\n\n",
-	             PRESSYN, NULL) :
+	             PRESSYN, nullptr) :
 	M_StringJoin("This savegame requires the file\n",
 	             crstr[CR_GOLD], savewadfilename, crstr[CR_NONE], "\n",
 	             "to restore a map that is\n",
 	             "currently not available!\n\n",
-	             PRESSKEY, NULL) ;
+	             PRESSKEY, nullptr) ;
 
-	M_StartMessage(savegwarning, M_ForceLoadGameResponse, savemaplumpinfo != NULL);
+	M_StartMessage(savegwarning, M_ForceLoadGameResponse, savemaplumpinfo != nullptr);
 	messageToPrint = 2;
-	S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 }
 
 static void M_ConfirmDeleteGameResponse (int key)
@@ -3492,17 +3492,17 @@ void M_ConfirmDeleteGame ()
 	savegwarning =
 	M_StringJoin("delete savegame\n\n",
 	             crstr[CR_GOLD], savegamestrings[itemOn], crstr[CR_NONE], " ?\n\n",
-	             PRESSYN, NULL);
+	             PRESSYN, nullptr);
 
 	M_StartMessage(savegwarning, M_ConfirmDeleteGameResponse, true);
 	messageToPrint = 2;
-	S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 }
 
 // [crispy] indicate game version mismatch
 void M_LoadGameVerMismatch ()
 {
-	M_StartMessage("Game Version Mismatch\n\n"PRESSKEY, NULL, false);
+	M_StartMessage("Game Version Mismatch\n\n"PRESSKEY, nullptr, false);
 	messageToPrint = 2;
-	S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+	S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 }

@@ -326,7 +326,7 @@ void CT_Ticker(void)
                 {
                     P_SetMessage(&players[consoleplayer], plr_lastmsg[i],
                                  true);
-                    S_StartSound(NULL, SFX_CHAT);
+                    S_StartSound(nullptr, SFX_CHAT);
                 }
                 else if (i == consoleplayer && (*chat_msg[i]))
                 {
@@ -335,7 +335,7 @@ void CT_Ticker(void)
                         P_SetMessage(&players[consoleplayer],
                                      "THERE ARE NO OTHER PLAYERS IN THE GAME!",
                                      true);
-                        S_StartSound(NULL, SFX_CHAT);
+                        S_StartSound(nullptr, SFX_CHAT);
                     }
                 }
                 CT_ClearChatMessage(i);
@@ -383,7 +383,7 @@ void CT_Drawer(void)
                 x += patch->width;
             }
         }
-        V_DrawPatch(x, 10, W_CacheLumpName("FONTA59", PU_CACHE));
+        V_DrawPatch(x, 10, W_CacheLumpName_patch("FONTA59", PU_CACHE));
         BorderTopRefresh = true;
         UpdateState |= I_MESSAGES;
     }

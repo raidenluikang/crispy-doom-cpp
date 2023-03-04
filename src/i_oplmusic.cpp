@@ -364,7 +364,7 @@ static boolean LoadInstrumentTable(void)
 {
     byte *lump;
 
-    lump = W_CacheLumpName(DEH_String("genmidi"), PU_STATIC);
+    lump = W_CacheLumpName_byte(DEH_String("genmidi"), PU_STATIC);
 
     // DMX does not check header
 
@@ -388,7 +388,7 @@ static opl_voice_t *GetFreeVoice(void)
 
     if (voice_free_num == 0)
     {
-        return NULL;
+        return nullptr;
     }
 
     // Remove from free list
@@ -432,7 +432,7 @@ static void ReleaseVoice(int index)
 
     VoiceKeyOff(voice);
 
-    voice->channel = NULL;
+    voice->channel = nullptr;
     voice->note = 0;
 
     double_voice = voice->current_instr_voice != 0;
@@ -621,7 +621,7 @@ static void InitVoices(void)
         voices[i].op1 = voice_operators[0][i % OPL_NUM_VOICES];
         voices[i].op2 = voice_operators[1][i % OPL_NUM_VOICES];
         voices[i].array = (i / OPL_NUM_VOICES) << 8;
-        voices[i].current_instr = NULL;
+        voices[i].current_instr = nullptr;
 
         // Add this voice to the freelist.
 
@@ -922,7 +922,7 @@ static void VoiceKeyOn(opl_channel_data_t *channel,
 
     voice = GetFreeVoice();
 
-    if (voice == NULL)
+    if (voice == nullptr)
     {
         return;
     }
@@ -1413,7 +1413,7 @@ static void TrackTimerCallback(void *arg)
 
         if (running_tracks <= 0 && song_looping)
         {
-            OPL_SetCallback(5000, RestartSong, NULL);
+            OPL_SetCallback(5000, RestartSong, nullptr);
         }
 
         return;
@@ -1478,7 +1478,7 @@ static void I_OPL_PlaySong(void *handle, boolean looping)
     midi_file_t *file;
     unsigned int i;
 
-    if (!music_initialized || handle == NULL)
+    if (!music_initialized || handle == nullptr)
     {
         return;
     }
@@ -1537,7 +1537,7 @@ static void I_OPL_PauseSong(void)
 
     for (i = 0; i < num_opl_voices; ++i)
     {
-        if (voices[i].channel != NULL
+        if (voices[i].channel != nullptr
          && voices[i].current_instr < percussion_instrs)
         {
             VoiceKeyOff(&voices[i]);
@@ -1586,7 +1586,7 @@ static void I_OPL_StopSong(void)
 
     free(tracks);
 
-    tracks = NULL;
+    tracks = nullptr;
     num_tracks = 0;
 
     OPL_Unlock();
@@ -1599,7 +1599,7 @@ static void I_OPL_UnRegisterSong(void *handle)
         return;
     }
 
-    if (handle != NULL)
+    if (handle != nullptr)
     {
         MIDI_FreeFile(handle);
     }
@@ -1638,7 +1638,7 @@ static void *I_OPL_RegisterSong(void *data, int len)
 
     if (!music_initialized)
     {
-        return NULL;
+        return nullptr;
     }
 
     // MUS files begin with "MUS"
@@ -1660,7 +1660,7 @@ static void *I_OPL_RegisterSong(void *data, int len)
 
     result = MIDI_LoadFile(filename);
 
-    if (result == NULL)
+    if (result == nullptr)
     {
         fprintf(stderr, "I_OPL_RegisterSong: Failed to load MID.\n");
     }
@@ -1724,12 +1724,12 @@ static boolean I_OPL_InitMusic(void)
     // The DMXOPTION variable must be set to enable OPL3 support.
     // As an extension, we also allow it to be set from the config file.
     dmxoption = getenv("DMXOPTION");
-    if (dmxoption == NULL)
+    if (dmxoption == nullptr)
     {
-        dmxoption = snd_dmxoption != NULL ? snd_dmxoption : "";
+        dmxoption = snd_dmxoption != nullptr ? snd_dmxoption : "";
     }
 
-    if (chip_type == OPL_INIT_OPL3 && strstr(dmxoption, "-opl3") != NULL)
+    if (chip_type == OPL_INIT_OPL3 && strstr(dmxoption, "-opl3") != nullptr)
     {
         opl_opl3mode = 1;
         num_opl_voices = OPL_NUM_VOICES * 2;
@@ -1742,7 +1742,7 @@ static boolean I_OPL_InitMusic(void)
 
     // Secret, undocumented DMXOPTION that reverses the stereo channels
     // into their correct orientation.
-    opl_stereo_correct = strstr(dmxoption, "-reverse") != NULL;
+    opl_stereo_correct = strstr(dmxoption, "-reverse") != nullptr;
 
     // Initialize all registers.
 
@@ -1758,7 +1758,7 @@ static boolean I_OPL_InitMusic(void)
 
     InitVoices();
 
-    tracks = NULL;
+    tracks = nullptr;
     num_tracks = 0;
     music_initialized = true;
 
@@ -1785,7 +1785,7 @@ music_module_t music_opl_module =
     I_OPL_PlaySong,
     I_OPL_StopSong,
     I_OPL_MusicIsPlaying,
-    NULL,  // Poll
+    nullptr,  // Poll
 };
 
 void I_SetOPLDriverVer(opl_driver_ver_t ver)
@@ -1848,7 +1848,7 @@ void I_OPL_DevMessages(char *result, size_t result_len)
 
     for (i = 0; i < NumActiveChannels(); ++i)
     {
-        if (channels[i].instrument == NULL)
+        if (channels[i].instrument == nullptr)
         {
             continue;
         }

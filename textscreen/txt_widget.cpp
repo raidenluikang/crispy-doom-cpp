@@ -14,33 +14,32 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
+#include <string>
 
 #include "txt_io.hpp"
 #include "txt_widget.hpp"
 #include "txt_gui.hpp"
 #include "txt_desktop.hpp"
+#include "../utils/memory.hpp"
 
-typedef struct
+struct txt_callback_t
 {
-    char *signal_name;
+    std::string signal_name;
     TxtWidgetSignalFunc func;
     void *user_data;
-} txt_callback_t;
+};
 
 struct txt_callback_table_s
 {
     int refcount;
-    txt_callback_t *callbacks;
-    int num_callbacks;
+    std::vector<txt_callback_t> callbacks;
 };
 
 txt_callback_table_t *TXT_NewCallbackTable(void)
 {
-    txt_callback_table_t *table;
+    txt_callback_table_t *table = create_structure<txt_callback_table_t>();
 
-    table = malloc(sizeof(txt_callback_table_t));
-    table->callbacks = NULL;
-    table->num_callbacks = 0;
     table->refcount = 1;
 
     return table;
@@ -53,20 +52,13 @@ void TXT_RefCallbackTable(txt_callback_table_t *table)
 
 void TXT_UnrefCallbackTable(txt_callback_table_t *table)
 {
-    int i;
-
     --table->refcount;
 
     if (table->refcount == 0)
     {
         // No more references to this table
+        table->~txt_callback_table_s();//destroy all members.
 
-        for (i=0; i<table->num_callbacks; ++i)
-        {
-            free(table->callbacks[i].signal_name);
-        }
-    
-        free(table->callbacks);
         free(table);
     }
 }
@@ -77,7 +69,7 @@ void TXT_InitWidget(TXT_UNCAST_ARG(widget), txt_widget_class_t *widget_class)
 
     widget->widget_class = widget_class;
     widget->callback_table = TXT_NewCallbackTable();
-    widget->parent = NULL;
+    widget->parent = nullptr;
 
     // Not focused until we hear otherwise.
 
@@ -105,11 +97,8 @@ void TXT_SignalConnect(TXT_UNCAST_ARG(widget),
 
     // Add a new callback to the table
 
-    table->callbacks 
-            = realloc(table->callbacks,
-                      sizeof(txt_callback_t) * (table->num_callbacks + 1));
-    callback = &table->callbacks[table->num_callbacks];
-    ++table->num_callbacks;
+    table->callbacks.push_back(txt_callback_t{}); 
+    callback = &table->callbacks.back();
 
     callback->signal_name = strdup(signal_name);
     callback->func = func;
@@ -120,7 +109,6 @@ void TXT_EmitSignal(TXT_UNCAST_ARG(widget), const char *signal_name)
 {
     TXT_CAST_ARG(txt_widget_t, widget);
     txt_callback_table_t *table;
-    int i;
 
     table = widget->callback_table;
 
@@ -132,11 +120,11 @@ void TXT_EmitSignal(TXT_UNCAST_ARG(widget), const char *signal_name)
     // Search the table for all callbacks with this name and invoke
     // the functions.
 
-    for (i=0; i<table->num_callbacks; ++i)
+    for (auto & callback : table->callbacks)
     {
-        if (!strcmp(table->callbacks[i].signal_name, signal_name))
+        if (callback.signal_name == signal_name)
         {
-            table->callbacks[i].func(widget, table->callbacks[i].user_data);
+            callback.func(widget, callback.user_data);
         }
     }
 
@@ -186,7 +174,7 @@ int TXT_WidgetKeyPress(TXT_UNCAST_ARG(widget), int key)
 {
     TXT_CAST_ARG(txt_widget_t, widget);
 
-    if (widget->widget_class->key_press != NULL)
+    if (widget->widget_class->key_press != nullptr)
     {
         return widget->widget_class->key_press(widget, key);
     }
@@ -198,7 +186,7 @@ void TXT_SetWidgetFocus(TXT_UNCAST_ARG(widget), int focused)
 {
     TXT_CAST_ARG(txt_widget_t, widget);
 
-    if (widget == NULL)
+    if (widget == nullptr)
     {
         return;
     }
@@ -207,7 +195,7 @@ void TXT_SetWidgetFocus(TXT_UNCAST_ARG(widget), int focused)
     {
         widget->focused = focused;
 
-        if (widget->widget_class->focus_change != NULL)
+        if (widget->widget_class->focus_change != nullptr)
         {
             widget->widget_class->focus_change(widget, focused);
         }
@@ -225,7 +213,7 @@ void TXT_WidgetMousePress(TXT_UNCAST_ARG(widget), int x, int y, int b)
 {
     TXT_CAST_ARG(txt_widget_t, widget);
 
-    if (widget->widget_class->mouse_press != NULL)
+    if (widget->widget_class->mouse_press != nullptr)
     {
         widget->widget_class->mouse_press(widget, x, y, b);
     }
@@ -235,7 +223,7 @@ void TXT_LayoutWidget(TXT_UNCAST_ARG(widget))
 {
     TXT_CAST_ARG(txt_widget_t, widget);
 
-    if (widget->widget_class->layout != NULL)
+    if (widget->widget_class->layout != nullptr)
     {
         widget->widget_class->layout(widget);
     }
@@ -255,7 +243,7 @@ int TXT_SelectableWidget(TXT_UNCAST_ARG(widget))
 {
     TXT_CAST_ARG(txt_widget_t, widget);
 
-    if (widget->widget_class->selectable != NULL)
+    if (widget->widget_class->selectable != nullptr)
     {
         return widget->widget_class->selectable(widget);
     }
@@ -270,7 +258,7 @@ int TXT_ContainsWidget(TXT_UNCAST_ARG(haystack), TXT_UNCAST_ARG(needle))
     TXT_CAST_ARG(txt_widget_t, haystack);
     TXT_CAST_ARG(txt_widget_t, needle);
 
-    while (needle != NULL)
+    while (needle != nullptr)
     {
         if (needle == haystack)
         {
@@ -293,7 +281,7 @@ int TXT_HoveringOverWidget(TXT_UNCAST_ARG(widget))
 
     active_window = TXT_GetActiveWindow();
 
-    if (active_window == NULL || !TXT_ContainsWidget(active_window, widget))
+    if (active_window == nullptr || !TXT_ContainsWidget(active_window, widget))
     {
         return 0;
     }
@@ -302,8 +290,8 @@ int TXT_HoveringOverWidget(TXT_UNCAST_ARG(widget))
 
     TXT_GetMousePosition(&x, &y);
 
-    return (x >= widget->x && x < widget->x + widget->w
-         && y >= widget->y && y < widget->y + widget->h);
+    return (x >= widget->x && x < widget->x + static_cast<int>(widget->w)
+         && y >= widget->y && y < widget->y + static_cast<int>(widget->h));
 }
 
 void TXT_SetWidgetBG(TXT_UNCAST_ARG(widget))

@@ -23,9 +23,9 @@
 #include "m_cheat.hpp"
 
 // Used by ST StatusBar stuff.
-#define AM_MSGHEADER (('a'<<24)+('m'<<16))
-#define AM_MSGENTERED (AM_MSGHEADER | ('e'<<8))
-#define AM_MSGEXITED (AM_MSGHEADER | ('x'<<8))
+#define AM_MSGHEADER ((static_cast<int>('a')<<24) + ( static_cast<int>('m')<<16))
+#define AM_MSGENTERED (AM_MSGHEADER | ( static_cast<int>('e')<<8))
+#define AM_MSGEXITED (AM_MSGHEADER | ( static_cast<int>('x')<<8))
 
 
 // Called by main loop.

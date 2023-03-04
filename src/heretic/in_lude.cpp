@@ -177,7 +177,7 @@ static const char *NameForMap(int map)
 
 void IN_Start(void)
 {
-    I_SetPalette(W_CacheLumpName(DEH_String("PLAYPAL"), PU_CACHE));
+    I_SetPalette(W_CacheLumpName_byte(DEH_String("PLAYPAL"), PU_CACHE));
     IN_LoadPics();
     IN_InitStats();
     intermission = true;
@@ -355,7 +355,7 @@ static void IN_LoadUnloadPics(void (*callback)(const char *lumpname,
 
     for (i = 0; i < 10; i++)
     {
-        callback(NULL, FontBLumpBase + i, &FontBNumbers[i]);
+        callback(nullptr, FontBLumpBase + i, &FontBNumbers[i]);
     }
 }
 
@@ -367,7 +367,7 @@ static void IN_LoadUnloadPics(void (*callback)(const char *lumpname,
 
 static void LoadLumpCallback(const char *lumpname, int lumpnum, patch_t **ptr)
 {
-    if (lumpname != NULL)
+    if (lumpname != nullptr)
     {
         lumpnum = W_GetNumForName(lumpname);
     }
@@ -394,7 +394,7 @@ void IN_LoadPics(void)
 
 static void UnloadLumpCallback(const char *lumpname, int lumpnum, patch_t **ptr)
 {
-    if (lumpname != NULL)
+    if (lumpname != nullptr)
     {
         W_ReleaseLumpName(lumpname);
     }
@@ -485,13 +485,13 @@ void IN_Ticker(void)
         {
             interstate = 2;
             skipintermission = false;
-            S_StartSound(NULL, sfx_dorcls);
+            S_StartSound(nullptr, sfx_dorcls);
             return;
         }
         interstate = 3;
         cnt = 10;
         skipintermission = false;
-        S_StartSound(NULL, sfx_dorcls);
+        S_StartSound(nullptr, sfx_dorcls);
     }
 }
 
@@ -560,7 +560,7 @@ void IN_Drawer(void)
     UpdateState |= I_FULLSCRN;
     if (oldinterstate != 2 && interstate == 2)
     {
-        S_StartSound(NULL, sfx_pstop);
+        S_StartSound(nullptr, sfx_pstop);
     }
     oldinterstate = interstate;
     switch (interstate)
@@ -620,7 +620,7 @@ void IN_DrawStatBack(void)
     byte *src;
     byte *dest;
 
-    src = W_CacheLumpName(DEH_String("FLOOR16"), PU_CACHE);
+    src = W_CacheLumpName_byte(DEH_String("FLOOR16"), PU_CACHE);
     dest = I_VideoBuffer;
 
     for (y = 0; y < SCREENHEIGHT; y++)
@@ -763,7 +763,7 @@ void IN_DrawSingleStats(void)
     }
     if (sounds < 1 && intertime >= 30)
     {
-        S_StartSound(NULL, sfx_dorcls);
+        S_StartSound(nullptr, sfx_dorcls);
         sounds++;
     }
     IN_DrawNumber(players[consoleplayer].killcount, 200, 65 - yoffset, 3);
@@ -775,7 +775,7 @@ void IN_DrawSingleStats(void)
     }
     if (sounds < 2 && intertime >= 60)
     {
-        S_StartSound(NULL, sfx_dorcls);
+        S_StartSound(nullptr, sfx_dorcls);
         sounds++;
     }
     IN_DrawNumber(players[consoleplayer].itemcount, 200, 90 - yoffset, 3);
@@ -787,7 +787,7 @@ void IN_DrawSingleStats(void)
     }
     if (sounds < 3 && intertime >= 90)
     {
-        S_StartSound(NULL, sfx_dorcls);
+        S_StartSound(nullptr, sfx_dorcls);
         sounds++;
     }
     IN_DrawNumber(players[consoleplayer].secretcount, 200, 115 - yoffset, 3);
@@ -799,7 +799,7 @@ void IN_DrawSingleStats(void)
     }
     if (sounds < 4 && intertime >= 150)
     {
-        S_StartSound(NULL, sfx_dorcls);
+        S_StartSound(nullptr, sfx_dorcls);
         sounds++;
     }
 
@@ -870,7 +870,7 @@ void IN_DrawCoopStats(void)
             }
             else if (intertime >= 40 && sounds < 1)
             {
-                S_StartSound(NULL, sfx_dorcls);
+                S_StartSound(nullptr, sfx_dorcls);
                 sounds++;
             }
             IN_DrawNumber(killPercent[i], 85, ypos + 10, 3);
@@ -931,12 +931,12 @@ void IN_DrawDMStats(void)
     }
     if (intertime >= 20 && sounds < 1)
     {
-        S_StartSound(NULL, sfx_dorcls);
+        S_StartSound(nullptr, sfx_dorcls);
         sounds++;
     }
     if (intertime >= 100 && slaughterboy && sounds < 2)
     {
-        S_StartSound(NULL, sfx_wpnup);
+        S_StartSound(nullptr, sfx_wpnup);
         sounds++;
     }
     for (i = 0; i < MAXPLAYERS; i++)

@@ -145,7 +145,7 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
 
     TXT_AddWidgets(window,
                    buttons_table = TXT_NewTable(4),
-                   NULL);
+                   nullptr);
 
     TXT_SetColumnWidths(buttons_table, 16, 11, 16, 10);
 
@@ -189,7 +189,7 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
     TXT_AddWidgets(window,
                    TXT_NewSeparator("Automap"),
                    am_buttons_table = TXT_NewTable(4),
-                   NULL);
+                   nullptr);
 
     TXT_SetColumnWidths(am_buttons_table, 16, 11, 16, 10);
 
@@ -240,13 +240,13 @@ void ConfigMouse(TXT_UNCAST_ARG(widget), void *user_data)
                    TXT_NewSpinControl(&mouse_threshold_y, 0, 32),
 
                    TXT_NewSeparator("Buttons"),
-                   NULL);
+                   nullptr);
 
     AddMouseControl(window, "Fire/Attack", &mousebfire);
     AddMouseControl(window, "Use", &mousebuse);
 
     TXT_AddWidget(window,
-                  TXT_NewButton2("More controls...", ConfigExtraButtons, NULL));
+                  TXT_NewButton2("More controls...", ConfigExtraButtons, nullptr));
 }
 
 void BindMouseVariables(void)

@@ -442,7 +442,7 @@ void R_StoreWallRange(int start, int stop)
     worldbottom = frontsector->interpfloorheight - viewz;
 
     midtexture = toptexture = bottomtexture = maskedtexture = 0;
-    ds_p->maskedtexturecol = NULL;
+    ds_p->maskedtexturecol = nullptr;
 
     if (!backsector)
     {
@@ -472,7 +472,7 @@ void R_StoreWallRange(int start, int stop)
 //
 // two sided line
 //
-        ds_p->sprtopclip = ds_p->sprbottomclip = NULL;
+        ds_p->sprtopclip = ds_p->sprbottomclip = nullptr;
         ds_p->silhouette = 0;
         if (frontsector->interpfloorheight > backsector->interpfloorheight)
         {

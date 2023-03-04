@@ -178,14 +178,14 @@ void SN_InitSequenceScript(void)
 {
     int i, j;
     int inSequence;
-    int *tempDataStart = NULL;
-    int *tempDataPtr = NULL;
+    int *tempDataStart = nullptr;
+    int *tempDataPtr = nullptr;
 
     inSequence = -1;
     ActiveSequences = 0;
     for (i = 0; i < SS_MAX_SCRIPTS; i++)
     {
-        SequenceData[i] = NULL;
+        SequenceData[i] = nullptr;
     }
     SC_Open(SS_SCRIPT_NAME);
     while (SC_GetString())
@@ -197,12 +197,12 @@ void SN_InitSequenceScript(void)
                 SC_ScriptError("SN_InitSequenceScript:  Nested Script Error");
             }
             tempDataStart = (int *) Z_Malloc(SS_TEMPBUFFER_SIZE,
-                                             PU_STATIC, NULL);
+                                             PU_STATIC, nullptr);
             memset(tempDataStart, 0, SS_TEMPBUFFER_SIZE);
             tempDataPtr = tempDataStart;
             for (i = 0; i < SS_MAX_SCRIPTS; i++)
             {
-                if (SequenceData[i] == NULL)
+                if (SequenceData[i] == nullptr)
                 {
                     break;
                 }
@@ -287,7 +287,7 @@ void SN_InitSequenceScript(void)
 
             *tempDataPtr++ = SS_CMD_END;
             dataSize = (tempDataPtr - tempDataStart) * sizeof(int);
-            SequenceData[i] = (int *) Z_Malloc(dataSize, PU_STATIC, NULL);
+            SequenceData[i] = (int *) Z_Malloc(dataSize, PU_STATIC, nullptr);
             memcpy(SequenceData[i], tempDataStart, dataSize);
             Z_Free(tempDataStart);
             inSequence = -1;
@@ -317,7 +317,7 @@ void SN_StartSequence(mobj_t * mobj, int sequence)
     seqnode_t *node;
 
     SN_StopSequence(mobj);      // Stop any previous sequence
-    node = (seqnode_t *) Z_Malloc(sizeof(seqnode_t), PU_STATIC, NULL);
+    node = (seqnode_t *) Z_Malloc(sizeof(seqnode_t), PU_STATIC, nullptr);
     node->sequencePtr = SequenceData[SequenceTranslate[sequence].scriptNum];
     node->sequence = sequence;
     node->mobj = mobj;
@@ -328,13 +328,13 @@ void SN_StartSequence(mobj_t * mobj, int sequence)
     if (!SequenceListHead)
     {
         SequenceListHead = node;
-        node->next = node->prev = NULL;
+        node->next = node->prev = nullptr;
     }
     else
     {
         SequenceListHead->prev = node;
         node->next = SequenceListHead;
-        node->prev = NULL;
+        node->prev = nullptr;
         SequenceListHead = node;
     }
     ActiveSequences++;

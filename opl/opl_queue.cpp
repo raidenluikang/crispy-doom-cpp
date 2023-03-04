@@ -19,17 +19,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 
 #include "opl_queue.hpp"
+#include "../utils/memory.hpp"
 
-#define MAX_OPL_QUEUE 64
+static constexpr size_t MAX_OPL_QUEUE = 64;
 
-typedef struct
+struct opl_queue_entry_t
 {
     opl_callback_t callback;
     void *data;
     uint64_t time;
-} opl_queue_entry_t;
+} ;
 
 struct opl_callback_queue_s
 {
@@ -39,9 +41,8 @@ struct opl_callback_queue_s
 
 opl_callback_queue_t *OPL_Queue_Create(void)
 {
-    opl_callback_queue_t *queue;
+    opl_callback_queue_t *queue = create_structure<opl_callback_queue_t>();
 
-    queue = malloc(sizeof(opl_callback_queue_t));
     queue->num_entries = 0;
 
     return queue;
@@ -145,13 +146,13 @@ int OPL_Queue_Pop(opl_callback_queue_t *queue,
         child1 = i * 2 + 1;
         child2 = i * 2 + 2;
 
-        if (child1 < queue->num_entries
+        if (static_cast<unsigned int>(child1) < queue->num_entries
          && queue->entries[child1].time < entry->time)
         {
             // Left child is less than entry.
             // Use the minimum of left and right children.
 
-            if (child2 < queue->num_entries
+            if (static_cast<unsigned int>(child2) < queue->num_entries
              && queue->entries[child2].time < queue->entries[child1].time)
             {
                 next_i = child2;
@@ -161,7 +162,7 @@ int OPL_Queue_Pop(opl_callback_queue_t *queue,
                 next_i = child1;
             }
         }
-        else if (child2 < queue->num_entries
+        else if (static_cast<unsigned>(child2) < queue->num_entries
               && queue->entries[child2].time < entry->time)
         {
             // Right child is less than entry.  Go down the right side.
@@ -204,12 +205,9 @@ uint64_t OPL_Queue_Peek(opl_callback_queue_t *queue)
 void OPL_Queue_AdjustCallbacks(opl_callback_queue_t *queue,
                                uint64_t time, float factor)
 {
-    int64_t offset;
-    int i;
-
-    for (i = 0; i < queue->num_entries; ++i)
+    for (unsigned i = 0; i < queue->num_entries; ++i)
     {
-        offset = queue->entries[i].time - time;
+        int64_t offset = queue->entries[i].time - time;
         queue->entries[i].time = time + (uint64_t) (offset / factor);
     }
 }
@@ -261,7 +259,7 @@ int main()
         for (i=0; i<MAX_OPL_QUEUE; ++i)
         {
             time = rand() % 0x10000;
-            OPL_Queue_Push(queue, NULL, NULL, time);
+            OPL_Queue_Push(queue, nullptr, nullptr, time);
         }
 
         time = 0;

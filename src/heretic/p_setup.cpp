@@ -93,7 +93,7 @@ void P_LoadVertexes(int lump)
     vertex_t *li;
 
     numvertexes = W_LumpLength(lump) / sizeof(mapvertex_t);
-    vertexes = Z_Malloc(numvertexes * sizeof(vertex_t), PU_LEVEL, 0);
+    vertexes = zmalloc<decltype(    vertexes)>(numvertexes * sizeof(vertex_t), PU_LEVEL, 0);
     data = W_CacheLumpNum(lump, PU_STATIC);
 
     ml = (mapvertex_t *) data;
@@ -131,7 +131,7 @@ void P_LoadSegs(int lump)
     int linedef, side;
 
     numsegs = W_LumpLength(lump) / sizeof(mapseg_t);
-    segs = Z_Malloc(numsegs * sizeof(seg_t), PU_LEVEL, 0);
+    segs = zmalloc<decltype(    segs)>(numsegs * sizeof(seg_t), PU_LEVEL, 0);
     memset(segs, 0, numsegs * sizeof(seg_t));
     data = W_CacheLumpNum(lump, PU_STATIC);
 
@@ -178,7 +178,7 @@ void P_LoadSubsectors(int lump)
     subsector_t *ss;
 
     numsubsectors = W_LumpLength(lump) / sizeof(mapsubsector_t);
-    subsectors = Z_Malloc(numsubsectors * sizeof(subsector_t), PU_LEVEL, 0);
+    subsectors = zmalloc<decltype(    subsectors)>(numsubsectors * sizeof(subsector_t), PU_LEVEL, 0);
     data = W_CacheLumpNum(lump, PU_STATIC);
 
     ms = (mapsubsector_t *) data;
@@ -210,7 +210,7 @@ void P_LoadSectors(int lump)
     sector_t *ss;
 
     numsectors = W_LumpLength(lump) / sizeof(mapsector_t);
-    sectors = Z_Malloc(numsectors * sizeof(sector_t), PU_LEVEL, 0);
+    sectors = zmalloc<decltype(    sectors)>(numsectors * sizeof(sector_t), PU_LEVEL, 0);
     memset(sectors, 0, numsectors * sizeof(sector_t));
     data = W_CacheLumpNum(lump, PU_STATIC);
 
@@ -225,7 +225,7 @@ void P_LoadSectors(int lump)
         ss->lightlevel = SHORT(ms->lightlevel);
         ss->special = SHORT(ms->special);
         ss->tag = SHORT(ms->tag);
-        ss->thinglist = NULL;
+        ss->thinglist = nullptr;
 
         // [AM] Sector interpolation.  Even if we're
         //      not running uncapped, the renderer still
@@ -258,7 +258,7 @@ void P_LoadNodes(int lump)
     node_t *no;
 
     numnodes = W_LumpLength(lump) / sizeof(mapnode_t);
-    nodes = Z_Malloc(numnodes * sizeof(node_t), PU_LEVEL, 0);
+    nodes = zmalloc<decltype(    nodes)>(numnodes * sizeof(node_t), PU_LEVEL, 0);
     data = W_CacheLumpNum(lump, PU_STATIC);
 
     mn = (mapnode_t *) data;
@@ -363,7 +363,7 @@ void P_LoadLineDefs(int lump)
     vertex_t *v1, *v2;
 
     numlines = W_LumpLength(lump) / sizeof(maplinedef_t);
-    lines = Z_Malloc(numlines * sizeof(line_t), PU_LEVEL, 0);
+    lines = zmalloc<decltype(    lines)>(numlines * sizeof(line_t), PU_LEVEL, 0);
     memset(lines, 0, numlines * sizeof(line_t));
     data = W_CacheLumpNum(lump, PU_STATIC);
 
@@ -442,7 +442,7 @@ void P_LoadSideDefs(int lump)
     side_t *sd;
 
     numsides = W_LumpLength(lump) / sizeof(mapsidedef_t);
-    sides = Z_Malloc(numsides * sizeof(side_t), PU_LEVEL, 0);
+    sides = zmalloc<decltype(    sides)>(numsides * sizeof(side_t), PU_LEVEL, 0);
     memset(sides, 0, numsides * sizeof(side_t));
     data = W_CacheLumpNum(lump, PU_STATIC);
 
@@ -484,9 +484,9 @@ void P_LoadBlockMap(int lump)
     count = lumplen / 2; // [crispy] remove BLOCKMAP limit
 
     // [crispy] remove BLOCKMAP limit
-    wadblockmaplump = Z_Malloc(lumplen, PU_LEVEL, NULL);
+    wadblockmaplump = zmalloc<decltype(    wadblockmaplump)>(lumplen, PU_LEVEL, nullptr);
     W_ReadLump(lump, wadblockmaplump);
-    blockmaplump = Z_Malloc(sizeof(*blockmaplump) * count, PU_LEVEL, NULL);
+    blockmaplump = zmalloc<decltype(    blockmaplump)>(sizeof(*blockmaplump) * count, PU_LEVEL, nullptr);
     blockmap = blockmaplump + 4;
 
     blockmaplump[0] = SHORT(wadblockmaplump[0]);
@@ -512,7 +512,7 @@ void P_LoadBlockMap(int lump)
 
 // clear out mobj chains
     count = sizeof(*blocklinks) * bmapwidth * bmapheight;
-    blocklinks = Z_Malloc(count, PU_LEVEL, 0);
+    blocklinks = zmalloc<decltype(    blocklinks)>(count, PU_LEVEL, 0);
     memset(blocklinks, 0, count);
 }
 
@@ -563,7 +563,7 @@ void P_GroupLines(void)
     }
 
 // build line tables for each sector    
-    linebuffer = Z_Malloc(total * sizeof(line_t *), PU_LEVEL, 0);
+    linebuffer = zmalloc<decltype(    linebuffer)>(total * sizeof(line_t *), PU_LEVEL, 0);
     sector = sectors;
     for (i = 0; i < numsectors; i++, sector++)
     {

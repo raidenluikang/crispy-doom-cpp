@@ -158,11 +158,11 @@ void P_InitPicAnims (void)
 
     if (from_lump)
     {
-	animdefs = W_CacheLumpName("ANIMATED", PU_STATIC);
+		animdefs = static_cast<animdef_t*>( W_CacheLumpName("ANIMATED", PU_STATIC) );
     }
     else
     {
-	animdefs = animdefs_vanilla;
+		animdefs = animdefs_vanilla;
     }
     
     //	Init animation
@@ -292,7 +292,7 @@ twoSided
 //
 // getNextSector()
 // Return sector_t * of sector next to current.
-// NULL if not two-sided line
+// nullptr if not two-sided line
 //
 sector_t*
 getNextSector
@@ -300,7 +300,7 @@ getNextSector
   sector_t*	sec )
 {
     if (!(line->flags & ML_TWOSIDED))
-	return NULL;
+	return nullptr;
 		
     if (line->frontsector == sec)
 	return line->backsector;
@@ -385,7 +385,7 @@ P_FindNextHighestFloor
     line_t*     check;
     sector_t*   other;
     fixed_t     height = currentheight;
-    static fixed_t *heightlist = NULL;
+    static fixed_t *heightlist = nullptr;
     static int heightlist_size = 0;
 
     // [crispy] remove MAX_ADJOINING_SECTORS Vanilla limit
@@ -1140,7 +1140,7 @@ void P_PlayerInSpecialSector (player_t* player)
 	// [crispy] no nukage damage with NOCLIP cheat
 	if (!player->powers[pw_ironfeet] && !(player->mo->flags & MF_NOCLIP))
 	    if (!(leveltime&0x1f))
-		P_DamageMobj (player->mo, NULL, NULL, 10);
+		P_DamageMobj (player->mo, nullptr, nullptr, 10);
 	break;
 	
       case 7:
@@ -1148,7 +1148,7 @@ void P_PlayerInSpecialSector (player_t* player)
 	// [crispy] no nukage damage with NOCLIP cheat
 	if (!player->powers[pw_ironfeet] && !(player->mo->flags & MF_NOCLIP))
 	    if (!(leveltime&0x1f))
-		P_DamageMobj (player->mo, NULL, NULL, 5);
+		P_DamageMobj (player->mo, nullptr, nullptr, 5);
 	break;
 	
       case 16:
@@ -1160,7 +1160,7 @@ void P_PlayerInSpecialSector (player_t* player)
 	    || (P_Random()<5) ) && !(player->mo->flags & MF_NOCLIP))
 	{
 	    if (!(leveltime&0x1f))
-		P_DamageMobj (player->mo, NULL, NULL, 20);
+		P_DamageMobj (player->mo, nullptr, nullptr, 20);
 	}
 	break;
 			
@@ -1181,7 +1181,7 @@ void P_PlayerInSpecialSector (player_t* player)
 
 	    player->centermessage = (crispy->secretmessage == SECRETMESSAGE_COUNT) ? str_count : HUSTR_SECRETFOUND;
 	    if (sfx_id != -1)
-		S_StartSound(NULL, sfx_id);
+		S_StartSound(nullptr, sfx_id);
 	}
 	// [crispy] remember revealed secrets
 	sector->oldspecial = sector->special;
@@ -1193,7 +1193,7 @@ void P_PlayerInSpecialSector (player_t* player)
 	player->cheats &= ~CF_GODMODE;
 
 	if (!(leveltime&0x1f))
-	    P_DamageMobj (player->mo, NULL, NULL, 20);
+	    P_DamageMobj (player->mo, nullptr, nullptr, 20);
 
 	if (player->health <= 10)
 	    G_ExitLevel();
@@ -1480,7 +1480,7 @@ int EV_DoDonut(line_t*	line)
         // isn't something that should be done, anyway.
         // Just print a warning and return.
 
-        if (s2 == NULL)
+        if (s2 == nullptr)
         {
             fprintf(stderr,
                     "EV_DoDonut: linedef had no second sidedef! "
@@ -1495,17 +1495,17 @@ int EV_DoDonut(line_t*	line)
 	    if (s3 == s1)
 		continue;
 
-            if (s3 == NULL)
+            if (s3 == nullptr)
             {
                 // e6y
-                // s3 is NULL, so
+                // s3 is nullptr, so
                 // s3->floorheight is an int at 0000:0000
                 // s3->floorpic is a short at 0000:0008
                 // Trying to emulate
 
                 fprintf(stderr,
                         "EV_DoDonut: WARNING: emulating buffer overrun due to "
-                        "NULL back sector. "
+                        "nullptr back sector. "
                         "Unexpected behavior may occur in Vanilla Doom.\n");
 
                 DonutOverrun(&s3_floorheight, &s3_floorpic, line, s1);
@@ -1517,7 +1517,7 @@ int EV_DoDonut(line_t*	line)
             }
 
 	    //	Spawn rising slime
-	    floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+	    floor = zmalloc<decltype(	    floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	    P_AddThinker (&floor->thinker);
 	    s2->specialdata = floor;
 	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
@@ -1531,7 +1531,7 @@ int EV_DoDonut(line_t*	line)
 	    floor->floordestheight = s3_floorheight;
 	    
 	    //	Spawn lowering donut-hole
-	    floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+	    floor = zmalloc<decltype(	    floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	    P_AddThinker (&floor->thinker);
 	    s1->specialdata = floor;
 	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
@@ -1696,10 +1696,10 @@ void P_SpawnSpecials (void)
     
     //	Init other misc stuff
     for (i = 0;i < MAXCEILINGS;i++)
-	activeceilings[i] = NULL;
+	activeceilings[i] = nullptr;
 
     for (i = 0;i < MAXPLATS;i++)
-	activeplats[i] = NULL;
+	activeplats[i] = nullptr;
     
     for (i = 0;i < maxbuttons;i++)
 	memset(&buttonlist[i],0,sizeof(button_t));

@@ -473,7 +473,7 @@ void R_Subsector(int num)
     }
     else
     {
-        floorplane = NULL;
+        floorplane = nullptr;
     }
 
     if (frontsector->interpceilingheight > viewz
@@ -485,7 +485,7 @@ void R_Subsector(int num)
     }
     else
     {
-        ceilingplane = NULL;
+        ceilingplane = nullptr;
     }
 
     R_AddSprites(frontsector);

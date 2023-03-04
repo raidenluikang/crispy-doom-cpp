@@ -30,7 +30,7 @@
 #include <unistd.h>
 #endif
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "config.h"
 
@@ -49,8 +49,11 @@
 #include "w_wad.hpp"
 #include "z_zone.hpp"
 
-#define DEFAULT_RAM 16*2 /* MiB [crispy] */
-#define MIN_RAM     4*4  /* MiB [crispy] */
+
+#include "../utils/memory.hpp"
+
+static constexpr int DEFAULT_RAM = 16*2;  /* MiB [crispy] */
+static constexpr int MIN_RAM     = 4*4;  /* MiB [crispy] */
 
 
 typedef struct atexit_listentry_s atexit_listentry_t;
@@ -62,13 +65,11 @@ struct atexit_listentry_s
     atexit_listentry_t *next;
 };
 
-static atexit_listentry_t *exit_funcs = NULL;
+static atexit_listentry_t *exit_funcs = nullptr;
 
 void I_AtExit(atexit_func_t func, boolean run_on_error)
 {
-    atexit_listentry_t *entry;
-
-    entry = malloc(sizeof(*entry));
+    atexit_listentry_t *entry = create_structure<atexit_listentry_t>();
 
     entry->func = func;
     entry->run_on_error = run_on_error;
@@ -95,9 +96,9 @@ static byte *AutoAllocMemory(int *size, int default_ram, int min_ram)
     // If we used the -mb command line parameter, only the parameter
     // provided is accepted.
 
-    zonemem = NULL;
+    zonemem = nullptr;
 
-    while (zonemem == NULL)
+    while (zonemem == nullptr)
     {
         // We need a reasonable minimum amount of RAM to start.
 
@@ -110,12 +111,12 @@ static byte *AutoAllocMemory(int *size, int default_ram, int min_ram)
 
         *size = default_ram * 1024 * 1024;
 
-        zonemem = malloc(*size);
+        zonemem = static_cast< byte* > ( malloc(*size) );
 
         // Failed to allocate?  Reduce zone size until we reach a size
         // that is acceptable.
 
-        if (zonemem == NULL)
+        if (zonemem == nullptr)
         {
             default_ram -= 1;
         }
@@ -252,7 +253,7 @@ void I_Quit (void)
  
     entry = exit_funcs; 
 
-    while (entry != NULL)
+    while (entry != nullptr)
     {
         entry->func();
         entry = entry->next;
@@ -306,7 +307,7 @@ void I_Error (const char *error, ...)
 
     entry = exit_funcs;
 
-    while (entry != NULL)
+    while (entry != nullptr)
     {
         if (entry->run_on_error)
         {
@@ -330,7 +331,7 @@ void I_Error (const char *error, ...)
     if (exit_gui_popup && !I_ConsoleStdout())
     {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-                                 PACKAGE_STRING, msgbuf, NULL);
+                                 PACKAGE_STRING, msgbuf, nullptr);
     }
 
     // abort();
@@ -350,7 +351,7 @@ void *I_Realloc(void *ptr, size_t size)
 
     new_ptr = realloc(ptr, size);
 
-    if (size != 0 && new_ptr == NULL)
+    if (size != 0 && new_ptr == nullptr)
     {
         I_Error ("I_Realloc: failed on reallocation of %zu bytes", size);
     }
@@ -403,7 +404,7 @@ boolean I_GetMemoryValue(unsigned int offset, void *value, int size)
         // @category compat
         // @arg <version>
         //
-        // Specify DOS version to emulate for NULL pointer dereference
+        // Specify DOS version to emulate for nullptr pointer dereference
         // emulation.  Supported versions are: dos622, dos71, dosbox.
         // The default is to emulate DOS 7.1 (Windows 98).
         //

@@ -148,13 +148,13 @@ static boolean server_initialized = false;
 static net_client_t clients[MAXNETNODES];
 static net_client_t *sv_players[NET_MAXPLAYERS];
 static net_context_t *server_context;
-static unsigned int sv_gamemode;
-static unsigned int sv_gamemission;
+static GameMode_t sv_gamemode;
+static GameMission_t sv_gamemission;
 static net_gamesettings_t sv_settings;
 
 // For registration with master server:
 
-static net_addr_t *master_server = NULL;
+static net_addr_t *master_server = nullptr;
 static unsigned int master_refresh_time;
 static unsigned int master_resolve_time;
 
@@ -254,7 +254,7 @@ static void NET_SV_AssignPlayers(void)
 
     for (; pl<NET_MAXPLAYERS; ++pl)
     {
-        sv_players[pl] = NULL;
+        sv_players[pl] = nullptr;
     }
 }
 
@@ -269,7 +269,7 @@ static int NET_SV_NumPlayers(void)
 
     for (i=0; i<NET_MAXPLAYERS; ++i)
     {
-        if (sv_players[i] != NULL && ClientConnected(sv_players[i]))
+        if (sv_players[i] != nullptr && ClientConnected(sv_players[i]))
         {
             result += 1;
         }
@@ -363,7 +363,7 @@ static net_client_t *NET_SV_Controller(void)
 
     // Find the oldest client (first to connect).
 
-    best = NULL;
+    best = nullptr;
 
     for (i=0; i<MAXNETNODES; ++i)
     {
@@ -374,7 +374,7 @@ static net_client_t *NET_SV_Controller(void)
             continue;
         }
 
-        if (best == NULL || clients[i].connect_time < best->connect_time)
+        if (best == nullptr || clients[i].connect_time < best->connect_time)
         {
             best = &clients[i];
         }
@@ -405,7 +405,7 @@ static void NET_SV_SendWaitingData(net_client_t *client)
     // If no controller found (?), send the details that the client
     // is expecting anyway.
 
-    if (controller == NULL)
+    if (controller == nullptr)
     {
         controller = client;
     }
@@ -491,7 +491,7 @@ static void NET_SV_AdvanceWindow(void)
 
         for (i=0; i<NET_MAXPLAYERS; ++i)
         {
-            if (sv_players[i] == NULL || !ClientConnected(sv_players[i]))
+            if (sv_players[i] == nullptr || !ClientConnected(sv_players[i]))
             {
                 continue;
             }
@@ -538,7 +538,7 @@ static net_client_t *NET_SV_FindClient(net_addr_t *addr)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // send a rejection packet to a client
@@ -624,7 +624,7 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
     // sending a reject message, as we only reject if we can't negotiate a
     // common protocol (below).
     client_version = NET_ReadString(packet);
-    if (client_version == NULL)
+    if (client_version == nullptr)
     {
         NET_Log("server: error: no version from client");
         return;
@@ -666,7 +666,7 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
 
     // Read the player's name
     player_name = NET_ReadString(packet);
-    if (player_name == NULL)
+    if (player_name == nullptr)
     {
         NET_Log("server: error: failed to read player name");
         return;
@@ -729,7 +729,7 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
     }
 
     // Allocate a client slot if there isn't one already
-    if (client == NULL)
+    if (client == nullptr)
     {
         // find a slot, or return if none found
 
@@ -742,7 +742,7 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
             }
         }
 
-        if (client == NULL)
+        if (client == nullptr)
         {
             return;
         }
@@ -854,7 +854,7 @@ static void StartGame(void)
 
     for (i = 0; i < NET_MAXPLAYERS; ++i)
     {
-        if (sv_players[i] != NULL && sv_players[i]->recording_lowres)
+        if (sv_players[i] != nullptr && sv_players[i]->recording_lowres)
         {
             sv_settings.lowres_turn = true;
         }
@@ -866,7 +866,7 @@ static void StartGame(void)
 
     for (i = 0; i < NET_MAXPLAYERS; ++i)
     {
-        if (sv_players[i] != NULL)
+        if (sv_players[i] != nullptr)
         {
             sv_settings.player_classes[i] = sv_players[i]->player_class;
         }
@@ -1429,14 +1429,14 @@ static void NET_SV_ParseHolePunch(net_packet_t *packet)
     net_addr_t *addr;
 
     addr_string = NET_ReadString(packet);
-    if (addr_string == NULL)
+    if (addr_string == nullptr)
     {
         NET_Log("server: error: hole punch request but no address provided");
         return;
     }
 
     addr = NET_ResolveAddress(server_context, addr_string);
-    if (addr == NULL)
+    if (addr == nullptr)
     {
         NET_Log("server: error: failed to resolve address: %s", addr_string);
         return;
@@ -1486,7 +1486,7 @@ static void NET_SV_Packet(net_packet_t *packet, net_addr_t *addr)
 
     // Response from master server?
 
-    if (addr != NULL && addr == master_server)
+    if (addr != nullptr && addr == master_server)
     {
         NET_SV_MasterPacket(packet);
         return;
@@ -1517,7 +1517,7 @@ static void NET_SV_Packet(net_packet_t *packet, net_addr_t *addr)
     {
         NET_SV_SendQueryResponse(addr);
     }
-    else if (client == NULL)
+    else if (client == nullptr)
     {
         // Must come from a valid client; ignore otherwise
     }
@@ -1594,7 +1594,7 @@ static void NET_SV_PumpSendQueue(net_client_t *client)
             continue;
         }
 
-        if (sv_players[i] == NULL || !ClientConnected(sv_players[i]))
+        if (sv_players[i] == nullptr || !ClientConnected(sv_players[i]))
         {
             continue;
         }
@@ -1616,7 +1616,7 @@ static void NET_SV_PumpSendQueue(net_client_t *client)
     // and never stopping. Don't let the server get too far ahead
     // of the client.
 
-    if (num_players == 0 && client->sendseq > recvwindow_start + 10)
+    if (num_players == 0 && client->sendseq > static_cast<int>(recvwindow_start) + 10)
     {
         return;
     }
@@ -1641,7 +1641,7 @@ static void NET_SV_PumpSendQueue(net_client_t *client)
             continue;
         }
         
-        if (sv_players[i] == NULL || !recvwindow[recv_index][i].active)
+        if (sv_players[i] == nullptr || !recvwindow[recv_index][i].active)
         {
             cmd.playeringame[i] = false;
             continue;
@@ -1733,7 +1733,7 @@ void NET_SV_CheckDeadlock(net_client_t *client)
         // client is blocked waiting on tics from us that have been lost.
         // This fixes deadlock with some older clients which do not send
         // resends to break deadlock.
-        if (i < BACKUPTICS && client->sendseq > client->acknowledged)
+        if (i < BACKUPTICS && client->sendseq > static_cast<int>(client->acknowledged))
         {
             NET_Log("server: also resending tics %d-%d to break deadlock",
                     client->acknowledged, client->sendseq - 1);
@@ -1750,7 +1750,7 @@ static void NET_SV_GameEnded(void)
     int i;
 
     server_state = SERVER_WAITING_LAUNCH;
-    sv_gamemode = indetermined;
+    sv_gamemode = GameMode_t::indetermined;
 
     for (i=0; i<MAXNETNODES; ++i)
     {
@@ -1866,7 +1866,7 @@ void NET_SV_Init(void)
     NET_SV_AssignPlayers();
 
     server_state = SERVER_WAITING_LAUNCH;
-    sv_gamemode = indetermined;
+    sv_gamemode = GameMode_t::indetermined;
     server_initialized = true;
 }
 
@@ -1914,12 +1914,12 @@ void NET_SV_RegisterWithMaster(void)
     }
     else
     {
-        master_server = NULL;
+        master_server = nullptr;
     }
 
     // Send request.
 
-    if (master_server != NULL)
+    if (master_server != nullptr)
     {
         NET_Query_AddToMaster(master_server);
         master_refresh_time = I_GetTimeMS();
@@ -1948,7 +1948,7 @@ void NET_SV_Run(void)
         NET_ReleaseAddress(addr);
     }
 
-    if (master_server != NULL)
+    if (master_server != nullptr)
     {
         UpdateMasterServer();
     }
@@ -1978,7 +1978,7 @@ void NET_SV_Run(void)
 
             for (i = 0; i < NET_MAXPLAYERS; ++i)
             {
-                if (sv_players[i] != NULL && ClientConnected(sv_players[i]))
+                if (sv_players[i] != nullptr && ClientConnected(sv_players[i]))
                 {
                     NET_SV_CheckResends(sv_players[i]);
                 }

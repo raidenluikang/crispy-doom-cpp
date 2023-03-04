@@ -47,15 +47,20 @@
 // The current state of the game: whether we are
 // playing, gazing at the intermission screen,
 // the game final animation, or a demo. 
-typedef enum
-{
+enum gamestate_t
+{   
     GS_LEVEL,
     GS_INTERMISSION,
     GS_FINALE,
     GS_DEMOSCREEN,
-} gamestate_t;
+};
 
-typedef enum
+#if __cplusplus >= 201703L
+inline 
+#endif 
+constexpr gamestate_t GS_INVALID = static_cast<gamestate_t>(-1);
+
+enum gameaction_t
 {
     ga_nothing,
     ga_loadlevel,
@@ -67,7 +72,7 @@ typedef enum
     ga_victory,
     ga_worlddone,
     ga_screenshot
-} gameaction_t;
+} ;
 
 //
 // Difficulty/skill settings/filters.
@@ -85,7 +90,7 @@ typedef enum
 //
 // Key cards.
 //
-typedef enum
+enum class card_t
 {
     it_bluecard,
     it_yellowcard,
@@ -96,14 +101,14 @@ typedef enum
     
     NUMCARDS
     
-} card_t;
+} ;
 
 
 
 // The defined weapons,
 //  including a marker indicating
 //  user has not changed weapon.
-typedef enum
+enum class weapontype_t
 {
     wp_fist,
     wp_pistol,
@@ -120,11 +125,11 @@ typedef enum
     // No pending weapon change.
     wp_nochange
 
-} weapontype_t;
+} ;
 
 
 // Ammunition types defined.
-typedef enum
+enum class ammotype_t
 {
     am_clip,	// Pistol / chaingun ammo.
     am_shell,	// Shotgun / double barreled shotgun.
@@ -133,11 +138,11 @@ typedef enum
     NUMAMMO,
     am_noammo	// Unlimited for chainsaw / fist.	
 
-} ammotype_t;
+} ;
 
 
 // Power up artifacts.
-typedef enum
+enum class powertype_t
 {
     pw_invulnerability,
     pw_strength,
@@ -150,7 +155,7 @@ typedef enum
     pw_showfps,
     pw_mapcoords
     
-} powertype_t;
+} ;
 
 
 
@@ -159,13 +164,13 @@ typedef enum
 //  how many seconds till expiration,
 //  assuming TICRATE is 35 ticks/second.
 //
-typedef enum
+enum class powerduration_t
 {
     INVULNTICS	= (30*TICRATE),
     INVISTICS	= (60*TICRATE),
     INFRATICS	= (120*TICRATE),
     IRONTICS	= (60*TICRATE)
     
-} powerduration_t;
+};
 
 #endif          // __DOOMDEF__

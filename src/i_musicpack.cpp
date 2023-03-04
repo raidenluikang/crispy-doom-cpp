@@ -114,7 +114,7 @@ typedef struct
 } file_metadata_t;
 #endif // !USE_SDL_MIXER_LOOPING
 
-static subst_music_t *subst_music = NULL;
+static subst_music_t *subst_music = nullptr;
 static unsigned int subst_music_len = 0;
 
 static boolean music_initialized = false;
@@ -135,7 +135,7 @@ static unsigned int current_track_pos;
 #endif // !USE_SDL_MIXER_LOOPING
 
 // Currently playing music track.
-static Mix_Music *current_track_music = NULL;
+static Mix_Music *current_track_music = nullptr;
 
 // If true, the currently playing track is being played on loop.
 static boolean current_track_loop;
@@ -379,7 +379,7 @@ static unsigned int ParseVorbisTime(unsigned int samplerate_hz, char *value)
     unsigned int result = 0;
     char c;
 
-    if (strchr(value, ':') == NULL)
+    if (strchr(value, ':') == nullptr)
     {
 	return atoi(value);
     }
@@ -415,7 +415,7 @@ static void ParseVorbisComment(file_metadata_t *metadata, char *comment)
 
     eq = strchr(comment, '=');
 
-    if (eq == NULL)
+    if (eq == nullptr)
     {
         return;
     }
@@ -477,7 +477,7 @@ static void ParseVorbisComments(file_metadata_t *metadata, FILE *fs)
 
         // Read actual comment data into string buffer.
         comment = calloc(1, comment_len + 1);
-        if (comment == NULL
+        if (comment == nullptr
          || fread(comment, 1, comment_len, fs) < comment_len)
         {
             free(comment);
@@ -621,7 +621,7 @@ static void ReadLoopPoints(const char *filename, file_metadata_t *metadata)
 
     fs = M_fopen(filename, "rb");
 
-    if (fs == NULL)
+    if (fs == nullptr)
     {
         return;
     }
@@ -659,7 +659,7 @@ static void ReadLoopPoints(const char *filename, file_metadata_t *metadata)
 #endif // !USE_SDL_MIXER_LOOPING
 
 // Given a MUS lump, look up a substitute MUS file to play instead
-// (or NULL to just use normal MIDI playback).
+// (or nullptr to just use normal MIDI playback).
 
 static const char *GetSubstituteMusicFile(void *data, size_t data_len)
 {
@@ -672,7 +672,7 @@ static const char *GetSubstituteMusicFile(void *data, size_t data_len)
     // Don't bother doing a hash if we're never going to find anything.
     if (subst_music_len == 0)
     {
-        return NULL;
+        return nullptr;
     }
 
     SHA1_Init(&context);
@@ -691,7 +691,7 @@ static const char *GetSubstituteMusicFile(void *data, size_t data_len)
     // filename mappings for the same hash. This allows us to try
     // different files and fall back if our first choice isn't found.
 
-    filename = NULL;
+    filename = nullptr;
 
     for (i = 0; i < subst_music_len; ++i)
     {
@@ -740,14 +740,14 @@ static char *GetFullPath(const char *musicdir, const char *path)
 
     // Copy config filename and cut off the filename to just get the
     // parent dir.
-    result = M_StringJoin(musicdir, systemized_path, NULL);
+    result = M_StringJoin(musicdir, systemized_path, nullptr);
     free(systemized_path);
 
     return result;
 }
 
 // If filename ends with .{ext}, check if a .ogg, .flac or .mp3 exists with
-// that name, returning it if found. If none exist, NULL is returned. If the
+// that name, returning it if found. If none exist, nullptr is returned. If the
 // filename doesn't end with .{ext} then it just acts as a wrapper around
 // GetFullPath().
 static char *ExpandFileExtension(const char *musicdir, const char *filename)
@@ -773,7 +773,7 @@ static char *ExpandFileExtension(const char *musicdir, const char *filename)
         free(result);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // Add a substitute music file to the lookup list.
@@ -784,7 +784,7 @@ static void AddSubstituteMusic(const char *musicdir, const char *hash_prefix,
     char *path;
 
     path = ExpandFileExtension(musicdir, filename);
-    if (path == NULL)
+    if (path == nullptr)
     {
         return;
     }
@@ -807,20 +807,20 @@ static const char *ReadHashPrefix(char *line)
     {
         if (!isxdigit(*p))
         {
-            return NULL;
+            return nullptr;
         }
     }
 
     len = p - line;
     if (len == 0 || len > sizeof(sha1_digest_t) * 2)
     {
-        return NULL;
+        return nullptr;
     }
 
     result = malloc(len + 1);
-    if (result == NULL)
+    if (result == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     for (i = 0; i < len; ++i)
@@ -833,7 +833,7 @@ static const char *ReadHashPrefix(char *line)
 }
 
 // Parse a line from substitute music configuration file; returns error
-// message or NULL for no error.
+// message or nullptr for no error.
 
 static const char *ParseSubstituteLine(char *musicdir, char *line)
 {
@@ -843,7 +843,7 @@ static const char *ParseSubstituteLine(char *musicdir, char *line)
 
     // Strip out comments if present.
     p = strchr(line, '#');
-    if (p != NULL)
+    if (p != nullptr)
     {
         while (p > line && isspace(*(p - 1)))
         {
@@ -859,11 +859,11 @@ static const char *ParseSubstituteLine(char *musicdir, char *line)
     // been stripped.
     if (*p == '\0')
     {
-        return NULL;
+        return nullptr;
     }
 
     hash_prefix = ReadHashPrefix(p);
-    if (hash_prefix == NULL)
+    if (hash_prefix == nullptr)
     {
         return "Invalid hash prefix";
     }
@@ -899,7 +899,7 @@ static const char *ParseSubstituteLine(char *musicdir, char *line)
     // Expand full path and add to our database of substitutes.
     AddSubstituteMusic(musicdir, hash_prefix, filename);
 
-    return NULL;
+    return nullptr;
 }
 
 // Read a substitute music configuration file.
@@ -920,14 +920,14 @@ static boolean ReadSubstituteConfig(char *musicdir, const char *filename)
 
     line = buffer;
 
-    while (line != NULL)
+    while (line != nullptr)
     {
         const char *error;
         char *next;
 
         // find end of line
         char *eol = strchr(line, '\n');
-        if (eol != NULL)
+        if (eol != nullptr)
         {
             // change the newline into NUL
             *eol = '\0';
@@ -936,12 +936,12 @@ static boolean ReadSubstituteConfig(char *musicdir, const char *filename)
         else
         {
             // end of buffer
-            next = NULL;
+            next = nullptr;
         }
 
         error = ParseSubstituteLine(musicdir, line);
 
-        if (error != NULL)
+        if (error != nullptr)
         {
             fprintf(stderr, "%s:%i: Error: %s\n", filename, linenum, error);
         }
@@ -970,7 +970,7 @@ static void LoadSubstituteConfigs(void)
     // $configdir/music to look for .cfg files.
     if (strcmp(music_pack_path, "") != 0)
     {
-        musicdir = M_StringJoin(music_pack_path, DIR_SEPARATOR_S, NULL);
+        musicdir = M_StringJoin(music_pack_path, DIR_SEPARATOR_S, nullptr);
     }
     else if (!strcmp(configdir, exedir))
     {
@@ -978,7 +978,7 @@ static void LoadSubstituteConfigs(void)
     }
     else
     {
-        musicdir = M_StringJoin(configdir, "music", DIR_SEPARATOR_S, NULL);
+        musicdir = M_StringJoin(configdir, "music", DIR_SEPARATOR_S, nullptr);
     }
 
     // Load all music packs, by searching for .cfg files.
@@ -986,7 +986,7 @@ static void LoadSubstituteConfigs(void)
     for (;;)
     {
         path = I_NextGlob(glob);
-        if (path == NULL)
+        if (path == nullptr)
         {
             break;
         }
@@ -1059,7 +1059,7 @@ static void DumpSubstituteConfig(const char *filename)
 
     fs = M_fopen(filename, "w");
 
-    if (fs == NULL)
+    if (fs == nullptr)
     {
         I_Error("Failed to open %s for writing", filename);
         return;
@@ -1175,7 +1175,7 @@ static boolean I_MP_InitMusic(void)
     {
         fprintf(stderr, "Unable to set up sound.\n");
     }
-    else if (Mix_OpenAudioDevice(snd_samplerate, AUDIO_S16SYS, 2, 1024, NULL, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
+    else if (Mix_OpenAudioDevice(snd_samplerate, AUDIO_S16SYS, 2, 1024, nullptr, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
     {
         fprintf(stderr, "Error initializing SDL_mixer: %s\n",
                 Mix_GetError());
@@ -1194,7 +1194,7 @@ static boolean I_MP_InitMusic(void)
 
 #if !USE_SDL_MIXER_LOOPING
     // Register an effect function to track the music position.
-    Mix_RegisterEffect(MIX_CHANNEL_POST, TrackPositionCallback, NULL, NULL);
+    Mix_RegisterEffect(MIX_CHANNEL_POST, TrackPositionCallback, nullptr, nullptr);
 #endif // !USE_SDL_MIXER_LOOPING
 
     return music_initialized;
@@ -1218,7 +1218,7 @@ static void I_MP_PlaySong(void *handle, boolean looping)
         return;
     }
 
-    if (handle == NULL)
+    if (handle == nullptr)
     {
         return;
     }
@@ -1282,7 +1282,7 @@ static void I_MP_StopSong(void)
     }
 
     Mix_HaltMusic();
-    current_track_music = NULL;
+    current_track_music = nullptr;
 }
 
 static void I_MP_UnRegisterSong(void *handle)
@@ -1294,7 +1294,7 @@ static void I_MP_UnRegisterSong(void *handle)
         return;
     }
 
-    if (handle == NULL)
+    if (handle == nullptr)
     {
         return;
     }
@@ -1309,24 +1309,24 @@ static void *I_MP_RegisterSong(void *data, int len)
 
     if (!music_initialized)
     {
-        return NULL;
+        return nullptr;
     }
 
     // See if we're substituting this MUS for a high-quality replacement.
     filename = GetSubstituteMusicFile(data, len);
-    if (filename == NULL)
+    if (filename == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     music = Mix_LoadMUS(filename);
-    if (music == NULL)
+    if (music == nullptr)
     {
         // Fall through and play MIDI normally, but print an error
         // message.
         fprintf(stderr, "Failed to load substitute music file: %s: %s\n",
                 filename, Mix_GetError());
-        return NULL;
+        return nullptr;
     }
 
 #if !USE_SDL_MIXER_LOOPING
@@ -1355,7 +1355,7 @@ static double GetMusicPosition(void)
     unsigned int music_pos;
     int freq;
 
-    Mix_QuerySpec(&freq, NULL, NULL);
+    Mix_QuerySpec(&freq, nullptr, nullptr);
 
     SDL_LockAudio();
     music_pos = current_track_pos;
@@ -1370,7 +1370,7 @@ static void RestartCurrentTrack(void)
                  / file_metadata.samplerate_hz;
 
     // If the track finished we need to restart it.
-    if (current_track_music != NULL)
+    if (current_track_music != nullptr)
     {
         Mix_PlayMusic(current_track_music, 1);
     }
@@ -1412,7 +1412,7 @@ static void I_MP_PollMusic(void)
 
 music_module_t music_pack_module =
 {
-    NULL,
+    nullptr,
     0,
     I_MP_InitMusic,
     I_MP_ShutdownMusic,
@@ -1459,7 +1459,7 @@ static void I_NULL_ResumeSong(void)
 
 static void *I_NULL_RegisterSong(void *data, int len)
 {
-    return NULL;
+    return nullptr;
 }
 
 
@@ -1490,7 +1490,7 @@ static void I_NULL_PollMusic(void)
 
 music_module_t music_pack_module =
 {
-    NULL,
+    nullptr,
     0,
     I_NULL_InitMusic,
     I_NULL_ShutdownMusic,

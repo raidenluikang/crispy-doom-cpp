@@ -24,7 +24,7 @@
 
 // The "mission" controls what game we are playing.
 
-typedef enum
+enum class GameMission_t
 {
     doom,            // Doom 1
     doom2,           // Doom 2
@@ -40,24 +40,24 @@ typedef enum
     pack_master,     // Master Levels for Doom 2
 
     none
-} GameMission_t;
+} ;
 
 // The "mode" allows more accurate specification of the game mode we are
 // in: eg. shareware vs. registered.  So doom1.wad and doom.wad are the
 // same mission, but a different mode.
 
-typedef enum
+enum class GameMode_t
 {
     shareware,       // Doom/Heretic shareware
     registered,      // Doom/Heretic registered
     commercial,      // Doom II/Hexen
     retail,          // Ultimate Doom
     indetermined     // Unknown.
-} GameMode_t;
+};
 
 // What version are we emulating?
 
-typedef enum
+enum class GameVersion_t
 {
     exe_doom_1_2,    // Doom 1.2: shareware and registered
     exe_doom_1_666,  // Doom 1.666: for shareware, registered and commercial
@@ -75,21 +75,21 @@ typedef enum
     exe_hexen_1_1,   // Hexen 1.1
     exe_strife_1_2,  // Strife v1.2
     exe_strife_1_31  // Strife v1.31
-} GameVersion_t;
+} ;
 
 // What IWAD variant are we using?
 
-typedef enum
+enum class GameVariant_t 
 {
     vanilla,    // Vanilla Doom
     freedoom,   // FreeDoom: Phase 1 + 2
     freedm,     // FreeDM
     bfgedition, // Doom Classic (Doom 3: BFG Edition)
-} GameVariant_t;
+} ;
 
 // Skill level.
 
-typedef enum
+enum class skill_t
 {
     sk_noitems = -1,        // the "-skill 0" hack
     sk_baby = 0,
@@ -97,7 +97,7 @@ typedef enum
     sk_medium,
     sk_hard,
     sk_nightmare
-} skill_t;
+} ;
 
 boolean D_ValidGameMode(GameMission_t mission, GameMode_t mode);
 boolean D_ValidGameVersion(GameMission_t mission, GameVersion_t version);

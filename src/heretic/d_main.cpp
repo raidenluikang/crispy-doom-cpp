@@ -101,7 +101,7 @@ void D_ProcessEvents(void)
 {
     event_t *ev;
 
-    while ((ev = D_PopEvent()) != NULL)
+    while ((ev = D_PopEvent()) != nullptr)
     {
         if (F_Responder(ev))
         {
@@ -153,7 +153,7 @@ void DrawCenterMessage(void)
     // Place message above quit game message position so they don't overlap
     dp_translation = cr[CR_GOLD];
     MN_DrTextA(player->centerMessage, 160 - MN_TextAWidth(player->centerMessage) / 2, 70);
-    dp_translation = NULL;
+    dp_translation = nullptr;
 }
 
 //---------------------------------------------------------------------------
@@ -301,12 +301,12 @@ void D_Display(void)
     {
         if (!netgame)
         {
-            V_DrawPatch(160, (viewwindowy >> crispy->hires) + 5, W_CacheLumpName(DEH_String("PAUSED"),
+            V_DrawPatch(160, (viewwindowy >> crispy->hires) + 5, W_CacheLumpName_patch(DEH_String("PAUSED"),
                                                               PU_CACHE));
         }
         else
         {
-            V_DrawPatch(160, 70, W_CacheLumpName(DEH_String("PAUSED"), PU_CACHE));
+            V_DrawPatch(160, 70, W_CacheLumpName_patch(DEH_String("PAUSED"), PU_CACHE));
         }
     }
     // Handle player messages
@@ -411,7 +411,7 @@ void D_DoomLoop(void)
         if (crispy->post_rendering_hook)
         {
             crispy->post_rendering_hook();
-            crispy->post_rendering_hook = NULL;
+            crispy->post_rendering_hook = nullptr;
         }
     }
 }
@@ -459,7 +459,7 @@ void D_PageDrawer(void)
     V_DrawFullscreenRawOrPatch(W_GetNumForName(pagename));
     if (demosequence == 1)
     {
-        V_DrawPatch(4, 160, W_CacheLumpName(DEH_String("ADVISOR"), PU_CACHE));
+        V_DrawPatch(4, 160, W_CacheLumpName_patch(DEH_String("ADVISOR"), PU_CACHE));
     }
     UpdateState |= I_FULLSCRN;
 }
@@ -620,7 +620,7 @@ boolean D_AddFile(char *file)
 
     handle = W_AddFile(file);
 
-    return handle != NULL;
+    return handle != nullptr;
 }
 
 //==========================================================
@@ -741,7 +741,7 @@ void initStartup(void)
 
     // Blit main screen
     textScreen = TXT_GetScreenData();
-    loading = W_CacheLumpName(DEH_String("LOADING"), PU_CACHE);
+    loading = W_CacheLumpName_byte(DEH_String("LOADING"), PU_CACHE);
     memcpy(textScreen, loading, 4000);
 
     // Print version string
@@ -886,12 +886,12 @@ static void D_Endoom(void)
         return;
     }
 
-    endoom_data = W_CacheLumpName(DEH_String("ENDTEXT"), PU_STATIC);
+    endoom_data = W_CacheLumpName_byte(DEH_String("ENDTEXT"), PU_STATIC);
 
     I_Endoom(endoom_data);
 }
 
-static const char *const loadparms[] = {"-file", "-merge", NULL}; // [crispy]
+static const char *const loadparms[] = {"-file", "-merge", nullptr}; // [crispy]
 
 //---------------------------------------------------------------------------
 //
@@ -1035,7 +1035,7 @@ void D_DoomMain(void)
     }
     else
     {
-        M_SetConfigDir(NULL);
+        M_SetConfigDir(nullptr);
     }
 
     // Load defaults before initing other systems
@@ -1072,7 +1072,7 @@ void D_DoomMain(void)
 
     iwadfile = D_FindIWAD(IWAD_MASK_HERETIC, &gamemission);
 
-    if (iwadfile == NULL)
+    if (iwadfile == nullptr)
     {
         I_Error("Game mode indeterminate. No IWAD was found. Try specifying\n"
                 "one with the '-iwad' command line parameter.");
@@ -1141,7 +1141,7 @@ void D_DoomMain(void)
     {
         char *autoload_dir;
         autoload_dir = M_GetAutoloadDir("heretic.wad", true);
-        if (autoload_dir != NULL)
+        if (autoload_dir != nullptr)
         {
             DEH_AutoLoadPatches(autoload_dir);
             W_AutoLoadWADs(autoload_dir);

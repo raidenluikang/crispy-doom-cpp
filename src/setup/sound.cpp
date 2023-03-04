@@ -48,8 +48,8 @@ static const char *opltype_strings[] =
     "OPL3"
 };
 
-static const char *cfg_extension[] = { "cfg", NULL };
-static const char *sf_extension[] = { "sf2", "sf3", NULL };
+static const char *cfg_extension[] = { "cfg", nullptr };
+static const char *sf_extension[] = { "sf2", "sf3", nullptr };
 
 // Config file variables:
 
@@ -74,17 +74,17 @@ static int show_talk = 1; // [crispy] show subtitles by default
 int use_libsamplerate = 1;
 float libsamplerate_scale = 0.65;
 
-char *music_pack_path = NULL;
-char *timidity_cfg_path = NULL;
-char *fluidsynth_sf_path = NULL;
-static char *gus_patch_path = NULL;
+char *music_pack_path = nullptr;
+char *timidity_cfg_path = nullptr;
+char *fluidsynth_sf_path = nullptr;
+static char *gus_patch_path = nullptr;
 static int gus_ram_kb = 1024;
 #ifdef _WIN32
 #define MAX_MIDI_DEVICES 20
 static char **midi_names;
 static int midi_num_devices;
 static int midi_index;
-char *winmm_midi_device = NULL;
+char *winmm_midi_device = nullptr;
 int winmm_reset_type = -1;
 int winmm_reset_delay = 0;
 int winmm_reverb_level = -1;
@@ -121,7 +121,7 @@ static txt_dropdown_list_t *OPLTypeSelector(void)
 {
     txt_dropdown_list_t *result;
 
-    if (snd_dmxoption != NULL && strstr(snd_dmxoption, "-opl3") != NULL)
+    if (snd_dmxoption != nullptr && strstr(snd_dmxoption, "-opl3") != nullptr)
     {
         snd_oplmode = OPLMODE_OPL3;
     }
@@ -132,7 +132,7 @@ static txt_dropdown_list_t *OPLTypeSelector(void)
 
     result = TXT_NewDropdownList(&snd_oplmode, opltype_strings, 2);
 
-    TXT_SignalConnect(result, "changed", UpdateSndDevices, NULL);
+    TXT_SignalConnect(result, "changed", UpdateSndDevices, nullptr);
 
     return result;
 }
@@ -166,10 +166,10 @@ static txt_dropdown_list_t *MidiDeviceSelector(void)
         for (i = 0; i < midi_num_devices; ++i)
         {
             free(midi_names[i]);
-            midi_names[i] = NULL;
+            midi_names[i] = nullptr;
         }
         free(midi_names);
-        midi_names = NULL;
+        midi_names = nullptr;
     }
     midi_num_devices = 0;
 
@@ -205,13 +205,13 @@ static txt_dropdown_list_t *MidiDeviceSelector(void)
     // set the dropdown list index to the previously selected device
     for (i = 0; i < midi_num_devices; ++i)
     {
-        if (winmm_midi_device != NULL &&
+        if (winmm_midi_device != nullptr &&
             strstr(winmm_midi_device, midi_names[i]))
         {
             midi_index = i;
             break;
         }
-        else if (winmm_midi_device == NULL || i == midi_num_devices - 1)
+        else if (winmm_midi_device == nullptr || i == midi_num_devices - 1)
         {
             // give up and use MIDI_MAPPER
             midi_index = 0;
@@ -223,7 +223,7 @@ static txt_dropdown_list_t *MidiDeviceSelector(void)
 
     result = TXT_NewDropdownList(&midi_index, (const char **)midi_names,
                                  midi_num_devices);
-    TXT_SignalConnect(result, "changed", UpdateMidiDevice, NULL);
+    TXT_SignalConnect(result, "changed", UpdateMidiDevice, nullptr);
 
     return result;
 }
@@ -250,7 +250,7 @@ void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
 
     music_action = TXT_NewWindowAction('m', "Music Packs");
     TXT_SetWindowAction(window, TXT_HORIZ_CENTER, music_action);
-    TXT_SignalConnect(music_action, "pressed", OpenMusicPackDir, NULL);
+    TXT_SignalConnect(music_action, "pressed", OpenMusicPackDir, nullptr);
 
     TXT_AddWidgets(window,
         TXT_NewSeparator("Sound effects"),
@@ -267,13 +267,13 @@ void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
                 TXT_NewHorizBox(
                     TXT_NewStrut(4, 0),
                     TXT_NewCheckBox("Pitch-shifted sounds", &snd_pitchshift),
-                    NULL))),
+                    nullptr))),
         TXT_If(gamemission == strife,
             TXT_NewConditional(&snd_sfxdevice, SNDDEVICE_SB,
                 TXT_NewHorizBox(
                     TXT_NewStrut(4, 0),
                     TXT_NewCheckBox("Show text with voices", &show_talk),
-                    NULL))),
+                    nullptr))),
 
         TXT_NewSeparator("Music"),
         TXT_NewRadioButton("Disabled", &snd_musicdevice, SNDDEVICE_NONE),
@@ -285,7 +285,7 @@ void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
                 TXT_NewStrut(4, 0),
                 TXT_NewLabel("Chip type: "),
                 OPLTypeSelector(),
-                NULL)),
+                nullptr)),
 
         TXT_NewRadioButton("GUS (emulated)", &snd_musicdevice, SNDDEVICE_GUS),
         TXT_NewConditional(&snd_musicdevice, SNDDEVICE_GUS,
@@ -296,7 +296,7 @@ void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
                 TXT_NewFileSelector(&gus_patch_path, 34,
                                     "Select directory containing GUS patches",
                                     TXT_DIRECTORY),
-                NULL)),
+                nullptr)),
 
         TXT_NewRadioButton("Native MIDI", &snd_musicdevice, SNDDEVICE_GENMIDI),
 #ifdef _WIN32
@@ -305,7 +305,7 @@ void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
                 TXT_NewStrut(4, 0),
                 TXT_NewLabel("Device: "),
                 MidiDeviceSelector(),
-                NULL)),
+                nullptr)),
 #endif
         TXT_NewConditional(&snd_musicdevice, SNDDEVICE_GENMIDI,
             TXT_MakeTable(2,
@@ -321,8 +321,8 @@ void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
                 TXT_NewFileSelector(&fluidsynth_sf_path, 34,
                                     "Select FluidSynth soundfont file",
                                     sf_extension),
-                NULL)),
-        NULL);
+                nullptr)),
+        nullptr);
 }
 
 void BindSoundVariables(void)

@@ -291,7 +291,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
                      "ALWAYS RUN ON" :
                      "ALWAYS RUN OFF", false);
 
-        S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
+        S_StartSound(nullptr, SFX_DOOR_LIGHT_CLOSE);
 
         gamekeydown[key_toggleautorun] = false;
     }
@@ -305,7 +305,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
                      "VERTICAL MOUSE MOVEMENT OFF" :
                      "VERTICAL MOUSE MOVEMENT ON", false);
 
-        S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
+        S_StartSound(nullptr, SFX_DOOR_LIGHT_CLOSE);
 
         gamekeydown[key_togglenovert] = false;
     }
@@ -1108,7 +1108,7 @@ boolean G_Responder(event_t * ev)
 void G_Ticker(void)
 {
     int i, buf;
-    ticcmd_t *cmd = NULL;
+    ticcmd_t *cmd = nullptr;
 
 //
 // do player reborns if needed
@@ -1530,7 +1530,7 @@ void G_DoReborn(int playernum)
     }
     else
     {                           // Net-game
-        players[playernum].mo->player = NULL;   // Dissassociate the corpse
+        players[playernum].mo->player = nullptr;   // Dissassociate the corpse
 
         if (deathmatch)
         {                       // Spawn at random spot if in death match
@@ -1694,7 +1694,7 @@ void G_Completed(int map, int position)
     if (gamemode == shareware && map > 4)
     {
         P_SetMessage(&players[consoleplayer], "ACCESS DENIED -- DEMO", true);
-        S_StartSound(NULL, SFX_CHAT);
+        S_StartSound(nullptr, SFX_CHAT);
         return;
     }
 
@@ -2048,7 +2048,7 @@ static void IncreaseDemoBuffer(void)
     // Generate a new buffer twice the size
     new_length = current_length * 2;
 
-    new_demobuffer = Z_Malloc(new_length, PU_STATIC, 0);
+    new_demobuffer = zmalloc<decltype(    new_demobuffer)>(new_length, PU_STATIC, 0);
     new_demop = new_demobuffer + (demo_p - demobuffer);
 
     // Copy over the old data
@@ -2160,7 +2160,7 @@ void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
     G_InitNew(skill, episode, map);
     usergame = false;
     demoname_size = strlen(name) + 5;
-    demoname = Z_Malloc(demoname_size, PU_STATIC, NULL);
+    demoname = zmalloc<decltype(    demoname)>(demoname_size, PU_STATIC, nullptr);
     M_snprintf(demoname, demoname_size, "%s.lmp", name);
     maxsize = 0x20000;
 
@@ -2175,7 +2175,7 @@ void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
     i = M_CheckParmWithArgs("-maxdemo", 1);
     if (i)
         maxsize = atoi(myargv[i + 1]) * 1024;
-    demobuffer = Z_Malloc(maxsize, PU_STATIC, NULL);
+    demobuffer = zmalloc<decltype(    demobuffer)>(maxsize, PU_STATIC, nullptr);
     demoend = demobuffer + maxsize;
 
     demo_p = demobuffer;
@@ -2307,7 +2307,7 @@ void G_TimeDemo(char *name)
     skill_t skill;
     int episode, map, i;
 
-    demobuffer = demo_p = W_CacheLumpName(name, PU_STATIC);
+    demobuffer = demo_p = W_CacheLumpName_byte(name, PU_STATIC);
     skill = *demo_p++;
     episode = *demo_p++;
     map = *demo_p++;

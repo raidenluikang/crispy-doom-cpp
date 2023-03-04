@@ -102,8 +102,8 @@ typedef struct player_s
     int			armortype;	
 
     // Power ups. invinc and invis are tic counters.
-    int			powers[NUMPOWERS + 3]; // [crispy] showfps and mapcoords are now "powers"
-    boolean		cards[NUMCARDS];
+    int			powers[static_cast<size_t>(powertype_t::NUMPOWERS) + 3]; // [crispy] showfps and mapcoords are now "powers"
+    boolean		cards[static_cast<size_t>(card_t::NUMCARDS)];
     boolean		backpack;
     
     // Frags, kills of other players.
@@ -113,9 +113,9 @@ typedef struct player_s
     // Is wp_nochange if not changing.
     weapontype_t	pendingweapon;
 
-    int                 weaponowned[NUMWEAPONS];
-    int			ammo[NUMAMMO];
-    int			maxammo[NUMAMMO];
+    int                 weaponowned[static_cast<size_t>(weapontype_t::NUMWEAPONS)];
+    int			ammo[static_cast<size_t>(ammotype_t::NUMAMMO)];
+    int			maxammo[static_cast<size_t>(ammotype_t::NUMAMMO)];
 
     // True if button down last tic.
     int			attackdown;
@@ -140,7 +140,7 @@ typedef struct player_s
     int			damagecount;
     int			bonuscount;
 
-    // Who did damage (NULL for floors/ceilings).
+    // Who did damage (nullptr for floors/ceilings).
     mobj_t*		attacker;
     
     // So gun flashes light up areas.
@@ -186,7 +186,7 @@ typedef struct player_s
     fixed_t	bob2;
 
     // [crispy] blinking key or skull in the status bar
-    boolean		tryopen[NUMCARDS];
+    boolean		tryopen[static_cast<size_t>(card_t::NUMCARDS)];
 
     // [crispy] negative player health
     int			neghealth;

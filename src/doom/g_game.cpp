@@ -190,15 +190,15 @@ static const struct
     weapontype_t weapon;
     weapontype_t weapon_num;
 } weapon_order_table[] = {
-    { wp_fist,            wp_fist },
-    { wp_chainsaw,        wp_fist },
-    { wp_pistol,          wp_pistol },
-    { wp_shotgun,         wp_shotgun },
-    { wp_supershotgun,    wp_shotgun },
-    { wp_chaingun,        wp_chaingun },
-    { wp_missile,         wp_missile },
-    { wp_plasma,          wp_plasma },
-    { wp_bfg,             wp_bfg }
+    { weapontype_t::wp_fist,            weapontype_t::wp_fist },
+    { weapontype_t::wp_chainsaw,        weapontype_t::wp_fist },
+    { weapontype_t::wp_pistol,          weapontype_t::wp_pistol },
+    { weapontype_t::wp_shotgun,         weapontype_t::wp_shotgun },
+    { weapontype_t::wp_supershotgun,    weapontype_t::wp_shotgun },
+    { weapontype_t::wp_chaingun,        weapontype_t::wp_chaingun },
+    { weapontype_t::wp_missile,         weapontype_t::wp_missile },
+    { weapontype_t::wp_plasma,          weapontype_t::wp_plasma },
+    { weapontype_t::wp_bfg,             weapontype_t::wp_bfg }
 };
 
 #define SLOWTURNTICS	6 
@@ -246,7 +246,7 @@ int             vanilla_savegame_limit = 1;
 int             vanilla_demo_limit = 1;
 
 // [crispy] store last cmd to track joins
-static ticcmd_t* last_cmd = NULL;
+static ticcmd_t* last_cmd = nullptr;
  
 int G_CmdChecksum (ticcmd_t* cmd) 
 { 
@@ -263,22 +263,22 @@ static boolean WeaponSelectable(weapontype_t weapon)
 {
     // Can't select the super shotgun in Doom 1.
 
-    if (weapon == wp_supershotgun && !crispy->havessg)
+    if (weapon == weapontype_t::wp_supershotgun && !crispy->havessg)
     {
         return false;
     }
 
     // These weapons aren't available in shareware.
 
-    if ((weapon == wp_plasma || weapon == wp_bfg)
-     && gamemission == doom && gamemode == shareware)
+    if ((weapon == weapontype_t::wp_plasma || weapon == weapontype_t::wp_bfg)
+     && gamemission == GameMission_t::doom && gamemode == GameMode_t::shareware)
     {
         return false;
     }
 
     // Can't select a weapon if we don't own it.
 
-    if (!players[consoleplayer].weaponowned[weapon])
+    if (!players[consoleplayer].weaponowned[static_cast<int>(weapon)])
     {
         return false;
     }
@@ -286,9 +286,9 @@ static boolean WeaponSelectable(weapontype_t weapon)
     // Can't select the fist if we have the chainsaw, unless
     // we also have the berserk pack.
 
-    if (weapon == wp_fist
-     && players[consoleplayer].weaponowned[wp_chainsaw]
-     && !players[consoleplayer].powers[pw_strength])
+    if (weapon ==weapontype_t:: wp_fist
+     && players[consoleplayer].weaponowned[static_cast<int>(weapontype_t::wp_chainsaw)]
+     && !players[consoleplayer].powers[static_cast<int>(powertype_t::pw_strength)])
     {
         return false;
     }
@@ -299,11 +299,11 @@ static boolean WeaponSelectable(weapontype_t weapon)
 static int G_NextWeapon(int direction)
 {
     weapontype_t weapon;
-    int start_i, i;
+    int start_i;
 
     // Find index in the table.
 
-    if (players[consoleplayer].pendingweapon == wp_nochange)
+    if (players[consoleplayer].pendingweapon == weapontype_t::wp_nochange)
     {
         weapon = players[consoleplayer].readyweapon;
     }
@@ -311,8 +311,10 @@ static int G_NextWeapon(int direction)
     {
         weapon = players[consoleplayer].pendingweapon;
     }
-
-    for (i=0; i<arrlen(weapon_order_table); ++i)
+    
+    constexpr int order_table_len = arrlen(weapon_order_table);
+    int i = 0;
+    for (i = 0; i <  order_table_len ; ++i)
     {
         if (weapon_order_table[i].weapon == weapon)
         {
@@ -325,10 +327,10 @@ static int G_NextWeapon(int direction)
     do
     {
         i += direction;
-        i = (i + arrlen(weapon_order_table)) % arrlen(weapon_order_table);
+        i = (i + order_table_len ) % order_table_len;
     } while (i != start_i && !WeaponSelectable(weapon_order_table[i].weapon));
 
-    return weapon_order_table[i].weapon_num;
+    return static_cast<int>( weapon_order_table[i].weapon_num );
 }
 
 // [crispy] holding down the "Run" key may trigger special behavior,
@@ -441,7 +443,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
             crstr[CR_GREEN],
             (joybspeed >= MAX_JOY_BUTTONS) ? "ON" : "OFF");
         player->message = playermessage;
-        S_StartSoundOptional(NULL, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
+        S_StartSoundOptional(nullptr, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
 
         gamekeydown[key_toggleautorun] = false;
     }
@@ -456,13 +458,13 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
             crstr[CR_GREEN],
             !novert ? "ON" : "OFF");
         player->message = playermessage;
-        S_StartSoundOptional(NULL, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
+        S_StartSoundOptional(nullptr, sfx_mnusli, sfx_swtchn); // [NS] Optional menu sounds.
 
         gamekeydown[key_togglenovert] = false;
     }
 
     // [crispy] extra high precision IDMYPOS variant, updates for 10 seconds
-    if (player->powers[pw_mapcoords])
+    if (player->powers[static_cast<int>(powertype_t::pw_mapcoords)])
     {
         M_snprintf(playermessage, sizeof(playermessage),
             "X=%.10f Y=%.10f A=%d",
@@ -471,10 +473,10 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
             player->mo->angle >> 24);
         player->message = playermessage;
 
-        player->powers[pw_mapcoords]--;
+        player->powers[static_cast<int>(powertype_t::pw_mapcoords)]--;
 
         // [crispy] discard instead of going static
-        if (!player->powers[pw_mapcoords])
+        if (!player->powers[static_cast<int>(powertype_t::pw_mapcoords)])
         {
             player->message = "";
         }
@@ -608,14 +610,14 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     {
         // Check weapon keys.
 
-        for (i=0; i<arrlen(weapon_keys); ++i)
+        for (size_t i=0; i<arrlen(weapon_keys); ++i)
         {
             int key = *weapon_keys[i];
 
             if (gamekeydown[key])
             {
                 cmd->buttons |= BT_CHANGE;
-                cmd->buttons |= i<<BT_WEAPONSHIFT;
+                cmd->buttons |= i << BT_WEAPONSHIFT;
                 break;
             }
         }
@@ -820,14 +822,14 @@ void G_DoLoadLevel (void)
     // The "Sky never changes in Doom II" bug was fixed in
     // the id Anthology version of doom2.exe for Final Doom.
     // [crispy] correct "Sky never changes in Doom II" bug
-    if ((gamemode == commercial)
-     && (gameversion == exe_final2 || gameversion == exe_chex || true))
+    if ((gamemode == GameMode_t::commercial)
+     && (gameversion == GameVersion_t::exe_final2 || gameversion == GameVersion_t::exe_chex || true))
     {
         const char *skytexturename;
 
         if (gamemap < 12)
         {
-            if ((gameepisode == 2 || gamemission == pack_nerve) && gamemap >= 4 && gamemap <= 8)
+            if ((gameepisode == 2 || gamemission == GameMission_t::pack_nerve) && gamemap >= 4 && gamemap <= 8)
                 skytexturename = "SKY3";
             else
             skytexturename = "SKY1";
@@ -835,11 +837,11 @@ void G_DoLoadLevel (void)
         else if (gamemap < 21)
         {
             // [crispy] BLACKTWR (MAP25) and TEETH (MAP31 and MAP32)
-            if ((gameepisode == 3 || gamemission == pack_master) && gamemap >= 19)
+            if ((gameepisode == 3 || gamemission == GameMission_t::pack_master) && gamemap >= 19)
                 skytexturename = "SKY3";
             else
             // [crispy] BLOODSEA and MEPHISTO (both MAP07)
-            if ((gameepisode == 3 || gamemission == pack_master) && (gamemap == 14 || gamemap == 15))
+            if ((gameepisode == 3 || gamemission == GameMission_t::pack_master) && (gamemap == 14 || gamemap == 15))
                 skytexturename = "SKY1";
             else
             skytexturename = "SKY2";
@@ -859,16 +861,16 @@ void G_DoLoadLevel (void)
     levelstarttic = gametic;        // for time calculation
     
     if (wipegamestate == GS_LEVEL) 
-	wipegamestate = -1;             // force a wipe 
+	wipegamestate = GS_INVALID;             // force a wipe 
 
     gamestate = GS_LEVEL; 
 
     for (i=0 ; i<MAXPLAYERS ; i++) 
     { 
-	turbodetected[i] = false;
-	if (playeringame[i] && players[i].playerstate == PST_DEAD) 
-	    players[i].playerstate = PST_REBORN; 
-	memset (players[i].frags,0,sizeof(players[i].frags)); 
+        turbodetected[i] = false;
+        if (playeringame[i] && players[i].playerstate == PST_DEAD) 
+            players[i].playerstate = PST_REBORN; 
+        memset (players[i].frags,0,sizeof(players[i].frags)); 
     } 
 		 
     // [crispy] update the "singleplayer" variable
@@ -996,7 +998,7 @@ boolean G_Responder (event_t* ev)
     if (gameaction == ga_nothing && 
         (demoplayback || gamestate == GS_DEMOSCREEN))
     {
-        if (ev->type == ev_keydown && ev->data1 == key_pause)
+        if (ev->type == evtype_t::ev_keydown && ev->data1 == key_pause)
         {
             if (paused ^= 2)
                 S_PauseSound();
@@ -1007,7 +1009,7 @@ boolean G_Responder (event_t* ev)
     }
 
     // [crispy] demo fast-forward
-    if (ev->type == ev_keydown && ev->data1 == key_demospeed && 
+    if (ev->type == evtype_t::ev_keydown && ev->data1 == key_demospeed && 
         (demoplayback || gamestate == GS_DEMOSCREEN))
     {
         singletics = !singletics;
@@ -1015,7 +1017,7 @@ boolean G_Responder (event_t* ev)
     }
  
     // allow spy mode changes even during the demo
-    if (gamestate == GS_LEVEL && ev->type == ev_keydown 
+    if (gamestate == GS_LEVEL && ev->type == evtype_t::ev_keydown 
      && ev->data1 == key_spy && (singledemo || !deathmatch) )
     {
 	// spy mode 
@@ -1040,13 +1042,13 @@ boolean G_Responder (event_t* ev)
 	(demoplayback || gamestate == GS_DEMOSCREEN) 
 	) 
     { 
-	if (ev->type == ev_keydown ||  
-	    (ev->type == ev_mouse && ev->data1) || 
-	    (ev->type == ev_joystick && ev->data1) ) 
+	if (ev->type == evtype_t::ev_keydown ||  
+	    (ev->type == evtype_t::ev_mouse && ev->data1) || 
+	    (ev->type == evtype_t::ev_joystick && ev->data1) ) 
 	{ 
 	    // [crispy] play a sound if the menu is activated with a different key than ESC
 	    if (!menuactive && crispy->soundfix)
-		S_StartSoundOptional(NULL, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
+		S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 	    M_StartControlPanel (); 
 	    return true; 
 	} 
@@ -1076,7 +1078,7 @@ boolean G_Responder (event_t* ev)
 	    return true;	// finale ate the event 
     } 
 
-    if (testcontrols && ev->type == ev_mouse)
+    if (testcontrols && ev->type == evtype_t::ev_mouse)
     {
         // If we are invoked by setup to test the controls, save the 
         // mouse speed so that we can display it on-screen.
@@ -1089,60 +1091,63 @@ boolean G_Responder (event_t* ev)
     // If the next/previous weapon keys are pressed, set the next_weapon
     // variable to change weapons when the next ticcmd is generated.
 
-    if (ev->type == ev_keydown && ev->data1 == key_prevweapon)
+    if (ev->type == evtype_t::ev_keydown && ev->data1 == key_prevweapon)
     {
         next_weapon = -1;
     }
-    else if (ev->type == ev_keydown && ev->data1 == key_nextweapon)
+    else if (ev->type == evtype_t::ev_keydown && ev->data1 == key_nextweapon)
     {
         next_weapon = 1;
     }
 
     switch (ev->type) 
     { 
-      case ev_keydown: 
-	if (ev->data1 == key_pause) 
-	{ 
-	    sendpause = true; 
-	}
+      case evtype_t::ev_keydown: 
+        if (ev->data1 == key_pause) 
+        { 
+            sendpause = true; 
+        }
         else if (ev->data1 <NUMKEYS) 
         {
-	    gamekeydown[ev->data1] = true; 
+	        gamekeydown[ev->data1] = true; 
         }
 
-	return true;    // eat key down events 
+	    return true;    // eat key down events 
  
-      case ev_keyup: 
-	if (ev->data1 <NUMKEYS) 
-	    gamekeydown[ev->data1] = false; 
-	return false;   // always let key up events filter down 
+      case evtype_t::ev_keyup: 
+	        if (ev->data1 <NUMKEYS) 
+	            gamekeydown[ev->data1] = false; 
+	        return false;   // always let key up events filter down 
 		 
-      case ev_mouse: 
+      case evtype_t::ev_mouse: 
         SetMouseButtons(ev->data1);
-	if (mouseSensitivity)
-	mousex = ev->data2*(mouseSensitivity+5)/10; 
-	else
-	    mousex = 0; // [crispy] disable entirely
-	if (mouseSensitivity_x2)
-	mousex2 = ev->data2*(mouseSensitivity_x2+5)/10; // [crispy] separate sensitivity for strafe
-	else
-	    mousex2 = 0; // [crispy] disable entirely
-	if (mouseSensitivity_y)
-	mousey = ev->data3*(mouseSensitivity_y+5)/10; // [crispy] separate sensitivity for y-axis
-	else
-	    mousey = 0; // [crispy] disable entirely
-	return true;    // eat events 
+	    if (mouseSensitivity)
+	        mousex = ev->data2*(mouseSensitivity+5)/10; 
+	    else
+	        mousex = 0; // [crispy] disable entirely
+	    if (mouseSensitivity_x2)
+	        mousex2 = ev->data2*(mouseSensitivity_x2+5)/10; // [crispy] separate sensitivity for strafe
+        else
+	        mousex2 = 0; // [crispy] disable entirely
+	    
+        if (mouseSensitivity_y)
+	        mousey = ev->data3*(mouseSensitivity_y+5)/10; // [crispy] separate sensitivity for y-axis
+	    else
+	        mousey = 0; // [crispy] disable entirely
+	    
+        return true;    // eat events 
  
-      case ev_joystick: 
+      case evtype_t::ev_joystick: 
         SetJoyButtons(ev->data1);
-	joyxmove = ev->data2; 
-	joyymove = ev->data3; 
+	    joyxmove = ev->data2; 
+	    joyymove = ev->data3; 
         joystrafemove = ev->data4;
         joylook = ev->data5;
-	return true;    // eat events 
+	    
+        return true;    // eat events 
  
       default: 
-	break; 
+	    break; 
     } 
  
     return false; 
@@ -1427,11 +1432,14 @@ void G_PlayerFinishLevel (int player)
     p->damagecount = 0;			// no palette changes 
     p->bonuscount = 0; 
     // [crispy] reset additional player properties
-    p->lookdir = p->oldlookdir =
-    p->centering =
-    p->jumpTics =
-    p->recoilpitch = p->oldrecoilpitch =
-    p->btuse = p->btuse_tics = 0;
+    p->lookdir = 0;
+    p->oldlookdir = 0;
+    p->centering = 0;
+    p->jumpTics = 0;
+    p->recoilpitch = 0;
+    p->oldrecoilpitch = 0;
+    p->btuse = 0;
+    p->btuse_tics = 0;
 } 
  
 
@@ -1443,7 +1451,6 @@ void G_PlayerFinishLevel (int player)
 void G_PlayerReborn (int player) 
 { 
     player_t*	p; 
-    int		i; 
     int		frags[MAXPLAYERS]; 
     int		killcount;
     int		itemcount;
@@ -1467,13 +1474,13 @@ void G_PlayerReborn (int player)
     p->health = deh_initial_health;     // Use dehacked value
     // [crispy] negative player health
     p->neghealth = p->health;
-    p->readyweapon = p->pendingweapon = wp_pistol; 
-    p->weaponowned[wp_fist] = true; 
-    p->weaponowned[wp_pistol] = true; 
-    p->ammo[am_clip] = deh_initial_bullets; 
+    p->readyweapon = p->pendingweapon = weapontype_t::wp_pistol; 
+    p->weaponowned[static_cast<int>(weapontype_t::wp_fist)] = true; 
+    p->weaponowned[static_cast<int>(weapontype_t::wp_pistol)] = true; 
+    p->ammo[static_cast<int>(ammotype_t::am_clip)] = deh_initial_bullets; 
 	 
-    for (i=0 ; i<NUMAMMO ; i++) 
-	p->maxammo[i] = maxammo[i]; 
+    for (int i = 0 ; i < static_cast<int>( ammotype_t::NUMAMMO); i++) 
+	    p->maxammo[i] = maxammo[i]; 
 		 
 }
 
@@ -1650,7 +1657,7 @@ void G_DoReborn (int playernum)
 	// respawn at the start
 
 	// first dissasociate the corpse 
-	players[playernum].mo->player = NULL;   
+	players[playernum].mo->player = nullptr;   
 		 
 	// spawn at random spot if in death match 
 	if (deathmatch) 
@@ -1739,11 +1746,12 @@ void G_ExitLevel (void)
 void G_SecretExitLevel (void) 
 { 
     // IF NO WOLF3D LEVELS, NO SECRET EXIT!
-    if ( (gamemode == commercial)
+    if ( (gamemode == GameMode_t::commercial)
       && (W_CheckNumForName("map31")<0))
-	secretexit = false;
+	    secretexit = false;
     else
-	secretexit = true; 
+	    secretexit = true; 
+    
     G_ClearSavename();
     gameaction = ga_completed; 
 } 
@@ -1776,27 +1784,27 @@ static void G_FormatLevelStatTime(char *str, int tics)
 // [crispy] Write level statistics upon exit
 static void G_WriteLevelStat(void)
 {
-    static FILE *fstream = NULL;
+    static FILE *fstream = nullptr;
 
-    int i, playerKills = 0, playerItems = 0, playerSecrets = 0;
+    int playerKills = 0, playerItems = 0, playerSecrets = 0;
 
     char levelString[8];
     char levelTimeString[TIMESTRSIZE];
     char totalTimeString[TIMESTRSIZE];
     char *decimal;
 
-    if (fstream == NULL)
+    if (fstream == nullptr)
     {
         fstream = fopen("levelstat.txt", "w");
 
-        if (fstream == NULL)
+        if (fstream == nullptr)
         {
             fprintf(stderr, "G_WriteLevelStat: Unable to open levelstat.txt for writing!\n");
             return;
         }
     }
     
-    if (gamemode == commercial)
+    if (gamemode == GameMode_t::commercial)
     {
         M_snprintf(levelString, sizeof(levelString), "MAP%02d", gamemap);
     }
@@ -1811,12 +1819,12 @@ static void G_WriteLevelStat(void)
 
     // Total time ignores centiseconds
     decimal = strchr(totalTimeString, '.');
-    if (decimal != NULL)
+    if (decimal != nullptr)
     {
         *decimal = '\0';
     }
 
-    for (i = 0; i < MAXPLAYERS; i++)
+    for (int i = 0; i < MAXPLAYERS; i++)
     {
         if (playeringame[i])
         {
@@ -1851,11 +1859,11 @@ void G_DoCompleted (void)
     if (automapactive) 
 	AM_Stop (); 
 	
-    if (gamemode != commercial)
+    if (gamemode != GameMode_t::commercial)
     {
         // Chex Quest ends after 5 levels, rather than 8.
 
-        if (gameversion == exe_chex)
+        if (gameversion == GameVersion_t::exe_chex)
         {
             // [crispy] display tally screen after Chex Quest E1M5
             /*
@@ -1911,7 +1919,7 @@ void G_DoCompleted (void)
     wminfo.last = gamemap -1;
     
     // wminfo.next is 0 biased, unlike gamemap
-    if ( gamemission == pack_nerve && gamemap <= 9 )
+    if ( gamemission == GameMission_t::pack_nerve && gamemap <= 9 )
     {
 	if (secretexit)
 	    switch(gamemap)
@@ -1926,12 +1934,12 @@ void G_DoCompleted (void)
 	    }
     }
     else
-    if ( gamemission == pack_master && gamemap <= 21 )
+    if ( gamemission == GameMission_t::pack_master && gamemap <= 21 )
     {
 	wminfo.next = gamemap;
     }
     else
-    if ( gamemode == commercial)
+    if ( gamemode == GameMode_t::commercial)
     {
 	if (secretexit)
 	    if (gamemap == 2 && critical->havemap33)
@@ -1996,7 +2004,7 @@ void G_DoCompleted (void)
 
     // Set par time. Exceptions are added for purposes of
     // statcheck regression testing.
-    if (gamemode == commercial)
+    if (gamemode == GameMode_t::commercial)
     {
         // map33 reads its par time from beyond the cpars[] array
         if (gamemap == 33)
@@ -2014,7 +2022,7 @@ void G_DoCompleted (void)
             wminfo.partime = TICRATE*bex_cpars[gamemap-1];
         }
         // [crispy] par times for NRFTL
-        else if (gamemission == pack_nerve)
+        else if (gamemission == GameMission_t::pack_nerve)
         {
             wminfo.partime = TICRATE*npars[gamemap-1];
         }
@@ -2037,7 +2045,7 @@ void G_DoCompleted (void)
             wminfo.partime = TICRATE*bex_pars[gameepisode][gamemap];
         }
         else
-        if (gameversion == exe_chex && gameepisode == 1 && gamemap < 6)
+        if (gameversion == GameVersion_t::exe_chex && gameepisode == 1 && gamemap < 6)
         {
             wminfo.partime = TICRATE*chexpars[gamemap];
         }
@@ -2185,7 +2193,7 @@ void G_DoLoadGame (void)
 	 
     save_stream = M_fopen(savename, "rb");
 
-    if (save_stream == NULL)
+    if (save_stream == nullptr)
     {
         I_Error("Could not load savegame %s", savename);
     }
@@ -2213,7 +2221,7 @@ void G_DoLoadGame (void)
             free(savewadfilename);
         }
     }
-    savewadfilename = NULL;
+    savewadfilename = nullptr;
 
     savegame_error = false;
 
@@ -2287,7 +2295,7 @@ void G_DoSaveGame (void)
     char *temp_savegame_file;
     char *recovery_savegame_file;
 
-    recovery_savegame_file = NULL;
+    recovery_savegame_file = nullptr;
     temp_savegame_file = P_TempSaveGameFile();
     savegame_file = P_SaveGameFile(savegameslot);
 
@@ -2297,13 +2305,13 @@ void G_DoSaveGame (void)
     // a corrupted one, or if a savegame buffer overrun occurs.
     save_stream = M_fopen(temp_savegame_file, "wb");
 
-    if (save_stream == NULL)
+    if (save_stream == nullptr)
     {
         // Failed to save the game, so we're going to have to abort. But
         // to be nice, save to somewhere else before we call I_Error().
         recovery_savegame_file = M_TempFile("recovery.dsg");
         save_stream = M_fopen(recovery_savegame_file, "wb");
-        if (save_stream == NULL)
+        if (save_stream == nullptr)
         {
             I_Error("Failed to open either '%s' or '%s' to write savegame.",
                     temp_savegame_file, recovery_savegame_file);
@@ -2350,7 +2358,7 @@ void G_DoSaveGame (void)
 
     fclose(save_stream);
 
-    if (recovery_savegame_file != NULL)
+    if (recovery_savegame_file != nullptr)
     {
         // We failed to save to the normal location, but we wrote a
         // recovery file to the temp directory. Now we can bomb out
@@ -2718,7 +2726,7 @@ static void IncreaseDemoBuffer(void)
     // Generate a new buffer twice the size
     new_length = current_length * 2;
     
-    new_demobuffer = Z_Malloc(new_length, PU_STATIC, 0);
+    new_demobuffer = zmalloc<decltype(    new_demobuffer)>(new_length, PU_STATIC, 0);
     new_demop = new_demobuffer + (demo_p - demobuffer);
 
     // Copy over the old data
@@ -2799,7 +2807,7 @@ void G_RecordDemo (const char *name)
 
     // [crispy] demo file name suffix counter
     static unsigned int j = 0;
-    FILE *fp = NULL;
+    FILE *fp = nullptr;
 
     // [crispy] the name originally chosen for the demo, i.e. without "-00000"
     if (!orig_demoname)
@@ -2809,11 +2817,11 @@ void G_RecordDemo (const char *name)
 
     usergame = false;
     demoname_size = strlen(name) + 5 + 6; // [crispy] + 6 for "-00000"
-    demoname = Z_Malloc(demoname_size, PU_STATIC, NULL);
+    demoname = zmalloc<decltype(    demoname)>(demoname_size, PU_STATIC, nullptr);
     M_snprintf(demoname, demoname_size, "%s.lmp", name);
 
     // [crispy] prevent overriding demos by adding a file name suffix
-    for ( ; j <= 99999 && (fp = fopen(demoname, "rb")) != NULL; j++)
+    for ( ; j <= 99999 && (fp = fopen(demoname, "rb")) != nullptr; j++)
     {
 	M_snprintf(demoname, demoname_size, "%s-%05d.lmp", name, j);
 	fclose (fp);
@@ -2832,7 +2840,7 @@ void G_RecordDemo (const char *name)
     i = M_CheckParmWithArgs("-maxdemo", 1);
     if (i)
 	maxsize = atoi(myargv[i+1])*1024;
-    demobuffer = Z_Malloc (maxsize,PU_STATIC,NULL); 
+    demobuffer = zmalloc<decltype(    demobuffer)>(maxsize,PU_STATIC,nullptr); 
     demoend = demobuffer + maxsize;
 	
     demorecording = true; 
@@ -3148,7 +3156,7 @@ static void G_AddDemoFooter(void)
     }
 
     tmp = M_StringJoin(PACKAGE_STRING, DEMO_FOOTER_SEPARATOR,
-            "-iwad \"", M_BaseName(filenames[0]), "\"", NULL);
+            "-iwad \"", M_BaseName(filenames[0]), "\"", nullptr);
     mem_fputs(tmp, stream);
     free(tmp);
 
@@ -3158,7 +3166,7 @@ static void G_AddDemoFooter(void)
 
         for (i = 1; filenames[i]; i++)
         {
-            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", NULL);
+            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", nullptr);
             mem_fputs(tmp, stream);
             free(tmp);
         }
@@ -3172,13 +3180,13 @@ static void G_AddDemoFooter(void)
 
         for (i = 0; filenames[i]; i++)
         {
-            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", NULL);
+            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", nullptr);
             mem_fputs(tmp, stream);
             free(tmp);
         }
     }
 
-    tmp = M_StringJoin(" -gameversion ", D_GetGameVersionCmd(), NULL);
+    tmp = M_StringJoin(" -gameversion ", D_GetGameVersionCmd(), nullptr);
     mem_fputs(tmp, stream);
     free(tmp);
 
@@ -3218,7 +3226,7 @@ boolean G_CheckDemoStatus (void)
 
     // [crispy] catch the last cmd to track joins
     ticcmd_t* cmd = last_cmd;
-    last_cmd = NULL;
+    last_cmd = nullptr;
 
     if (timingdemo) 
     { 
@@ -3271,7 +3279,7 @@ boolean G_CheckDemoStatus (void)
             }
 
             // [crispy] record demo join
-            if (cmd != NULL)
+            if (cmd != nullptr)
             {
                 cmd->buttons |= BT_JOIN;
             }

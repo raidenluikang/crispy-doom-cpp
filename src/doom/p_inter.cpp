@@ -165,8 +165,8 @@ P_GiveAmmo
 // [crispy] show weapon pickup messages in multiplayer games
 const char *const WeaponPickupMessages[NUMWEAPONS] =
 {
-	NULL, // wp_fist
-	NULL, // wp_pistol
+	nullptr, // wp_fist
+	nullptr, // wp_pistol
 	GOTSHOTGUN,
 	GOTCHAINGUN,
 	GOTLAUNCHER,
@@ -209,7 +209,7 @@ P_GiveWeapon
 	player->message = DEH_String(WeaponPickupMessages[weapon]);
 
 	if (player == &players[displayplayer])
-	    S_StartSound (NULL, sfx_wpnup);
+	    S_StartSound (nullptr, sfx_wpnup);
 	return false;
     }
 	
@@ -717,7 +717,7 @@ P_TouchSpecialThing
     P_RemoveMobj (special);
     player->bonuscount += BONUSADD;
     if (player == &players[displayplayer])
-	S_StartSoundOptional (NULL, sound, sfx_itemup); // [NS] Fallback to itemup.
+	S_StartSoundOptional (nullptr, sound, sfx_itemup); // [NS] Fallback to itemup.
 }
 
 
@@ -837,11 +837,11 @@ P_KillMobj
 // P_DamageMobj
 // Damages both enemies and players
 // "inflictor" is the thing that caused the damage
-//  creature or missile, can be NULL (slime, etc)
+//  creature or missile, can be nullptr (slime, etc)
 // "source" is the thing to target after taking damage
-//  creature or NULL
+//  creature or nullptr
 // Source and inflictor are the same for melee attacks.
-// Source can be NULL for slime, barrel explosions
+// Source can be nullptr for slime, barrel explosions
 // and other environmental stuff.
 //
 void

@@ -155,7 +155,7 @@ static boolean main_loop_started = false;
 static int comport = 0;
 
 // fraggle 06/03/11 [STRIFE]: Multiplayer nickname?
-char *nickname = NULL;
+char *nickname = nullptr;
 
 // [crispy] track screen wipe
 boolean screenwipe;
@@ -179,7 +179,7 @@ void D_ProcessEvents (void)
     //if (storedemo)
     //    return;
 
-    while ((ev = D_PopEvent()) != NULL)
+    while ((ev = D_PopEvent()) != nullptr)
     {
         if (M_Responder (ev))
             continue;               // menu ate the event
@@ -295,7 +295,7 @@ void D_Display (void)
 
     // clean up border stuff
     if (gamestate != oldgamestate && gamestate != GS_LEVEL)
-        I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
+        I_SetPalette (W_CacheLumpName_byte (DEH_String("PLAYPAL"),PU_CACHE));
 
     // see if the border needs to be initially drawn
     if (gamestate == GS_LEVEL && oldgamestate != GS_LEVEL)
@@ -363,7 +363,7 @@ void D_Display (void)
         if (crispy->post_rendering_hook)
         {
             crispy->post_rendering_hook();
-            crispy->post_rendering_hook = NULL;
+            crispy->post_rendering_hook = nullptr;
         }
         return;
     }
@@ -376,7 +376,7 @@ void D_Display (void)
         else
             y = (viewwindowy >> crispy->hires)+4;
         V_DrawPatchDirect((viewwindowx >> crispy->hires) + ((scaledviewwidth >> crispy->hires) - 68) / 2 - WIDESCREENDELTA, y,
-                          W_CacheLumpName (DEH_String("M_PAUSE"), PU_CACHE));
+                          W_CacheLumpName_patch(DEH_String("M_PAUSE"), PU_CACHE));
     }
 
 
@@ -396,7 +396,7 @@ void D_Display (void)
         if (crispy->post_rendering_hook)
         {
             crispy->post_rendering_hook();
-            crispy->post_rendering_hook = NULL;
+            crispy->post_rendering_hook = nullptr;
         }
         return;
     }
@@ -663,7 +663,7 @@ void D_PageTicker (void)
 //
 void D_PageDrawer (void)
 {
-    V_DrawPatchFullScreen (W_CacheLumpName(pagename, PU_CACHE), false);
+    V_DrawPatchFullScreen (W_CacheLumpName_patch(pagename, PU_CACHE), false);
 }
 
 
@@ -730,7 +730,7 @@ void D_DoAdvanceDemo (void)
         pagetic = 10;
         gamestate = GS_DEMOSCREEN;
         pagename = DEH_String("PANEL0");
-        S_StartSound(NULL, sfx_rb2act);
+        S_StartSound(nullptr, sfx_rb2act);
         wipegamestate = -1;
         break;
     case 0: // Rogue logo
@@ -882,7 +882,7 @@ static char *GetGameName(char *gamename)
             // We also need to cut off spaces to get the basic name
 
             gamename_size = strlen(deh_sub) + 10;
-            gamename = Z_Malloc(gamename_size, PU_STATIC, 0);
+            gamename = zmalloc<decltype(            gamename)>(gamename_size, PU_STATIC, 0);
             M_snprintf(gamename, gamename_size, deh_sub,
                        STRIFE_VERSION / 100, STRIFE_VERSION % 100);
 
@@ -926,7 +926,7 @@ void D_IdentifyVersion(void)
     // Load voices.wad 
     if(isregistered)
     {
-        char *name = NULL;
+        char *name = nullptr;
         int p;
 
         // If -iwad was used, check and see if voices.wad exists on the same
@@ -935,7 +935,7 @@ void D_IdentifyVersion(void)
         {
             const char *iwad = myargv[p + 1];
             size_t  len      = strlen(iwad) + 1;
-            char   *iwadpath = Z_Malloc(len, PU_STATIC, NULL);
+            char   *iwadpath = zmalloc<decltype(            char   *iwadpath)>(len, PU_STATIC, nullptr);
             char   *voiceswad;
 
             // extract base path of IWAD parameter
@@ -986,7 +986,7 @@ void DoTimeBomb(void)
     int serial_year;
     int serial_month;
 
-    serial = W_CacheLumpName("serial", PU_CACHE);
+    serial = (char*)W_CacheLumpName("serial", PU_CACHE);
     serialnum = atoi(serial);
 
     // Rogue, much like Governor Mourel, were lousy liars. These deceptive
@@ -1040,7 +1040,7 @@ static boolean D_AddFile(char *filename)
     printf(" adding %s\n", filename);
     handle = W_AddFile(filename);
 
-    return handle != NULL;
+    return handle != nullptr;
 }
 
 // Copyright message banners
@@ -1099,7 +1099,7 @@ static struct
 } gameversions[] = {
     { "Strife 1.2",          "1.2",       exe_strife_1_2  },
     { "Strife 1.31",         "1.31",      exe_strife_1_31 },
-    { NULL,                  NULL,        0               }
+    { nullptr,                  nullptr,        0               }
 };
 
 // Initialize the game version
@@ -1126,7 +1126,7 @@ static void InitGameVersion(void)
 
     if (p)
     {
-        for (i=0; gameversions[i].description != NULL; ++i)
+        for (i=0; gameversions[i].description != nullptr; ++i)
         {
             if (!strcmp(myargv[p+1], gameversions[i].cmdline))
             {
@@ -1135,11 +1135,11 @@ static void InitGameVersion(void)
             }
         }
 
-        if (gameversions[i].description == NULL) 
+        if (gameversions[i].description == nullptr) 
         {
             printf("Supported game versions:\n");
 
-            for (i=0; gameversions[i].description != NULL; ++i)
+            for (i=0; gameversions[i].description != nullptr; ++i)
             {
                 printf("\t%s (%s)\n", gameversions[i].cmdline,
                         gameversions[i].description);
@@ -1158,7 +1158,7 @@ void PrintGameVersion(void)
 {
     int i;
 
-    for (i=0; gameversions[i].description != NULL; ++i)
+    for (i=0; gameversions[i].description != nullptr; ++i)
     {
         if (gameversions[i].version == gameversion)
         {
@@ -1186,7 +1186,7 @@ static void D_Endoom(void)
     }
 
     // haleyjd 08/27/10: [STRIFE] ENDOOM -> ENDSTRF
-    endoom = W_CacheLumpName(DEH_String("ENDSTRF"), PU_STATIC);
+    endoom = W_CacheLumpName_byte(DEH_String("ENDSTRF"), PU_STATIC);
 
     I_Endoom(endoom);
 }
@@ -1378,14 +1378,14 @@ static void D_InitIntroSequence(void)
         V_RestoreBuffer(); // make the V_ routines work
 
         // Load all graphics
-        rawgfx_startup0   = W_CacheLumpName("STARTUP0", PU_STATIC);
-        rawgfx_startp[0]  = W_CacheLumpName("STRTPA1",  PU_STATIC);
-        rawgfx_startp[1]  = W_CacheLumpName("STRTPB1",  PU_STATIC);
-        rawgfx_startp[2]  = W_CacheLumpName("STRTPC1",  PU_STATIC);
-        rawgfx_startp[3]  = W_CacheLumpName("STRTPD1",  PU_STATIC);
-        rawgfx_startlz[0] = W_CacheLumpName("STRTLZ1",  PU_STATIC);
-        rawgfx_startlz[1] = W_CacheLumpName("STRTLZ2",  PU_STATIC);
-        rawgfx_startbot   = W_CacheLumpName("STRTBOT",  PU_STATIC);
+        rawgfx_startup0   = W_CacheLumpName_byte("STARTUP0", PU_STATIC);
+        rawgfx_startp[0]  = W_CacheLumpName_byte("STRTPA1",  PU_STATIC);
+        rawgfx_startp[1]  = W_CacheLumpName_byte("STRTPB1",  PU_STATIC);
+        rawgfx_startp[2]  = W_CacheLumpName_byte("STRTPC1",  PU_STATIC);
+        rawgfx_startp[3]  = W_CacheLumpName_byte("STRTPD1",  PU_STATIC);
+        rawgfx_startlz[0] = W_CacheLumpName_byte("STRTLZ1",  PU_STATIC);
+        rawgfx_startlz[1] = W_CacheLumpName_byte("STRTLZ2",  PU_STATIC);
+        rawgfx_startbot   = W_CacheLumpName_byte("STRTBOT",  PU_STATIC);
 
         // Draw the background
         D_IntroBackground();
@@ -1542,7 +1542,7 @@ void D_IntroTick(void)
         // that without this one-time limitation, the sound is far too loud.
         if(!didsound)
         {
-            S_StartSound(NULL, sfx_psdtha);
+            S_StartSound(nullptr, sfx_psdtha);
             didsound = true;
         }
     }
@@ -1560,7 +1560,7 @@ static void G_CheckDemoStatusAtExit (void)
     G_CheckDemoStatus();
 }
 
-static const char *const loadparms[] = {"-file", "-merge", NULL}; // [crispy]
+static const char *const loadparms[] = {"-file", "-merge", nullptr}; // [crispy]
 
 //
 // D_DoomMain
@@ -1779,7 +1779,7 @@ void D_DoomMain (void)
     {
         // Auto-detect the configuration dir.
 
-        M_SetConfigDir(NULL);
+        M_SetConfigDir(nullptr);
     }
     
     //!
@@ -1829,7 +1829,7 @@ void D_DoomMain (void)
     iwadfile = D_FindIWAD(IWAD_MASK_STRIFE, &gamemission);
 
     // None found?
-    if (iwadfile == NULL)
+    if (iwadfile == nullptr)
     {
         I_Error("Game mode indeterminate.  No IWAD file was found.  Try\n"
                 "specifying one with the '-iwad' command line parameter.\n");
@@ -1852,7 +1852,7 @@ void D_DoomMain (void)
     {
         char *autoload_dir;
         autoload_dir = M_GetAutoloadDir("strife1.wad", true);
-        if (autoload_dir != NULL)
+        if (autoload_dir != nullptr)
         {
             DEH_AutoLoadPatches(autoload_dir);
             W_AutoLoadWADs(autoload_dir);
@@ -1870,7 +1870,7 @@ void D_DoomMain (void)
     if(devparm)
     {
         char msgbuf[80];
-        char *serial  = W_CacheLumpName("SERIAL", PU_CACHE);
+        char *serial  = (char*)W_CacheLumpName("SERIAL", PU_CACHE);
         int serialnum = atoi(serial);
 
         DEH_snprintf(msgbuf, sizeof(msgbuf), "Wad Serial Number: %d:", serialnum);

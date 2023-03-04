@@ -53,18 +53,18 @@ void ClearTmp(void)
 {
     glob_t *glob;
 
-    if(savepathtemp == NULL)
+    if(savepathtemp == nullptr)
         I_Error("you fucked up savedir man!");
 
     glob = I_StartGlob(savepathtemp, "*", 0);
-    if (glob == NULL)
+    if (glob == nullptr)
         I_Error("ClearTmp: Couldn't open dir %s", savepathtemp);
 
     for (;;)
     {
         const char *path = I_NextGlob(glob);
 
-        if (path == NULL)
+        if (path == nullptr)
         {
             break;
         }
@@ -83,18 +83,18 @@ void ClearSlot(void)
 {
     glob_t *glob;
 
-    if(savepath == NULL)
+    if(savepath == nullptr)
         I_Error("userdir is fucked up man!");
 
     glob = I_StartGlob(savepath, "*", 0);
-    if (glob == NULL)
+    if (glob == nullptr)
         I_Error("ClearSlot: Couldn't open dir %s", savepath);
 
     for (;;)
     {
         const char *filepath = I_NextGlob(glob);
 
-        if (filepath == NULL)
+        if (filepath == nullptr)
         {
             break;
         }
@@ -116,7 +116,7 @@ void FromCurr(void)
 
     glob = I_StartGlob(savepathtemp, "*", 0);
 
-    if (glob == NULL)
+    if (glob == nullptr)
         I_Error("FromCurr: Couldn't open dir %s", savepathtemp);
 
     for (;;)
@@ -127,7 +127,7 @@ void FromCurr(void)
         char *dstfilename;
 
         srcfilename = I_NextGlob(glob);
-        if (srcfilename == NULL)
+        if (srcfilename == nullptr)
         {
             break;
         }
@@ -158,7 +158,7 @@ void ToCurr(void)
     // BUG: Rogue copypasta'd this error message, which is why we don't know
     // the real original name of this function.
     glob = I_StartGlob(savepath, "*", 0);
-    if (glob == NULL)
+    if (glob == nullptr)
         I_Error("ClearSlot: Couldn't open dir %s", savepath);
 
     for (;;)
@@ -169,7 +169,7 @@ void ToCurr(void)
         char *dstfilename;
 
         srcfilename = I_NextGlob(glob);
-        if (srcfilename == NULL)
+        if (srcfilename == nullptr)
         {
             break;
         }
@@ -193,8 +193,8 @@ void ToCurr(void)
 //
 void M_SaveMoveMapToHere(void)
 {
-    char *mapsave  = NULL;
-    char *heresave = NULL;
+    char *mapsave  = nullptr;
+    char *heresave = nullptr;
     char tmpnum[33];
 
     // haleyjd: no itoa available...
@@ -222,8 +222,8 @@ void M_SaveMoveMapToHere(void)
 //
 void M_SaveMoveHereToMap(void)
 {
-    char *mapsave  = NULL;
-    char *heresave = NULL;
+    char *mapsave  = nullptr;
+    char *heresave = nullptr;
     char tmpnum[33];
 
     // haleyjd: no itoa available...
@@ -250,7 +250,7 @@ void M_SaveMoveHereToMap(void)
 boolean M_SaveMisObj(const char *path)
 {
     boolean result;
-    char *destpath = NULL;
+    char *destpath = nullptr;
 
     // haleyjd 20110210: use M_SafeFilePath, not sprintf
     destpath = M_SafeFilePath(path, "mis_obj");
@@ -267,8 +267,8 @@ boolean M_SaveMisObj(const char *path)
 //
 void M_ReadMisObj(void)
 {
-    FILE *f = NULL;
-    char *srcpath = NULL;
+    FILE *f = nullptr;
+    char *srcpath = nullptr;
 
     // haleyjd: use M_SafeFilePath, not sprintf
     srcpath = M_SafeFilePath(savepathtemp, "mis_obj");
@@ -306,7 +306,7 @@ void M_ReadMisObj(void)
 //
 void *M_Calloc(size_t n1, size_t n2)
 {
-    return (n1 *= n2) ? memset(Z_Malloc(n1, PU_STATIC, NULL), 0, n1) : NULL;
+    return (n1 *= n2) ? memset(Z_Malloc(n1, PU_STATIC, nullptr), 0, n1) : nullptr;
 }
 
 //
@@ -372,7 +372,7 @@ int M_StringAlloc(char **str, int numstrs, size_t extra, const char *str1, ...)
 char *M_SafeFilePath(const char *basepath, const char *newcomponent)
 {
     int   newstrlen = 0;
-    char *newstr = NULL;
+    char *newstr = nullptr;
 
     if (!strcmp(basepath, ""))
     {

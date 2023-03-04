@@ -392,7 +392,7 @@ void P_DeathThink(player_t * player)
     {
         if (player == &players[consoleplayer])
         {
-            I_SetPalette(W_CacheLumpName(DEH_String("PLAYPAL"), PU_CACHE));
+            I_SetPalette(W_CacheLumpName_byte(DEH_String("PLAYPAL"), PU_CACHE));
             inv_ptr = 0;
             curpos = 0;
             newtorch = 0;
@@ -822,7 +822,7 @@ void P_ArtiTele(player_t * player)
         destAngle = ANG45 * (playerstarts[0].angle / 45);
     }
     P_Teleport(player->mo, destX, destY, destAngle);
-    S_StartSound(NULL, sfx_wpnup);      // Full volume laugh
+    S_StartSound(nullptr, sfx_wpnup);      // Full volume laugh
 }
 
 //----------------------------------------------------------------------------
@@ -922,7 +922,7 @@ void P_PlayerUseArtifact(player_t * player, artitype_t arti)
                 P_PlayerRemoveArtifact(player, i);
                 if (player == &players[consoleplayer])
                 {
-                    S_StartSound(NULL, sfx_artiuse);
+                    S_StartSound(nullptr, sfx_artiuse);
                     ArtifactFlash = 4;
                 }
             }
@@ -979,7 +979,7 @@ boolean P_UseArtifact(player_t * player, artitype_t arti)
             {                   // Attempt to undo chicken
                 if (P_UndoPlayerChicken(player) == false)
                 {               // Failed
-                    P_DamageMobj(player->mo, NULL, NULL, 10000);
+                    P_DamageMobj(player->mo, nullptr, nullptr, 10000);
                 }
                 else
                 {               // Succeeded

@@ -173,14 +173,14 @@ static void ParseDMXConfig(char *dmxconf, gus_config_t *config)
     {
         newline = strchr(p, '\n');
 
-        if (newline != NULL)
+        if (newline != nullptr)
         {
             *newline = '\0';
         }
 
         ParseLine(config, p);
 
-        if (newline == NULL)
+        if (newline == nullptr)
         {
             break;
         }
@@ -217,7 +217,7 @@ static char *ReadDMXConfig(void)
     }
 
     len = W_LumpLength(lumpnum);
-    data = Z_Malloc(len + 1, PU_STATIC, NULL);
+    data = zmalloc<decltype(    data)>(len + 1, PU_STATIC, nullptr);
     W_ReadLump(lumpnum, data);
 
     data[len] = '\0';
@@ -231,7 +231,7 @@ static boolean WriteTimidityConfig(char *path, gus_config_t *config)
 
     fstream = M_fopen(path, "w");
 
-    if (fstream == NULL)
+    if (fstream == nullptr)
     {
         return false;
     }
@@ -245,7 +245,7 @@ static boolean WriteTimidityConfig(char *path, gus_config_t *config)
     for (i = 0; i < 128; ++i)
     {
         if (config->mapping[i] >= 0 && config->mapping[i] < MAX_INSTRUMENTS
-         && config->patch_names[config->mapping[i]] != NULL)
+         && config->patch_names[config->mapping[i]] != nullptr)
         {
             fprintf(fstream, "%u %s\n",
                     i, config->patch_names[config->mapping[i]]);
@@ -257,7 +257,7 @@ static boolean WriteTimidityConfig(char *path, gus_config_t *config)
     for (i = 128 + 35; i <= 128 + 81; ++i)
     {
         if (config->mapping[i] >= 0 && config->mapping[i] < MAX_INSTRUMENTS
-         && config->patch_names[config->mapping[i]] != NULL)
+         && config->patch_names[config->mapping[i]] != nullptr)
         {
             fprintf(fstream, "%u %s\n",
                     i - 128, config->patch_names[config->mapping[i]]);

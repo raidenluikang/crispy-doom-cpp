@@ -61,46 +61,46 @@ unsigned int finalecount;
 #define	TEXTSPEED	3
 #define	TEXTWAIT	250
 
-typedef struct
+ struct textscreen_t
 {
     GameMission_t mission;
     int episode, level;
     const char *background;
     const char *text;
-} textscreen_t;
+} ;
 
 static textscreen_t textscreens[] =
 {
-    { doom,      1, 8,  "FLOOR4_8",  E1TEXT},
-    { doom,      2, 8,  "SFLR6_1",   E2TEXT},
-    { doom,      3, 8,  "MFLR8_4",   E3TEXT},
-    { doom,      4, 8,  "MFLR8_3",   E4TEXT},
-    { doom,      5, 8,  "FLOOR7_2",  E5TEXT}, // [crispy] Sigil
+    { GameMission_t::doom,      1, 8,  "FLOOR4_8",  E1TEXT},
+    { GameMission_t::doom,      2, 8,  "SFLR6_1",   E2TEXT},
+    { GameMission_t::doom,      3, 8,  "MFLR8_4",   E3TEXT},
+    { GameMission_t::doom,      4, 8,  "MFLR8_3",   E4TEXT},
+    { GameMission_t::doom,      5, 8,  "FLOOR7_2",  E5TEXT}, // [crispy] Sigil
 
-    { doom2,     1, 6,  "SLIME16",   C1TEXT},
-    { doom2,     1, 11, "RROCK14",   C2TEXT},
-    { doom2,     1, 20, "RROCK07",   C3TEXT},
-    { doom2,     1, 30, "RROCK17",   C4TEXT},
-    { doom2,     1, 15, "RROCK13",   C5TEXT},
-    { doom2,     1, 31, "RROCK19",   C6TEXT},
+    { GameMission_t::doom2,     1, 6,  "SLIME16",   C1TEXT},
+    { GameMission_t::doom2,     1, 11, "RROCK14",   C2TEXT},
+    { GameMission_t::doom2,     1, 20, "RROCK07",   C3TEXT},
+    { GameMission_t::doom2,     1, 30, "RROCK17",   C4TEXT},
+    { GameMission_t::doom2,     1, 15, "RROCK13",   C5TEXT},
+    { GameMission_t::doom2,     1, 31, "RROCK19",   C6TEXT},
 
-    { pack_tnt,  1, 6,  "SLIME16",   T1TEXT},
-    { pack_tnt,  1, 11, "RROCK14",   T2TEXT},
-    { pack_tnt,  1, 20, "RROCK07",   T3TEXT},
-    { pack_tnt,  1, 30, "RROCK17",   T4TEXT},
-    { pack_tnt,  1, 15, "RROCK13",   T5TEXT},
-    { pack_tnt,  1, 31, "RROCK19",   T6TEXT},
+    { GameMission_t::pack_tnt,  1, 6,  "SLIME16",   T1TEXT},
+    { GameMission_t::pack_tnt,  1, 11, "RROCK14",   T2TEXT},
+    { GameMission_t::pack_tnt,  1, 20, "RROCK07",   T3TEXT},
+    { GameMission_t::pack_tnt,  1, 30, "RROCK17",   T4TEXT},
+    { GameMission_t::pack_tnt,  1, 15, "RROCK13",   T5TEXT},
+    { GameMission_t::pack_tnt,  1, 31, "RROCK19",   T6TEXT},
 
-    { pack_plut, 1, 6,  "SLIME16",   P1TEXT},
-    { pack_plut, 1, 11, "RROCK14",   P2TEXT},
-    { pack_plut, 1, 20, "RROCK07",   P3TEXT},
-    { pack_plut, 1, 30, "RROCK17",   P4TEXT},
-    { pack_plut, 1, 15, "RROCK13",   P5TEXT},
-    { pack_plut, 1, 31, "RROCK19",   P6TEXT},
+    { GameMission_t::pack_plut, 1, 6,  "SLIME16",   P1TEXT},
+    { GameMission_t::pack_plut, 1, 11, "RROCK14",   P2TEXT},
+    { GameMission_t::pack_plut, 1, 20, "RROCK07",   P3TEXT},
+    { GameMission_t::pack_plut, 1, 30, "RROCK17",   P4TEXT},
+    { GameMission_t::pack_plut, 1, 15, "RROCK13",   P5TEXT},
+    { GameMission_t::pack_plut, 1, 31, "RROCK19",   P6TEXT},
 
-    { pack_nerve, 1, 8, "SLIME16",   N1TEXT},
-    { pack_master, 1, 20, "SLIME16",   M1TEXT},
-    { pack_master, 1, 21, "SLIME16",   M2TEXT},
+    { GameMission_t::pack_nerve, 1, 8, "SLIME16",   N1TEXT},
+    { GameMission_t:: pack_master, 1, 20, "SLIME16",   M1TEXT},
+    { GameMission_t::pack_master, 1, 21, "SLIME16",   M2TEXT},
 };
 
 const char *finaletext;
@@ -126,7 +126,7 @@ void F_StartFinale (void)
     viewactive = false;
     automapactive = false;
 
-    if (logical_gamemission == doom)
+    if (logical_gamemission == GameMission_t::doom)
     {
         S_ChangeMusic(mus_victor, true);
     }
@@ -143,13 +143,13 @@ void F_StartFinale (void)
 
         // Hack for Chex Quest
 
-        if (gameversion == exe_chex && screen->mission == doom)
+        if (gameversion == GameVersion_t::exe_chex && screen->mission == GameMission_t::doom)
         {
             screen->level = 5;
         }
 
         if (logical_gamemission == screen->mission
-         && (logical_gamemission != doom || gameepisode == screen->episode)
+         && (logical_gamemission != GameMission_t::doom || gameepisode == screen->episode)
          && gamemap == screen->level)
         {
             finaletext = screen->text;
@@ -165,7 +165,7 @@ void F_StartFinale (void)
     if (finaletext_rw)
     {
 	free(finaletext_rw);
-	finaletext_rw = NULL;
+	finaletext_rw = nullptr;
     }
     finaletext_rw = M_StringDuplicate(finaletext);
     
@@ -193,7 +193,7 @@ void F_Ticker (void)
     size_t		i;
     
     // check for skipping
-    if ( (gamemode == commercial)
+    if ( (gamemode == GameMode_t::commercial)
       && ( finalecount > 50) )
     {
       // go on to the next level
@@ -203,10 +203,10 @@ void F_Ticker (void)
 				
       if (i < MAXPLAYERS)
       {	
-	if (gamemission == pack_nerve && gamemap == 8)
+	if (gamemission == GameMission_t::pack_nerve && gamemap == 8)
 	  F_StartCast ();
 	else
-	if (gamemission == pack_master && (gamemap == 20 || gamemap == 21))
+	if (gamemission == GameMission_t::pack_master && (gamemap == 20 || gamemap == 21))
 	  F_StartCast ();
 	else
 	if (gamemap == 30)
@@ -225,7 +225,7 @@ void F_Ticker (void)
 	return;
     }
 	
-    if ( gamemode == commercial)
+    if ( gamemode == GameMode_t::commercial)
 	return;
 		
     if (finalestage == F_STAGE_TEXT
@@ -233,7 +233,7 @@ void F_Ticker (void)
     {
 	finalecount = 0;
 	finalestage = F_STAGE_ARTSCREEN;
-	wipegamestate = -1;		// force a wipe
+	wipegamestate = static_cast<gamestate_t>(-1);		// force a wipe
 	if (gameepisode == 3)
 	    S_StartMusic (mus_bunny);
     }
@@ -280,7 +280,7 @@ void F_TextWrite (void)
     int		cy;
     
     // erase the entire screen to a tiled background
-    src = W_CacheLumpName ( finaleflat , PU_CACHE);
+    src =  W_CacheLumpName_byte ( finaleflat , PU_CACHE);
     dest = I_VideoBuffer;
 	
     for (y=0 ; y<SCREENHEIGHT ; y++)
@@ -354,17 +354,17 @@ void F_TextWrite (void)
     }
 	
 }
-
+static_assert(__cplusplus >= 201703L, "!");
 //
 // Final DOOM 2 animation
 // Casting by id Software.
 //   in order of appearance
 //
-typedef struct
+struct castinfo_t
 {
     const char	*name;
     mobjtype_t	type;
-} castinfo_t;
+} ;
 
 castinfo_t	castorder[] = {
     {CC_ZOMBIE, MT_POSSESSED},
@@ -385,8 +385,9 @@ castinfo_t	castorder[] = {
     {CC_CYBER, MT_CYBORG},
     {CC_HERO, MT_PLAYER},
 
-    {NULL,0}
+    {nullptr, mobjtype_t{}}
 };
+
 
 int		castnum;
 int		casttics;
@@ -457,12 +458,15 @@ extern void A_SPosAttack();
 extern void A_TroopAttack();
 extern void A_VileTarget();
 
-typedef struct
+
+struct actionsound_t
 {
-	void *const action;
+    using action_function_t = void(*)();
+
+	action_function_t const action;
 	const int sound;
 	const boolean early;
-} actionsound_t;
+} ;
 
 static const actionsound_t actionsounds[] =
 {
@@ -494,7 +498,7 @@ static int F_SoundForState (int st)
 	void *const nextaction = (void *) (&states[caststate->nextstate])->action.acv;
 
 	// [crispy] fix Doomguy in casting sequence
-	if (castaction == NULL)
+	if (castaction == nullptr)
 	{
 		if (st == S_PLAY_ATK2)
 			return sfx_dshtgn;
@@ -503,9 +507,7 @@ static int F_SoundForState (int st)
 	}
 	else
 	{
-		int i;
-
-		for (i = 0; i < arrlen(actionsounds); i++)
+		for (size_t i = 0; i < arrlen(actionsounds); i++)
 		{
 			const actionsound_t *const as = &actionsounds[i];
 
@@ -525,7 +527,7 @@ static int F_SoundForState (int st)
 //
 void F_StartCast (void)
 {
-    wipegamestate = -1;		// force a screen wipe
+    wipegamestate = GS_INVALID;		// force a screen wipe
     castnum = 0;
     caststate = &states[mobjinfo[castorder[castnum].type].seestate];
     casttics = caststate->tics;
@@ -547,56 +549,59 @@ void F_CastTicker (void)
     int		sfx;
 	
     if (--casttics > 0)
-	return;			// not time to change state yet
+	    return;			// not time to change state yet
 		
     if (caststate->tics == -1 || caststate->nextstate == S_NULL || castskip) // [crispy] skippable cast
     {
-	if (castskip)
-	{
-	    castnum += castskip;
-	    castskip = 0;
-	}
-	else
-	// switch from deathstate to next monster
-	castnum++;
-	castdeath = false;
-	if (castorder[castnum].name == NULL)
-	    castnum = 0;
-	if (mobjinfo[castorder[castnum].type].seesound)
-	    S_StartSound (NULL, F_RandomizeSound(mobjinfo[castorder[castnum].type].seesound));
-	caststate = &states[mobjinfo[castorder[castnum].type].seestate];
-	castframes = 0;
-	castangle = 0; // [crispy] turnable cast
-	castflip = false; // [crispy] flippable death sequence
+        if (castskip)
+        {
+            castnum += castskip;
+            castskip = 0;
+        }
+        else
+            // switch from deathstate to next monster
+            castnum++;
+
+        castdeath = false;
+        if (castorder[castnum].name == nullptr)
+            castnum = 0;
+
+        if (mobjinfo[castorder[castnum].type].seesound)
+            S_StartSound (nullptr, F_RandomizeSound(mobjinfo[castorder[castnum].type].seesound));
+
+        caststate = &states[mobjinfo[castorder[castnum].type].seestate];
+        castframes = 0;
+        castangle = 0; // [crispy] turnable cast
+        castflip = false; // [crispy] flippable death sequence
     }
     else
     {
-	// just advance to next state in animation
-	// [crispy] fix Doomguy in casting sequence
-	/*
-	if (!castdeath && caststate == &states[S_PLAY_ATK1])
-	    goto stopattack;	// Oh, gross hack!
-	*/
-	// [crispy] Allow A_RandomJump() in deaths in cast sequence
-	if (caststate->action.acp1 == A_RandomJump && Crispy_Random() < caststate->misc2)
-	{
-	    st = caststate->misc1;
-	}
-	else
-	{
-	// [crispy] fix Doomguy in casting sequence
-	if (!castdeath && caststate == &states[S_PLAY_ATK1])
-	    st = S_PLAY_ATK2;
-	else
-	if (!castdeath && caststate == &states[S_PLAY_ATK2])
-	    goto stopattack;	// Oh, gross hack!
-	else
-	st = caststate->nextstate;
-	}
-	caststate = &states[st];
-	castframes++;
-	
-	sfx = F_SoundForState(st);
+        // just advance to next state in animation
+        // [crispy] fix Doomguy in casting sequence
+        /*
+        if (!castdeath && caststate == &states[S_PLAY_ATK1])
+            goto stopattack;	// Oh, gross hack!
+        */
+        // [crispy] Allow A_RandomJump() in deaths in cast sequence
+        if (caststate->action.acv == A_RandomJump && Crispy_Random() < caststate->misc2)
+        {
+            st = caststate->misc1;
+        }
+        else
+        {
+            // [crispy] fix Doomguy in casting sequence
+            if (!castdeath && caststate == &states[S_PLAY_ATK1])
+                st = S_PLAY_ATK2;
+            else
+            if (!castdeath && caststate == &states[S_PLAY_ATK2])
+                goto stopattack;	// Oh, gross hack!
+            else
+                st = caststate->nextstate;
+        }
+        caststate = &states[st];
+        castframes++;
+        
+        sfx = F_SoundForState(st);
 /*
 	// sound hacks....
 	switch (st)
@@ -631,8 +636,8 @@ void F_CastTicker (void)
 	}
 		
 */
-	if (sfx)
-	    S_StartSound (NULL, sfx);
+        if (sfx)
+            S_StartSound (nullptr, sfx);
     }
 	
     if (!castdeath && castframes == 12)
@@ -671,7 +676,7 @@ void F_CastTicker (void)
     if (casttics == -1)
     {
 	// [crispy] Allow A_RandomJump() in deaths in cast sequence
-	if (caststate->action.acp1 == A_RandomJump)
+	if (caststate->action.acv == A_RandomJump)
 	{
 	    if (Crispy_Random() < caststate->misc2)
 	    {
@@ -701,7 +706,7 @@ boolean F_CastResponder (event_t* ev)
 {
     boolean xdeath = false;
 
-    if (ev->type != ev_keydown)
+    if (ev->type != evtype_t::ev_keydown)
 	return false;
 
     // [crispy] make monsters turnable in cast ...
@@ -746,7 +751,7 @@ boolean F_CastResponder (event_t* ev)
     caststate = &states[mobjinfo[castorder[castnum].type].deathstate];
     casttics = caststate->tics;
     // [crispy] Allow A_RandomJump() in deaths in cast sequence
-    if (casttics == -1 && caststate->action.acp1 == A_RandomJump)
+    if (casttics == -1 && caststate->action.acv == A_RandomJump)
     {
         if (Crispy_Random() < caststate->misc2)
         {
@@ -761,10 +766,10 @@ boolean F_CastResponder (event_t* ev)
     castframes = 0;
     castattacking = false;
     if (xdeath && mobjinfo[castorder[castnum].type].xdeathstate)
-        S_StartSound (NULL, sfx_slop);
+        S_StartSound (nullptr, sfx_slop);
     else
     if (mobjinfo[castorder[castnum].type].deathsound)
-	S_StartSound (NULL, F_RandomizeSound(mobjinfo[castorder[castnum].type].deathsound));
+	S_StartSound (nullptr, F_RandomizeSound(mobjinfo[castorder[castnum].type].deathsound));
 	
     // [crispy] flippable death sequence
     castflip = crispy->flipcorpses &&
@@ -840,7 +845,7 @@ void F_CastDrawer (void)
     patch_t*		patch;
     
     // erase the entire screen to a background
-    V_DrawPatchFullScreen (W_CacheLumpName (DEH_String("BOSSBACK"), PU_CACHE), false);
+    V_DrawPatchFullScreen (W_CacheLumpName_patch (DEH_String("BOSSBACK"), PU_CACHE), false);
 
     F_CastPrint (DEH_String(castorder[castnum].name));
     
@@ -855,7 +860,7 @@ void F_CastDrawer (void)
     lump = sprframe->lump[castangle]; // [crispy] turnable cast
     flip = (boolean)sprframe->flip[castangle] ^ castflip; // [crispy] turnable cast, flippable death sequence
 			
-    patch = W_CacheLumpNum (lump+firstspritelump, PU_CACHE);
+    patch = (patch_t*)W_CacheLumpNum (lump+firstspritelump, PU_CACHE);
     if (flip)
 	V_DrawPatchFlipped(ORIGWIDTH/2, 170, patch);
     else
@@ -924,8 +929,8 @@ void F_BunnyScroll (void)
     dy = (SCREENHEIGHT << FRACBITS) / ORIGHEIGHT;
     dyi = (ORIGHEIGHT << FRACBITS) / SCREENHEIGHT;
 
-    p1 = W_CacheLumpName (DEH_String("PFUB2"), PU_LEVEL);
-    p2 = W_CacheLumpName (DEH_String("PFUB1"), PU_LEVEL);
+    p1 = W_CacheLumpName_patch (DEH_String("PFUB2"), PU_LEVEL);
+    p2 = W_CacheLumpName_patch (DEH_String("PFUB1"), PU_LEVEL);
 
     // [crispy] fill pillarboxes in widescreen mode
     pillar_width = (SCREENWIDTH - (SHORT(p1->width) << FRACBITS) / dxi) / 2;
@@ -980,7 +985,7 @@ void F_BunnyScroll (void)
     {
         V_DrawPatch((ORIGWIDTH - 13 * 8) / 2,
                     (ORIGHEIGHT - 8 * 8) / 2,
-                    W_CacheLumpName(DEH_String("END0"), PU_CACHE));
+                    W_CacheLumpName_patch(DEH_String("END0"), PU_CACHE));
 	laststage = 0;
 	return;
     }
@@ -990,14 +995,14 @@ void F_BunnyScroll (void)
 	stage = 6;
     if (stage > laststage)
     {
-	S_StartSound (NULL, sfx_pistol);
+	S_StartSound (nullptr, sfx_pistol);
 	laststage = stage;
     }
 	
     DEH_snprintf(name, 10, "END%i", stage);
     V_DrawPatch((ORIGWIDTH - 13 * 8) / 2,
                 (ORIGHEIGHT - 8 * 8) / 2,
-                W_CacheLumpName (name,PU_CACHE));
+                W_CacheLumpName_patch(name,PU_CACHE));
 }
 
 static void F_ArtScreenDrawer(void)
@@ -1013,7 +1018,7 @@ static void F_ArtScreenDrawer(void)
         switch (gameepisode)
         {
             case 1:
-                if (gameversion >= exe_ultimate)
+                if (gameversion >= GameVersion_t::exe_ultimate)
                 {
                     lumpname = "CREDIT";
                 }
@@ -1042,7 +1047,7 @@ static void F_ArtScreenDrawer(void)
 
         lumpname = DEH_String(lumpname);
 
-        V_DrawPatchFullScreen (W_CacheLumpName(lumpname, PU_CACHE), false);
+        V_DrawPatchFullScreen (W_CacheLumpName_patch(lumpname, PU_CACHE), false);
     }
 }
 

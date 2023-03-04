@@ -427,34 +427,34 @@ void HU_Init(void)
     j = HU_FONTSTART;
     for (i=0;i<HU_FONTSIZE;i++)
     {
-	DEH_snprintf(buffer, 9, "STCFN%.3d", j++);
-	hu_font[i] = (patch_t *) W_CacheLumpName(buffer, PU_STATIC);
+	    DEH_snprintf(buffer, 9, "STCFN%.3d", j++);
+	    hu_font[i] = W_CacheLumpName_patch(buffer, PU_STATIC);
     }
 
-    if (gameversion == exe_chex)
+    if (gameversion == GameVersion_t::exe_chex)
     {
-	cr_stat = crstr[CR_GREEN];
-	cr_stat2 = crstr[CR_GOLD];
-	kills = "F\t";
+        cr_stat = crstr[CR_GREEN];
+        cr_stat2 = crstr[CR_GOLD];
+        kills = "F\t";
     }
     else
     {
-	if (gameversion == exe_hacx)
-	{
-		cr_stat = crstr[CR_BLUE];
-	}
-	else
-	{
-		cr_stat = crstr[CR_RED];
-	}
-	cr_stat2 = crstr[CR_GREEN];
-	kills = "K\t";
+        if (gameversion == GameVersion_t::exe_hacx)
+        {
+            cr_stat = crstr[CR_BLUE];
+        }
+        else
+        {
+            cr_stat = crstr[CR_RED];
+        }
+        cr_stat2 = crstr[CR_GREEN];
+        kills = "K\t";
     }
 
     // [crispy] initialize the crosshair types
     for (i = 0; laserpatch[i].c; i++)
     {
-	patch_t *patch = NULL;
+	patch_t *patch = nullptr;
 
 	// [crispy] check for alternative crosshair patches from e.g. prboom-plus.wad first
 //	if ((laserpatch[i].l = W_CheckNumForName(laserpatch[i].a)) == -1)
@@ -516,48 +516,48 @@ void HU_Stop(void)
 // These are single, non-consecutive, (semi-)official levels
 // without their own music or par times and thus do not need
 // to be handled as distinct pack_* game missions.
-typedef struct
+struct speciallevel_t
 {
     GameMission_t mission;
     int episode;
     int map;
     const char *wad;
     const char *name;
-} speciallevel_t;
+} ;
 
 static const speciallevel_t speciallevels[] = {
     // [crispy] ExM0
-    {doom, 1, 0, NULL, NULL},
-    {doom, 2, 0, NULL, NULL},
-    {doom, 3, 0, NULL, NULL},
-    {doom, 4, 0, NULL, NULL},
+    {GameMission_t::doom, 1, 0, nullptr, nullptr},
+    {GameMission_t::doom, 2, 0, nullptr, nullptr},
+    {GameMission_t::doom, 3, 0, nullptr, nullptr},
+    {GameMission_t::doom, 4, 0, nullptr, nullptr},
     // [crispy] Romero's latest E1 additions
-    {doom, 1, 8, "e1m8b.wad", HUSTR_E1M8B},
-    {doom, 1, 4, "e1m4b.wad", HUSTR_E1M4B},
+    {GameMission_t::doom, 1, 8, "e1m8b.wad", HUSTR_E1M8B},
+    {GameMission_t::doom, 1, 4, "e1m4b.wad", HUSTR_E1M4B},
     // [crispy] E1M10 "Sewers" (Xbox Doom)
-    {doom, 1, 10, NULL, HUSTR_E1M10},
+    {GameMission_t::doom, 1, 10, nullptr, HUSTR_E1M10},
     // [crispy] The Master Levels for Doom 2
-    {doom2, 0, 1, "attack.wad", MHUSTR_1},
-    {doom2, 0, 1, "canyon.wad", MHUSTR_2},
-    {doom2, 0, 1, "catwalk.wad", MHUSTR_3},
-    {doom2, 0, 1, "combine.wad", MHUSTR_4},
-    {doom2, 0, 1, "fistula.wad", MHUSTR_5},
-    {doom2, 0, 1, "garrison.wad", MHUSTR_6},
-    {doom2, 0, 1, "manor.wad", MHUSTR_7},
-    {doom2, 0, 1, "paradox.wad", MHUSTR_8},
-    {doom2, 0, 1, "subspace.wad", MHUSTR_9},
-    {doom2, 0, 1, "subterra.wad", MHUSTR_10},
-    {doom2, 0, 1, "ttrap.wad", MHUSTR_11},
-    {doom2, 0, 3, "virgil.wad", MHUSTR_12},
-    {doom2, 0, 5, "minos.wad", MHUSTR_13},
-    {doom2, 0, 7, "bloodsea.wad", MHUSTR_14},
-    {doom2, 0, 7, "mephisto.wad", MHUSTR_15},
-    {doom2, 0, 7, "nessus.wad", MHUSTR_16},
-    {doom2, 0, 8, "geryon.wad", MHUSTR_17},
-    {doom2, 0, 9, "vesperas.wad", MHUSTR_18},
-    {doom2, 0, 25, "blacktwr.wad", MHUSTR_19},
-    {doom2, 0, 31, "teeth.wad", MHUSTR_20},
-    {doom2, 0, 32, "teeth.wad", MHUSTR_21},
+    {GameMission_t::doom2, 0, 1, "attack.wad", MHUSTR_1},
+    {GameMission_t::doom2, 0, 1, "canyon.wad", MHUSTR_2},
+    {GameMission_t::doom2, 0, 1, "catwalk.wad", MHUSTR_3},
+    {GameMission_t::doom2, 0, 1, "combine.wad", MHUSTR_4},
+    {GameMission_t::doom2, 0, 1, "fistula.wad", MHUSTR_5},
+    {GameMission_t::doom2, 0, 1, "garrison.wad", MHUSTR_6},
+    {GameMission_t::doom2, 0, 1, "manor.wad", MHUSTR_7},
+    {GameMission_t::doom2, 0, 1, "paradox.wad", MHUSTR_8},
+    {GameMission_t::doom2, 0, 1, "subspace.wad", MHUSTR_9},
+    {GameMission_t::doom2, 0, 1, "subterra.wad", MHUSTR_10},
+    {GameMission_t::doom2, 0, 1, "ttrap.wad", MHUSTR_11},
+    {GameMission_t::doom2, 0, 3, "virgil.wad", MHUSTR_12},
+    {GameMission_t::doom2, 0, 5, "minos.wad", MHUSTR_13},
+    {GameMission_t::doom2, 0, 7, "bloodsea.wad", MHUSTR_14},
+    {GameMission_t::doom2, 0, 7, "mephisto.wad", MHUSTR_15},
+    {GameMission_t::doom2, 0, 7, "nessus.wad", MHUSTR_16},
+    {GameMission_t::doom2, 0, 8, "geryon.wad", MHUSTR_17},
+    {GameMission_t::doom2, 0, 9, "vesperas.wad", MHUSTR_18},
+    {GameMission_t::doom2, 0, 25, "blacktwr.wad", MHUSTR_19},
+    {GameMission_t::doom2, 0, 31, "teeth.wad", MHUSTR_20},
+    {GameMission_t::doom2, 0, 32, "teeth.wad", MHUSTR_21},
 };
 
 static void HU_SetSpecialLevelName (const char *wad, const char **name)
@@ -721,7 +721,7 @@ void HU_Start(void)
     {
 	char *m;
 
-	ptr = M_StringJoin(crstr[CR_GOLD], W_WadNameForLump(maplumpinfo), ": ", crstr[CR_GRAY], maplumpinfo->name, NULL);
+	ptr = M_StringJoin(crstr[CR_GOLD], W_WadNameForLump(maplumpinfo), ": ", crstr[CR_GRAY], maplumpinfo->name, nullptr);
 	m = ptr;
 
 	while (*m)
@@ -838,7 +838,7 @@ void HU_Drawer(void)
 	HUlib_drawSText(&w_secret);
     }
 
-    dp_translation = NULL;
+    dp_translation = nullptr;
     if (crispy->screenshotmsg == 4)
 	HUlib_eraseSText(&w_message);
     else
@@ -890,7 +890,7 @@ void HU_Drawer(void)
     if (crispy->crosshair == CROSSHAIR_STATIC)
 	HU_DrawCrosshair();
 
-    dp_translation = NULL;
+    dp_translation = nullptr;
     dp_translucent = false;
 
     // [crispy] demo timer widget

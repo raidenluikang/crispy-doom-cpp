@@ -227,7 +227,7 @@ wipe_StartScreen
   int	width,
   int	height )
 {
-    wipe_scr_start = Z_Malloc(SCREENWIDTH * SCREENHEIGHT, PU_STATIC, NULL);
+    wipe_scr_start = zmalloc<decltype(    wipe_scr_start)>(SCREENWIDTH * SCREENHEIGHT, PU_STATIC, nullptr);
     I_ReadScreen(wipe_scr_start);
     return 0;
 }
@@ -240,7 +240,7 @@ wipe_EndScreen
   int	width,
   int	height )
 {
-    wipe_scr_end = Z_Malloc(SCREENWIDTH * SCREENHEIGHT, PU_STATIC, NULL);
+    wipe_scr_end = zmalloc<decltype(    wipe_scr_end)>(SCREENWIDTH * SCREENHEIGHT, PU_STATIC, nullptr);
     I_ReadScreen(wipe_scr_end);
     V_DrawBlock(x, y, width, height, wipe_scr_start); // restore start scr.
     return 0;

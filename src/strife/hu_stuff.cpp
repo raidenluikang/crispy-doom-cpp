@@ -188,12 +188,12 @@ void HU_Init(void)
     for (i=0;i<HU_FONTSIZE;i++)
     {
         DEH_snprintf(buffer, 9, "STCFN%.3d", j++);
-        hu_font[i] = (patch_t *) W_CacheLumpName(buffer, PU_STATIC);
+        hu_font[i] = W_CacheLumpName_patch(buffer, PU_STATIC);
 
         // haleyjd 09/18/10: load yfont as well; and yes, this is exactly
         // how Rogue did it :P
         buffer[2] = 'B';
-        yfont[i] = (patch_t *) W_CacheLumpName(buffer, PU_STATIC);
+        yfont[i] = W_CacheLumpName_patch(buffer, PU_STATIC);
     }
 }
 
@@ -302,7 +302,7 @@ void HU_Start(void)
         // haleyjd 09/18/10: [STRIFE] nickname weirdness. 
         if(nickname != player_names[consoleplayer])
         {
-            if(nickname != NULL && *nickname)
+            if(nickname != nullptr && *nickname)
             {
                 DEH_printf("have one\n");
                 nickname = player_names[consoleplayer];
@@ -326,7 +326,7 @@ static byte *R_CrosshairColor (void)
             return cr[CR_GREEN];
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // [crispy] static, non-projected crosshair
@@ -344,7 +344,7 @@ static void HU_DrawCrosshair (void)
     }
     else
     {
-        patch_t *const patch = W_CacheLumpName("TRGTA0", PU_STATIC);
+        patch_t *const patch = W_CacheLumpName_patch("TRGTA0", PU_STATIC);
         const int x = ORIGWIDTH / 2 - SHORT(patch->width) / 2 +
                       SHORT(patch->leftoffset);
         const int y = (ORIGHEIGHT - (screenblocks < 11 ? ST_HEIGHT : 0)) / 2 -
@@ -413,7 +413,7 @@ void HU_Drawer(void)
     // [crispy] crosshair
     if (crispy->crosshair)
         HU_DrawCrosshair();
-    dp_translation = NULL;
+    dp_translation = nullptr;
 }
 
 //
@@ -520,7 +520,7 @@ static void HU_addMessage(const char *prefix, const char *message)
 
     // Add two message lines.
     HUlib_addMessageToSText(&w_message, prefix, buffer);
-    HUlib_addMessageToSText(&w_message, NULL,   rover2);
+    HUlib_addMessageToSText(&w_message, nullptr,   rover2);
 }
 
 //
@@ -552,7 +552,7 @@ void HU_Ticker(void)
             || (plr->message && message_dontfuckwithme))
         {
             //HUlib_addMessageToSText(&w_message, 0, plr->message);
-            HU_addMessage(NULL, plr->message); // haleyjd [STRIFE]
+            HU_addMessage(nullptr, plr->message); // haleyjd [STRIFE]
             plr->message = 0;
             message_on = true;
             message_counter = HU_MSGTIMEOUT;

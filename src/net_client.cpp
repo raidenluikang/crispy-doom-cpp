@@ -110,7 +110,7 @@ static net_context_t *client_context;
 static net_gamesettings_t settings;
 
 // Why did the server reject us?
-char *net_client_reject_reason = NULL;
+char *net_client_reject_reason = nullptr;
 
 // true if the client code is in use
 
@@ -128,7 +128,7 @@ boolean net_waiting_for_launch = false;
 
 // Name that we send to the server
 
-char *net_player_name = NULL;
+char *net_player_name = nullptr;
 
 // Connected but not participating in the game (observer)
 
@@ -175,7 +175,7 @@ unsigned int net_local_is_freedoom;
 
 static void NET_CL_Disconnected(void)
 {
-    D_ReceiveTic(NULL, NULL);
+    D_ReceiveTic(nullptr, nullptr);
 }
 
 // Called when a packet is received from the server containing game
@@ -435,7 +435,7 @@ static void NET_CL_ParseSYN(net_packet_t *packet)
     NET_Log("client: processing SYN response");
 
     server_version = NET_ReadSafeString(packet);
-    if (server_version == NULL)
+    if (server_version == nullptr)
     {
         NET_Log("client: error: failed to read server version");
         return;
@@ -468,13 +468,13 @@ static void NET_CL_ParseSYN(net_packet_t *packet)
 static void SetRejectReason(const char *s)
 {
     free(net_client_reject_reason);
-    if (s != NULL)
+    if (s != nullptr)
     {
         net_client_reject_reason = strdup(s);
     }
     else
     {
-        net_client_reject_reason = NULL;
+        net_client_reject_reason = nullptr;
     }
 }
 
@@ -483,7 +483,7 @@ static void NET_CL_ParseReject(net_packet_t *packet)
     char *msg;
 
     msg = NET_ReadSafeString(packet);
-    if (msg == NULL)
+    if (msg == nullptr)
     {
         return;
     }
@@ -918,7 +918,7 @@ static void NET_CL_ParseConsoleMessage(net_packet_t *packet)
 
     msg = NET_ReadSafeString(packet);
 
-    if (msg == NULL)
+    if (msg == nullptr)
     {
         return;
     }
@@ -1134,7 +1134,7 @@ boolean NET_CL_Connect(net_addr_t *addr, net_connect_data_t *data)
     {
         // connected ok!
         NET_Log("client: connected successfully");
-        SetRejectReason(NULL);
+        SetRejectReason(nullptr);
         client_state = CLIENT_STATE_WAITING_LAUNCH;
         drone = data->drone;
 
@@ -1211,7 +1211,7 @@ void NET_CL_Init(void)
     // Try to set from the USER and USERNAME environment variables
     // Otherwise, fallback to "Player"
 
-    if (net_player_name == NULL)
+    if (net_player_name == nullptr)
     {
         net_player_name = NET_GetRandomPetName();
     }

@@ -25,6 +25,7 @@
 #include "m_misc.hpp"
 
 #include "z_zone.hpp"
+#include "../utils/memory.hpp"
 
 typedef struct 
 {
@@ -32,7 +33,7 @@ typedef struct
     char *to_text;
 } deh_substitution_t;
 
-static deh_substitution_t **hash_table = NULL;
+static deh_substitution_t **hash_table = nullptr;
 static int hash_table_entries;
 static int hash_table_length = -1;
 
@@ -58,11 +59,11 @@ static deh_substitution_t *SubstitutionForString(const char *s)
 
     // Fallback if we have not initialized the hash table yet
     if (hash_table_length < 0)
-	return NULL;
+	return nullptr;
 
     entry = strhash(s) % hash_table_length;
 
-    while (hash_table[entry] != NULL)
+    while (hash_table[entry] != nullptr)
     {
         if (!strcmp(hash_table[entry]->from_text, s))
         {
@@ -74,7 +75,7 @@ static deh_substitution_t *SubstitutionForString(const char *s)
     }
 
     // no substitution found
-    return NULL;
+    return nullptr;
 }
 
 // Look up a string to see if it has been replaced with something else
@@ -86,7 +87,7 @@ const char *DEH_String(const char *s)
 
     subst = SubstitutionForString(s);
 
-    if (subst != NULL)
+    if (subst != nullptr)
     {
         return subst->to_text;
     }
@@ -109,8 +110,8 @@ static void InitHashTable(void)
     
     hash_table_entries = 0;
     hash_table_length = 16;
-    hash_table = Z_Malloc(sizeof(deh_substitution_t *) * hash_table_length,
-                          PU_STATIC, NULL);
+    hash_table = static_cast<decltype(hash_table)>( Z_Malloc(sizeof(deh_substitution_t *) * hash_table_length,
+                          PU_STATIC, nullptr) );
     memset(hash_table, 0, sizeof(deh_substitution_t *) * hash_table_length);
 }
 
@@ -130,15 +131,15 @@ static void IncreaseHashtable(void)
     // double the size 
 
     hash_table_length *= 2;
-    hash_table = Z_Malloc(sizeof(deh_substitution_t *) * hash_table_length,
-                          PU_STATIC, NULL);
+    hash_table = static_cast<decltype(hash_table)>( Z_Malloc(sizeof(deh_substitution_t *) * hash_table_length,
+                          PU_STATIC, nullptr) );
     memset(hash_table, 0, sizeof(deh_substitution_t *) * hash_table_length);
 
     // go through the old table and insert all the old entries
 
     for (i=0; i<old_table_length; ++i)
     {
-        if (old_table[i] != NULL)
+        if (old_table[i] != nullptr)
         {
             DEH_AddToHashtable(old_table[i]);
         }
@@ -163,7 +164,7 @@ static void DEH_AddToHashtable(deh_substitution_t *sub)
     // find where to insert it
     entry = strhash(sub->from_text) % hash_table_length;
 
-    while (hash_table[entry] != NULL)
+    while (hash_table[entry] != nullptr)
     {
         entry = (entry + 1) % hash_table_length;
     }
@@ -186,26 +187,26 @@ void DEH_AddStringReplacement(const char *from_text, const char *to_text)
     // Check to see if there is an existing substitution already in place.
     sub = SubstitutionForString(from_text);
 
-    if (sub != NULL)
+    if (sub != nullptr)
     {
         Z_Free(sub->to_text);
 
         len = strlen(to_text) + 1;
-        sub->to_text = Z_Malloc(len, PU_STATIC, NULL);
+        sub->to_text = static_cast<decltype(sub->to_text)>( Z_Malloc(len, PU_STATIC, nullptr) );
         memcpy(sub->to_text, to_text, len);
     }
     else
     {
         // We need to allocate a new substitution.
-        sub = Z_Malloc(sizeof(*sub), PU_STATIC, 0);
+        sub = static_cast<decltype(sub)>( Z_Malloc(sizeof(*sub), PU_STATIC, 0) );
 
         // We need to create our own duplicates of the provided strings.
         len = strlen(from_text) + 1;
-        sub->from_text = Z_Malloc(len, PU_STATIC, NULL);
+        sub->from_text = zmalloc<decltype(        sub->from_text)>(len, PU_STATIC, nullptr);
         memcpy(sub->from_text, from_text, len);
 
         len = strlen(to_text) + 1;
-        sub->to_text = Z_Malloc(len, PU_STATIC, NULL);
+        sub->to_text = zmalloc<decltype(        sub->to_text)>(len, PU_STATIC, nullptr);
         memcpy(sub->to_text, to_text, len);
 
         DEH_AddToHashtable(sub);
@@ -299,7 +300,7 @@ static format_arg_t NextFormatArgument(const char **str)
 
     // Stop searching, we have reached the end.
 
-    *str = NULL;
+    *str = nullptr;
 
     return FORMAT_ARG_INVALID;
 }
@@ -337,7 +338,7 @@ static boolean ValidFormatReplacement(const char *original, const char *replacem
 {
     const char *rover1;
     const char *rover2;
-    int argtype1, argtype2;
+    format_arg_t argtype1, argtype2;
 
     // Check each argument in turn and compare types.
 

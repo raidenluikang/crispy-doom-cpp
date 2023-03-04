@@ -468,7 +468,7 @@ void P_LoadACScripts(int lump)
         return;
     }
 
-    ACSInfo = Z_Malloc(ACScriptCount * sizeof(acsInfo_t), PU_LEVEL, 0);
+    ACSInfo = zmalloc<decltype(    ACSInfo)>(ACScriptCount * sizeof(acsInfo_t), PU_LEVEL, 0);
     memset(ACSInfo, 0, ACScriptCount * sizeof(acsInfo_t));
     for (i = 0, info = ACSInfo; i < ACScriptCount; i++, info++)
     {
@@ -500,13 +500,13 @@ void P_LoadACScripts(int lump)
 
     ACStringCount = ReadCodeInt();
     ACSAssert(ACStringCount >= 0, "negative string count %d", ACStringCount);
-    ACStrings = Z_Malloc(ACStringCount * sizeof(char *), PU_LEVEL, NULL);
+    ACStrings = zmalloc<decltype(    ACStrings)>(ACStringCount * sizeof(char *), PU_LEVEL, nullptr);
 
     for (i=0; i<ACStringCount; ++i)
     {
         offset = ReadOffset();
         ACStrings[i] = (char *) ActionCodeBase + offset;
-        ACSAssert(memchr(ACStrings[i], '\0', ActionCodeSize - offset) != NULL,
+        ACSAssert(memchr(ACStrings[i], '\0', ActionCodeSize - offset) != nullptr,
                   "string %d missing terminating NUL", i);
     }
 
@@ -523,7 +523,7 @@ static void StartOpenACS(int number, int infoIndex, int offset)
 {
     acs_t *script;
 
-    script = Z_Malloc(sizeof(acs_t), PU_LEVSPEC, 0);
+    script = zmalloc<decltype(    script)>(sizeof(acs_t), PU_LEVSPEC, 0);
     memset(script, 0, sizeof(acs_t));
     script->number = number;
 
@@ -553,7 +553,7 @@ void P_CheckACSStore(void)
     {
         if (store->map == gamemap)
         {
-            P_StartACS(store->script, 0, store->args, NULL, NULL, 0);
+            P_StartACS(store->script, 0, store->args, nullptr, nullptr, 0);
             if (NewScript)
             {
                 NewScript->delayCount = 35;
@@ -582,7 +582,7 @@ boolean P_StartACS(int number, int map, byte * args, mobj_t * activator,
     int infoIndex;
     aste_t *statePtr;
 
-    NewScript = NULL;
+    NewScript = nullptr;
     if (map && map != gamemap)
     {                           // Add to the script store
         return AddToACSStore(map, number, args);
@@ -605,7 +605,7 @@ boolean P_StartACS(int number, int map, byte * args, mobj_t * activator,
     {                           // Script is already executing
         return false;
     }
-    script = Z_Malloc(sizeof(acs_t), PU_LEVSPEC, 0);
+    script = zmalloc<decltype(    script)>(sizeof(acs_t), PU_LEVSPEC, 0);
     memset(script, 0, sizeof(acs_t));
     script->number = number;
     script->infoIndex = infoIndex;
@@ -1498,7 +1498,7 @@ static void ThingCount(int type, int tid)
     searcher = -1;
     if (tid)
     {                           // Count TID things
-        while ((mobj = P_FindMobjFromTID(tid, &searcher)) != NULL)
+        while ((mobj = P_FindMobjFromTID(tid, &searcher)) != nullptr)
         {
             if (type == 0)
             {                   // Just count TIDs
@@ -1868,7 +1868,7 @@ static int CmdSectorSound(void)
     int volume;
     mobj_t *mobj;
 
-    mobj = NULL;
+    mobj = nullptr;
     if (ACScript->line)
     {
         mobj = (mobj_t *) & ACScript->line->frontsector->soundorg;
@@ -1890,7 +1890,7 @@ static int CmdThingSound(void)
     sound = S_GetSoundID(StringLookup(Pop()));
     tid = Pop();
     searcher = -1;
-    while ((mobj = P_FindMobjFromTID(tid, &searcher)) != NULL)
+    while ((mobj = P_FindMobjFromTID(tid, &searcher)) != nullptr)
     {
         S_StartSoundAtVolume(mobj, sound, volume);
     }
@@ -1902,7 +1902,7 @@ static int CmdAmbientSound(void)
     int volume;
 
     volume = Pop();
-    S_StartSoundAtVolume(NULL, S_GetSoundID(StringLookup(Pop())), volume);
+    S_StartSoundAtVolume(nullptr, S_GetSoundID(StringLookup(Pop())), volume);
     return SCRIPT_CONTINUE;
 }
 
@@ -1910,7 +1910,7 @@ static int CmdSoundSequence(void)
 {
     mobj_t *mobj;
 
-    mobj = NULL;
+    mobj = nullptr;
     if (ACScript->line)
     {
         mobj = (mobj_t *) & ACScript->line->frontsector->soundorg;
@@ -1933,7 +1933,7 @@ static int CmdSetLineTexture(void)
     side = Pop();
     lineTag = Pop();
     searcher = -1;
-    while ((line = P_FindLine(lineTag, &searcher)) != NULL)
+    while ((line = P_FindLine(lineTag, &searcher)) != nullptr)
     {
         if (position == TEXTURE_MIDDLE)
         {
@@ -1961,7 +1961,7 @@ static int CmdSetLineBlocking(void)
     blocking = Pop()? ML_BLOCKING : 0;
     lineTag = Pop();
     searcher = -1;
-    while ((line = P_FindLine(lineTag, &searcher)) != NULL)
+    while ((line = P_FindLine(lineTag, &searcher)) != nullptr)
     {
         line->flags = (line->flags & ~ML_BLOCKING) | blocking;
     }
@@ -1983,7 +1983,7 @@ static int CmdSetLineSpecial(void)
     special = Pop();
     lineTag = Pop();
     searcher = -1;
-    while ((line = P_FindLine(lineTag, &searcher)) != NULL)
+    while ((line = P_FindLine(lineTag, &searcher)) != nullptr)
     {
         line->special = special;
         line->arg1 = arg1;

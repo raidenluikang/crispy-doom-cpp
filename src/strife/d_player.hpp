@@ -172,7 +172,7 @@ typedef struct player_s
     int			damagecount;
     int			bonuscount;
 
-    // Who did damage (NULL for floors/ceilings).
+    // Who did damage (nullptr for floors/ceilings).
     mobj_t*		attacker;
     
     // So gun flashes light up areas.

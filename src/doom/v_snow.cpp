@@ -29,7 +29,7 @@ typedef struct snowflake_t
     int x, y;
 } snowflake_t;
 
-static snowflake_t *snowflakes = NULL;
+static snowflake_t *snowflakes = nullptr;
 static size_t snowflakes_num;
 static pixel_t snowflakes_color;
 static int last_screen_size = -1;

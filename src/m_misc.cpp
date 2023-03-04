@@ -50,16 +50,16 @@
 #ifdef _WIN32
 static wchar_t *ConvertMultiByteToWide(const char *str, UINT code_page)
 {
-    wchar_t *wstr = NULL;
+    wchar_t *wstr = nullptr;
     int wlen = 0;
 
-    wlen = MultiByteToWideChar(code_page, 0, str, -1, NULL, 0);
+    wlen = MultiByteToWideChar(code_page, 0, str, -1, nullptr, 0);
 
     if (!wlen)
     {
         errno = EINVAL;
         printf("ConvertMultiByteToWide: Failed to convert path to wide encoding.\n");
-        return NULL;
+        return nullptr;
     }
 
     wstr = malloc(sizeof(wchar_t) * wlen);
@@ -67,7 +67,7 @@ static wchar_t *ConvertMultiByteToWide(const char *str, UINT code_page)
     if (!wstr)
     {
         I_Error("ConvertMultiByteToWide: Failed to allocate new string.");
-        return NULL;
+        return nullptr;
     }
 
     if (MultiByteToWideChar(code_page, 0, str, -1, wstr, wlen) == 0)
@@ -75,7 +75,7 @@ static wchar_t *ConvertMultiByteToWide(const char *str, UINT code_page)
         errno = EINVAL;
         printf("ConvertMultiByteToWide: Failed to convert path to wide encoding.\n");
         free(wstr);
-        return NULL;
+        return nullptr;
     }
 
     return wstr;
@@ -83,16 +83,16 @@ static wchar_t *ConvertMultiByteToWide(const char *str, UINT code_page)
 
 static char *ConvertWideToMultiByte(const wchar_t *wstr, UINT code_page)
 {
-    char *str = NULL;
+    char *str = nullptr;
     int len = 0;
 
-    len = WideCharToMultiByte(code_page, 0, wstr, -1, NULL, 0, NULL, NULL);
+    len = WideCharToMultiByte(code_page, 0, wstr, -1, nullptr, 0, nullptr, nullptr);
 
     if (!len)
     {
         errno = EINVAL;
         printf("ConvertWideToMultiByte: Failed to convert path to multibyte encoding.\n");
-        return NULL;
+        return nullptr;
     }
 
     str = malloc(sizeof(char) * len);
@@ -100,15 +100,15 @@ static char *ConvertWideToMultiByte(const wchar_t *wstr, UINT code_page)
     if (!str)
     {
         I_Error("ConvertWideToMultiByte: Failed to allocate new string.");
-        return NULL;
+        return nullptr;
     }
 
-    if (WideCharToMultiByte(code_page, 0, wstr, -1, str, len, NULL, NULL) == 0)
+    if (WideCharToMultiByte(code_page, 0, wstr, -1, str, len, nullptr, nullptr) == 0)
     {
         errno = EINVAL;
         printf("ConvertWideToMultiByte: Failed to convert path to multibyte encoding.\n");
         free(str);
-        return NULL;
+        return nullptr;
     }
 
     return str;
@@ -144,14 +144,14 @@ wchar_t *M_ConvertUtf8ToWide(const char *str)
 char *M_ConvertSysNativeMBToUtf8(const char *str)
 {
 #ifdef _WIN32
-    char *ret = NULL;
-    wchar_t *wstr = NULL;
+    char *ret = nullptr;
+    wchar_t *wstr = nullptr;
 
     wstr = ConvertSysNativeMBToWide(str);
 
     if (!wstr)
     {
-        return NULL;
+        return nullptr;
     }
 
     ret = ConvertWideToUtf8(wstr);
@@ -170,14 +170,14 @@ char *M_ConvertSysNativeMBToUtf8(const char *str)
 char *M_ConvertUtf8ToSysNativeMB(const char *str)
 {
 #ifdef _WIN32
-    char *ret = NULL;
-    wchar_t *wstr = NULL;
+    char *ret = nullptr;
+    wchar_t *wstr = nullptr;
 
     wstr = M_ConvertUtf8ToWide(str);
 
     if (!wstr)
     {
-        return NULL;
+        return nullptr;
     }
 
     ret = ConvertWideToSysNativeMB(wstr);
@@ -194,14 +194,14 @@ FILE *M_fopen(const char *filename, const char *mode)
 {
 #ifdef _WIN32
     FILE *file;
-    wchar_t *wname = NULL;
-    wchar_t *wmode = NULL;
+    wchar_t *wname = nullptr;
+    wchar_t *wmode = nullptr;
 
     wname = M_ConvertUtf8ToWide(filename);
 
     if (!wname)
     {
-        return NULL;
+        return nullptr;
     }
 
     wmode = M_ConvertUtf8ToWide(mode);
@@ -209,7 +209,7 @@ FILE *M_fopen(const char *filename, const char *mode)
     if (!wmode)
     {
         free(wname);
-        return NULL;
+        return nullptr;
     }
 
     file = _wfopen(wname, wmode);
@@ -226,7 +226,7 @@ FILE *M_fopen(const char *filename, const char *mode)
 int M_remove(const char *path)
 {
 #ifdef _WIN32
-    wchar_t *wpath = NULL;
+    wchar_t *wpath = nullptr;
     int ret;
 
     wpath = M_ConvertUtf8ToWide(path);
@@ -249,8 +249,8 @@ int M_remove(const char *path)
 int M_rename(const char *oldname, const char *newname)
 {
 #ifdef _WIN32
-    wchar_t *wold = NULL;
-    wchar_t *wnew = NULL;
+    wchar_t *wold = nullptr;
+    wchar_t *wnew = nullptr;
     int ret;
 
     wold = M_ConvertUtf8ToWide(oldname);
@@ -282,7 +282,7 @@ int M_rename(const char *oldname, const char *newname)
 int M_stat(const char *path, struct stat *buf)
 {
 #ifdef _WIN32
-    wchar_t *wpath = NULL;
+    wchar_t *wpath = nullptr;
     struct _stat wbuf;
     int ret;
 
@@ -322,8 +322,8 @@ char *M_getenv(const char *name)
 {
 #ifdef _WIN32
     int i;
-    wchar_t *wenv = NULL, *wname = NULL;
-    char *env = NULL;
+    wchar_t *wenv = nullptr, *wname = nullptr;
+    char *env = nullptr;
 
     for (i = 0; i < num_vars; ++i)
     {
@@ -337,7 +337,7 @@ char *M_getenv(const char *name)
 
     if (!wname)
     {
-        return NULL;
+        return nullptr;
     }
 
     wenv = _wgetenv(wname);
@@ -350,7 +350,7 @@ char *M_getenv(const char *name)
     }
     else
     {
-        env = NULL;
+        env = nullptr;
     }
 
     env_vars = I_Realloc(env_vars, (num_vars + 1) * sizeof(*env_vars));
@@ -396,7 +396,7 @@ boolean M_FileExists(const char *filename)
 
     fstream = M_fopen(filename, "r");
 
-    if (fstream != NULL)
+    if (fstream != nullptr)
     {
         fclose(fstream);
         return true;
@@ -426,7 +426,7 @@ char *M_FileCaseExists(const char *path)
     }
 
     filename = strrchr(path_dup, DIR_SEPARATOR);
-    if (filename != NULL)
+    if (filename != nullptr)
     {
         filename++;
     }
@@ -453,7 +453,7 @@ char *M_FileCaseExists(const char *path)
 
     // 3. uppercase basename with lowercase extension, e.g. DOOM2.wad
     ext = strrchr(path_dup, '.');
-    if (ext != NULL && ext > filename)
+    if (ext != nullptr && ext > filename)
     {
         M_ForceLowercase(ext + 1);
 
@@ -476,7 +476,7 @@ char *M_FileCaseExists(const char *path)
 
     // 5. no luck
     free(path_dup);
-    return NULL;
+    return nullptr;
 }
 
 //
@@ -512,7 +512,7 @@ boolean M_WriteFile(const char *name, const void *source, int length)
 	
     handle = M_fopen(name, "wb");
 
-    if (handle == NULL)
+    if (handle == nullptr)
 	return false;
 
     count = fwrite(source, 1, length, handle);
@@ -536,7 +536,7 @@ int M_ReadFile(const char *name, byte **buffer)
     byte *buf;
 	
     handle = M_fopen(name, "rb");
-    if (handle == NULL)
+    if (handle == nullptr)
 	I_Error ("Couldn't read file %s", name);
 
     // find the size of the file by seeking to the end and
@@ -544,7 +544,7 @@ int M_ReadFile(const char *name, byte **buffer)
 
     length = M_FileLength(handle);
     
-    buf = Z_Malloc (length + 1, PU_STATIC, NULL);
+    buf = static_cast<byte*>( Z_Malloc (length + 1, PU_STATIC, nullptr) );
     count = fread(buf, 1, length, handle);
     fclose (handle);
 	
@@ -571,7 +571,7 @@ char *M_TempFile(const char *s)
 
     tempdir = M_getenv("TEMP");
 
-    if (tempdir == NULL)
+    if (tempdir == nullptr)
     {
         tempdir = ".";
     }
@@ -581,7 +581,7 @@ char *M_TempFile(const char *s)
     tempdir = "/tmp";
 #endif
 
-    return M_StringJoin(tempdir, DIR_SEPARATOR_S, s, NULL);
+    return M_StringJoin(tempdir, DIR_SEPARATOR_S, s, nullptr);
 }
 
 boolean M_StrToInt(const char *str, int *result)
@@ -605,9 +605,9 @@ char *M_DirName(const char *path)
 #ifdef _WIN32
     pb = strrchr(path, '\\');
 #else
-    pb = NULL;
+    pb = nullptr;
 #endif
-    if (pf == NULL && pb == NULL)
+    if (pf == nullptr && pb == nullptr)
     {
         return M_StringDuplicate(".");
     }
@@ -631,9 +631,9 @@ const char *M_BaseName(const char *path)
 #ifdef _WIN32
     pb = strrchr(path, '\\');
 #else
-    pb = NULL;
+    pb = nullptr;
 #endif
-    if (pf == NULL && pb == NULL)
+    if (pf == nullptr && pb == nullptr)
     {
         return path;
     }
@@ -735,7 +735,7 @@ const char *M_StrCaseStr(const char *haystack, const char *needle)
 
     if (haystack_len < needle_len)
     {
-        return NULL;
+        return nullptr;
     }
 
     len = haystack_len - needle_len;
@@ -748,7 +748,7 @@ const char *M_StrCaseStr(const char *haystack, const char *needle)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 //
@@ -762,7 +762,7 @@ char *M_StringDuplicate(const char *orig)
 
     result = strdup(orig);
 
-    if (result == NULL)
+    if (result == nullptr)
     {
         I_Error("Failed to duplicate string (length %zu)\n",
                 strlen(orig));
@@ -791,7 +791,7 @@ char *M_StringReplace(const char *haystack, const char *needle,
     for (;;)
     {
         p = strstr(p, needle);
-        if (p == NULL)
+        if (p == nullptr)
         {
             break;
         }
@@ -802,11 +802,11 @@ char *M_StringReplace(const char *haystack, const char *needle,
 
     // Construct new string.
 
-    result = malloc(result_len);
-    if (result == NULL)
+    result = static_cast<char*>( malloc(result_len) );
+    if (result == nullptr)
     {
         I_Error("M_StringReplace: Failed to allocate new string");
-        return NULL;
+        return nullptr;
     }
 
     dst = result; dst_len = result_len;
@@ -903,7 +903,7 @@ char *M_StringJoin(const char *s, ...)
     for (;;)
     {
         v = va_arg(args, const char *);
-        if (v == NULL)
+        if (v == nullptr)
         {
             break;
         }
@@ -912,12 +912,12 @@ char *M_StringJoin(const char *s, ...)
     }
     va_end(args);
 
-    result = malloc(result_len);
+    result = static_cast<char*>( malloc(result_len) );
 
-    if (result == NULL)
+    if (result == nullptr)
     {
         I_Error("M_StringJoin: Failed to allocate new string.");
-        return NULL;
+        return nullptr;
     }
 
     M_StringCopy(result, s, result_len);
@@ -926,7 +926,7 @@ char *M_StringJoin(const char *s, ...)
     for (;;)
     {
         v = va_arg(args, const char *);
-        if (v == NULL)
+        if (v == nullptr)
         {
             break;
         }
@@ -962,7 +962,7 @@ int M_vsnprintf(char *buf, size_t buf_len, const char *s, va_list args)
 
     // If truncated, change the final char in the buffer to a \0.
     // A negative result indicates a truncated buffer on Windows.
-    if (result < 0 || result >= buf_len)
+    if (result < 0 || static_cast<size_t>(result) >= buf_len)
     {
         buf[buf_len - 1] = '\0';
         result = buf_len - 1;

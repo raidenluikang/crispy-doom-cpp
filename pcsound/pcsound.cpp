@@ -38,10 +38,10 @@ static pcsound_driver_t *drivers[] =
 #ifndef DISABLE_SDL2MIXER
     &pcsound_sdl_driver,
 #endif // DISABLE_SDL2MIXER
-    NULL,
+    nullptr,
 };
 
-static pcsound_driver_t *pcsound_driver = NULL;
+static pcsound_driver_t *pcsound_driver = nullptr;
 
 int pcsound_sample_rate;
 
@@ -55,7 +55,7 @@ int PCSound_Init(pcsound_callback_func callback_func)
     char *driver_name;
     int i;
 
-    if (pcsound_driver != NULL)
+    if (pcsound_driver != nullptr)
     {
         return 1;
     }
@@ -64,9 +64,9 @@ int PCSound_Init(pcsound_callback_func callback_func)
 
     driver_name = getenv("PCSOUND_DRIVER");
 
-    if (driver_name != NULL)
+    if (driver_name != nullptr)
     {
-        for (i=0; drivers[i] != NULL; ++i)
+        for (i=0; drivers[i] != nullptr; ++i)
         {
             if (!strcmp(drivers[i]->name, driver_name))
             {
@@ -89,7 +89,7 @@ int PCSound_Init(pcsound_callback_func callback_func)
     {
         // Try all drivers until we find a working one
 
-        for (i=0; drivers[i] != NULL; ++i)
+        for (i=0; drivers[i] != nullptr; ++i)
         {
             if (drivers[i]->init_func(callback_func)) 
             {
@@ -99,7 +99,7 @@ int PCSound_Init(pcsound_callback_func callback_func)
         }
     }
     
-    if (pcsound_driver != NULL)
+    if (pcsound_driver != nullptr)
     {
         printf("Using PC sound driver: %s\n", pcsound_driver->name);
         return 1;
@@ -114,6 +114,6 @@ int PCSound_Init(pcsound_callback_func callback_func)
 void PCSound_Shutdown(void)
 {
     pcsound_driver->shutdown_func();
-    pcsound_driver = NULL;
+    pcsound_driver = nullptr;
 }
 

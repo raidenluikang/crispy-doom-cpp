@@ -282,7 +282,7 @@ void SC_MustGetStringName(char *name)
     SC_MustGetString();
     if (SC_Compare(name) == false)
     {
-        SC_ScriptError(NULL);
+        SC_ScriptError(nullptr);
     }
 }
 
@@ -392,7 +392,7 @@ int SC_MatchString(const char **strings)
 {
     int i;
 
-    for (i = 0; *strings != NULL; i++)
+    for (i = 0; *strings != nullptr; i++)
     {
         if (SC_Compare(*strings++))
         {
@@ -415,7 +415,7 @@ int SC_MustMatchString(const char **strings)
     i = SC_MatchString(strings);
     if (i == -1)
     {
-        SC_ScriptError(NULL);
+        SC_ScriptError(nullptr);
     }
     return i;
 }
@@ -443,7 +443,7 @@ boolean SC_Compare(const char *text)
 
 void SC_ScriptError(const char *message)
 {
-    if (message == NULL)
+    if (message == nullptr)
     {
         message = "Bad syntax.";
     }

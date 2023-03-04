@@ -68,7 +68,7 @@ static net_packet_t *QueuePop(packet_queue_t *queue)
     {
         // queue empty
 
-        return NULL;
+        return nullptr;
     }
 
     packet = queue->packets[queue->head];
@@ -107,7 +107,7 @@ static boolean NET_CL_RecvPacket(net_addr_t **addr, net_packet_t **packet)
 
     popped = QueuePop(&client_queue);
 
-    if (popped != NULL)
+    if (popped != nullptr)
     {
         *packet = popped;
         *addr = &client_addr;
@@ -130,7 +130,7 @@ static void NET_CL_FreeAddress(net_addr_t *addr)
 
 static net_addr_t *NET_CL_ResolveAddress(const char *address)
 {
-    if (address == NULL)
+    if (address == nullptr)
     {
         client_addr.module = &net_loop_client_module;
 
@@ -138,7 +138,7 @@ static net_addr_t *NET_CL_ResolveAddress(const char *address)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -183,7 +183,7 @@ static boolean NET_SV_RecvPacket(net_addr_t **addr, net_packet_t **packet)
 
     popped = QueuePop(&server_queue);
 
-    if (popped != NULL)
+    if (popped != nullptr)
     {
         *packet = popped;
         *addr = &server_addr;
@@ -206,14 +206,14 @@ static void NET_SV_FreeAddress(net_addr_t *addr)
 
 static net_addr_t *NET_SV_ResolveAddress(const char *address)
 {
-    if (address == NULL)
+    if (address == nullptr)
     {
         server_addr.module = &net_loop_server_module;
         return &server_addr;
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 

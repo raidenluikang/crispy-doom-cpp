@@ -108,7 +108,7 @@
 //
 // Misc. mobj flags
 //
-typedef enum
+enum mobjflag_t
 {
     // Call P_SpecialThing when touched.
     MF_SPECIAL		= 1,
@@ -203,7 +203,7 @@ typedef enum
     // [crispy] translucent sprite
     MF_TRANSLUCENT      = 0x80000000
 
-} mobjflag_t;
+} ;
 
 
 // Map Object definition.
@@ -261,7 +261,7 @@ typedef struct mobj_s
     int			movedir;	// 0-7
     int			movecount;	// when 0, select a new dir
 
-    // Thing being chased/attacked (or NULL),
+    // Thing being chased/attacked (or nullptr),
     // also the originator for missiles.
     struct mobj_s*	target;
 

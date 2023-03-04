@@ -657,7 +657,7 @@ void A_Look(mobj_t *actor, player_t *player, pspdef_t *psp)
         sound = actor->info->seesound;
         if (actor->flags2 & MF2_BOSS)
         {                       // Full volume
-            S_StartSound(NULL, sound);
+            S_StartSound(nullptr, sound);
         }
         else
         {
@@ -794,7 +794,7 @@ void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp)
         }
         else if (actor->type == MT_SORCERER2)
         {
-            S_StartSound(NULL, actor->info->activesound);
+            S_StartSound(nullptr, actor->info->activesound);
         }
         else
         {
@@ -1247,7 +1247,7 @@ void A_MummyAttack2(mobj_t *actor, player_t *player, pspdef_t *psp)
     }
     mo = P_SpawnMissile(actor, actor->target, MT_MUMMYFX1);
     //mo = P_SpawnMissile(actor, actor->target, MT_EGGFX);
-    if (mo != NULL)
+    if (mo != nullptr)
     {
         mo->special1.m = actor->target;
     }
@@ -1456,7 +1456,7 @@ void A_Srcr2Attack(mobj_t *actor, player_t *player, pspdef_t *psp)
     {
         return;
     }
-    S_StartSound(NULL, actor->info->attacksound);
+    S_StartSound(nullptr, actor->info->attacksound);
     if (P_CheckMeleeRange(actor))
     {
         P_DamageMobj(actor->target, actor, actor, HITDICE(20));
@@ -1555,32 +1555,32 @@ void A_Sor2DthLoop(mobj_t *actor, player_t *player, pspdef_t *psp)
 
 void A_SorZap(mobj_t *actor, player_t *player, pspdef_t *psp)
 {
-    S_StartSound(NULL, sfx_sorzap);
+    S_StartSound(nullptr, sfx_sorzap);
 }
 
 void A_SorRise(mobj_t *actor, player_t *player, pspdef_t *psp)
 {
-    S_StartSound(NULL, sfx_sorrise);
+    S_StartSound(nullptr, sfx_sorrise);
 }
 
 void A_SorDSph(mobj_t *actor, player_t *player, pspdef_t *psp)
 {
-    S_StartSound(NULL, sfx_sordsph);
+    S_StartSound(nullptr, sfx_sordsph);
 }
 
 void A_SorDExp(mobj_t *actor, player_t *player, pspdef_t *psp)
 {
-    S_StartSound(NULL, sfx_sordexp);
+    S_StartSound(nullptr, sfx_sordexp);
 }
 
 void A_SorDBon(mobj_t *actor, player_t *player, pspdef_t *psp)
 {
-    S_StartSound(NULL, sfx_sordbon);
+    S_StartSound(nullptr, sfx_sordbon);
 }
 
 void A_SorSightSnd(mobj_t *actor, player_t *player, pspdef_t *psp)
 {
-    S_StartSound(NULL, sfx_sorsit);
+    S_StartSound(nullptr, sfx_sorsit);
 }
 
 //----------------------------------------------------------------------------
@@ -1603,7 +1603,7 @@ void A_MinotaurAtk1(mobj_t *actor, player_t *player_, pspdef_t *psp)
     if (P_CheckMeleeRange(actor))
     {
         P_DamageMobj(actor->target, actor, actor, HITDICE(4));
-        if ((player = actor->target->player) != NULL)
+        if ((player = actor->target->player) != nullptr)
         {                       // Squish the player
             player->deltaviewheight = -16 * FRACUNIT;
         }
@@ -1741,7 +1741,7 @@ void A_MinotaurAtk3(mobj_t *actor, player_t *player_, pspdef_t *psp)
     if (P_CheckMeleeRange(actor))
     {
         P_DamageMobj(actor->target, actor, actor, HITDICE(5));
-        if ((player = actor->target->player) != NULL)
+        if ((player = actor->target->player) != nullptr)
         {                       // Squish the player
             player->deltaviewheight = -16 * FRACUNIT;
         }
@@ -1749,7 +1749,7 @@ void A_MinotaurAtk3(mobj_t *actor, player_t *player_, pspdef_t *psp)
     else
     {
         mo = P_SpawnMissile(actor, actor->target, MT_MNTRFX2);
-        if (mo != NULL)
+        if (mo != nullptr)
         {
             S_StartSound(mo, sfx_minat1);
         }
@@ -1829,7 +1829,7 @@ void A_HeadAttack(mobj_t *actor, player_t *player, pspdef_t *psp)
     // Distance threshold = 8 cells
 
     target = actor->target;
-    if (target == NULL)
+    if (target == nullptr)
     {
         return;
     }
@@ -1850,7 +1850,7 @@ void A_HeadAttack(mobj_t *actor, player_t *player, pspdef_t *psp)
     else if (randAttack < atkResolve2[dist])
     {                           // Fire column
         baseFire = P_SpawnMissile(actor, target, MT_HEADFX3);
-        if (baseFire != NULL)
+        if (baseFire != nullptr)
         {
             P_SetMobjState(baseFire, S_HEADFX3_4);      // Don't grow
             for (i = 0; i < 5; i++)
@@ -1875,7 +1875,7 @@ void A_HeadAttack(mobj_t *actor, player_t *player, pspdef_t *psp)
     else
     {                           // Whirlwind
         mo = P_SpawnMissile(actor, target, MT_WHIRLWIND);
-        if (mo != NULL)
+        if (mo != nullptr)
         {
             mo->z -= 32 * FRACUNIT;
             mo->special1.m = target;
@@ -2098,7 +2098,7 @@ void A_Scream(mobj_t * actor, player_t *player, pspdef_t *psp)
         case MT_SORCERER1:
         case MT_MINOTAUR:
             // Make boss death sounds full volume
-            S_StartSound(NULL, actor->info->deathsound);
+            S_StartSound(nullptr, actor->info->deathsound);
             break;
         case MT_PLAYER:
             // Handle the different player death screams
@@ -2334,7 +2334,7 @@ void P_Massacre(void)
         mo = (mobj_t *) think;
         if ((mo->flags & MF_COUNTKILL) && (mo->health > 0))
         {
-            P_DamageMobj(mo, NULL, NULL, 10000);
+            P_DamageMobj(mo, nullptr, nullptr, 10000);
         }
     }
 }
@@ -2590,7 +2590,7 @@ void A_SkullPop(mobj_t *actor, player_t *player_, pspdef_t *psp)
     mo->momz = FRACUNIT * 2 + (P_Random() << 6);
     // Attach player mobj to bloody skull
     player = actor->player;
-    actor->player = NULL;
+    actor->player = nullptr;
     mo->player = player;
     mo->health = actor->health;
     mo->angle = actor->angle;
@@ -2599,7 +2599,7 @@ void A_SkullPop(mobj_t *actor, player_t *player_, pspdef_t *psp)
     // source, causing crashes if the player respawns before this
     // function is called.
 
-    if (player != NULL)
+    if (player != nullptr)
     {
         player->mo = mo;
         player->lookdir = 0;
@@ -2662,7 +2662,7 @@ void A_FreeTargMobj(mobj_t * mo, player_t *player, pspdef_t *psp)
     mo->flags &= ~(MF_SHOOTABLE | MF_FLOAT | MF_SKULLFLY | MF_SOLID);
     mo->flags |= MF_CORPSE | MF_DROPOFF | MF_NOGRAVITY;
     mo->flags2 &= ~(MF2_PASSMOBJ | MF2_LOGRAV);
-    mo->player = NULL;
+    mo->player = nullptr;
 }
 
 //----------------------------------------------------------------------------

@@ -24,7 +24,7 @@
 #include "txt_main.hpp"
 #include "txt_utf8.hpp"
 #include "txt_window.hpp"
-
+#include "../utils/memory.hpp"
 typedef struct
 {
     txt_window_t *window;
@@ -115,7 +115,7 @@ static int SelectorMouseListener(txt_window_t *window, int x, int y, int b,
 
     win = (txt_widget_t *) window;
 
-    if (x < win->x || x > win->x + win->w || y < win->y || y > win->y + win->h)
+    if (x < win->x || x > win->x + static_cast<int>(win->w) || y < win->y || y > win->y + static_cast<int>(win->h))
     {
         TXT_CloseWindow(window);
         return 1;
@@ -133,11 +133,11 @@ static void OpenSelectorWindow(txt_dropdown_list_t *list)
 
     // Open a simple window with no title bar or action buttons.
 
-    window = TXT_NewWindow(NULL);
+    window = TXT_NewWindow(nullptr);
 
-    TXT_SetWindowAction(window, TXT_HORIZ_LEFT, NULL);
-    TXT_SetWindowAction(window, TXT_HORIZ_CENTER, NULL);
-    TXT_SetWindowAction(window, TXT_HORIZ_RIGHT, NULL);
+    TXT_SetWindowAction(window, TXT_HORIZ_LEFT, nullptr);
+    TXT_SetWindowAction(window, TXT_HORIZ_CENTER, nullptr);
+    TXT_SetWindowAction(window, TXT_HORIZ_RIGHT, nullptr);
 
     // Position the window so that the currently selected item appears
     // over the top of the list widget.
@@ -150,7 +150,7 @@ static void OpenSelectorWindow(txt_dropdown_list_t *list)
     for (i=0; i<list->num_values; ++i)
     {
         txt_button_t *button;
-        callback_data_t *data;
+        callback_data_t *data = create_structure<callback_data_t>();
 
         button = TXT_NewButton(list->values[i]);
 
@@ -158,7 +158,6 @@ static void OpenSelectorWindow(txt_dropdown_list_t *list)
 
         // Callback struct
 
-        data = malloc(sizeof(callback_data_t));
         data->list = list;
         data->window = window;
         data->item = i;
@@ -182,8 +181,8 @@ static void OpenSelectorWindow(txt_dropdown_list_t *list)
 
     // Catch presses of escape in this window and close it.
 
-    TXT_SetKeyListener(window, SelectorWindowListener, NULL);
-    TXT_SetMouseListener(window, SelectorMouseListener, NULL);
+    TXT_SetKeyListener(window, SelectorWindowListener, nullptr);
+    TXT_SetMouseListener(window, SelectorMouseListener, nullptr);
 }
 
 static int DropdownListWidth(txt_dropdown_list_t *list)
@@ -285,15 +284,13 @@ txt_widget_class_t txt_dropdown_list_class =
     TXT_DropdownListKeyPress,
     TXT_DropdownListDestructor,
     TXT_DropdownListMousePress,
-    NULL,
+    nullptr,
 };
 
 txt_dropdown_list_t *TXT_NewDropdownList(int *variable, const char **values,
                                          int num_values)
 {
-    txt_dropdown_list_t *list;
-
-    list = malloc(sizeof(txt_dropdown_list_t));
+    txt_dropdown_list_t *list = create_structure<txt_dropdown_list_t>();
 
     TXT_InitWidget(list, &txt_dropdown_list_class);
     list->variable = variable;

@@ -15,6 +15,7 @@
 #ifndef TXT_TABLE_H
 #define TXT_TABLE_H
 
+#include <vector>
 /**
  * @file txt_table.h
  *
@@ -43,7 +44,7 @@
 
 /**
  * Indicates an empty space to @ref TXT_AddWidgets(). Equivalent to
- * TXT_AddWidget(table, NULL), except that NULL is used by TXT_AddWidgets()
+ * TXT_AddWidget(table, nullptr), except that nullptr is used by TXT_AddWidgets()
  * to indicate the end of input.
  */
 #define TXT_TABLE_EMPTY (&txt_table_empty)
@@ -72,9 +73,8 @@ struct txt_table_s
 
     // Widgets in this table
     // The widget at (x,y) in the table is widgets[columns * y + x]
-    txt_widget_t **widgets;
-    int num_widgets;
-
+    std::vector<txt_widget_t *>widgets;
+    
     // Number of columns
     int columns;
 
@@ -104,7 +104,7 @@ txt_table_t *TXT_NewTable(int columns);
  * Create a new table and populate it with provided widgets.
  *
  * The arguments to this function are variable. Each argument must be a
- * pointer to a widget, and the list is terminated with a NULL.
+ * pointer to a widget, and the list is terminated with a nullptr.
  *
  * @param columns       The number of columns in the new table.
  * @return              Pointer to the new table structure.
@@ -118,7 +118,7 @@ txt_table_t *TXT_MakeTable(int columns, ...);
  *
  * The arguments to this function are variable.  Each argument must
  * be a pointer to a widget, and the list is terminated with a
- * NULL.
+ * nullptr.
  *
  * @return             Pointer to the new table structure.
  */
@@ -161,7 +161,7 @@ void TXT_AddWidget(TXT_UNCAST_ARG(table), TXT_UNCAST_ARG(widget));
  * Widgets are added as described in the documentation for the
  * @ref TXT_AddWidget function.  This function adds multiple
  * widgets.  The number of arguments is variable, and the argument
- * list must be terminated by a NULL pointer.
+ * list must be terminated by a nullptr pointer.
  *
  * @param table        The table.
  */

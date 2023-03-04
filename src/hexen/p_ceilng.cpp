@@ -134,7 +134,7 @@ int EV_DoCeiling(line_t * line, byte * arg, ceiling_e type)
         // new door thinker
         //
         rtn = 1;
-        ceiling = Z_Malloc(sizeof(*ceiling), PU_LEVSPEC, 0);
+        ceiling = zmalloc<decltype(        ceiling)>(sizeof(*ceiling), PU_LEVSPEC, 0);
         P_AddThinker(&ceiling->thinker);
         sec->specialdata = ceiling;
         ceiling->thinker.function = T_MoveCeiling;
@@ -223,7 +223,7 @@ void P_AddActiveCeiling(ceiling_t * c)
 {
     int i;
     for (i = 0; i < MAXCEILINGS; i++)
-        if (activeceilings[i] == NULL)
+        if (activeceilings[i] == nullptr)
         {
             activeceilings[i] = c;
             return;
@@ -242,10 +242,10 @@ void P_RemoveActiveCeiling(ceiling_t * c)
     for (i = 0; i < MAXCEILINGS; i++)
         if (activeceilings[i] == c)
         {
-            activeceilings[i]->sector->specialdata = NULL;
+            activeceilings[i]->sector->specialdata = nullptr;
             P_RemoveThinker(&activeceilings[i]->thinker);
             P_TagFinished(activeceilings[i]->sector->tag);
-            activeceilings[i] = NULL;
+            activeceilings[i] = nullptr;
             break;
         }
 }
@@ -292,10 +292,10 @@ int EV_CeilingCrushStop(line_t * line, byte * args)
         {
             rtn = 1;
             SN_StopSequence((mobj_t *) & activeceilings[i]->sector->soundorg);
-            activeceilings[i]->sector->specialdata = NULL;
+            activeceilings[i]->sector->specialdata = nullptr;
             P_RemoveThinker(&activeceilings[i]->thinker);
             P_TagFinished(activeceilings[i]->sector->tag);
-            activeceilings[i] = NULL;
+            activeceilings[i] = nullptr;
             break;
         }
     }

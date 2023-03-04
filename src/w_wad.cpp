@@ -65,9 +65,9 @@ static lumpindex_t *lumphash;
 // Variables for the reload hack: filename of the PWAD to reload, and the
 // lumps from WADs before the reload file, so we can resent numlumps and
 // load the file again.
-static wad_file_t *reloadhandle = NULL;
-static lumpinfo_t *reloadlumps = NULL;
-static char *reloadname = NULL;
+static wad_file_t *reloadhandle = nullptr;
+static lumpinfo_t *reloadlumps = nullptr;
+static char *reloadname = nullptr;
 static int reloadlump = -1;
 
 static char **wad_filenames;
@@ -78,7 +78,7 @@ static void AddWADFileName(const char *filename)
 
     wad_filenames = I_Realloc(wad_filenames, (i + 2) * sizeof(*wad_filenames));
     wad_filenames[i++] = M_StringDuplicate(filename);
-    wad_filenames[i] = NULL;
+    wad_filenames[i] = nullptr;
 }
 
 char **W_GetWADFileNames(void)
@@ -132,7 +132,7 @@ wad_file_t *W_AddFile (const char *filename)
     // reload hack.
     if (filename[0] == '~')
     {
-        if (reloadname != NULL)
+        if (reloadname != nullptr)
         {
             I_Error("Prefixing a WAD filename with '~' indicates that the "
                     "WAD should be reloaded\n"
@@ -150,10 +150,10 @@ wad_file_t *W_AddFile (const char *filename)
     // Open the file and add to directory
     wad_file = W_OpenFile(filename);
 
-    if (wad_file == NULL)
+    if (wad_file == nullptr)
     {
 	printf (" couldn't open %s\n", filename);
-	return NULL;
+	return nullptr;
     }
 
     if (strcasecmp(filename+strlen(filename)-3 , "wad" ) )
@@ -165,7 +165,7 @@ wad_file_t *W_AddFile (const char *filename)
         // them back.  Effectively we're constructing a "fake WAD directory"
         // here, as it would appear on disk.
 
-	fileinfo = Z_Malloc(sizeof(filelump_t), PU_STATIC, 0);
+	fileinfo = zmalloc<decltype(	fileinfo)>(sizeof(filelump_t), PU_STATIC, 0);
 	fileinfo->filepos = LONG(0);
 	fileinfo->size = LONG(wad_file->length);
 
@@ -207,7 +207,7 @@ wad_file_t *W_AddFile (const char *filename)
 
 	header.infotableofs = LONG(header.infotableofs);
 	length = header.numlumps*sizeof(filelump_t);
-	fileinfo = Z_Malloc(length, PU_STATIC, 0);
+	fileinfo = zmalloc<decltype(	fileinfo)>(length, PU_STATIC, 0);
 
         W_Read(wad_file, header.infotableofs, fileinfo, length);
 	numfilelumps = header.numlumps;
@@ -215,7 +215,7 @@ wad_file_t *W_AddFile (const char *filename)
 
     // Increase size of numlumps array to accomodate the new file.
     filelumps = calloc(numfilelumps, sizeof(lumpinfo_t));
-    if (filelumps == NULL)
+    if (filelumps == nullptr)
     {
         W_CloseFile(wad_file);
         I_Error("Failed to allocate array for lumps from new file.");
@@ -232,7 +232,7 @@ wad_file_t *W_AddFile (const char *filename)
         lump_p->wad_file = wad_file;
         lump_p->position = LONG(filerover->filepos);
         lump_p->size = LONG(filerover->size);
-        lump_p->cache = NULL;
+        lump_p->cache = nullptr;
         strncpy(lump_p->name, filerover->name, 8);
         lumpinfo[i] = lump_p;
 
@@ -241,10 +241,10 @@ wad_file_t *W_AddFile (const char *filename)
 
     Z_Free(fileinfo);
 
-    if (lumphash != NULL)
+    if (lumphash != nullptr)
     {
         Z_Free(lumphash);
-        lumphash = NULL;
+        lumphash = nullptr;
     }
 
     // If this is the reload file, we need to save some details about the
@@ -283,7 +283,7 @@ lumpindex_t W_CheckNumForName(const char *name)
 
     // Do we have a hash table yet?
 
-    if (lumphash != NULL)
+    if (lumphash != nullptr)
     {
         int hash;
 
@@ -419,9 +419,9 @@ void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
     byte *result;
     lumpinfo_t *lump;
 
-    if ((unsigned)lumpnum >= numlumps)
+    if (lumpnum < 0  || static_cast<unsigned>(lumpnum) >= numlumps)
     {
-	I_Error ("W_CacheLumpNum: %i >= numlumps", lumpnum);
+	    I_Error ("W_CacheLumpNum: %i >= numlumps", lumpnum);
     }
 
     lump = lumpinfo[lumpnum];
@@ -431,13 +431,13 @@ void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
     // region.  If the lump is in an ordinary file, we may already
     // have it cached; otherwise, load it into memory.
 
-    if (lump->wad_file->mapped != NULL)
+    if (lump->wad_file->mapped != nullptr)
     {
         // Memory mapped file, return from the mmapped region.
 
         result = lump->wad_file->mapped + lump->position;
     }
-    else if (lump->cache != NULL)
+    else if (lump->cache != nullptr)
     {
         // Already cached, so just switch the zone tag.
 
@@ -448,8 +448,8 @@ void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
     {
         // Not yet loaded, so load it now
 
-        lump->cache = Z_Malloc(W_LumpLength(lumpnum), tag, &lump->cache);
-	W_ReadLump (lumpnum, lump->cache);
+        lump->cache = zmalloc<decltype(lump->cache)>(W_LumpLength(lumpnum), tag, &lump->cache);
+	    W_ReadLump (lumpnum, lump->cache);
         result = lump->cache;
     }
 	
@@ -487,7 +487,7 @@ void W_ReleaseLumpNum(lumpindex_t lumpnum)
 
     lump = lumpinfo[lumpnum];
 
-    if (lump->wad_file->mapped != NULL)
+    if (lump->wad_file->mapped != nullptr)
     {
         // Memory-mapped file, so nothing needs to be done here.
     }
@@ -575,7 +575,7 @@ void W_GenerateHashTable(void)
     lumpindex_t i;
 
     // Free the old hash table, if there is one:
-    if (lumphash != NULL)
+    if (lumphash != nullptr)
     {
         Z_Free(lumphash);
     }
@@ -583,7 +583,7 @@ void W_GenerateHashTable(void)
     // Generate hash table
     if (numlumps > 0)
     {
-        lumphash = Z_Malloc(sizeof(lumpindex_t) * numlumps, PU_STATIC, NULL);
+        lumphash = zmalloc<decltype(        lumphash)>(sizeof(lumpindex_t) * numlumps, PU_STATIC, nullptr);
 
         for (i = 0; i < numlumps; ++i)
         {
@@ -617,7 +617,7 @@ void W_Reload(void)
     char *filename;
     lumpindex_t i;
 
-    if (reloadname == NULL)
+    if (reloadname == nullptr)
     {
         return;
     }
@@ -625,7 +625,7 @@ void W_Reload(void)
     // We must free any lumps being cached from the PWAD we're about to reload:
     for (i = reloadlump; i < numlumps; ++i)
     {
-        if (lumpinfo[i]->cache != NULL)
+        if (lumpinfo[i]->cache != nullptr)
         {
             Z_Free(lumpinfo[i]->cache);
         }
@@ -640,9 +640,9 @@ void W_Reload(void)
     W_CloseFile(reloadhandle);
     free(reloadlumps);
 
-    reloadname = NULL;
+    reloadname = nullptr;
     reloadlump = -1;
-    reloadhandle = NULL;
+    reloadhandle = nullptr;
     W_AddFile(filename);
     free(filename);
 
@@ -676,7 +676,7 @@ int W_LumpDump (const char *lumpname)
     }
 
     // [crispy] open file for writing
-    filename = M_StringJoin(lumpname, ".lmp", NULL);
+    filename = M_StringJoin(lumpname, ".lmp", nullptr);
     M_ForceLowercase(filename);
     fp = fopen(filename, "wb");
     if (!fp)

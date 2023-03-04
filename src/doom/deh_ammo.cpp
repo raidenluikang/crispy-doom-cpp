@@ -33,13 +33,13 @@ static void *DEH_AmmoStart(deh_context_t *context, char *line)
     if (sscanf(line, "Ammo %i", &ammo_number) != 1)
     {
         DEH_Warning(context, "Parse error on section start");
-        return NULL;
+        return nullptr;
     }
 
-    if (ammo_number < 0 || ammo_number >= NUMAMMO)
+    if (ammo_number < 0 || ammo_number >= static_cast<int>(ammotype_t::NUMAMMO))
     {
         DEH_Warning(context, "Invalid ammo number: %i", ammo_number);
-        return NULL;
+        return nullptr;
     }
     
     return &maxammo[ammo_number];
@@ -51,7 +51,7 @@ static void DEH_AmmoParseLine(deh_context_t *context, char *line, void *tag)
     int ivalue;
     int ammo_number;
 
-    if (tag == NULL)
+    if (tag == nullptr)
         return;
 
     ammo_number = ((int *) tag) - maxammo;
@@ -82,9 +82,10 @@ static void DEH_AmmoParseLine(deh_context_t *context, char *line, void *tag)
 
 static void DEH_AmmoSHA1Hash(sha1_context_t *context)
 {
-    int i;
+    
+    constexpr size_t num_mummo = static_cast<size_t>(ammotype_t::NUMAMMO);
 
-    for (i=0; i<NUMAMMO; ++i)
+    for (size_t i = 0; i < num_mummo; ++i)
     {
         SHA1_UpdateInt32(context, clipammo[i]);
         SHA1_UpdateInt32(context, maxammo[i]);
@@ -94,10 +95,10 @@ static void DEH_AmmoSHA1Hash(sha1_context_t *context)
 deh_section_t deh_section_ammo =
 {
     "Ammo",
-    NULL,
+    nullptr,
     DEH_AmmoStart,
     DEH_AmmoParseLine,
-    NULL,
+    nullptr,
     DEH_AmmoSHA1Hash,
 };
 

@@ -48,7 +48,7 @@ void ST_UpdateNotches(int notchPosition);
 void ST_UpdateNetNotches(int notchPosition);
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
-static const byte *bitmap = NULL;
+static const byte *bitmap = nullptr;
 int graphical_startup = 0;
 static boolean using_graphical_startup;
 
@@ -209,7 +209,7 @@ void ST_Progress(void)
         if (notchPosition < ST_MAX_NOTCHES)
         {
             ST_UpdateNotches(notchPosition);
-            S_StartSound(NULL, SFX_STARTUP_TICK);
+            S_StartSound(nullptr, SFX_STARTUP_TICK);
             //I_Sleep(1000);
             notchPosition++;
         }
@@ -236,7 +236,7 @@ void ST_NetProgress(void)
         if (netnotchPosition < ST_MAX_NETNOTCHES)
         {
             ST_UpdateNetNotches(netnotchPosition);
-            S_StartSound(NULL, SFX_DRIP);
+            S_StartSound(nullptr, SFX_DRIP);
             netnotchPosition++;
         }
     }
@@ -252,7 +252,7 @@ void ST_NetDone(void)
 {
     if (using_graphical_startup)
     {
-        S_StartSound(NULL, SFX_PICKUP_WEAPON);
+        S_StartSound(nullptr, SFX_PICKUP_WEAPON);
     }
 }
 
@@ -303,7 +303,7 @@ byte *ST_LoadScreen(void)
 
     lump = W_GetNumForName("STARTUP");
     length = W_LumpLength(lump);
-    buffer = (byte *) Z_Malloc(length, PU_STATIC, NULL);
+    buffer = (byte *) Z_Malloc(length, PU_STATIC, nullptr);
     W_ReadLump(lump, buffer);
     return (buffer);
 }

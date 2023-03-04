@@ -154,14 +154,14 @@ void R_InitSpriteDefs(const char **namelist)
 
 // count the number of sprite names
     check = namelist;
-    while (*check != NULL)
+    while (*check != nullptr)
         check++;
     numsprites = check - namelist;
 
     if (!numsprites)
         return;
 
-    sprites = Z_Malloc(numsprites * sizeof(*sprites), PU_STATIC, NULL);
+    sprites = zmalloc<decltype(    sprites)>(numsprites * sizeof(*sprites), PU_STATIC, nullptr);
 
     start = firstspritelump - 1;
     end = lastspritelump + 1;
@@ -231,7 +231,7 @@ void R_InitSpriteDefs(const char **namelist)
         //
         sprites[i].numframes = maxframe;
         sprites[i].spriteframes =
-            Z_Malloc(maxframe * sizeof(spriteframe_t), PU_STATIC, NULL);
+            Z_Malloc(maxframe * sizeof(spriteframe_t), PU_STATIC, nullptr);
         memcpy(sprites[i].spriteframes, sprtemp,
                maxframe * sizeof(spriteframe_t));
     }
@@ -247,7 +247,7 @@ void R_InitSpriteDefs(const char **namelist)
 ===============================================================================
 */
 
-vissprite_t *vissprites = NULL, *vissprite_p;
+vissprite_t *vissprites = nullptr, *vissprite_p;
 int newvissprite;
 static int numvissprites;
 
@@ -410,7 +410,7 @@ void R_DrawVisSprite(vissprite_t * vis, int x1, int x2)
     dc_brightmap = vis->brightmap;
 
 //      if(!dc_colormap)
-//              colfunc = tlcolfunc;  // NULL colormap = shadow draw
+//              colfunc = tlcolfunc;  // nullptr colormap = shadow draw
 
     if (vis->mobjflags & MF_SHADOW)
     {
@@ -642,7 +642,7 @@ void R_ProjectSprite(mobj_t * thing)
 //
 
 //      if (thing->flags & MF_SHADOW)
-//              vis->colormap = NULL;                   // shadow draw
+//              vis->colormap = nullptr;                   // shadow draw
 //      else ...
 
     if (fixedcolormap)

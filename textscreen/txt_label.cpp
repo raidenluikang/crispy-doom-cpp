@@ -21,6 +21,7 @@
 #include "txt_main.hpp"
 #include "txt_utf8.hpp"
 #include "txt_window.hpp"
+#include "../utils/memory.hpp"
 
 static void TXT_LabelSizeCalc(TXT_UNCAST_ARG(label))
 {
@@ -107,10 +108,10 @@ txt_widget_class_t txt_label_class =
     TXT_NeverSelectable,
     TXT_LabelSizeCalc,
     TXT_LabelDrawer,
-    NULL,
+    nullptr,
     TXT_LabelDestructor,
-    NULL,
-    NULL,
+    nullptr,
+    nullptr,
 };
 
 void TXT_SetLabel(txt_label_t *label, const char *value)
@@ -141,7 +142,7 @@ void TXT_SetLabel(txt_label_t *label, const char *value)
 
     // Split into lines
 
-    label->lines = malloc(sizeof(char *) * label->h);
+    label->lines = create_structure<char*[]>(label->h);
     label->lines[0] = label->label;
     y = 1;
 
@@ -170,18 +171,16 @@ void TXT_SetLabel(txt_label_t *label, const char *value)
 
 txt_label_t *TXT_NewLabel(const char *text)
 {
-    txt_label_t *label;
-
-    label = malloc(sizeof(txt_label_t));
+    txt_label_t *label = create_structure<txt_label_t>();
 
     TXT_InitWidget(label, &txt_label_class);
-    label->label = NULL;
-    label->lines = NULL;
+    label->label = nullptr;
+    label->lines = nullptr;
 
     // Default colors
 
-    label->bgcolor = -1;
-    label->fgcolor = -1;
+    label->bgcolor = TXT_COLOR_BLACK;
+    label->fgcolor = TXT_COLOR_BLACK;
 
     TXT_SetLabel(label, text);
 

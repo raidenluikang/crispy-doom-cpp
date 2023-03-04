@@ -23,6 +23,7 @@
 #include "txt_main.hpp"
 #include "txt_utf8.hpp"
 #include "txt_window.hpp"
+#include "../utils/memory.hpp"
 
 static void TXT_ButtonSizeCalc(TXT_UNCAST_ARG(button))
 {
@@ -90,7 +91,7 @@ txt_widget_class_t txt_button_class =
     TXT_ButtonKeyPress,
     TXT_ButtonDestructor,
     TXT_ButtonMousePress,
-    NULL,
+    nullptr,
 };
 
 void TXT_SetButtonLabel(txt_button_t *button, const char *label)
@@ -101,9 +102,7 @@ void TXT_SetButtonLabel(txt_button_t *button, const char *label)
 
 txt_button_t *TXT_NewButton(const char *label)
 {
-    txt_button_t *button;
-
-    button = malloc(sizeof(txt_button_t));
+    txt_button_t *button = create_structure<txt_button_t>();
 
     TXT_InitWidget(button, &txt_button_class);
     button->label = strdup(label);

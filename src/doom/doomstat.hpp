@@ -65,8 +65,8 @@ extern GameVariant_t    gamevariant;
 // as the same most of the time.
 
 #define logical_gamemission                             \
-    (gamemission == pack_chex ? doom :                  \
-     gamemission == pack_hacx ? doom2 : gamemission)
+    (gamemission == GameMission_t::pack_chex ? GameMission_t::doom :                  \
+     gamemission == GameMission_t::pack_hacx ? GameMission_t::doom2 : gamemission)
 
 // Set if homebrew PWAD stuff has been added.
 extern  boolean	modifiedgame;

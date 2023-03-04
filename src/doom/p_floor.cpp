@@ -220,7 +220,7 @@ void T_MoveFloor(floormove_t* floor)
     
     if (res == pastdest)
     {
-	floor->sector->specialdata = NULL;
+	floor->sector->specialdata = nullptr;
 
 	if (floor->direction == 1)
 	{
@@ -275,7 +275,7 @@ void T_MoveGoobers (floormove_t *floor)
     // have reached their respective destination heights
     if ((res1 & res2) == pastdest)
     {
-	floor->sector->specialdata = NULL;
+	floor->sector->specialdata = nullptr;
 	P_RemoveThinker(&floor->thinker);
 
 	S_StartSound(&floor->sector->soundorg, sfx_pstop);
@@ -299,10 +299,10 @@ void EV_DoGoobers (void)
 	{
 	    floor = sec->specialdata;
 	    P_RemoveThinker(&floor->thinker);
-	    sec->specialdata = NULL;
+	    sec->specialdata = nullptr;
 	}
 
-	floor = Z_Malloc(sizeof(*floor), PU_LEVSPEC, 0);
+	floor = zmalloc<decltype(	floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	P_AddThinker(&floor->thinker);
 	sec->specialdata = floor;
 	floor->thinker.function.acp1 = (actionf_p1) T_MoveGoobers;
@@ -345,7 +345,7 @@ EV_DoFloor
 	
 	// new floor thinker
 	rtn = 1;
-	floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+	floor = zmalloc<decltype(	floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	P_AddThinker (&floor->thinker);
 	sec->specialdata = floor;
 	floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
@@ -549,7 +549,7 @@ EV_BuildStairs
 	
 	// new floor thinker
 	rtn = 1;
-	floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+	floor = zmalloc<decltype(	floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	P_AddThinker (&floor->thinker);
 	sec->specialdata = floor;
 	floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
@@ -608,7 +608,7 @@ EV_BuildStairs
 					
 		sec = tsec;
 		secnum = newsecnum;
-		floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+		floor = zmalloc<decltype(		floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 
 		P_AddThinker (&floor->thinker);
 

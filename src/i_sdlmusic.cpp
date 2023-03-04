@@ -46,7 +46,7 @@
 char *fluidsynth_sf_path = "";
 char *timidity_cfg_path = "";
 
-static char *temp_timidity_cfg = NULL;
+static char *temp_timidity_cfg = nullptr;
 
 // If the temp_timidity_cfg config variable is set, generate a "wrapper"
 // config file for Timidity to point to the actual config file. This
@@ -65,7 +65,7 @@ static boolean WriteWrapperTimidityConfig(char *write_path)
 
     fstream = M_fopen(write_path, "w");
 
-    if (fstream == NULL)
+    if (fstream == nullptr)
     {
         return false;
     }
@@ -106,7 +106,7 @@ void I_InitTimidityConfig(void)
     // config file.
     if (success)
     {
-        env_string = M_StringJoin("TIMIDITY_CFG=", temp_timidity_cfg, NULL);
+        env_string = M_StringJoin("TIMIDITY_CFG=", temp_timidity_cfg, nullptr);
         putenv(env_string);
         // env_string deliberately not freed; see putenv manpage
 
@@ -119,7 +119,7 @@ void I_InitTimidityConfig(void)
     else
     {
         free(temp_timidity_cfg);
-        temp_timidity_cfg = NULL;
+        temp_timidity_cfg = nullptr;
     }
 }
 
@@ -144,7 +144,7 @@ static int current_music_volume;
 
 static void RemoveTimidityConfig(void)
 {
-    if (temp_timidity_cfg != NULL)
+    if (temp_timidity_cfg != nullptr)
     {
         M_remove(temp_timidity_cfg);
         free(temp_timidity_cfg);
@@ -195,7 +195,7 @@ static boolean I_SDL_InitMusic(void)
         {
             fprintf(stderr, "Unable to set up sound.\n");
         }
-        else if (Mix_OpenAudioDevice(snd_samplerate, AUDIO_S16SYS, 2, 1024, NULL, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
+        else if (Mix_OpenAudioDevice(snd_samplerate, AUDIO_S16SYS, 2, 1024, nullptr, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
         {
             fprintf(stderr, "Error initializing SDL_mixer: %s\n",
                     Mix_GetError());
@@ -238,7 +238,7 @@ static boolean I_SDL_InitMusic(void)
 
     // If a soundfont has been set (either here on in the environment),
     // confirm that FluidSynth is actually available before trying to use it.
-    if ((Mix_GetSoundFonts() != NULL) && (strlen(timidity_cfg_path) == 0))
+    if ((Mix_GetSoundFonts() != nullptr) && (strlen(timidity_cfg_path) == 0))
     {
         int total;
 
@@ -318,7 +318,7 @@ static void I_SDL_PlaySong(void *handle, boolean looping)
         return;
     }
 
-    if (handle == NULL)
+    if (handle == nullptr)
     {
         return;
     }
@@ -378,7 +378,7 @@ static void I_SDL_UnRegisterSong(void *handle)
         return;
     }
 
-    if (handle != NULL)
+    if (handle != nullptr)
     {
         Mix_FreeMusic(music);
     }
@@ -417,7 +417,7 @@ static void *I_SDL_RegisterSong(void *data, int len)
 
     if (!music_initialized)
     {
-        return NULL;
+        return nullptr;
     }
 
     // MUS files begin with "MUS"
@@ -447,7 +447,7 @@ static void *I_SDL_RegisterSong(void *data, int len)
     // we have to generate a temporary file.
 
     music = Mix_LoadMUS(filename);
-    if (music == NULL)
+    if (music == nullptr)
     {
         // Failed to load
         fprintf(stderr, "Error loading midi: %s\n", Mix_GetError());
@@ -503,7 +503,7 @@ music_module_t music_sdl_module =
     I_SDL_PlaySong,
     I_SDL_StopSong,
     I_SDL_MusicIsPlaying,
-    NULL,  // Poll
+    nullptr,  // Poll
 };
 
 

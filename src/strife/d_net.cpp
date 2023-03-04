@@ -252,7 +252,7 @@ void D_CheckNetGame(void)
     }
 
     SaveGameSettings(&settings);
-    D_StartNetGame(&settings, NULL);
+    D_StartNetGame(&settings, nullptr);
     LoadGameSettings(&settings);
 
     // Strife games are always deathmatch, though -altdeath is

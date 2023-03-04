@@ -23,6 +23,7 @@
 #include "txt_main.hpp"
 #include "txt_utf8.hpp"
 #include "txt_window.hpp"
+#include "../utils/memory.hpp"
 
 static void TXT_CheckBoxSizeCalc(TXT_UNCAST_ARG(checkbox))
 {
@@ -113,14 +114,12 @@ txt_widget_class_t txt_checkbox_class =
     TXT_CheckBoxKeyPress,
     TXT_CheckBoxDestructor,
     TXT_CheckBoxMousePress,
-    NULL,
+    nullptr,
 };
 
 txt_checkbox_t *TXT_NewCheckBox(const char *label, int *variable)
 {
-    txt_checkbox_t *checkbox;
-
-    checkbox = malloc(sizeof(txt_checkbox_t));
+    auto * checkbox = create_structure<txt_checkbox_t>();
 
     TXT_InitWidget(checkbox, &txt_checkbox_class);
     checkbox->label = strdup(label);

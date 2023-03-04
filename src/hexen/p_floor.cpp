@@ -243,7 +243,7 @@ void T_MoveFloor(thinker_t *thinker)
 //                      floor->resetDelay = 0;
             return;
         }
-        floor->sector->specialdata = NULL;
+        floor->sector->specialdata = nullptr;
         /*
            if (floor->direction == 1)
            switch(floor->type)
@@ -283,7 +283,7 @@ int EV_DoFloor(line_t * line, byte * args, floor_e floortype)
     int secnum;
     int rtn;
     sector_t *sec;
-    floormove_t *floor = NULL;
+    floormove_t *floor = nullptr;
 
     secnum = -1;
     rtn = 0;
@@ -299,7 +299,7 @@ int EV_DoFloor(line_t * line, byte * args, floor_e floortype)
         //      new floor thinker
         //
         rtn = 1;
-        floor = Z_Malloc(sizeof(*floor), PU_LEVSPEC, 0);
+        floor = zmalloc<decltype(        floor)>(sizeof(*floor), PU_LEVSPEC, 0);
         memset(floor, 0, sizeof(*floor));
         P_AddThinker(&floor->thinker);
         sec->specialdata = floor;
@@ -421,7 +421,7 @@ int EV_DoFloorAndCeiling(line_t * line, byte * args, boolean raise)
         while ((secnum = P_FindSectorFromTag(args[0], secnum)) >= 0)
         {
             sec = &sectors[secnum];
-            sec->specialdata = NULL;
+            sec->specialdata = nullptr;
         }
         ceiling = EV_DoCeiling(line, args, CLEV_RAISEBYVALUE);
     }
@@ -432,7 +432,7 @@ int EV_DoFloorAndCeiling(line_t * line, byte * args, boolean raise)
         while ((secnum = P_FindSectorFromTag(args[0], secnum)) >= 0)
         {
             sec = &sectors[secnum];
-            sec->specialdata = NULL;
+            sec->specialdata = nullptr;
         }
         ceiling = EV_DoCeiling(line, args, CLEV_LOWERBYVALUE);
     }
@@ -494,7 +494,7 @@ static sector_t *DequeueStairSector(int *type, int *height)
 
     if (QueueHead == QueueTail)
     {                           // queue is empty
-        return NULL;
+        return nullptr;
     }
     *type = StairQueue[QueueHead].type;
     *height = StairQueue[QueueHead].height;
@@ -521,7 +521,7 @@ static void ProcessStairSector(sector_t * sec, int type, int height,
     // new floor thinker
     //
     height += StepDelta;
-    floor = Z_Malloc(sizeof(*floor), PU_LEVSPEC, 0);
+    floor = zmalloc<decltype(    floor)>(sizeof(*floor), PU_LEVSPEC, 0);
     memset(floor, 0, sizeof(*floor));
     P_AddThinker(&floor->thinker);
     sec->specialdata = floor;
@@ -646,7 +646,7 @@ int EV_BuildStairs(line_t * line, byte * args, int direction,
         QueueStairSector(sec, 0, sec->floorheight);
         sec->special = 0;
     }
-    while ((qSec = DequeueStairSector(&type, &height)) != NULL)
+    while ((qSec = DequeueStairSector(&type, &height)) != nullptr)
     {
         ProcessStairSector(qSec, type, height, stairsType, delay, resetDelay);
     }
@@ -673,7 +673,7 @@ void T_BuildPillar(thinker_t *thinker)
                        -pillar->direction);
     if (res1 == RES_PASTDEST && res2 == RES_PASTDEST)
     {
-        pillar->sector->specialdata = NULL;
+        pillar->sector->specialdata = nullptr;
         SN_StopSequence((mobj_t *) & pillar->sector->soundorg);
         P_TagFinished(pillar->sector->tag);
         P_RemoveThinker(&pillar->thinker);
@@ -716,7 +716,7 @@ int EV_BuildPillar(line_t * line, byte * args, boolean crush)
             newHeight = sec->floorheight + (args[2] << FRACBITS);
         }
 
-        pillar = Z_Malloc(sizeof(*pillar), PU_LEVSPEC, 0);
+        pillar = zmalloc<decltype(        pillar)>(sizeof(*pillar), PU_LEVSPEC, 0);
         sec->specialdata = pillar;
         P_AddThinker(&pillar->thinker);
         pillar->thinker.function = T_BuildPillar;
@@ -778,7 +778,7 @@ int EV_OpenPillar(line_t * line, byte * args)
             continue;
         }
         rtn = 1;
-        pillar = Z_Malloc(sizeof(*pillar), PU_LEVSPEC, 0);
+        pillar = zmalloc<decltype(        pillar)>(sizeof(*pillar), PU_LEVSPEC, 0);
         sec->specialdata = pillar;
         P_AddThinker(&pillar->thinker);
         pillar->thinker.function = T_BuildPillar;
@@ -850,7 +850,7 @@ int EV_FloorCrushStop(line_t * line, byte * args)
         }
         // Completely remove the crushing floor
         SN_StopSequence((mobj_t *) & floor->sector->soundorg);
-        floor->sector->specialdata = NULL;
+        floor->sector->specialdata = nullptr;
         P_TagFinished(floor->sector->tag);
         P_RemoveThinker(&floor->thinker);
         rtn = 1;
@@ -885,7 +885,7 @@ void T_FloorWaggle(thinker_t *thinker)
             {                   // Remove
                 waggle->sector->floorheight = waggle->originalHeight;
                 P_ChangeSector(waggle->sector, true);
-                waggle->sector->specialdata = NULL;
+                waggle->sector->specialdata = nullptr;
                 P_TagFinished(waggle->sector->tag);
                 P_RemoveThinker(&waggle->thinker);
                 return;
@@ -932,7 +932,7 @@ boolean EV_StartFloorWaggle(int tag, int height, int speed, int offset,
             continue;
         }
         retCode = true;
-        waggle = Z_Malloc(sizeof(*waggle), PU_LEVSPEC, 0);
+        waggle = zmalloc<decltype(        waggle)>(sizeof(*waggle), PU_LEVSPEC, 0);
         sector->specialdata = waggle;
         waggle->thinker.function = T_FloorWaggle;
         waggle->sector = sector;

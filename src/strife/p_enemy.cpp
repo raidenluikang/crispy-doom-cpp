@@ -759,12 +759,12 @@ P_LookForPlayers
 
                 // Clear target if nothing is visible, or if the target is a
                 // friendly Rebel or the allied player.
-                if (linetarget == NULL
+                if (linetarget == nullptr
                  || (actor->target->type == MT_REBEL1
                   && actor->target->miscdata == actor->miscdata)
                  || actor->target == master)
                 {
-                    actor->target = NULL;
+                    actor->target = nullptr;
                     return false;
                 }
             }
@@ -784,7 +784,7 @@ P_LookForPlayers
             // Clear target if nothing is visible, or if the target is an ally.
             if(!linetarget || actor->target->flags & MF_ALLY)
             {
-                actor->target = NULL;
+                actor->target = nullptr;
                 return false;
             }
         }
@@ -905,11 +905,11 @@ seeyou:
 
         // [STRIFE] Only Inquisitors roar loudly here.
         if (actor->type == MT_INQUISITOR)
-            emitter = NULL;
+            emitter = nullptr;
 
         // [crispy] prevent from adding up volume
         if (crispy->soundfull && actor->type == MT_INQUISITOR)
-            S_StartSoundOnce(NULL, sound);
+            S_StartSoundOnce(nullptr, sound);
         else
             S_StartSound(emitter, sound);
 
@@ -2249,8 +2249,8 @@ void A_Scream(mobj_t* actor)
     if(actor->type == MT_ENTITY || actor->type == MT_INQUISITOR)
     {
         // [crispy] prevent from adding up volume
-        crispy->soundfull ? S_StartSoundOnce(NULL, actor->info->deathsound)
-                          : S_StartSound(NULL, actor->info->deathsound);
+        crispy->soundfull ? S_StartSoundOnce(nullptr, actor->info->deathsound)
+                          : S_StartSound(nullptr, actor->info->deathsound);
     }
     else
         S_StartSound(actor, actor->info->deathsound);
@@ -2609,7 +2609,7 @@ void A_ZombieInSpecialSector(mobj_t* actor)
         return;
 
     if(sector->special <= 15)
-        P_DamageMobj(actor, NULL, NULL, 999);
+        P_DamageMobj(actor, nullptr, nullptr, 999);
     else if(sector->special == 18)
     {
         tagval = sector->tag - 100;
@@ -3194,7 +3194,7 @@ void A_TeleportBeacon(mobj_t* actor)
 
     // set rebel color and flags
     mobj->flags |= ((actor->miscdata << MF_TRANSSHIFT) | MF_NODIALOG);
-    mobj->target = NULL;
+    mobj->target = nullptr;
 
     // double Rebel's health in deathmatch mode
     if(deathmatch)
@@ -3265,7 +3265,7 @@ void A_ClaxonBlare(mobj_t* actor)
     if(--actor->reactiontime < 0)
     {
         // reset to initial state
-        actor->target = NULL;
+        actor->target = nullptr;
         actor->reactiontime = actor->info->reactiontime;
 
         // listen for more noise
@@ -3283,7 +3283,7 @@ void A_ClaxonBlare(mobj_t* actor)
     // retrigger the alarm.
     // Also, play the harsh, grating claxon.
     if(actor->reactiontime == 2)
-        actor->subsector->sector->soundtarget = NULL;
+        actor->subsector->sector->soundtarget = nullptr;
     else if(actor->reactiontime > 50)
         S_StartSound(actor, sfx_alarm);
 }
@@ -3333,7 +3333,7 @@ void A_ActiveSound(mobj_t* actor)
 //
 void A_ClearSoundTarget(mobj_t* actor)
 {
-    actor->subsector->sector->soundtarget = NULL;
+    actor->subsector->sector->soundtarget = nullptr;
 }
 
 //

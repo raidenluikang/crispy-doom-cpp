@@ -29,7 +29,7 @@ const char *deh_signatures[] =
 {
     "Patch File for HHE v1.0",
     "Patch File for HHE v1.1",
-    NULL
+    nullptr
 };
 
 static const char *hhe_versions[] =
@@ -55,7 +55,7 @@ deh_section_t *deh_section_types[] =
     &deh_section_heretic_text,
     &deh_section_thing,
     &deh_section_weapon,
-    NULL
+    nullptr
 };
 
 static void SetHHEVersionByName(const char *name)

@@ -238,15 +238,15 @@ boolean P_GiveAmmo(player_t * player, ammotype_t ammo, int count)
 // [crispy] show weapon pickup messages in multiplayer games
 const char *const WeaponPickupMessages[NUMWEAPONS] =
 {
-    NULL, // wp_staff
-    NULL, // wp_goldwand
+    nullptr, // wp_staff
+    nullptr, // wp_goldwand
     TXT_WPNCROSSBOW,
     TXT_WPNBLASTER,
     TXT_WPNSKULLROD,
     TXT_WPNPHOENIXROD,
     TXT_WPNMACE,
     TXT_WPNGAUNTLETS,
-    NULL // wp_beak
+    nullptr // wp_beak
 };
 
 boolean P_GiveWeapon(player_t * player, weapontype_t weapon)
@@ -270,7 +270,7 @@ boolean P_GiveWeapon(player_t * player, weapontype_t weapon)
 
         if (player == &players[consoleplayer])
         {
-            S_StartSound(NULL, sfx_wpnup);
+            S_StartSound(nullptr, sfx_wpnup);
         }
         return (false);
     }
@@ -910,7 +910,7 @@ void P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
     player->bonuscount += BONUSADD;
     if (player == &players[consoleplayer])
     {
-        S_StartSound(NULL, sound);
+        S_StartSound(nullptr, sound);
         SB_PaletteFlash();
     }
 }
@@ -944,7 +944,7 @@ void P_KillMobj(mobj_t * source, mobj_t * target)
                 source->player->frags[target->player - players]++;
                 if (source->player == &players[consoleplayer])
                 {
-                    S_StartSound(NULL, sfx_gfrag);
+                    S_StartSound(nullptr, sfx_gfrag);
                 }
                 if (source->player->chickenTics)
                 {               // Make a super chicken
@@ -1005,7 +1005,7 @@ void P_MinotaurSlam(mobj_t * source, mobj_t * target)
     thrust = 16 * FRACUNIT + (P_Random() << 10);
     target->momx += FixedMul(thrust, finecosine[angle]);
     target->momy += FixedMul(thrust, finesine[angle]);
-    P_DamageMobj(target, NULL, NULL, HITDICE(6));
+    P_DamageMobj(target, nullptr, nullptr, HITDICE(6));
     if (target->player)
     {
         target->reactiontime = 14 + (P_Random() & 7);
@@ -1040,7 +1040,7 @@ void P_TouchWhirlwind(mobj_t * target)
     }
     if (!(leveltime & 7))
     {
-        P_DamageMobj(target, NULL, NULL, 3);
+        P_DamageMobj(target, nullptr, nullptr, 3);
     }
 }
 
@@ -1256,9 +1256,9 @@ void P_AutoUseHealth(player_t * player, int saveHealth)
 =
 = Damages both enemies and players
 = inflictor is the thing that caused the damage
-= 		creature or missile, can be NULL (slime, etc)
+= 		creature or missile, can be nullptr (slime, etc)
 = source is the thing to target after taking damage
-=		creature or NULL
+=		creature or nullptr
 = Source and inflictor are the same for melee attacks
 = source can be null for barrel explosions and other environmental stuff
 ==================

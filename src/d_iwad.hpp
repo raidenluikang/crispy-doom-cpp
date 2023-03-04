@@ -21,23 +21,25 @@
 
 #include "d_mode.hpp"
 
-#define IWAD_MASK_DOOM    ((1 << doom)           \
-                         | (1 << doom2)          \
-                         | (1 << pack_tnt)       \
-                         | (1 << pack_plut)      \
-                         | (1 << pack_chex)      \
-                         | (1 << pack_hacx))
-#define IWAD_MASK_HERETIC (1 << heretic)
-#define IWAD_MASK_HEXEN   (1 << hexen)
-#define IWAD_MASK_STRIFE  (1 << strife)
+#define IWAD_MASK_DOOM    ((1 << static_cast<int>(GameMission_t::doom))           \
+                         | (1 << static_cast<int>(GameMission_t::doom2))          \
+                         | (1 << static_cast<int>(GameMission_t::pack_tnt))       \
+                         | (1 << static_cast<int>(GameMission_t::pack_plut))      \
+                         | (1 << static_cast<int>(GameMission_t::pack_chex))      \
+                         | (1 << static_cast<int>(GameMission_t::pack_hacx)))
 
-typedef struct
+
+#define IWAD_MASK_HERETIC (1 << static_cast<int>(GameMission_t::heretic))
+#define IWAD_MASK_HEXEN   (1 << static_cast<int>(GameMission_t::hexen))
+#define IWAD_MASK_STRIFE  (1 << static_cast<int>(GameMission_t::strife))
+
+struct iwad_t
 {
     const char *name;
     GameMission_t mission;
     GameMode_t mode;
     const char *description;
-} iwad_t;
+} ;
 
 boolean D_IsIWADName(const char *name);
 char *D_FindWADByName(const char *filename);

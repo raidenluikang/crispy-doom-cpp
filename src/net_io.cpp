@@ -22,6 +22,7 @@
 #include "net_defs.hpp"
 #include "net_io.hpp"
 #include "z_zone.hpp"
+#include "../utils/memory.hpp"
 
 #define MAX_MODULES 16
 
@@ -37,7 +38,7 @@ net_context_t *NET_NewContext(void)
 {
     net_context_t *context;
 
-    context = Z_Malloc(sizeof(net_context_t), PU_STATIC, 0);
+    context = zmalloc<decltype(context)>(sizeof(net_context_t), PU_STATIC, 0);
     context->num_modules = 0;
 
     return context;
@@ -63,14 +64,14 @@ net_addr_t *NET_ResolveAddress(net_context_t *context, const char *addr)
     {
         result = context->modules[i]->ResolveAddress(addr);
 
-        if (result != NULL)
+        if (result != nullptr)
         {
             NET_ReferenceAddress(result);
             return result;
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void NET_SendPacket(net_addr_t *addr, net_packet_t *packet)
@@ -122,7 +123,7 @@ char *NET_AddrToString(net_addr_t *addr)
 
 void NET_ReferenceAddress(net_addr_t *addr)
 {
-    if (addr == NULL)
+    if (addr == nullptr)
     {
         return;
     }
@@ -132,7 +133,7 @@ void NET_ReferenceAddress(net_addr_t *addr)
 
 void NET_ReleaseAddress(net_addr_t *addr)
 {
-    if (addr == NULL)
+    if (addr == nullptr)
     {
         return;
     }

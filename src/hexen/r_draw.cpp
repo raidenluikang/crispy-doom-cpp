@@ -423,7 +423,7 @@ void R_InitTranslationTables(void)
     V_LoadTintTable();
 
     // Allocate translation tables
-    translationtables = Z_Malloc(256 * 3 * (maxplayers - 1), PU_STATIC, 0);
+    translationtables = zmalloc<decltype(    translationtables)>(256 * 3 * (maxplayers - 1), PU_STATIC, 0);
 
     for (i = 0; i < 3 * (maxplayers - 1); i++)
     {
@@ -557,7 +557,7 @@ void R_DrawViewBorder(void)
     if (scaledviewwidth == SCREENWIDTH)
         return;
 
-    src = W_CacheLumpName("F_022", PU_CACHE);
+    src = W_CacheLumpName_byte("F_022", PU_CACHE);
     dest = I_VideoBuffer;
 
     for (y = 0; y < SCREENHEIGHT - SBARHEIGHT; y++)
@@ -576,29 +576,29 @@ void R_DrawViewBorder(void)
     for (x = (viewwindowx >> crispy->hires); x < (viewwindowx + viewwidth) >> crispy->hires; x += 16)
     {
         V_DrawPatch(x - WIDESCREENDELTA, (viewwindowy >> crispy->hires) - 4,
-                    W_CacheLumpName("bordt", PU_CACHE));
+                    W_CacheLumpName_patch("bordt", PU_CACHE));
         V_DrawPatch(x - WIDESCREENDELTA, (viewwindowy + viewheight) >> crispy->hires,
-                    W_CacheLumpName("bordb", PU_CACHE));
+                    W_CacheLumpName_patch("bordb", PU_CACHE));
     }
     for (y = (viewwindowy >> crispy->hires); y < (viewwindowy + viewheight) >> crispy->hires; y += 16)
     {
         V_DrawPatch((viewwindowx >> crispy->hires) - 4 - WIDESCREENDELTA, y,
-                     W_CacheLumpName("bordl", PU_CACHE));
+                     W_CacheLumpName_patch("bordl", PU_CACHE));
         V_DrawPatch(((viewwindowx + viewwidth) >> crispy->hires) - WIDESCREENDELTA, y,
-                      W_CacheLumpName("bordr", PU_CACHE));
+                      W_CacheLumpName_patch("bordr", PU_CACHE));
     }
     V_DrawPatch((viewwindowx >> crispy->hires) - 4 - WIDESCREENDELTA,
                 (viewwindowy >> crispy->hires) - 4,
-                 W_CacheLumpName("bordtl", PU_CACHE));
+                 W_CacheLumpName_patch("bordtl", PU_CACHE));
     V_DrawPatch(((viewwindowx + viewwidth) >> crispy->hires) - WIDESCREENDELTA,
                 (viewwindowy >> crispy->hires) - 4,
-                W_CacheLumpName("bordtr", PU_CACHE));
+                W_CacheLumpName_patch("bordtr", PU_CACHE));
     V_DrawPatch(((viewwindowx + viewwidth) >> crispy->hires) - WIDESCREENDELTA,
                 (viewwindowy + viewheight) >> crispy->hires,
-                W_CacheLumpName("bordbr", PU_CACHE));
+                W_CacheLumpName_patch("bordbr", PU_CACHE));
     V_DrawPatch((viewwindowx >> crispy->hires) - 4 - WIDESCREENDELTA,
                 (viewwindowy + viewheight) >> crispy->hires,
-                W_CacheLumpName("bordbl", PU_CACHE));
+                W_CacheLumpName_patch("bordbl", PU_CACHE));
 }
 
 /*
@@ -622,14 +622,14 @@ void R_DrawTopBorder(void)
 
 /*	if(gamemode == shareware)
 	{
-		src = W_CacheLumpName ("FLOOR04", PU_CACHE);
+		src = W_CacheLumpName_byte("FLOOR04", PU_CACHE);
 	}
 	else
 	{
-		src = W_CacheLumpName ("FLAT513", PU_CACHE);
+		src = W_CacheLumpName_byte("FLAT513", PU_CACHE);
 	}
 */
-    src = W_CacheLumpName("F_022", PU_CACHE);
+    src = W_CacheLumpName_byte("F_022", PU_CACHE);
     dest = I_VideoBuffer;
 
     for (y = 0; y < (34 << crispy->hires); y++)
@@ -650,26 +650,26 @@ void R_DrawTopBorder(void)
         for (x = (viewwindowx >> crispy->hires); x < (viewwindowx + viewwidth) >> crispy->hires; x += 16)
         {
             V_DrawPatch(x - WIDESCREENDELTA, (viewwindowy >> crispy->hires) - 4,
-                        W_CacheLumpName("bordt", PU_CACHE));
+                        W_CacheLumpName_patch("bordt", PU_CACHE));
         }
         V_DrawPatch((viewwindowx >> crispy->hires) - 4 - WIDESCREENDELTA,
                     viewwindowy >> crispy->hires,
-                    W_CacheLumpName("bordl", PU_CACHE));
+                    W_CacheLumpName_patch("bordl", PU_CACHE));
         V_DrawPatch(((viewwindowx + viewwidth) >> crispy->hires) - WIDESCREENDELTA,
                     viewwindowy >> crispy->hires,
-                    W_CacheLumpName("bordr", PU_CACHE));
+                    W_CacheLumpName_patch("bordr", PU_CACHE));
         V_DrawPatch((viewwindowx >> crispy->hires) - 4 - WIDESCREENDELTA,
                     (viewwindowy >> crispy->hires) + 16,
-                    W_CacheLumpName("bordl", PU_CACHE));
+                    W_CacheLumpName_patch("bordl", PU_CACHE));
         V_DrawPatch(((viewwindowx + viewwidth) >> crispy->hires) - WIDESCREENDELTA,
                     (viewwindowy >> crispy->hires) + 16,
-                    W_CacheLumpName("bordr", PU_CACHE));
+                    W_CacheLumpName_patch("bordr", PU_CACHE));
 
         V_DrawPatch((viewwindowx >> crispy->hires) - 4 - WIDESCREENDELTA,
                     (viewwindowy >> crispy->hires) - 4,
-                    W_CacheLumpName("bordtl", PU_CACHE));
+                    W_CacheLumpName_patch("bordtl", PU_CACHE));
         V_DrawPatch(((viewwindowx + viewwidth) >> crispy->hires) - WIDESCREENDELTA,
                     (viewwindowy >> crispy->hires) - 4,
-                    W_CacheLumpName("bordtr", PU_CACHE));
+                    W_CacheLumpName_patch("bordtr", PU_CACHE));
     }
 }

@@ -485,7 +485,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
                    "Always Run %s",
                    (joybspeed >= MAX_JOY_BUTTONS) ? "On" : "Off");
         player->message = playermessage;
-        S_StartSound(NULL, sfx_swtchn);
+        S_StartSound(nullptr, sfx_swtchn);
 
         gamekeydown[key_toggleautorun] = false;
     }
@@ -499,7 +499,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
                    "Vertical Mouse Movement %s",
                    !novert ? "On" : "Off");
         player->message = playermessage;
-        S_StartSound(NULL, sfx_swtchn);
+        S_StartSound(nullptr, sfx_swtchn);
 
         gamekeydown[key_togglenovert] = false;
     }
@@ -953,7 +953,7 @@ boolean G_Responder (event_t* ev)
             {
                 // [crispy] play a sound if the menu is activated with a different key than ESC
                 if (!menuactive && crispy->soundfix)
-                    S_StartSound(NULL, sfx_swtchn);
+                    S_StartSound(nullptr, sfx_swtchn);
 
                 M_StartControlPanel (); 
             }
@@ -1503,9 +1503,9 @@ void G_DoReborn (int playernum)
         // respawn at the start
 
         // first dissasociate the corpse 
-        // [STRIFE] Checks for NULL first
+        // [STRIFE] Checks for nullptr first
         if(players[playernum].mo)
-            players[playernum].mo->player = NULL;
+            players[playernum].mo->player = nullptr;
 
         // spawn at random spot if in death match 
         if (deathmatch) 
@@ -1812,8 +1812,8 @@ void G_DoWorldDone2(void)
 //
 void G_ReadCurrent(const char *path)
 {
-    char *temppath = NULL;
-    byte *buffer = NULL;
+    char *temppath = nullptr;
+    byte *buffer = nullptr;
 
     temppath = M_SafeFilePath(path, "\\current");
 
@@ -1865,7 +1865,7 @@ void G_DoLoadGame (boolean userload)
     save_stream = M_fopen(loadpath, "rb");
 
     // [STRIFE] If the file does not exist, G_DoLoadLevel is called.
-    if (save_stream == NULL)
+    if (save_stream == nullptr)
     {
         G_DoLoadLevel();
         return;
@@ -2018,7 +2018,7 @@ void G_DoSaveGame (char *path)
 
     save_stream = M_fopen(temp_savegame_file, "wb");
 
-    if (save_stream == NULL)
+    if (save_stream == nullptr)
     {
         return;
     }
@@ -2315,7 +2315,7 @@ static void IncreaseDemoBuffer(void)
     // Generate a new buffer twice the size
     new_length = current_length * 2;
     
-    new_demobuffer = Z_Malloc(new_length, PU_STATIC, 0);
+    new_demobuffer = zmalloc<decltype(    new_demobuffer)>(new_length, PU_STATIC, 0);
     new_demop = new_demobuffer + (demo_p - demobuffer);
 
     // Copy over the old data
@@ -2393,7 +2393,7 @@ void G_RecordDemo (const char* name)
 
     usergame = false;
     demoname_size = strlen(name) + 5;
-    demoname = Z_Malloc(demoname_size, PU_STATIC, NULL);
+    demoname = zmalloc<decltype(    demoname)>(demoname_size, PU_STATIC, nullptr);
     M_snprintf(demoname, demoname_size, "%s.lmp", name);
     maxsize = 0x20000;
 
@@ -2408,7 +2408,7 @@ void G_RecordDemo (const char* name)
     i = M_CheckParmWithArgs("-maxdemo", 1);
     if (i)
         maxsize = atoi(myargv[i+1])*1024;
-    demobuffer = Z_Malloc (maxsize,PU_STATIC,NULL); 
+    demobuffer = zmalloc<decltype(    demobuffer)>(maxsize,PU_STATIC,nullptr); 
     demoend = demobuffer + maxsize;
 
     demorecording = true; 
@@ -2507,7 +2507,7 @@ void G_DoPlayDemo (void)
     int     demoversion;
 
     gameaction = ga_nothing; 
-    demobuffer = demo_p = W_CacheLumpName (defdemoname, PU_STATIC); 
+    demobuffer = demo_p = W_CacheLumpName_byte (defdemoname, PU_STATIC); 
 
     demoversion = *demo_p++;
 

@@ -45,7 +45,7 @@ int TXT_CanSelectFiles(void);
  *
  * @param prompt      Pointer to a string containing a prompt to display
  *                    in the window.
- * @param extensions  NULL-terminated list of filename extensions for
+ * @param extensions  nullptr-terminated list of filename extensions for
  *                    files that can be selected, or @ref TXT_DIRECTORY
  *                    to select directories.
  */
@@ -60,7 +60,7 @@ char *TXT_SelectFile(const char *prompt, const char **extensions);
  * @param size        Width of the file selector widget in characters.
  * @param prompt      Pointer to a string containing a prompt to display
  *                    in the file selection window.
- * @param extensions  NULL-terminated list of filename extensions that
+ * @param extensions  nullptr-terminated list of filename extensions that
  *                    can be used for this widget, or @ref TXT_DIRECTORY
  *                    to select directories.
  */

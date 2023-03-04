@@ -19,6 +19,7 @@
 #include "txt_io.hpp"
 #include "txt_main.hpp"
 #include "txt_utf8.hpp"
+#include "../utils/memory.hpp"
 
 typedef struct txt_cliparea_s txt_cliparea_t;
 
@@ -44,7 +45,7 @@ static const int borders[4][4] =
     {0xc0, 0xc4, 0xc1, 0xd9},
 };
 
-static txt_cliparea_t *cliparea = NULL;
+static txt_cliparea_t *cliparea = nullptr;
 
 #define VALID_X(x) ((x) >= cliparea->x1 && (x) < cliparea->x2)
 #define VALID_Y(y) ((y) >= cliparea->y1 && (y) < cliparea->y2)
@@ -138,7 +139,7 @@ void TXT_DrawWindowFrame(const char *title, int x, int y, int w, int h)
         // draw a box around the title.
 
         by = y1 == y ? 0 :
-             y1 == y + 2 && title != NULL ? 2 :
+             y1 == y + 2 && title != nullptr ? 2 :
              y1 == y + h - 1 ? 3 : 1;
 
         for (x1=x; x1<x+w; ++x1)
@@ -156,7 +157,7 @@ void TXT_DrawWindowFrame(const char *title, int x, int y, int w, int h)
 
     // Draw the title
 
-    if (title != NULL)
+    if (title != nullptr)
     {
         TXT_GotoXY(x + 1, y + 1);
         TXT_BGColor(TXT_COLOR_GREY, 0);
@@ -418,22 +419,20 @@ void TXT_DrawVertScrollbar(int x, int y, int h, int cursor, int range)
 
 void TXT_InitClipArea(void)
 {
-    if (cliparea == NULL)
+    if (cliparea == nullptr)
     {
-        cliparea = malloc(sizeof(txt_cliparea_t));
+        cliparea = create_structure<txt_cliparea_t>(); 
         cliparea->x1 = 0;
         cliparea->x2 = TXT_SCREEN_W;
         cliparea->y1 = 0;
         cliparea->y2 = TXT_SCREEN_H;
-        cliparea->next = NULL;
+        cliparea->next = nullptr;
     }
 }
 
 void TXT_PushClipArea(int x1, int x2, int y1, int y2)
 {
-    txt_cliparea_t *newarea;
-
-    newarea = malloc(sizeof(txt_cliparea_t));
+    txt_cliparea_t *newarea = create_structure<txt_cliparea_t>();
 
     // Set the new clip area to the intersection of the old
     // area and the new one.
@@ -468,7 +467,7 @@ void TXT_PopClipArea(void)
 
     // Never pop the last entry
 
-    if (cliparea->next == NULL)
+    if (cliparea->next == nullptr)
         return;
 
     // Unlink the last entry and delete

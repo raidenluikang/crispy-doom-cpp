@@ -59,7 +59,7 @@ static void *DEH_TextStart(deh_context_t *context, char *line)
     if (sscanf(line, "Text %i %i", &fromlen, &tolen) != 2)
     {
         DEH_Warning(context, "Parse error on section start");
-        return NULL;
+        return nullptr;
     }
 
     // Only allow string replacements that are possible in Vanilla Doom.  
@@ -69,7 +69,7 @@ static void *DEH_TextStart(deh_context_t *context, char *line)
     {
         DEH_Error(context, "Replacement string is longer than the maximum "
                            "possible in doom.exe");
-        return NULL;
+        return nullptr;
     }
 
     from_text = malloc(fromlen + 1);
@@ -99,7 +99,7 @@ static void *DEH_TextStart(deh_context_t *context, char *line)
     free(from_text);
     free(to_text);
 
-    return NULL;
+    return nullptr;
 }
 
 static void DEH_TextParseLine(deh_context_t *context, char *line, void *tag)
@@ -110,10 +110,10 @@ static void DEH_TextParseLine(deh_context_t *context, char *line, void *tag)
 deh_section_t deh_section_text =
 {
     "Text",
-    NULL,
+    nullptr,
     DEH_TextStart,
     DEH_TextParseLine,
-    NULL,
-    NULL,
+    nullptr,
+    nullptr,
 };
 

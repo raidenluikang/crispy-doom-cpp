@@ -44,11 +44,11 @@ static int restoretargets_fail;
 
 char *P_TempSaveGameFile(void)
 {
-    static char *filename = NULL;
+    static char *filename = nullptr;
 
-    if (filename == NULL)
+    if (filename == nullptr)
     {
-        filename = M_StringJoin(savegamedir, "temp.dsg", NULL);
+        filename = M_StringJoin(savegamedir, "temp.dsg", nullptr);
     }
 
     return filename;
@@ -61,11 +61,11 @@ extern int savepage;
 
 char *P_SaveGameFile(int slot)
 {
-    static char *filename = NULL;
+    static char *filename = nullptr;
     static size_t filename_size = 0;
     char basename[32];
 
-    if (filename == NULL)
+    if (filename == nullptr)
     {
         filename_size = strlen(savegamedir) + 32;
         filename = malloc(filename_size);
@@ -407,7 +407,7 @@ static void saveg_read_mobj_t(mobj_t *str)
     }
     else
     {
-        str->player = NULL;
+        str->player = nullptr;
     }
 
     // int lastlook;
@@ -456,7 +456,7 @@ thinker_t* P_IndexToThinker (uint32_t index)
     uint32_t	i;
 
     if (!index)
-	return NULL;
+	return nullptr;
 
     for (th = thinkercap.next, i = 0; th != &thinkercap; th = th->next)
     {
@@ -470,7 +470,7 @@ thinker_t* P_IndexToThinker (uint32_t index)
 
     restoretargets_fail++;
 
-    return NULL;
+    return nullptr;
 }
 
 static void saveg_write_mobj_t(mobj_t *str)
@@ -658,7 +658,7 @@ static void saveg_read_pspdef_t(pspdef_t *str)
     }
     else
     {
-        str->state = NULL;
+        str->state = nullptr;
     }
 
     // int tics;
@@ -1538,9 +1538,9 @@ void P_UnArchivePlayers (void)
         saveg_read_player_t(&players[i]);
 	
 	// will be set when unarc thinker
-	players[i].mo = NULL;	
-	players[i].message = NULL;
-	players[i].attacker = NULL;
+	players[i].mo = nullptr;	
+	players[i].message = nullptr;
+	players[i].attacker = nullptr;
     }
 }
 
@@ -1729,12 +1729,12 @@ void P_UnArchiveThinkers (void)
 			
 	  case tc_mobj:
 	    saveg_read_pad();
-	    mobj = Z_Malloc (sizeof(*mobj), PU_LEVEL, NULL);
+	    mobj = zmalloc<decltype(	    mobj)>(sizeof(*mobj), PU_LEVEL, nullptr);
             saveg_read_mobj_t(mobj);
 
 	    // [crispy] restore mobj->target and mobj->tracer fields
-	    //mobj->target = NULL;
-            //mobj->tracer = NULL;
+	    //mobj->target = nullptr;
+            //mobj->tracer = nullptr;
 	    P_SetThingPosition (mobj);
 	    mobj->info = &mobjinfo[mobj->type];
 	    // [crispy] killough 2/28/98: Fix for falling down into a wall after savegame loaded
@@ -1813,7 +1813,7 @@ void P_ArchiveSpecials (void)
     // save off the current thinkers
     for (th = thinkercap.next ; th != &thinkercap ; th=th->next)
     {
-	if (th->function.acv == (actionf_v)NULL)
+	if (th->function.acv == (actionf_v)nullptr)
 	{
 	    for (i = 0; i < MAXCEILINGS;i++)
 		if (activeceilings[i] == (ceiling_t *)th)
@@ -1929,7 +1929,7 @@ void P_UnArchiveSpecials (void)
 			
 	  case tc_ceiling:
 	    saveg_read_pad();
-	    ceiling = Z_Malloc (sizeof(*ceiling), PU_LEVEL, NULL);
+	    ceiling = zmalloc<decltype(	    ceiling)>(sizeof(*ceiling), PU_LEVEL, nullptr);
             saveg_read_ceiling_t(ceiling);
 	    ceiling->sector->specialdata = ceiling;
 
@@ -1942,7 +1942,7 @@ void P_UnArchiveSpecials (void)
 				
 	  case tc_door:
 	    saveg_read_pad();
-	    door = Z_Malloc (sizeof(*door), PU_LEVEL, NULL);
+	    door = zmalloc<decltype(	    door)>(sizeof(*door), PU_LEVEL, nullptr);
             saveg_read_vldoor_t(door);
 	    door->sector->specialdata = door;
 	    door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
@@ -1951,7 +1951,7 @@ void P_UnArchiveSpecials (void)
 				
 	  case tc_floor:
 	    saveg_read_pad();
-	    floor = Z_Malloc (sizeof(*floor), PU_LEVEL, NULL);
+	    floor = zmalloc<decltype(	    floor)>(sizeof(*floor), PU_LEVEL, nullptr);
             saveg_read_floormove_t(floor);
 	    floor->sector->specialdata = floor;
 	    floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
@@ -1960,7 +1960,7 @@ void P_UnArchiveSpecials (void)
 				
 	  case tc_plat:
 	    saveg_read_pad();
-	    plat = Z_Malloc (sizeof(*plat), PU_LEVEL, NULL);
+	    plat = zmalloc<decltype(	    plat)>(sizeof(*plat), PU_LEVEL, nullptr);
             saveg_read_plat_t(plat);
 	    plat->sector->specialdata = plat;
 
@@ -1973,7 +1973,7 @@ void P_UnArchiveSpecials (void)
 				
 	  case tc_flash:
 	    saveg_read_pad();
-	    flash = Z_Malloc (sizeof(*flash), PU_LEVEL, NULL);
+	    flash = zmalloc<decltype(	    flash)>(sizeof(*flash), PU_LEVEL, nullptr);
             saveg_read_lightflash_t(flash);
 	    flash->thinker.function.acp1 = (actionf_p1)T_LightFlash;
 	    P_AddThinker (&flash->thinker);
@@ -1981,7 +1981,7 @@ void P_UnArchiveSpecials (void)
 				
 	  case tc_strobe:
 	    saveg_read_pad();
-	    strobe = Z_Malloc (sizeof(*strobe), PU_LEVEL, NULL);
+	    strobe = zmalloc<decltype(	    strobe)>(sizeof(*strobe), PU_LEVEL, nullptr);
             saveg_read_strobe_t(strobe);
 	    strobe->thinker.function.acp1 = (actionf_p1)T_StrobeFlash;
 	    P_AddThinker (&strobe->thinker);
@@ -1989,7 +1989,7 @@ void P_UnArchiveSpecials (void)
 				
 	  case tc_glow:
 	    saveg_read_pad();
-	    glow = Z_Malloc (sizeof(*glow), PU_LEVEL, NULL);
+	    glow = zmalloc<decltype(	    glow)>(sizeof(*glow), PU_LEVEL, nullptr);
             saveg_read_glow_t(glow);
 	    glow->thinker.function.acp1 = (actionf_p1)T_Glow;
 	    P_AddThinker (&glow->thinker);

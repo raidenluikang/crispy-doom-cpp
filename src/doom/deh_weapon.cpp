@@ -43,13 +43,13 @@ static void *DEH_WeaponStart(deh_context_t *context, char *line)
     if (sscanf(line, "Weapon %i", &weapon_number) != 1)
     {
         DEH_Warning(context, "Parse error on section start");
-        return NULL;
+        return nullptr;
     }
 
-    if (weapon_number < 0 || weapon_number >= NUMWEAPONS)
+    if (weapon_number < 0 || weapon_number >= static_cast<int>(weapontype_t::NUMWEAPONS))
     {
         DEH_Warning(context, "Invalid weapon number: %i", weapon_number);
-        return NULL;
+        return nullptr;
     }
     
     return &weaponinfo[weapon_number];
@@ -61,7 +61,7 @@ static void DEH_WeaponParseLine(deh_context_t *context, char *line, void *tag)
     weaponinfo_t *weapon;
     int ivalue;
     
-    if (tag == NULL)
+    if (tag == nullptr)
         return;
 
     weapon = (weaponinfo_t *) tag;
@@ -81,9 +81,7 @@ static void DEH_WeaponParseLine(deh_context_t *context, char *line, void *tag)
 
 static void DEH_WeaponSHA1Sum(sha1_context_t *context)
 {
-    int i;
-
-    for (i=0; i<NUMWEAPONS ;++i)
+    for (int i=0; i < static_cast<int>(weapontype_t::NUMWEAPONS); ++i)
     {
         DEH_StructSHA1Sum(context, &weapon_mapping, &weaponinfo[i]);
     }
@@ -92,10 +90,10 @@ static void DEH_WeaponSHA1Sum(sha1_context_t *context)
 deh_section_t deh_section_weapon =
 {
     "Weapon",
-    NULL,
+    nullptr,
     DEH_WeaponStart,
     DEH_WeaponParseLine,
-    NULL,
+    nullptr,
     DEH_WeaponSHA1Sum,
 };
 

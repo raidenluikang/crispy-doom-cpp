@@ -105,12 +105,12 @@ static GameSelectCallback game_selected_callback;
 static int showMessages = 1;
 static int screenblocks = 10;
 static int detailLevel = 0;
-static char *savedir = NULL;
-static char *executable = NULL;
+static char *savedir = nullptr;
+static char *executable = nullptr;
 static const char *game_title = "Doom";
 static char *back_flat = "F_PAVE01";
 static int comport = 0;
-static char *nickname = NULL;
+static char *nickname = nullptr;
 
 static void BindMiscVariables(void)
 {
@@ -214,7 +214,7 @@ static void SetExecutable(mission_config_t *config)
     extension = "";
 #endif
 
-    executable = M_StringJoin(config->executable, extension, NULL);
+    executable = M_StringJoin(config->executable, extension, nullptr);
 }
 
 static void SetMission(mission_config_t *config)
@@ -238,7 +238,7 @@ static mission_config_t *GetMissionForName(const char *name)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // Check the name of the executable.  If it contains one of the game
@@ -256,7 +256,7 @@ static boolean CheckExecutableName(GameSelectCallback callback)
     {
         config = &mission_configs[i];
 
-        if (strstr(exe_name, config->name) != NULL)
+        if (strstr(exe_name, config->name) != nullptr)
         {
             SetMission(config);
             callback();
@@ -277,7 +277,7 @@ static void GameSelected(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(config))
 
 static void OpenGameSelectDialog(GameSelectCallback callback)
 {
-    mission_config_t *mission = NULL;
+    mission_config_t *mission = nullptr;
     txt_window_t *window;
     const iwad_t **iwads;
     int num_games;
@@ -297,7 +297,7 @@ static void OpenGameSelectDialog(GameSelectCallback callback)
 
         iwads = D_FindAllIWADs(mission_configs[i].mask);
 
-        if (iwads[0] != NULL)
+        if (iwads[0] != nullptr)
         {
             mission = &mission_configs[i];
             TXT_AddWidget(window, TXT_NewButton2(mission_configs[i].label,
@@ -355,7 +355,7 @@ void SetupMission(GameSelectCallback callback)
 
         config = GetMissionForName(mission_name);
 
-        if (config == NULL)
+        if (config == nullptr)
         {
             I_Error("Invalid parameter - '%s'", mission_name);
         }

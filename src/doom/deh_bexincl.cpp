@@ -35,7 +35,7 @@ static void *DEH_BEXInclStart(deh_context_t *context, char *line)
     if (!DEH_FileName(context))
     {
 	DEH_Warning(context, "DEHACKED lumps may not include files");
-	return NULL;
+	return nullptr;
     }
 
     deh_file = DEH_FileName(context);
@@ -43,10 +43,10 @@ static void *DEH_BEXInclStart(deh_context_t *context, char *line)
     if (bex_nested)
     {
 	DEH_Warning(context, "Included files may not include other files");
-	return NULL;
+	return nullptr;
     }
 
-    inc_file = malloc(strlen(line) + 1);
+    inc_file = static_cast<char*>(malloc(strlen(line) + 1));
 
     if (sscanf(line, "INCLUDE NOTEXT %32s", inc_file) == 1)
     {
@@ -61,7 +61,7 @@ static void *DEH_BEXInclStart(deh_context_t *context, char *line)
     {
 	DEH_Warning(context, "Parse error on section start");
 	free(inc_file);
-	return NULL;
+	return nullptr;
     }
 
     // first, try loading the file right away
@@ -72,7 +72,7 @@ static void *DEH_BEXInclStart(deh_context_t *context, char *line)
 	// second, try loading the file in the directory of the current file
 	char *dir;
 	dir = M_DirName(deh_file);
-	try_path = M_StringJoin(dir, DIR_SEPARATOR_S, inc_file, NULL);
+	try_path = M_StringJoin(dir, DIR_SEPARATOR_S, inc_file, nullptr);
 	free(dir);
     }
 
@@ -87,10 +87,10 @@ static void *DEH_BEXInclStart(deh_context_t *context, char *line)
     bex_notext = false;
 
     if (try_path != inc_file)
-	free(try_path);
+	    free(try_path);
     free(inc_file);
 
-    return NULL;
+    return nullptr;
 }
 
 static void DEH_BEXInclParseLine(deh_context_t *context, char *line, void *tag)
@@ -101,9 +101,9 @@ static void DEH_BEXInclParseLine(deh_context_t *context, char *line, void *tag)
 deh_section_t deh_section_bexincl =
 {
     "INCLUDE",
-    NULL,
+    nullptr,
     DEH_BEXInclStart,
     DEH_BEXInclParseLine,
-    NULL,
-    NULL,
+    nullptr,
+    nullptr,
 };

@@ -121,7 +121,7 @@ int mouseSensitivity_x2 = 5;
 int mouseSensitivity_y = 5;
 
 char *demoname;
-static const char *orig_demoname = NULL; // [crispy] the name originally chosen for the demo, i.e. without "-00000"
+static const char *orig_demoname = nullptr; // [crispy] the name originally chosen for the demo, i.e. without "-00000"
 boolean demorecording;
 boolean longtics;               // specify high resolution turning in demos
 boolean lowres_turn;
@@ -386,7 +386,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
                      "ALWAYS RUN ON" :
                      "ALWAYS RUN OFF", false);
 
-        S_StartSound(NULL, sfx_switch);
+        S_StartSound(nullptr, sfx_switch);
 
         gamekeydown[key_toggleautorun] = false;
     }
@@ -400,7 +400,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
                      "VERTICAL MOUSE MOVEMENT OFF" :
                      "VERTICAL MOUSE MOVEMENT ON", false);
 
-        S_StartSound(NULL, sfx_switch);
+        S_StartSound(nullptr, sfx_switch);
 
         gamekeydown[key_togglenovert] = false;
     }
@@ -1179,7 +1179,7 @@ boolean G_Responder(event_t * ev)
 void G_Ticker(void)
 {
     int i, buf;
-    ticcmd_t *cmd = NULL;
+    ticcmd_t *cmd = nullptr;
 
 //
 // do player reborns if needed
@@ -1424,8 +1424,8 @@ void G_PlayerFinishLevel(int player)
     p->fixedcolormap = 0;       // Remove torch
     p->damagecount = 0;         // No palette changes
     p->bonuscount = 0;
-    p->rain1 = NULL;
-    p->rain2 = NULL;
+    p->rain1 = nullptr;
+    p->rain2 = nullptr;
     if (p == &players[consoleplayer])
     {
         SB_state = -1;          // refresh the status bar
@@ -1589,7 +1589,7 @@ void G_DoReborn(int playernum)
         gameaction = ga_loadlevel;      // reload the level from scratch
     else
     {                           // respawn at the start
-        players[playernum].mo->player = NULL;   // dissasociate the corpse
+        players[playernum].mo->player = nullptr;   // dissasociate the corpse
 
         // spawn at random spot if in death match
         if (deathmatch)
@@ -1674,7 +1674,7 @@ static void G_FormatLevelStatTime(char *str, int tics)
 // [crispy] Write level statistics upon exit
 static void G_WriteLevelStat(void)
 {
-    static FILE *fstream = NULL;
+    static FILE *fstream = nullptr;
 
     int i, playerKills = 0, playerItems = 0, playerSecrets = 0;
 
@@ -1682,11 +1682,11 @@ static void G_WriteLevelStat(void)
     char totalTimeString[TIMESTRSIZE];
     char *decimal;
 
-    if (fstream == NULL)
+    if (fstream == nullptr)
     {
         fstream = fopen("levelstat.txt", "w");
 
-        if (fstream == NULL)
+        if (fstream == nullptr)
         {
             fprintf(stderr, "G_WriteLevelStat: Unable to open levelstat.txt for writing!\n");
             return;
@@ -1698,7 +1698,7 @@ static void G_WriteLevelStat(void)
 
     // Total time ignores centiseconds
     decimal = strchr(totalTimeString, '.');
-    if (decimal != NULL)
+    if (decimal != nullptr)
     {
         *decimal = '\0';
     }
@@ -1809,7 +1809,7 @@ void G_DoWorldDone(void)
 //
 //---------------------------------------------------------------------------
 
-static char *savename = NULL;
+static char *savename = nullptr;
 
 void G_LoadGame(char *name)
 {
@@ -1839,7 +1839,7 @@ void G_DoLoadGame(void)
     SV_OpenRead(savename);
 
     free(savename);
-    savename = NULL;
+    savename = nullptr;
 
     // Skip the description field
     SV_Read(savestr, SAVESTRINGSIZE);
@@ -2065,7 +2065,7 @@ static void IncreaseDemoBuffer(void)
     // Generate a new buffer twice the size
     new_length = current_length * 2;
 
-    new_demobuffer = Z_Malloc(new_length, PU_STATIC, 0);
+    new_demobuffer = zmalloc<decltype(    new_demobuffer)>(new_length, PU_STATIC, 0);
     new_demop = new_demobuffer + (demo_p - demobuffer);
 
     // Copy over the old data
@@ -2154,7 +2154,7 @@ void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
 
     // [crispy] demo file name suffix counter
     static unsigned int j = 0;
-    FILE *fp = NULL;
+    FILE *fp = nullptr;
 
     // [crispy] the name originally chosen for the demo, i.e. without "-00000"
     if (!orig_demoname)
@@ -2187,12 +2187,12 @@ void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
     G_InitNew(skill, episode, map);
     usergame = false;
     demoname_size = strlen(name) + 5 + 6; // [crispy] + 6 for "-00000"
-    demoname = Z_Malloc(demoname_size, PU_STATIC, NULL);
+    demoname = zmalloc<decltype(    demoname)>(demoname_size, PU_STATIC, nullptr);
     M_snprintf(demoname, demoname_size, "%s.lmp", name);
     maxsize = 0x20000;
 
     // [crispy] prevent overriding demos by adding a file name suffix
-    for ( ; j <= 99999 && (fp = fopen(demoname, "rb")) != NULL; j++)
+    for ( ; j <= 99999 && (fp = fopen(demoname, "rb")) != nullptr; j++)
     {
 	M_snprintf(demoname, demoname_size, "%s-%05d.lmp", name, j);
 	fclose (fp);
@@ -2209,7 +2209,7 @@ void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
     i = M_CheckParmWithArgs("-maxdemo", 1);
     if (i)
         maxsize = atoi(myargv[i + 1]) * 1024;
-    demobuffer = Z_Malloc(maxsize, PU_STATIC, NULL);
+    demobuffer = zmalloc<decltype(    demobuffer)>(maxsize, PU_STATIC, nullptr);
     demoend = demobuffer + maxsize;
 
     demo_p = demobuffer;
@@ -2334,7 +2334,7 @@ void G_TimeDemo(char *name)
     skill_t skill;
     int episode, map, i;
 
-    demobuffer = demo_p = W_CacheLumpName(name, PU_STATIC);
+    demobuffer = demo_p = W_CacheLumpName_byte(name, PU_STATIC);
     skill = *demo_p++;
     episode = *demo_p++;
     map = *demo_p++;
@@ -2393,7 +2393,7 @@ static void G_AddDemoFooter(void)
     free(tmp);
 
     tmp = M_StringJoin(DEMO_FOOTER_SEPARATOR, "-iwad \"",
-        M_BaseName(filenames[0]), "\"", NULL);
+        M_BaseName(filenames[0]), "\"", nullptr);
     mem_fputs(tmp, stream);
     free(tmp);
 
@@ -2403,7 +2403,7 @@ static void G_AddDemoFooter(void)
 
         for (i = 1; filenames[i]; i++)
         {
-            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", NULL);
+            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", nullptr);
             mem_fputs(tmp, stream);
             free(tmp);
         }
@@ -2417,7 +2417,7 @@ static void G_AddDemoFooter(void)
 
         for (i = 0; filenames[i]; i++)
         {
-            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", NULL);
+            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", nullptr);
             mem_fputs(tmp, stream);
             free(tmp);
         }

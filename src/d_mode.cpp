@@ -23,37 +23,35 @@
 // Valid game mode/mission combinations, with the number of
 // episodes/maps for each.
 
-static struct
+static constexpr struct
 {
     GameMission_t mission;
     GameMode_t mode;
     int episode;
     int map;
 } valid_modes[] = {
-    { pack_chex, retail,     1, 5 },
-    { doom,      shareware,  1, 9 },
-    { doom,      registered, 3, 9 },
-    { doom,      retail,     4, 9 },
-    { doom2,     commercial, 1, 32 },
-    { pack_tnt,  commercial, 1, 32 },
-    { pack_plut, commercial, 1, 32 },
-    { pack_hacx, commercial, 1, 32 },
-    { pack_nerve, commercial, 1, 9 },
-    { pack_master, commercial, 1, 21 },
-    { heretic,   shareware,  1, 9 },
-    { heretic,   registered, 3, 9 },
-    { heretic,   retail,     5, 9 },
-    { hexen,     commercial, 1, 60 },
-    { strife,    commercial, 1, 34 },
+    { GameMission_t::pack_chex, GameMode_t::retail,     1, 5 },
+    { GameMission_t::doom,      GameMode_t::shareware,  1, 9 },
+    { GameMission_t::doom,      GameMode_t::registered, 3, 9 },
+    { GameMission_t::doom,      GameMode_t::retail,     4, 9 },
+    { GameMission_t::doom2,     GameMode_t::commercial, 1, 32 },
+    { GameMission_t::pack_tnt,  GameMode_t::commercial, 1, 32 },
+    { GameMission_t::pack_plut, GameMode_t::commercial, 1, 32 },
+    { GameMission_t::pack_hacx, GameMode_t::commercial, 1, 32 },
+    { GameMission_t::pack_nerve, GameMode_t::commercial, 1, 9 },
+    { GameMission_t::pack_master, GameMode_t::commercial, 1, 21 },
+    { GameMission_t::heretic,   GameMode_t::shareware,  1, 9 },
+    { GameMission_t::heretic,   GameMode_t::registered, 3, 9 },
+    { GameMission_t::heretic,   GameMode_t::retail,     5, 9 },
+    { GameMission_t::hexen,     GameMode_t::commercial, 1, 60 },
+    { GameMission_t::strife,    GameMode_t::commercial, 1, 34 },
 };
 
 // Check that a gamemode+gamemission received over the network is valid.
 
 boolean D_ValidGameMode(GameMission_t mission, GameMode_t mode)
 {
-    int i;
-
-    for (i=0; i<arrlen(valid_modes); ++i)
+    for (size_t i=0; i<arrlen(valid_modes); ++i)
     {
         if (valid_modes[i].mode == mode && valid_modes[i].mission == mission)
         {
@@ -67,17 +65,15 @@ boolean D_ValidGameMode(GameMission_t mission, GameMode_t mode)
 boolean D_ValidEpisodeMap(GameMission_t mission, GameMode_t mode,
                           int episode, int map)
 {
-    int i;
-
     // Hacks for Heretic secret episodes
 
-    if (mission == heretic)
+    if (mission == GameMission_t::heretic)
     {
-        if (mode == retail && episode == 6)
+        if (mode == GameMode_t::retail && episode == 6)
         {
             return map >= 1 && map <= 3;
         }
-        else if (mode == registered && episode == 4)
+        else if (mode == GameMode_t::registered && episode == 4)
         {
             return map == 1;
         }
@@ -85,7 +81,7 @@ boolean D_ValidEpisodeMap(GameMission_t mission, GameMode_t mode,
 
     // Find the table entry for this mission/mode combination.
 
-    for (i=0; i<arrlen(valid_modes); ++i) 
+    for (size_t i=0; i<arrlen(valid_modes); ++i) 
     {
         if (mission == valid_modes[i].mission
          && mode == valid_modes[i].mode)
@@ -118,40 +114,38 @@ int D_GetNumEpisodes(GameMission_t mission, GameMode_t mode)
 
 // Table of valid versions
 
-static struct {
+static constexpr struct {
     GameMission_t mission;
     GameVersion_t version;
 } valid_versions[] = {
-    { doom,     exe_doom_1_2 },
-    { doom,     exe_doom_1_666 },
-    { doom,     exe_doom_1_7 },
-    { doom,     exe_doom_1_8 },
-    { doom,     exe_doom_1_9 },
-    { doom,     exe_hacx },
-    { doom,     exe_ultimate },
-    { doom,     exe_final },
-    { doom,     exe_final2 },
-    { doom,     exe_chex },
-    { heretic,  exe_heretic_1_3 },
-    { hexen,    exe_hexen_1_1 },
-    { strife,   exe_strife_1_2 },
-    { strife,   exe_strife_1_31 },
+    { GameMission_t::doom,     GameVersion_t::exe_doom_1_2 },
+    { GameMission_t::doom,     GameVersion_t::exe_doom_1_666 },
+    { GameMission_t::doom,     GameVersion_t::exe_doom_1_7 },
+    { GameMission_t::doom,     GameVersion_t::exe_doom_1_8 },
+    { GameMission_t::doom,     GameVersion_t::exe_doom_1_9 },
+    { GameMission_t::doom,     GameVersion_t::exe_hacx },
+    { GameMission_t::doom,     GameVersion_t::exe_ultimate },
+    { GameMission_t::doom,     GameVersion_t::exe_final },
+    { GameMission_t::doom,     GameVersion_t::exe_final2 },
+    { GameMission_t::doom,     GameVersion_t::exe_chex },
+    { GameMission_t::heretic,  GameVersion_t::exe_heretic_1_3 },
+    { GameMission_t::hexen,    GameVersion_t::exe_hexen_1_1 },
+    { GameMission_t::strife,   GameVersion_t::exe_strife_1_2 },
+    { GameMission_t::strife,   GameVersion_t::exe_strife_1_31 },
 };
 
 boolean D_ValidGameVersion(GameMission_t mission, GameVersion_t version)
 {
-    int i;
-
     // All Doom variants can use the Doom versions.
 
-    if (mission == doom2 || mission == pack_plut || mission == pack_tnt
-     || mission == pack_hacx || mission == pack_chex
-     || mission == pack_nerve || mission == pack_master)
+    if (mission == GameMission_t::doom2 || mission == GameMission_t::pack_plut || mission == GameMission_t::pack_tnt
+     || mission == GameMission_t::pack_hacx || mission == GameMission_t::pack_chex
+     || mission == GameMission_t::pack_nerve || mission == GameMission_t::pack_master)
     {
-        mission = doom;
+        mission = GameMission_t::doom;
     }
 
-    for (i=0; i<arrlen(valid_versions); ++i) 
+    for (size_t i=0; i<arrlen(valid_versions); ++i) 
     {
         if (valid_versions[i].mission == mission 
          && valid_versions[i].version == version)
@@ -169,20 +163,20 @@ boolean D_IsEpisodeMap(GameMission_t mission)
 {
     switch (mission)
     {
-        case doom:
-        case heretic:
-        case pack_chex:
+        case GameMission_t::doom:
+        case GameMission_t::heretic:
+        case GameMission_t::pack_chex:
             return true;
 
-        case none:
-        case hexen:
-        case doom2:
-        case pack_hacx:
-        case pack_tnt:
-        case pack_plut:
-        case pack_nerve:
-        case pack_master:
-        case strife:
+        case GameMission_t::none:
+        case GameMission_t::hexen:
+        case GameMission_t::doom2:
+        case GameMission_t::pack_hacx:
+        case GameMission_t::pack_tnt:
+        case GameMission_t::pack_plut:
+        case GameMission_t::pack_nerve:
+        case GameMission_t::pack_master:
+        case GameMission_t::strife:
         default:
             return false;
     }
@@ -192,43 +186,44 @@ const char *D_GameMissionString(GameMission_t mission)
 {
     switch (mission)
     {
-        case none:
+        case GameMission_t::none:
         default:
             return "none";
-        case doom:
+        case GameMission_t::doom:
             return "doom";
-        case doom2:
+        case GameMission_t::doom2:
             return "doom2";
-        case pack_tnt:
+        case GameMission_t::pack_tnt:
             return "tnt";
-        case pack_plut:
+        case GameMission_t::pack_plut:
             return "plutonia";
-        case pack_hacx:
+        case GameMission_t::pack_hacx:
             return "hacx";
-        case pack_chex:
+        case GameMission_t::pack_chex:
             return "chex";
-        case heretic:
+        case GameMission_t::heretic:
             return "heretic";
-        case hexen:
+        case GameMission_t::hexen:
             return "hexen";
-        case strife:
+        case GameMission_t::strife:
             return "strife";
     }
+    return "<unknown>";
 }
 
 const char *D_GameModeString(GameMode_t mode)
 {
     switch (mode)
     {
-        case shareware:
+        case GameMode_t::shareware:
             return "shareware";
-        case registered:
+        case GameMode_t::registered:
             return "registered";
-        case commercial:
+        case GameMode_t::commercial:
             return "commercial";
-        case retail:
+        case GameMode_t::retail:
             return "retail";
-        case indetermined:
+        case GameMode_t::indetermined:
         default:
             return "unknown";
     }

@@ -270,29 +270,29 @@ void SB_Init(void)
     int i;
     int startLump;
 
-    PatchH2BAR = W_CacheLumpName("H2BAR", PU_STATIC);
-    PatchH2TOP = W_CacheLumpName("H2TOP", PU_STATIC);
-    PatchINVBAR = W_CacheLumpName("INVBAR", PU_STATIC);
-    PatchLFEDGE = W_CacheLumpName("LFEDGE", PU_STATIC);
-    PatchRTEDGE = W_CacheLumpName("RTEDGE", PU_STATIC);
-    PatchSTATBAR = W_CacheLumpName("STATBAR", PU_STATIC);
-    PatchKEYBAR = W_CacheLumpName("KEYBAR", PU_STATIC);
-    PatchSELECTBOX = W_CacheLumpName("SELECTBOX", PU_STATIC);
-    PatchARTICLEAR = W_CacheLumpName("ARTICLS", PU_STATIC);
-    PatchARMCLEAR = W_CacheLumpName("ARMCLS", PU_STATIC);
-    PatchMANACLEAR = W_CacheLumpName("MANACLS", PU_STATIC);
-    PatchMANAVIAL1 = W_CacheLumpName("MANAVL1", PU_STATIC);
-    PatchMANAVIAL2 = W_CacheLumpName("MANAVL2", PU_STATIC);
-    PatchMANAVIALDIM1 = W_CacheLumpName("MANAVL1D", PU_STATIC);
-    PatchMANAVIALDIM2 = W_CacheLumpName("MANAVL2D", PU_STATIC);
-    PatchMANADIM1 = W_CacheLumpName("MANADIM1", PU_STATIC);
-    PatchMANADIM2 = W_CacheLumpName("MANADIM2", PU_STATIC);
-    PatchMANABRIGHT1 = W_CacheLumpName("MANABRT1", PU_STATIC);
-    PatchMANABRIGHT2 = W_CacheLumpName("MANABRT2", PU_STATIC);
-    PatchINVLFGEM1 = W_CacheLumpName("invgeml1", PU_STATIC);
-    PatchINVLFGEM2 = W_CacheLumpName("invgeml2", PU_STATIC);
-    PatchINVRTGEM1 = W_CacheLumpName("invgemr1", PU_STATIC);
-    PatchINVRTGEM2 = W_CacheLumpName("invgemr2", PU_STATIC);
+    PatchH2BAR = W_CacheLumpName_patch("H2BAR", PU_STATIC);
+    PatchH2TOP = W_CacheLumpName_patch("H2TOP", PU_STATIC);
+    PatchINVBAR = W_CacheLumpName_patch("INVBAR", PU_STATIC);
+    PatchLFEDGE = W_CacheLumpName_patch("LFEDGE", PU_STATIC);
+    PatchRTEDGE = W_CacheLumpName_patch("RTEDGE", PU_STATIC);
+    PatchSTATBAR = W_CacheLumpName_patch("STATBAR", PU_STATIC);
+    PatchKEYBAR = W_CacheLumpName_patch("KEYBAR", PU_STATIC);
+    PatchSELECTBOX = W_CacheLumpName_patch("SELECTBOX", PU_STATIC);
+    PatchARTICLEAR = W_CacheLumpName_patch("ARTICLS", PU_STATIC);
+    PatchARMCLEAR = W_CacheLumpName_patch("ARMCLS", PU_STATIC);
+    PatchMANACLEAR = W_CacheLumpName_patch("MANACLS", PU_STATIC);
+    PatchMANAVIAL1 = W_CacheLumpName_patch("MANAVL1", PU_STATIC);
+    PatchMANAVIAL2 = W_CacheLumpName_patch("MANAVL2", PU_STATIC);
+    PatchMANAVIALDIM1 = W_CacheLumpName_patch("MANAVL1D", PU_STATIC);
+    PatchMANAVIALDIM2 = W_CacheLumpName_patch("MANAVL2D", PU_STATIC);
+    PatchMANADIM1 = W_CacheLumpName_patch("MANADIM1", PU_STATIC);
+    PatchMANADIM2 = W_CacheLumpName_patch("MANADIM2", PU_STATIC);
+    PatchMANABRIGHT1 = W_CacheLumpName_patch("MANABRT1", PU_STATIC);
+    PatchMANABRIGHT2 = W_CacheLumpName_patch("MANABRT2", PU_STATIC);
+    PatchINVLFGEM1 = W_CacheLumpName_patch("invgeml1", PU_STATIC);
+    PatchINVLFGEM2 = W_CacheLumpName_patch("invgeml2", PU_STATIC);
+    PatchINVRTGEM1 = W_CacheLumpName_patch("invgemr1", PU_STATIC);
+    PatchINVRTGEM2 = W_CacheLumpName_patch("invgemr2", PU_STATIC);
 
 //      PatchCHAINBACK = W_CacheLumpName("CHAINBACK", PU_STATIC);
     startLump = W_GetNumForName("IN0");
@@ -300,7 +300,7 @@ void SB_Init(void)
     {
         PatchINumbers[i] = W_CacheLumpNum(startLump + i, PU_STATIC);
     }
-    PatchNEGATIVE = W_CacheLumpName("NEGNUM", PU_STATIC);
+    PatchNEGATIVE = W_CacheLumpName_patch("NEGNUM", PU_STATIC);
     FontBNumBase = W_GetNumForName("FONTB16");
     startLump = W_GetNumForName("SMALLIN0");
     for (i = 0; i < 10; i++)
@@ -316,7 +316,7 @@ void SB_Init(void)
     st_backing_screen = (pixel_t *) Z_Malloc(MAXWIDTH * (ORIGSBARHEIGHT << 1) * sizeof(*st_backing_screen), PU_STATIC, 0);
     if (deathmatch)
     {
-        PatchKILLS = W_CacheLumpName("KILLS", PU_STATIC);
+        PatchKILLS = W_CacheLumpName_patch("KILLS", PU_STATIC);
     }
     SB_SetClassData();
 
@@ -672,7 +672,7 @@ static void DrawSoundInfo(void)
         c = &s.chan[i];
         x = 0;
         y = 40 + i * 10;
-        if (c->mo == NULL)
+        if (c->mo == nullptr)
         {                       // Channel is unused
             MN_DrTextA("------", xPos[0], y);
             continue;
@@ -772,7 +772,7 @@ static void RefreshBackground(void)
         byte *src;
         pixel_t *dest;
 
-        src = W_CacheLumpName("F_022", PU_CACHE);
+        src = W_CacheLumpName_byte("F_022", PU_CACHE);
         dest = st_backing_screen;
 
         for (y = SCREENHEIGHT - SBARHEIGHT; y < SCREENHEIGHT; y++)
@@ -786,7 +786,7 @@ static void RefreshBackground(void)
         // [crispy] preserve bezel bottom edge
         if (scaledviewwidth == SCREENWIDTH)
         {
-            patch_t *const patch = W_CacheLumpName("bordb", PU_CACHE);
+            patch_t *const patch = W_CacheLumpName_patch("bordb", PU_CACHE);
 
             for (x = 0; x < WIDESCREENDELTA; x += 16)
             {
@@ -1111,10 +1111,10 @@ void DrawMainBar(void)
     patch_t *manaPatch1, *manaPatch2;
     patch_t *manaVialPatch1, *manaVialPatch2;
 
-    manaPatch1 = NULL;
-    manaPatch2 = NULL;
-    manaVialPatch1 = NULL;
-    manaVialPatch2 = NULL;
+    manaPatch1 = nullptr;
+    manaPatch2 = nullptr;
+    manaVialPatch1 = nullptr;
+    manaVialPatch2 = nullptr;
 
     // Ready artifact
     if (ArtifactFlash)
@@ -1133,7 +1133,7 @@ void DrawMainBar(void)
         if (CPlayer->readyArtifact > 0)
         {
             V_DrawPatch(143, 163,
-                        W_CacheLumpName(patcharti[CPlayer->readyArtifact],
+                        W_CacheLumpName_patch(patcharti[CPlayer->readyArtifact],
                                         PU_CACHE));
             if (CPlayer->inventory[inv_ptr].count > 1)
             {
@@ -1336,12 +1336,12 @@ void DrawInventoryBar(void)
     V_DrawPatch(38, 162, PatchINVBAR);
     for (i = 0; i < 7; i++)
     {
-        //V_DrawPatch(50+i*31, 160, W_CacheLumpName("ARTIBOX", PU_CACHE));
+        //V_DrawPatch(50+i*31, 160, W_CacheLumpName_patch("ARTIBOX", PU_CACHE));
         if (CPlayer->inventorySlotNum > x + i
             && CPlayer->inventory[x + i].type != arti_none)
         {
             V_DrawPatch(50 + i * 31, 163,
-                        W_CacheLumpName(patcharti
+                        W_CacheLumpName_patch(patcharti
                                         [CPlayer->inventory[x + i].type],
                                         PU_CACHE));
             if (CPlayer->inventory[x + i].count > 1)
@@ -1503,9 +1503,9 @@ void DrawFullScreenStuff(void)
     {
         if (CPlayer->readyArtifact > 0)
         {
-            V_DrawTLPatch(286, 170, W_CacheLumpName("ARTIBOX", PU_CACHE));
+            V_DrawTLPatch(286, 170, W_CacheLumpName_patch("ARTIBOX", PU_CACHE));
             V_DrawPatch(284, 169,
-                        W_CacheLumpName(patcharti[CPlayer->readyArtifact],
+                        W_CacheLumpName_patch(patcharti[CPlayer->readyArtifact],
                                         PU_CACHE));
             if (CPlayer->inventory[inv_ptr].count > 1)
             {
@@ -1518,13 +1518,13 @@ void DrawFullScreenStuff(void)
         x = inv_ptr - curpos;
         for (i = 0; i < 7; i++)
         {
-            V_DrawTLPatch(50 + i * 31, 168, W_CacheLumpName("ARTIBOX",
+            V_DrawTLPatch(50 + i * 31, 168, W_CacheLumpName_patch("ARTIBOX",
                                                             PU_CACHE));
             if (CPlayer->inventorySlotNum > x + i
                 && CPlayer->inventory[x + i].type != arti_none)
             {
                 V_DrawPatch(49 + i * 31, 167,
-                            W_CacheLumpName(patcharti
+                            W_CacheLumpName_patch(patcharti
                                             [CPlayer->inventory[x + i].type],
                                             PU_CACHE));
                 if (CPlayer->inventory[x + i].count > 1)
@@ -1639,12 +1639,12 @@ static boolean HandleCheats(byte key)
             if (CheatAddKey(&Cheats[0], key, &eat))
             {
                 Cheats[0].func(&players[consoleplayer], &Cheats[0]);
-                S_StartSound(NULL, SFX_PLATFORM_STOP);
+                S_StartSound(nullptr, SFX_PLATFORM_STOP);
             }
             if (CheatAddKey(&Cheats[1], key, &eat))
             {
                 Cheats[1].func(&players[consoleplayer], &Cheats[1]);
-                S_StartSound(NULL, SFX_PLATFORM_STOP);
+                S_StartSound(nullptr, SFX_PLATFORM_STOP);
             }
         }
         return eat;
@@ -1659,7 +1659,7 @@ static boolean HandleCheats(byte key)
         if (CheatAddKey(&Cheats[i], key, &eat))
         {
             Cheats[i].func(&players[consoleplayer], &Cheats[i]);
-            S_StartSound(NULL, SFX_PLATFORM_STOP);
+            S_StartSound(nullptr, SFX_PLATFORM_STOP);
         }
     }
     return (eat);
@@ -1818,7 +1818,7 @@ static void CheatArtifactAllFunc(player_t * player, Cheat_t * cheat)
     {
         for (j = 0; j < 25; j++)
         {
-            P_GiveArtifact(player, i, NULL);
+            P_GiveArtifact(player, i, nullptr);
         }
     }
     P_SetMessage(player, TXT_CHEATARTIFACTS3, true);
@@ -1830,7 +1830,7 @@ static void CheatPuzzleFunc(player_t * player, Cheat_t * cheat)
 
     for (i = arti_firstpuzzitem; i < NUMARTIFACTS; i++)
     {
-        P_GiveArtifact(player, i, NULL);
+        P_GiveArtifact(player, i, nullptr);
     }
     P_SetMessage(player, TXT_CHEATARTIFACTS3, true);
 }
@@ -1939,7 +1939,7 @@ static void CheatQuickenFunc2(player_t * player, Cheat_t * cheat)
 
 static void CheatQuickenFunc3(player_t * player, Cheat_t * cheat)
 {
-    P_DamageMobj(player->mo, NULL, player->mo, 10000);
+    P_DamageMobj(player->mo, nullptr, player->mo, 10000);
     P_SetMessage(player, "THAT'S THREE!  TIME TO DIE.", true);
 }
 
@@ -2024,7 +2024,7 @@ static void CheatScriptFunc3(player_t * player, Cheat_t * cheat)
         return;
     script_args[0] = script_args[1] = script_args[2] = 0;
 
-    if (P_StartACS(script, 0, script_args, player->mo, NULL, 0))
+    if (P_StartACS(script, 0, script_args, player->mo, nullptr, 0))
     {
         M_snprintf(textBuffer, sizeof(textBuffer),
                    "RUNNING SCRIPT %.2d", script);

@@ -237,7 +237,7 @@ void 	P_UseLines (player_t* player);
 
 boolean P_ChangeSector (sector_t* sector, boolean crunch);
 
-extern mobj_t*	linetarget;	// who got hit (or NULL)
+extern mobj_t*	linetarget;	// who got hit (or nullptr)
 
 
 extern fixed_t attackrange;
@@ -292,8 +292,8 @@ extern int st_keyorskull[3];
 //
 // P_INTER
 //
-extern int		maxammo[NUMAMMO];
-extern int		clipammo[NUMAMMO];
+extern int		maxammo[static_cast<size_t>(ammotype_t::NUMAMMO)];
+extern int		clipammo[static_cast<size_t>(ammotype_t::NUMAMMO)];
 
 void
 P_TouchSpecialThing

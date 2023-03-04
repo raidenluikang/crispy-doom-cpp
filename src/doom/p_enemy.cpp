@@ -665,7 +665,7 @@ void A_Look (mobj_t* actor)
 	{
 	    // full volume
 	    // [crispy] prevent from adding up volume
-	    crispy->soundfull ? S_StartSoundOnce (NULL, sound) : S_StartSound (NULL, sound);
+	    crispy->soundfull ? S_StartSoundOnce (nullptr, sound) : S_StartSound (nullptr, sound);
 	}
 	else
 	    S_StartSound (actor, sound);
@@ -1242,7 +1242,7 @@ void A_VileChase (mobj_t* actor)
 		    corpsehit->height <<= 2;
 		    corpsehit->flags = info->flags;
 		    corpsehit->health = info->spawnhealth;
-		    corpsehit->target = NULL;
+		    corpsehit->target = nullptr;
 
 		    // [crispy] count resurrected monsters
 		    extrakills++;
@@ -1632,7 +1632,7 @@ void A_Scream (mobj_t* actor)
     {
 	// full volume
 	// [crispy] prevent from adding up volume
-	crispy->soundfull ? S_StartSoundOnce (NULL, sound) : S_StartSound (NULL, sound);
+	crispy->soundfull ? S_StartSoundOnce (nullptr, sound) : S_StartSound (nullptr, sound);
     }
     else
 	S_StartSound (actor, sound);
@@ -1888,12 +1888,12 @@ A_CloseShotgun2
 {
     if (!player) return; // [crispy] let pspr action pointers get called from mobj states
     S_StartSound (player->so, sfx_dbcls); // [crispy] weapon sound source
-    A_ReFire(NULL,player,psp); // [crispy] let pspr action pointers get called from mobj states
+    A_ReFire(nullptr,player,psp); // [crispy] let pspr action pointers get called from mobj states
 }
 
 
 
-mobj_t**		braintargets = NULL;
+mobj_t**		braintargets = nullptr;
 int		numbraintargets = 0; // [crispy] initialize
 int		braintargeton = 0;
 static int	maxbraintargets; // [crispy] remove braintargets limit
@@ -1933,7 +1933,7 @@ void A_BrainAwake (mobj_t* mo)
 	}
     }
 	
-    S_StartSound (NULL,sfx_bossit);
+    S_StartSound (nullptr,sfx_bossit);
 
     // [crispy] prevent braintarget overflow
     // (e.g. in two subsequent maps featuring a brain spitter)
@@ -1951,7 +1951,7 @@ void A_BrainAwake (mobj_t* mo)
 void A_BrainPain (mobj_t*	mo)
 {
     // [crispy] prevent from adding up volume
-    crispy->soundfull ? S_StartSoundOnce (NULL,sfx_bospn) : S_StartSound (NULL,sfx_bospn);
+    crispy->soundfull ? S_StartSoundOnce (nullptr,sfx_bospn) : S_StartSound (nullptr,sfx_bospn);
 }
 
 
@@ -1976,7 +1976,7 @@ void A_BrainScream (mobj_t*	mo)
 	    th->tics = 1;
     }
 	
-    S_StartSound (NULL,sfx_bosdth);
+    S_StartSound (nullptr,sfx_bosdth);
 }
 
 
@@ -2023,7 +2023,7 @@ void A_BrainSpit (mobj_t*	mo)
 		
     // [crispy] avoid division by zero by recalculating the number of spawn spots
     if (numbraintargets == 0)
-	A_BrainAwake(NULL);
+	A_BrainAwake(nullptr);
 
     // [crispy] still no spawn spots available
     if (numbraintargets == -1)
@@ -2043,7 +2043,7 @@ void A_BrainSpit (mobj_t*	mo)
     newmobj->reactiontime =
 	((targ->y - mo->y)/newmobj->momy) / newmobj->state->tics;
 
-    S_StartSound(NULL, sfx_bospit);
+    S_StartSound(nullptr, sfx_bospit);
 }
 
 

@@ -116,11 +116,11 @@ void P_InitSwitchList(void)
 
     if ((from_lump = (W_CheckNumForName("SWITCHES") != -1)))
     {
-	alphSwitchList = W_CacheLumpName("SWITCHES", PU_STATIC);
+		alphSwitchList = static_cast<switchlist_t *>( W_CacheLumpName("SWITCHES", PU_STATIC) );
     }
     else
     {
-	alphSwitchList = alphSwitchList_vanilla;
+		alphSwitchList = alphSwitchList_vanilla;
     }
 
     // Note that this is called "episode" here but it's actually something
@@ -190,7 +190,7 @@ void P_InitSwitchList(void)
     }
 
     // [crispy] pre-allocate some memory for the buttonlist[] array
-    buttonlist = I_Realloc(NULL, sizeof(*buttonlist) * (maxbuttons = MAXBUTTONS));
+    buttonlist = I_Realloc(nullptr, sizeof(*buttonlist) * (maxbuttons = MAXBUTTONS));
     memset(buttonlist, 0, sizeof(*buttonlist) * maxbuttons);
 }
 

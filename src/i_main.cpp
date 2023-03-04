@@ -44,8 +44,8 @@ int main(int argc, char **argv)
     // save arguments
 
     myargc = argc;
-    myargv = malloc(argc * sizeof(char *));
-    assert(myargv != NULL);
+    myargv = static_cast<char**>( malloc(argc * sizeof(char *)) );
+    assert(myargv != nullptr);
 
     for (int i = 0; i < argc; i++)
     {

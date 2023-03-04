@@ -27,12 +27,13 @@
 #include "info.hpp"
 #include "p_mobj.hpp" // [crispy] MF_*
 
-typedef struct {
+struct bex_thingbits_t
+{
     const char *flag;
     int bits;
-} bex_thingbits_t;
+};
 
-static const bex_thingbits_t bex_thingbitstable[] = {
+static constexpr bex_thingbits_t bex_thingbitstable[] = {
     {"SPECIAL", MF_SPECIAL},
     {"SOLID", MF_SOLID},
     {"SHOOTABLE", MF_SHOOTABLE},
@@ -59,7 +60,7 @@ static const bex_thingbits_t bex_thingbitstable[] = {
     {"COUNTITEM", MF_COUNTITEM},
     {"SKULLFLY", MF_SKULLFLY},
     {"NOTDMATCH", MF_NOTDMATCH},
-    {"TRANSLUCENT", MF_TRANSLUCENT},
+    {"TRANSLUCENT", static_cast<int>(MF_TRANSLUCENT) },
     // [NS] Beta projectile bouncing.
     {"BOUNCES", MF_BOUNCES},
     // TRANSLATION consists of 2 bits, not 1
@@ -173,7 +174,7 @@ static void *DEH_ThingStart(deh_context_t *context, char *line)
     if (sscanf(line, "Thing %i", &thing_number) != 1)
     {
         DEH_Warning(context, "Parse error on section start");
-        return NULL;
+        return nullptr;
     }
 
     // dehacked files are indexed from 1
@@ -182,7 +183,7 @@ static void *DEH_ThingStart(deh_context_t *context, char *line)
     if (thing_number < 0 || thing_number >= NUMMOBJTYPES)
     {
         DEH_Warning(context, "Invalid thing number: %i", thing_number);
-        return NULL;
+        return nullptr;
     }
     
     mobj = &mobjinfo[thing_number];
@@ -196,7 +197,7 @@ static void DEH_ThingParseLine(deh_context_t *context, char *line, void *tag)
     char *variable_name, *value;
     int ivalue;
     
-    if (tag == NULL)
+    if (tag == nullptr)
        return;
 
     mobj = (mobjinfo_t *) tag;
@@ -220,16 +221,16 @@ static void DEH_ThingParseLine(deh_context_t *context, char *line, void *tag)
     // [crispy] support BEX bits mnemonics in Things fields
     if (!ivalue && !strcasecmp(variable_name, "bits"))
     {
-	for ( ; (value = strtok(value, ",+| \t\f\r")); value = NULL)
-	{
-	    int i;
-	    for (i = 0; i < arrlen(bex_thingbitstable); i++)
-		if (!strcasecmp(value, bex_thingbitstable[i].flag))
-		{
-		    ivalue |= bex_thingbitstable[i].bits;
-		    break;
-		}
-	}
+        for ( ; (value = strtok(value, ",+| \t\f\r")); value = nullptr)
+        {
+            for (size_t i = 0; i < arrlen(bex_thingbitstable); i++)
+            {    if (!strcasecmp(value, bex_thingbitstable[i].flag))
+                {
+                    ivalue |= bex_thingbitstable[i].bits;
+                    break;
+                }
+            }
+        }
     }
     // [crispy] Thing ids in dehacked are 1-based, convert dropped item to 0-based
     if (!strcasecmp(variable_name, "dropped item"))
@@ -258,7 +259,7 @@ deh_section_t deh_section_thing =
     DEH_InitThingProperties, // [crispy] initialize Thing extra properties
     DEH_ThingStart,
     DEH_ThingParseLine,
-    NULL,
+    nullptr,
     DEH_ThingSHA1Sum,
 };
 

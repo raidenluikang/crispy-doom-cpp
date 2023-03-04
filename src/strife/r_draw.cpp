@@ -36,6 +36,7 @@
 // State.
 #include "doomstat.hpp"
 
+#include "../../utils/memory.hpp"
 
 // ?
 //#define MAXWIDTH			1120
@@ -74,7 +75,7 @@ int		columnofs[MAXWIDTH];
 // Backing buffer containing the bezel drawn around the screen and 
 // surrounding background.
 
-static byte *background_buffer = NULL;
+static byte *background_buffer = nullptr;
 
 // haleyjd 08/29/10: [STRIFE] Rogue added the ability to customize the view
 // border flat by storing it in the configuration file.
@@ -478,7 +479,7 @@ void R_InitTranslationTables (void)
 
     // [STRIFE] Load xlatab. Here's how Rogue did it:
     //   v7 = W_CacheLumpName("XLATAB", PU_CACHE); // note potential cache bug...
-    //   HIWORD(v8) = (Z_Malloc(131072, PU_STATIC, NULL) + 65535) >> 16;
+    //   HIWORD(v8) = (Z_Malloc(131072, PU_STATIC, nullptr) + 65535) >> 16;
     //   LOWORD(v8) = 0; // aligning to a 64K boundary, as if this is Wolf3D.
     //   xlatab = v8;
     //   memcpy(v8, v7, 65536);
@@ -490,7 +491,7 @@ void R_InitTranslationTables (void)
     V_LoadXlaTable();
 
     // villsa [STRIFE] allocate a larger size for translation tables
-    translationtables = Z_Malloc (256*8, PU_STATIC, 0);
+    translationtables = zmalloc<decltype(translationtables)>(256*8, PU_STATIC, 0);
 
     col1 = 0xFA;
     col2 = 0xE0;
@@ -871,10 +872,10 @@ void R_FillBackScreen (void)
 
     if (scaledviewwidth == SCREENWIDTH)
     {
-        if (background_buffer != NULL)
+        if (background_buffer != nullptr)
         {
             Z_Free(background_buffer);
-            background_buffer = NULL;
+            background_buffer = nullptr;
         }
 
 	return;
@@ -882,16 +883,16 @@ void R_FillBackScreen (void)
 
     // Allocate the background buffer if necessary
 	
-    if (background_buffer == NULL)
+    if (background_buffer == nullptr)
     {
-        background_buffer = Z_Malloc(MAXWIDTH * (MAXHEIGHT - SBARHEIGHT),
-                                     PU_STATIC, NULL);
+        background_buffer = zmalloc<decltype(        background_buffer)>(MAXWIDTH * (MAXHEIGHT - SBARHEIGHT),
+                                     PU_STATIC, nullptr);
     }
 
     // haleyjd 08/29/10: [STRIFE] Use configurable back_flat
     name = back_flat;
     
-    src = W_CacheLumpName(name, PU_CACHE); 
+    src = W_CacheLumpName_byte(name, PU_CACHE); 
     dest = background_buffer;
 	 
     for (y=0 ; y<SCREENHEIGHT-SBARHEIGHT ; y++) 
@@ -913,19 +914,19 @@ void R_FillBackScreen (void)
 
     V_UseBuffer(background_buffer);
 
-    patch = W_CacheLumpName(DEH_String("brdr_t"),PU_CACHE);
+    patch = W_CacheLumpName_patch(DEH_String("brdr_t"),PU_CACHE);
 
     for (x=0 ; x<(scaledviewwidth >> crispy->hires) ; x+=8)
 	V_DrawPatch((viewwindowx >> crispy->hires)+x-WIDESCREENDELTA, (viewwindowy >> crispy->hires)-8, patch);
-    patch = W_CacheLumpName(DEH_String("brdr_b"),PU_CACHE);
+    patch = W_CacheLumpName_patch(DEH_String("brdr_b"),PU_CACHE);
 
     for (x=0 ; x<(scaledviewwidth >> crispy->hires) ; x+=8)
 	V_DrawPatch((viewwindowx >> crispy->hires)+x-WIDESCREENDELTA, (viewwindowy >> crispy->hires)+(viewheight >> crispy->hires), patch);
-    patch = W_CacheLumpName(DEH_String("brdr_l"),PU_CACHE);
+    patch = W_CacheLumpName_patch(DEH_String("brdr_l"),PU_CACHE);
 
     for (y=0 ; y<(viewheight >> crispy->hires) ; y+=8)
 	V_DrawPatch((viewwindowx >> crispy->hires)-8-WIDESCREENDELTA, (viewwindowy >> crispy->hires)+y, patch);
-    patch = W_CacheLumpName(DEH_String("brdr_r"),PU_CACHE);
+    patch = W_CacheLumpName_patch(DEH_String("brdr_r"),PU_CACHE);
 
     for (y=0 ; y<(viewheight >> crispy->hires) ; y+=8)
 	V_DrawPatch((viewwindowx >> crispy->hires)+(scaledviewwidth >> crispy->hires)-WIDESCREENDELTA, (viewwindowy >> crispy->hires)+y, patch);
@@ -933,19 +934,19 @@ void R_FillBackScreen (void)
     // Draw beveled edge. 
     V_DrawPatch((viewwindowx >> crispy->hires)-8-WIDESCREENDELTA,
                 (viewwindowy >> crispy->hires)-8,
-                W_CacheLumpName(DEH_String("brdr_tl"),PU_CACHE));
+                W_CacheLumpName_patch(DEH_String("brdr_tl"),PU_CACHE));
     
     V_DrawPatch((viewwindowx >> crispy->hires)+(scaledviewwidth >> crispy->hires)-WIDESCREENDELTA,
                 (viewwindowy >> crispy->hires)-8,
-                W_CacheLumpName(DEH_String("brdr_tr"),PU_CACHE));
+                W_CacheLumpName_patch(DEH_String("brdr_tr"),PU_CACHE));
     
     V_DrawPatch((viewwindowx >> crispy->hires)-8-WIDESCREENDELTA,
                 (viewwindowy >> crispy->hires)+(viewheight >> crispy->hires),
-                W_CacheLumpName(DEH_String("brdr_bl"),PU_CACHE));
+                W_CacheLumpName_patch(DEH_String("brdr_bl"),PU_CACHE));
     
     V_DrawPatch((viewwindowx >> crispy->hires)+(scaledviewwidth >> crispy->hires)-WIDESCREENDELTA,
                 (viewwindowy >> crispy->hires)+(viewheight >> crispy->hires),
-                W_CacheLumpName(DEH_String("brdr_br"),PU_CACHE));
+                W_CacheLumpName_patch(DEH_String("brdr_br"),PU_CACHE));
 
     V_RestoreBuffer();
 } 
@@ -965,7 +966,7 @@ R_VideoErase
   //  a 32bit CPU, as GNU GCC/Linux libc did
   //  at one point.
 
-    if (background_buffer != NULL)
+    if (background_buffer != nullptr)
     {
         memcpy(I_VideoBuffer + ofs, background_buffer + ofs, count); 
     }

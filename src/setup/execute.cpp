@@ -63,7 +63,7 @@ static char *TempFile(const char *s)
 
     tempdir = M_getenv("TEMP");
 
-    if (tempdir == NULL)
+    if (tempdir == nullptr)
     {
         tempdir = ".";
     }
@@ -73,7 +73,7 @@ static char *TempFile(const char *s)
     tempdir = "/tmp";
 #endif
 
-    return M_StringJoin(tempdir, DIR_SEPARATOR_S, s, NULL);
+    return M_StringJoin(tempdir, DIR_SEPARATOR_S, s, nullptr);
 }
 
 static int ArgumentNeedsEscape(const char *arg)
@@ -121,7 +121,7 @@ execute_context_t *NewExecuteContext(void)
     result->response_file = TempFile("chocolat.rsp");
     result->stream = M_fopen(result->response_file, "w");
 
-    if (result->stream == NULL)
+    if (result->stream == nullptr)
     {
         fprintf(stderr, "Error opening response file\n");
         exit(-1);
@@ -147,7 +147,7 @@ void AddCmdLineParameter(execute_context_t *context, const char *s, ...)
 boolean OpenFolder(const char *path)
 {
     // "If the function succeeds, it returns a value greater than 32."
-    return (int)ShellExecute(NULL, "open", path, NULL, NULL, SW_SHOWDEFAULT) > 32;
+    return (int)ShellExecute(nullptr, "open", path, nullptr, nullptr, SW_SHOWDEFAULT) > 32;
 }
 
 // Wait for the specified process to exit.  Returns the exit code.
@@ -190,7 +190,7 @@ static wchar_t *BuildCommandLine(const char *program, const char *arg)
 
     // Get the path to this .exe file.
 
-    GetModuleFileNameW(NULL, exe_path, MAX_PATH);
+    GetModuleFileNameW(nullptr, exe_path, MAX_PATH);
 
     // Allocate buffer to contain result string.
 
@@ -204,7 +204,7 @@ static wchar_t *BuildCommandLine(const char *program, const char *arg)
 
     sep = wcsrchr(exe_path, DIR_SEPARATOR);
 
-    if (sep != NULL)
+    if (sep != nullptr)
     {
         wcsncpy(result + 1, exe_path, sep - exe_path + 1);
         result[sep - exe_path + 2] = '\0';
@@ -240,8 +240,8 @@ static int ExecuteCommand(const char *program, const char *arg)
     memset(&startup_info, 0, sizeof(startup_info));
     startup_info.cb = sizeof(startup_info);
 
-    if (!CreateProcessW(NULL, command,
-                        NULL, NULL, FALSE, 0, NULL, NULL,
+    if (!CreateProcessW(nullptr, command,
+                        nullptr, nullptr, FALSE, 0, nullptr, nullptr,
                         &startup_info, &proc_info))
     {
         result = -1;
@@ -269,9 +269,9 @@ boolean OpenFolder(const char *path)
     int result;
 
 #if defined(__MACOSX__)
-    cmd = M_StringJoin("open \"", path, "\"", NULL);
+    cmd = M_StringJoin("open \"", path, "\"", nullptr);
 #else
-    cmd = M_StringJoin("xdg-open \"", path, "\"", NULL);
+    cmd = M_StringJoin("xdg-open \"", path, "\"", nullptr);
 #endif
     result = system(cmd);
     free(cmd);
@@ -291,7 +291,7 @@ static char *GetFullExePath(const char *program)
 
     sep = strrchr(myargv[0], DIR_SEPARATOR);
 
-    if (sep == NULL)
+    if (sep == nullptr)
     {
         result = M_StringDuplicate(program);
     }
@@ -324,7 +324,7 @@ static int ExecuteCommand(const char *program, const char *arg)
 
         argv[0] = GetFullExePath(program);
         argv[1] = arg;
-        argv[2] = NULL;
+        argv[2] = nullptr;
 
         execvp(argv[0], (char **) argv);
 
@@ -359,7 +359,7 @@ int ExecuteDoom(execute_context_t *context)
 
     // Build the command line
 
-    response_file_arg = M_StringJoin("@", context->response_file, NULL);
+    response_file_arg = M_StringJoin("@", context->response_file, nullptr);
 
     // Run Doom
 
@@ -417,7 +417,7 @@ txt_window_action_t *TestConfigAction(void)
     txt_window_action_t *test_action;
     
     test_action = TXT_NewWindowAction('t', "Test");
-    TXT_SignalConnect(test_action, "pressed", TestCallback, NULL);
+    TXT_SignalConnect(test_action, "pressed", TestCallback, nullptr);
 
     return test_action;
 }

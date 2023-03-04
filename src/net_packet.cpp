@@ -20,7 +20,7 @@
 #include "m_misc.hpp"
 #include "net_packet.hpp"
 #include "z_zone.hpp"
-
+#include "../utils/memory.hpp"
 static int total_packet_memory = 0;
 
 net_packet_t *NET_NewPacket(int initial_size)
@@ -33,7 +33,7 @@ net_packet_t *NET_NewPacket(int initial_size)
         initial_size = 256;
 
     packet->alloced = initial_size;
-    packet->data = Z_Malloc(initial_size, PU_STATIC, 0);
+    packet->data = zmalloc<decltype(    packet->data)>(initial_size, PU_STATIC, 0);
     packet->len = 0;
     packet->pos = 0;
 
@@ -171,7 +171,7 @@ boolean NET_ReadSInt32(net_packet_t *packet, signed int *data)
     }
 }
 
-// Read a string from the packet.  Returns NULL if a terminating 
+// Read a string from the packet.  Returns nullptr if a terminating 
 // NUL character was not found before the end of the packet.
 
 char *NET_ReadString(net_packet_t *packet)
@@ -191,11 +191,11 @@ char *NET_ReadString(net_packet_t *packet)
     {
         // Reached the end of the packet
 
-        return NULL;
+        return nullptr;
     }
 
     // packet->data[packet->pos] == '\0': We have reached a terminating
-    // NULL.  Skip past this NULL and continue reading immediately 
+    // nullptr.  Skip past this nullptr and continue reading immediately 
     // after it.
 
     ++packet->pos;
@@ -211,9 +211,9 @@ char *NET_ReadSafeString(net_packet_t *packet)
     char *r, *w, *result;
 
     result = NET_ReadString(packet);
-    if (result == NULL)
+    if (result == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     // w is always <= r, so we never produce a longer string than the original.
@@ -244,7 +244,7 @@ static void NET_IncreasePacket(net_packet_t *packet)
    
     packet->alloced *= 2;
 
-    newdata = Z_Malloc(packet->alloced, PU_STATIC, 0);
+    newdata = zmalloc<decltype(    newdata)>(packet->alloced, PU_STATIC, 0);
 
     memcpy(newdata, packet->data, packet->len);
 

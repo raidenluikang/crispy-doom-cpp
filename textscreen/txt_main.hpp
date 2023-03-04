@@ -75,7 +75,7 @@
 
 #define TXT_COLOR_BLINKING (1 << 3)
 
-typedef enum
+enum txt_color_t
 {
     TXT_COLOR_BLACK,
     TXT_COLOR_BLUE,
@@ -93,7 +93,7 @@ typedef enum
     TXT_COLOR_BRIGHT_MAGENTA,
     TXT_COLOR_YELLOW,
     TXT_COLOR_BRIGHT_WHITE,
-} txt_color_t;
+};
 
 // Modifier keys.
 
