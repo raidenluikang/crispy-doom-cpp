@@ -12,7 +12,7 @@
 // GNU General Public License for more details.
 //
 
-#include "AppController.h"
+#include "AppController.hpp"
 
 #include "config.h"
 

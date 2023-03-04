@@ -13,8 +13,8 @@
 //
 
 #include <AppKit/AppKit.h>
-#include "Execute.h"
-#include "LauncherManager.h"
+#include "Execute.hpp"
+#include "LauncherManager.hpp"
 #include "config.h"
 
 @implementation LauncherManager

@@ -1,7 +1,7 @@
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 cmake_minimum_required(VERSION 3.7.2)
-project("Crispy Doom" VERSION 5.12.0 LANGUAGES C)
+project("Crispy Doom" VERSION 5.12.0 LANGUAGES CXX)
 
 # Autotools variables
 set(top_srcdir ${CMAKE_CURRENT_SOURCE_DIR})
@@ -50,7 +50,7 @@ endif()
 option(CRISPY_TRUECOLOR "True color rendering" OFF)
 
 # Check for libsamplerate.
-find_package(SampleRate)
+find_package(SampleRate CONFIG)
 if(SampleRate_FOUND)
     set(HAVE_LIBSAMPLERATE TRUE)
 endif()

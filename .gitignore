@@ -28,7 +28,7 @@ DOOM*.pcx
 HTIC*.pcx
 HEXEN*.pcx
 STRIFE*.pcx
-
+files.sh
 # CMake-specific ignores
 /.vs
 /build*

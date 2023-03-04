@@ -17,7 +17,7 @@
 #include <AppKit/AppKit.h>
 
 #include "config.h"
-#include "IWADController.h"
+#include "IWADController.hpp"
 
 typedef enum
 {
