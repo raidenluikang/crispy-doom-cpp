@@ -87,7 +87,7 @@ typedef struct
 
 } musicinfo_t;
 
-typedef enum 
+enum  snddevice_t : int
 {
     SNDDEVICE_NONE = 0,
     SNDDEVICE_PCSPEAKER = 1,
@@ -100,7 +100,7 @@ typedef enum
     SNDDEVICE_GENMIDI = 8,
     SNDDEVICE_AWE32 = 9,
     SNDDEVICE_CD = 10,
-} snddevice_t;
+} ;
 
 // Interface for sound modules
 
@@ -230,14 +230,14 @@ boolean I_MusicIsPlaying(void);
 boolean IsMid(byte *mem, int len);
 boolean IsMus(byte *mem, int len);
 
-extern int snd_sfxdevice;
-extern int snd_musicdevice;
+extern snddevice_t snd_sfxdevice;
+extern snddevice_t snd_musicdevice;
 extern int snd_samplerate;
 extern int snd_cachesize;
 extern int snd_maxslicetime_ms;
-extern char *snd_musiccmd;
+extern const char *snd_musiccmd;
 extern int snd_pitchshift;
-extern char *snd_dmxoption;
+extern const char *snd_dmxoption;
 extern int use_libsamplerate;
 extern float libsamplerate_scale;
 
@@ -269,9 +269,9 @@ extern int opl_io_port;
 
 // For native music module:
 
-extern char *music_pack_path;
-extern char *fluidsynth_sf_path;
-extern char *timidity_cfg_path;
+extern const char *music_pack_path;
+extern const char *fluidsynth_sf_path;
+extern const char *timidity_cfg_path;
 #ifdef _WIN32
 extern char *winmm_midi_device;
 extern int winmm_reset_type;

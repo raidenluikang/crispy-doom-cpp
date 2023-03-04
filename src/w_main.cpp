@@ -232,10 +232,10 @@ static const struct
     GameMission_t mission;
     const char *lumpname;
 } unique_lumps[] = {
-    { doom,    "POSSA1" },
-    { heretic, "IMPXA1" },
-    { hexen,   "ETTNA1" },
-    { strife,  "AGRDA1" },
+    { GameMission_t::doom,    "POSSA1" },
+    { GameMission_t::heretic, "IMPXA1" },
+    { GameMission_t::hexen,   "ETTNA1" },
+    { GameMission_t::strife,  "AGRDA1" },
 };
 
 void W_CheckCorrectIWAD(GameMission_t mission)
@@ -255,7 +255,7 @@ void W_CheckCorrectIWAD(GameMission_t mission)
                         "the %s%s binary.\nThis isn't going to work.\n"
                         "You probably want to use the %s%s binary.",
                         D_SuggestGameName(unique_lumps[i].mission,
-                                          indetermined),
+                                          GameMode_t::indetermined),
                         PROGRAM_PREFIX,
                         D_GameMissionString(mission),
                         PROGRAM_PREFIX,

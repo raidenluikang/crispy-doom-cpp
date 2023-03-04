@@ -39,6 +39,7 @@ int TXT_WindowKeyPress(txt_window_t *window, int c);
  * @param title         The title to display (UTF-8 format).
  */
 
+extern "C"
 void TXT_SetDesktopTitle(const char *title);
 
 /**

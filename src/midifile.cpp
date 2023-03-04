@@ -26,6 +26,8 @@
 #include "m_misc.hpp"
 #include "midifile.hpp"
 
+#include "../utils/memory.hpp"
+
 #define HEADER_CHUNK_ID "MThd"
 #define TRACK_CHUNK_ID  "MTrk"
 #define MAX_BUFFER_SIZE 0x10000
@@ -174,7 +176,7 @@ static void *ReadByteSequence(unsigned int num_bytes, FILE *stream)
     // Allocate a buffer. Allocate one extra byte, as malloc(0) is
     // non-portable.
 
-    result = malloc(num_bytes + 1);
+    result = (byte*)malloc(num_bytes + 1);
 
     if (result == nullptr)
     {
@@ -210,7 +212,7 @@ static boolean ReadChannelEvent(midi_event_t *event,
 
     // Set basics:
 
-    event->event_type = event_type & 0xf0;
+    event->event_type = static_cast<midi_event_type_t>( event_type & 0xf0 );
     event->data.channel.channel = event_type & 0x0f;
 
     // Read parameters:
@@ -246,7 +248,7 @@ static boolean ReadChannelEvent(midi_event_t *event,
 static boolean ReadSysExEvent(midi_event_t *event, int event_type,
                               FILE *stream)
 {
-    event->event_type = event_type;
+    event->event_type = static_cast<midi_event_type_t>( event_type );
 
     if (!ReadVariableLength(&event->data.sysex.length, stream))
     {
@@ -257,7 +259,7 @@ static boolean ReadSysExEvent(midi_event_t *event, int event_type,
 
     // Read the byte sequence:
 
-    event->data.sysex.data = ReadByteSequence(event->data.sysex.length, stream);
+    event->data.sysex.data = (byte*)ReadByteSequence(event->data.sysex.length, stream);
 
     if (event->data.sysex.data == nullptr)
     {
@@ -297,7 +299,7 @@ static boolean ReadMetaEvent(midi_event_t *event, FILE *stream)
 
     // Read the byte sequence:
 
-    event->data.meta.data = ReadByteSequence(event->data.meta.length, stream);
+    event->data.meta.data = (byte*)ReadByteSequence(event->data.meta.length, stream);
 
     if (event->data.meta.data == nullptr)
     {
@@ -505,7 +507,7 @@ static boolean ReadAllTracks(midi_file_t *file, FILE *stream)
 
     // Allocate list of tracks and read each track:
 
-    file->tracks = malloc(sizeof(midi_track_t) * file->num_tracks);
+    file->tracks =  create_structure<midi_track_t[]>(file->num_tracks);
 
     if (file->tracks == nullptr)
     {
@@ -586,7 +588,7 @@ midi_file_t *MIDI_LoadFile(char *filename)
     midi_file_t *file;
     FILE *stream;
 
-    file = malloc(sizeof(midi_file_t));
+    file = (midi_file_t*)malloc(sizeof(midi_file_t));
 
     if (file == nullptr)
     {
@@ -643,11 +645,10 @@ unsigned int MIDI_NumTracks(midi_file_t *file)
 
 midi_track_iter_t *MIDI_IterateTrack(midi_file_t *file, unsigned int track)
 {
-    midi_track_iter_t *iter;
+    midi_track_iter_t *iter = create_structure<midi_track_iter_t>();
 
     assert(track < file->num_tracks);
 
-    iter = malloc(sizeof(*iter));
     iter->track = &file->tracks[track];
     iter->position = 0;
     iter->loop_point = 0;

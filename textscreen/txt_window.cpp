@@ -56,6 +56,7 @@ void TXT_SetWindowAction(txt_window_t *window,
     }
 }
 
+extern "C"
 txt_window_t *TXT_NewWindow(const char *title)
 {
     int i;

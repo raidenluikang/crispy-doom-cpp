@@ -28,6 +28,8 @@
 #include "deh_defs.hpp"
 #include "deh_io.hpp"
 
+#include "../utils/memory.hpp"
+
 typedef enum
 {
     DEH_INPUT_FILE,
@@ -119,11 +121,11 @@ deh_context_t *DEH_OpenLump(int lumpnum)
 
     context->type = DEH_INPUT_LUMP;
     context->lumpnum = lumpnum;
-    context->input_buffer = lump;
+    context->input_buffer = (unsigned char*)lump;
     context->input_buffer_len = W_LumpLength(lumpnum);
     context->input_buffer_pos = 0;
 
-    context->filename = malloc(9);
+    context->filename = (char*)malloc(16);
     M_StringCopy(context->filename, lumpinfo[lumpnum]->name, 9);
 
     return context;

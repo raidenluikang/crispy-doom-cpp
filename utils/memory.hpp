@@ -14,6 +14,9 @@ std::enable_if_t<!std::is_array<T>::value, T*>
  create_structure()
 {
     auto* mem = std::malloc(sizeof(T));
+    if (mem == nullptr)
+        return nullptr;
+
     return new(mem)T{};
 }
 
@@ -41,6 +44,8 @@ create_structure(std::size_t size)
     // T is U[]
     using U = std::remove_extent_t<T>;
     auto *mem = std::malloc(sizeof(U)* size);
+    if (mem == nullptr)
+        return nullptr;
     return  new(mem)U[size]{} ;
 }
 

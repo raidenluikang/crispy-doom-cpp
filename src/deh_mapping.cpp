@@ -151,7 +151,7 @@ boolean DEH_SetStringMapping(deh_context_t *context, deh_mapping_t *mapping,
 
     // Copy value into field:
 
-    M_StringCopy(location, value, entry->size);
+    M_StringCopy((char*)location, value, entry->size);
 
     return true;
 }

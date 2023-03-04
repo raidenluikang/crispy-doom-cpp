@@ -95,9 +95,9 @@ void A_XScream();
 void A_Look();
 void A_Chase();
 void A_FaceTarget();
-void A_PosAttack();
+void A_PosAttack(void*);
 void A_Scream();
-void A_SPosAttack();
+void A_SPosAttack(void*);
 void A_VileChase();
 void A_VileStart();
 void A_VileTarget();
@@ -114,7 +114,7 @@ void A_FatAttack1();
 void A_FatAttack2();
 void A_FatAttack3();
 void A_BossDeath();
-void A_CPosAttack();
+void A_CPosAttack(void*);
 void A_CPosRefire();
 void A_TroopAttack();
 void A_SargAttack();
@@ -337,7 +337,7 @@ state_t	states[NUMSTATES] = {
     {SPR_POSS,3,4,{A_Chase},S_POSS_RUN1,0,0},	// S_POSS_RUN8
     {SPR_POSS,4,10,{A_FaceTarget},S_POSS_ATK2,0,0},	// S_POSS_ATK1
     // [crispy] render Zombiman's firing frames full-bright
-    {SPR_POSS,5|0x8000,8,{A_PosAttack},S_POSS_ATK3,0,0},	// S_POSS_ATK2
+    {SPR_POSS,5|0x8000,8,{.acp1 = A_PosAttack},S_POSS_ATK3,0,0},	// S_POSS_ATK2
     {SPR_POSS,4,8,{nullptr},S_POSS_RUN1,0,0},	// S_POSS_ATK3
     {SPR_POSS,6,3,{nullptr},S_POSS_PAIN2,0,0},	// S_POSS_PAIN
     {SPR_POSS,6,3,{A_Pain},S_POSS_RUN1,0,0},	// S_POSS_PAIN2
@@ -370,7 +370,7 @@ state_t	states[NUMSTATES] = {
     {SPR_SPOS,3,3,{A_Chase},S_SPOS_RUN8,0,0},	// S_SPOS_RUN7
     {SPR_SPOS,3,3,{A_Chase},S_SPOS_RUN1,0,0},	// S_SPOS_RUN8
     {SPR_SPOS,4,10,{A_FaceTarget},S_SPOS_ATK2,0,0},	// S_SPOS_ATK1
-    {SPR_SPOS,32773,10,{A_SPosAttack},S_SPOS_ATK3,0,0},	// S_SPOS_ATK2
+    {SPR_SPOS,32773,10,{.acp1 = A_SPosAttack},S_SPOS_ATK3,0,0},	// S_SPOS_ATK2
     {SPR_SPOS,4,10,{nullptr},S_SPOS_RUN1,0,0},	// S_SPOS_ATK3
     {SPR_SPOS,6,3,{nullptr},S_SPOS_PAIN2,0,0},	// S_SPOS_PAIN
     {SPR_SPOS,6,3,{A_Pain},S_SPOS_RUN1,0,0},	// S_SPOS_PAIN2
@@ -569,8 +569,8 @@ state_t	states[NUMSTATES] = {
     {SPR_CPOS,3,3,{A_Chase},S_CPOS_RUN8,0,0},	// S_CPOS_RUN7
     {SPR_CPOS,3,3,{A_Chase},S_CPOS_RUN1,0,0},	// S_CPOS_RUN8
     {SPR_CPOS,4,10,{A_FaceTarget},S_CPOS_ATK2,0,0},	// S_CPOS_ATK1
-    {SPR_CPOS,32773,4,{A_CPosAttack},S_CPOS_ATK3,0,0},	// S_CPOS_ATK2
-    {SPR_CPOS,32772,4,{A_CPosAttack},S_CPOS_ATK4,0,0},	// S_CPOS_ATK3
+    {SPR_CPOS,32773,4,{.acp1 = A_CPosAttack},S_CPOS_ATK3,0,0},	// S_CPOS_ATK2
+    {SPR_CPOS,32772,4,{.acp1 = A_CPosAttack},S_CPOS_ATK4,0,0},	// S_CPOS_ATK3
     // [crispy] render Minigun zombie's firing frames full-bright
     {SPR_CPOS,5|0x8000,1,{A_CPosRefire},S_CPOS_ATK2,0,0},	// S_CPOS_ATK4
     {SPR_CPOS,6,3,{nullptr},S_CPOS_PAIN2,0,0},	// S_CPOS_PAIN
@@ -769,8 +769,8 @@ state_t	states[NUMSTATES] = {
     {SPR_SPID,5,3,{A_Chase},S_SPID_RUN12,0,0},	// S_SPID_RUN11
     {SPR_SPID,5,3,{A_Chase},S_SPID_RUN1,0,0},	// S_SPID_RUN12
     {SPR_SPID,32768,20,{A_FaceTarget},S_SPID_ATK2,0,0},	// S_SPID_ATK1
-    {SPR_SPID,32774,4,{A_SPosAttack},S_SPID_ATK3,0,0},	// S_SPID_ATK2
-    {SPR_SPID,32775,4,{A_SPosAttack},S_SPID_ATK4,0,0},	// S_SPID_ATK3
+    {SPR_SPID,32774,4,{.acp1 = A_SPosAttack},S_SPID_ATK3,0,0},	// S_SPID_ATK2
+    {SPR_SPID,32775,4,{.acp1 = A_SPosAttack},S_SPID_ATK4,0,0},	// S_SPID_ATK3
     {SPR_SPID,32775,1,{A_SpidRefire},S_SPID_ATK2,0,0},	// S_SPID_ATK4
     {SPR_SPID,8,3,{nullptr},S_SPID_PAIN2,0,0},	// S_SPID_PAIN
     {SPR_SPID,8,3,{A_Pain},S_SPID_RUN1,0,0},	// S_SPID_PAIN2
@@ -892,9 +892,9 @@ state_t	states[NUMSTATES] = {
     {SPR_SSWV,3,3,{A_Chase},S_SSWV_RUN1,0,0},	// S_SSWV_RUN8
     {SPR_SSWV,4,10,{A_FaceTarget},S_SSWV_ATK2,0,0},	// S_SSWV_ATK1
     {SPR_SSWV,5,10,{A_FaceTarget},S_SSWV_ATK3,0,0},	// S_SSWV_ATK2
-    {SPR_SSWV,32774,4,{A_CPosAttack},S_SSWV_ATK4,0,0},	// S_SSWV_ATK3
+    {SPR_SSWV,32774,4,{.acp1 = A_CPosAttack},S_SSWV_ATK4,0,0},	// S_SSWV_ATK3
     {SPR_SSWV,5,6,{A_FaceTarget},S_SSWV_ATK5,0,0},	// S_SSWV_ATK4
-    {SPR_SSWV,32774,4,{A_CPosAttack},S_SSWV_ATK6,0,0},	// S_SSWV_ATK5
+    {SPR_SSWV,32774,4,{.acp1 = A_CPosAttack},S_SSWV_ATK6,0,0},	// S_SSWV_ATK5
     {SPR_SSWV,5,1,{A_CPosRefire},S_SSWV_ATK2,0,0},	// S_SSWV_ATK6
     {SPR_SSWV,7,3,{nullptr},S_SSWV_PAIN2,0,0},	// S_SSWV_PAIN
     {SPR_SSWV,7,3,{A_Pain},S_SSWV_RUN1,0,0},	// S_SSWV_PAIN2

@@ -336,7 +336,7 @@ static const char *NameForIWAD(IWAD iwad)
 
     // Build string.
 
-    env = malloc(env_len);
+    env = (decltype(    env)) malloc(env_len);
     strlcpy(env, "", env_len);
 
     first = YES;

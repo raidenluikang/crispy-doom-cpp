@@ -306,6 +306,7 @@ int TXT_Init(void)
     return 1;
 }
 
+extern "C"
 void TXT_Shutdown(void)
 {
     free(screendata);
@@ -314,6 +315,7 @@ void TXT_Shutdown(void)
     screenbuffer = nullptr;
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
+
 
 void TXT_SetColor(txt_color_t color, std::uint8_t r, std::uint8_t g, std::uint8_t b)
 {

@@ -220,6 +220,7 @@ static void DrawHelpIndicator(void)
     TXT_DrawString("=Help ");
 }
 
+extern "C" 
 void TXT_SetDesktopTitle(const char *title)
 {
     free(desktop_title);

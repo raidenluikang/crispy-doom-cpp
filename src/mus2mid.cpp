@@ -523,7 +523,7 @@ boolean mus2mid(MEMFILE *musinput, MEMFILE *midioutput)
             }
 
             channel = GetMIDIChannel(eventdescriptor & 0x0F, midioutput);
-            event = eventdescriptor & 0x70;
+            event = static_cast<musevent>( eventdescriptor & 0x70 );
 
             switch (event)
             {

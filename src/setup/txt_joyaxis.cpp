@@ -518,7 +518,7 @@ txt_joystick_axis_t *TXT_NewJoystickAxis(int *axis, int *invert,
 {
     txt_joystick_axis_t *joystick_axis;
 
-    joystick_axis = malloc(sizeof(txt_joystick_axis_t));
+    joystick_axis = (decltype(    joystick_axis)) malloc(sizeof(txt_joystick_axis_t));
 
     TXT_InitWidget(joystick_axis, &txt_joystick_axis_class);
     joystick_axis->axis = axis;

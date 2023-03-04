@@ -141,8 +141,12 @@ void A_PlaySound(mobj_t *mo)
 }
 
 // [crispy] this is pretty much the only action pointer that makes sense for both mobj and pspr states
-void A_RandomJump(mobj_t *mo, player_t *player, pspdef_t *psp)
+void A_RandomJump(void* la, void* lb, void* lc)
 {
+	mobj_t *mo = (mobj_t*)la;
+	player_t *player = (player_t*)lb;
+	pspdef_t *psp = (pspdef_t*)lc;
+	
 	// [crispy] first, try to apply to pspr states
 	if (player && psp)
 	{

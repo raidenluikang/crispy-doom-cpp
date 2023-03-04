@@ -77,7 +77,7 @@ float libsamplerate_scale = 0.65;
 char *music_pack_path = nullptr;
 char *timidity_cfg_path = nullptr;
 char *fluidsynth_sf_path = nullptr;
-static char *gus_patch_path = nullptr;
+static const char *gus_patch_path = nullptr;
 static int gus_ram_kb = 1024;
 #ifdef _WIN32
 #define MAX_MIDI_DEVICES 20
@@ -192,7 +192,7 @@ static txt_dropdown_list_t *MidiDeviceSelector(void)
     }
 
     // get the device names
-    midi_names = malloc(midi_num_devices * sizeof(char *));
+    midi_names = (decltype(    midi_names)) malloc(midi_num_devices * sizeof(char *));
     for (i = 0; i < midi_num_devices; ++i)
     {
         mmr = midiOutGetDevCaps(device_ids[i], &mcaps, sizeof(mcaps));

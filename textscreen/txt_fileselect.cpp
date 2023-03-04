@@ -236,7 +236,7 @@ static char *GenerateFilterString(const char **extensions)
         result_len += 16 + strlen(extensions[i]) * 3;
     }
 
-    result = malloc(result_len);
+    result = (decltype(    result)) malloc(result_len);
     out = result; out_len = result_len;
 
     for (i = 0; extensions[i] != nullptr; ++i)
@@ -359,7 +359,7 @@ static char *CreateEscapedString(const char *original)
         }
     }
 
-    result = malloc(strlen(original) + count_extras + 1);
+    result = (decltype(    result)) malloc(strlen(original) + count_extras + 1);
     if (!result)
     {
         return nullptr;
@@ -400,7 +400,7 @@ static char *CreateExtensionsList(const char **extensions)
         result_len += 5 + strlen(extensions[i]) * 2;
     }
 
-    result = malloc(result_len);
+    result = (decltype(    result)) malloc(result_len);
     if (!result)
     {
         return nullptr;
@@ -468,7 +468,7 @@ static char *GenerateSelector(const char *const window_title, const char **exten
         result_len += strlen(ext_list);
     }
 
-    result = malloc(result_len);
+    result = (decltype(    result)) malloc(result_len);
     if (!result)
     {
         free(window_title_escaped);
@@ -507,7 +507,7 @@ static char *GenerateAppleScript(const char *window_title, const char **extensio
     }
 
     result_len = strlen(APPLESCRIPT_WRAPPER) + strlen(selector);
-    result = malloc(result_len);
+    result = (decltype(    result)) malloc(result_len);
     if (!result)
     {
         free(selector);

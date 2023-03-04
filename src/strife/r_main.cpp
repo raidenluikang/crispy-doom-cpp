@@ -736,15 +736,15 @@ void R_InitLightTables (void)
         LIGHTZSHIFT = 20;
     }
 
-    scalelight = malloc(LIGHTLEVELS * sizeof(*scalelight));
-    scalelightfixed = malloc(MAXLIGHTSCALE * sizeof(*scalelightfixed));
-    zlight = malloc(LIGHTLEVELS * sizeof(*zlight));
+    scalelight = (decltype(    scalelight)) malloc(LIGHTLEVELS * sizeof(*scalelight));
+    scalelightfixed = (decltype(    scalelightfixed)) malloc(MAXLIGHTSCALE * sizeof(*scalelightfixed));
+    zlight = (decltype(    zlight)) malloc(LIGHTLEVELS * sizeof(*zlight));
 
     // Calculate the light levels to use
     //  for each level / distance combination.
     for (i=0 ; i< LIGHTLEVELS ; i++)
     {
-	zlight[i] = malloc(MAXLIGHTZ * sizeof(**zlight));
+	zlight[i] = (decltype(	zlight[i])) malloc(MAXLIGHTZ * sizeof(**zlight));
 
 	startmap = ((LIGHTLEVELS-LIGHTBRIGHT-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
 	for (j=0 ; j<MAXLIGHTZ ; j++)
@@ -899,7 +899,7 @@ void R_ExecuteSetViewSize (void)
     //  for each level / scale combination.
     for (i=0 ; i< LIGHTLEVELS ; i++)
     {
-	scalelight[i] = malloc(MAXLIGHTSCALE * sizeof(**scalelight));
+	scalelight[i] = (decltype(	scalelight[i])) malloc(MAXLIGHTSCALE * sizeof(**scalelight));
 
 	startmap = ((LIGHTLEVELS-LIGHTBRIGHT-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
 	for (j=0 ; j<MAXLIGHTSCALE ; j++)

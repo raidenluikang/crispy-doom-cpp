@@ -140,7 +140,7 @@ typedef enum
 int TXT_Init(void);
 
 // Shut down text mode emulation
-void TXT_Shutdown(void);
+extern "C" void TXT_Shutdown(void);
 
 // Get a pointer to the buffer containing the raw screen data.
 unsigned char *TXT_GetScreenData(void);
@@ -152,7 +152,8 @@ void TXT_UpdateScreenArea(int x, int y, int w, int h);
 void TXT_UpdateScreen(void);
 
 // Set the RGB value for a particular entry in the color palette:
-void TXT_SetColor(txt_color_t color, int r, int g, int b);
+
+void TXT_SetColor(txt_color_t color, uint8_t r, uint8_t g, uint8_t b);
 
 // Read a character from the keyboard
 int TXT_GetChar(void);

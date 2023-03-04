@@ -60,7 +60,7 @@ void *test_malloc(size_t size)
 
     test_malloced += size;
 
-    result = malloc(size + sizeof(int));
+    result = (decltype(    result)) malloc(size + sizeof(int));
 
     *result = size;
 

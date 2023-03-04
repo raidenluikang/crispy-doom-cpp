@@ -116,7 +116,7 @@ execute_context_t *NewExecuteContext(void)
 {
     execute_context_t *result;
 
-    result = malloc(sizeof(execute_context_t));
+    result = (decltype(    result)) malloc(sizeof(execute_context_t));
     
     result->response_file = TempFile("chocolat.rsp");
     result->stream = M_fopen(result->response_file, "w");
@@ -299,7 +299,7 @@ static char *GetFullExePath(const char *program)
     {
         path_len = sep - myargv[0] + 1;
         result_len = strlen(program) + path_len + 1;
-        result = malloc(result_len);
+        result = (decltype(        result)) malloc(result_len);
 
         M_StringCopy(result, myargv[0], result_len);
         result[path_len] = '\0';

@@ -45,15 +45,15 @@ int snd_maxslicetime_ms = 28;
 
 // External command to invoke to play back music.
 
-char *snd_musiccmd = "";
+const char *snd_musiccmd = "";
 
 // Whether to vary the pitch of sound effects
 // Each game will set the default differently
 
 int snd_pitchshift = -1;
 
-int snd_musicdevice = SNDDEVICE_SB;
-int snd_sfxdevice = SNDDEVICE_SB;
+snddevice_t snd_musicdevice = SNDDEVICE_SB;
+snddevice_t snd_sfxdevice = SNDDEVICE_SB;
 
 // Low-level sound and music modules we are using
 static sound_module_t *sound_module;
@@ -448,12 +448,16 @@ boolean IsMid(byte *mem, int len)
     return len > 4 && !memcmp(mem, "MThd", 4);
 }
 
+boolean IsMid(void* data, int len){ return IsMid(static_cast<byte*>(data), len); }
+
 // Determine whether memory block is a .mus file
 
 boolean IsMus(byte *mem, int len)
 {
     return len > 4 && !memcmp(mem, "MUS\x1a", 4);
 }
+
+boolean IsMus(void* data, int len){ return IsMus(static_cast<byte*>(data), len); }
 
 void *I_RegisterSong(void *data, int len)
 {
@@ -534,8 +538,8 @@ boolean I_MusicIsPlaying(void)
 
 void I_BindSoundVariables(void)
 {
-    M_BindIntVariable("snd_musicdevice",         &snd_musicdevice);
-    M_BindIntVariable("snd_sfxdevice",           &snd_sfxdevice);
+    M_BindIntVariable("snd_musicdevice",         (int*)&snd_musicdevice);
+    M_BindIntVariable("snd_sfxdevice",           (int*)&snd_sfxdevice);
     M_BindIntVariable("snd_sbport",              &snd_sbport);
     M_BindIntVariable("snd_sbirq",               &snd_sbirq);
     M_BindIntVariable("snd_sbdma",               &snd_sbdma);

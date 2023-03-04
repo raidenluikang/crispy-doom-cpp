@@ -56,9 +56,9 @@ extern void A_XScream();
 extern void A_Look();
 extern void A_Chase();
 extern void A_FaceTarget();
-extern void A_PosAttack();
+extern void A_PosAttack(void*);
 extern void A_Scream();
-extern void A_SPosAttack();
+extern void A_SPosAttack(void*);
 extern void A_VileChase();
 extern void A_VileStart();
 extern void A_VileTarget();
@@ -75,12 +75,12 @@ extern void A_FatAttack1();
 extern void A_FatAttack2();
 extern void A_FatAttack3();
 extern void A_BossDeath();
-extern void A_CPosAttack();
+extern void A_CPosAttack(void*);
 extern void A_CPosRefire();
 extern void A_TroopAttack();
 extern void A_SargAttack();
 extern void A_HeadAttack();
-extern void A_BruisAttack();
+extern void A_BruisAttack(void*);
 extern void A_SkullAttack();
 extern void A_Metal();
 extern void A_SpidRefire();
@@ -112,7 +112,7 @@ extern void A_Turn();
 extern void A_Face();
 extern void A_Scratch();
 extern void A_PlaySound();
-extern void A_RandomJump();
+extern void A_RandomJump(void*, void*, void*);
 extern void A_LineEffect();
 
 typedef struct {
@@ -152,9 +152,9 @@ static const bex_codeptr_t bex_codeptrtable[] = {
     {"Look", {A_Look}},
     {"Chase", {A_Chase}},
     {"FaceTarget", {A_FaceTarget}},
-    {"PosAttack", {A_PosAttack}},
+    {"PosAttack", {.acp1 = A_PosAttack}},
     {"Scream", {A_Scream}},
-    {"SPosAttack", {A_SPosAttack}},
+    {"SPosAttack", {.acp1 = A_SPosAttack}},
     {"VileChase", {A_VileChase}},
     {"VileStart", {A_VileStart}},
     {"VileTarget", {A_VileTarget}},
@@ -171,12 +171,12 @@ static const bex_codeptr_t bex_codeptrtable[] = {
     {"FatAttack2", {A_FatAttack2}},
     {"FatAttack3", {A_FatAttack3}},
     {"BossDeath", {A_BossDeath}},
-    {"CPosAttack", {A_CPosAttack}},
+    {"CPosAttack", {.acp1 = A_CPosAttack}},
     {"CPosRefire", {A_CPosRefire}},
     {"TroopAttack", {A_TroopAttack}},
     {"SargAttack", {A_SargAttack}},
     {"HeadAttack", {A_HeadAttack}},
-    {"BruisAttack", {A_BruisAttack}},
+    {"BruisAttack", {.acp1=A_BruisAttack}},
     {"SkullAttack", {A_SkullAttack}},
     {"Metal", {A_Metal}},
     {"SpidRefire", {A_SpidRefire}},
@@ -208,7 +208,7 @@ static const bex_codeptr_t bex_codeptrtable[] = {
     {"Face", {A_Face}},
     {"Scratch", {A_Scratch}},
     {"PlaySound", {A_PlaySound}},
-    {"RandomJump", {A_RandomJump}},
+    {"RandomJump", {.acp3 =  A_RandomJump}},
     {"LineEffect", {A_LineEffect}},
     {"nullptr", {nullptr}},
 };

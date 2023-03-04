@@ -22,6 +22,9 @@
 #include "w_file.hpp"
 #include "z_zone.hpp"
 
+#include "../utils/memory.hpp"
+
+
 typedef struct
 {
     wad_file_t wad;
@@ -43,7 +46,7 @@ static wad_file_t *W_StdC_OpenFile(const char *path)
 
     // Create a new stdc_wad_file_t to hold the file handle.
 
-    result = zmalloc<decltype(    result)>(sizeof(stdc_wad_file_t), PU_STATIC, 0);
+    result = zmalloc<decltype(result)>(sizeof(stdc_wad_file_t), PU_STATIC, 0);
     result->wad.file_class = &stdc_wad_file;
     result->wad.mapped = nullptr;
     result->wad.length = M_FileLength(fstream);

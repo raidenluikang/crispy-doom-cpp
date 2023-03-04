@@ -99,7 +99,7 @@ struct txt_window_s
  * @return             Pointer to a new @ref txt_window_t structure
  *                     representing the new window.
  */
-
+extern "C"
 txt_window_t *TXT_NewWindow(const char *title);
 
 /**

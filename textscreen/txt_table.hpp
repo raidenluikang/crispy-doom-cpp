@@ -15,7 +15,6 @@
 #ifndef TXT_TABLE_H
 #define TXT_TABLE_H
 
-#include <vector>
 /**
  * @file txt_table.h
  *
@@ -73,8 +72,9 @@ struct txt_table_s
 
     // Widgets in this table
     // The widget at (x,y) in the table is widgets[columns * y + x]
-    std::vector<txt_widget_t *>widgets;
-    
+    txt_widget_t **widgets;
+    int num_widgets;
+
     // Number of columns
     int columns;
 

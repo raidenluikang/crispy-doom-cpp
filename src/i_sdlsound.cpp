@@ -218,7 +218,7 @@ static allocated_sound_t *AllocateSound(sfxinfo_t *sfxinfo, size_t len)
 
     do
     {
-        snd = malloc(sizeof(allocated_sound_t) + len);
+        snd = (allocated_sound_t *)malloc(sizeof(allocated_sound_t) + len);
 
         // Out of memory?  Try to free an old sound, then loop round
         // and try again.
@@ -423,13 +423,13 @@ static boolean ExpandSoundData_SRC(sfxinfo_t *sfxinfo,
     uint32_t samplecount = length / (bits / 8);
 
     src_data.input_frames = samplecount;
-    data_in = malloc(samplecount * sizeof(float));
+    data_in = (decltype(    data_in)) malloc(samplecount * sizeof(float));
     src_data.data_in = data_in;
     src_data.src_ratio = (double)mixer_freq / samplerate;
 
     // We include some extra space here in case of rounding-up.
     src_data.output_frames = src_data.src_ratio * samplecount + (mixer_freq / 4);
-    src_data.data_out = malloc(src_data.output_frames * sizeof(float));
+    src_data.data_out = (decltype(    src_data.data_out)) malloc(src_data.output_frames * sizeof(float));
 
     assert(src_data.data_in != nullptr && src_data.data_out != nullptr);
 
@@ -657,7 +657,7 @@ static boolean ExpandSoundData_SDL(sfxinfo_t *sfxinfo,
                           mixer_format, mixer_channels, mixer_freq))
     {
         convertor.len = length;
-        convertor.buf = malloc(convertor.len * convertor.len_mult);
+        convertor.buf = (Uint8*)malloc(convertor.len * convertor.len_mult);
         assert(convertor.buf != nullptr);
         memcpy(convertor.buf, data, length);
 

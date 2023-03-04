@@ -812,8 +812,9 @@ void A_FaceTarget (mobj_t* actor)
 //
 // A_PosAttack
 //
-void A_PosAttack (mobj_t* actor)
+void A_PosAttack (void* arg_1)
 {
+    mobj_t* actor = (mobj_t*)arg_1;
     int		angle;
     int		damage;
     int		slope;
@@ -831,8 +832,9 @@ void A_PosAttack (mobj_t* actor)
     P_LineAttack (actor, angle, MISSILERANGE, slope, damage);
 }
 
-void A_SPosAttack (mobj_t* actor)
+void A_SPosAttack (void* arg_1)
 {
+    mobj_t* actor = (mobj_t*)arg_1;
     int		i;
     int		angle;
     int		bangle;
@@ -855,8 +857,9 @@ void A_SPosAttack (mobj_t* actor)
     }
 }
 
-void A_CPosAttack (mobj_t* actor)
+void A_CPosAttack (void* arg_1)
 {
+    mobj_t* actor = (mobj_t*)arg_1;
     int		angle;
     int		bangle;
     int		damage;
@@ -995,8 +998,9 @@ void A_CyberAttack (mobj_t* actor)
 }
 
 
-void A_BruisAttack (mobj_t* actor)
+void A_BruisAttack (void* actor_void)
 {
+    mobj_t* actor = (mobj_t*)actor_void;
     int		damage;
 	
     if (!actor->target)

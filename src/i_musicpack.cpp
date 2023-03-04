@@ -44,8 +44,8 @@
 #include "w_wad.hpp"
 #include "z_zone.hpp"
 
-static char music_pack_path_empty[] = "";
-char *music_pack_path = music_pack_path_empty;
+
+const char *music_pack_path = "";
 
 
 #ifndef DISABLE_SDL2MIXER

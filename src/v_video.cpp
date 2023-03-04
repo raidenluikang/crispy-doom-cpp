@@ -19,7 +19,7 @@
 //	Functions to blit a block to the screen.
 //
 
-#include "SDL_version.hpp" // [crispy]
+#include <SDL_version.h> // [crispy]
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,6 +48,9 @@
 #ifdef HAVE_LIBPNG
 #include <png.h>
 #endif
+
+#include "../utils/memory.hpp"
+
 
 // TODO: There are separate RANGECHECK defines for different games, but this
 // is common code. Fix this.
@@ -986,7 +989,7 @@ void WritePCXfile(char *filename, pixel_t *data,
     pcx_t*	pcx;
     byte*	pack;
 	
-    pcx = zmalloc<decltype(    pcx)>(width*height*2+1000, PU_STATIC, nullptr);
+    pcx = zmalloc<decltype(pcx)>(width*height*2+1000, PU_STATIC, nullptr);
 
     pcx->manufacturer = 0x0a;		// PCX id
     pcx->version = 5;			// 256 color
@@ -1116,7 +1119,7 @@ void WritePNGfile(char *filename, pixel_t *data,
                  8, PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
                  PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
-    pcolor = malloc(sizeof(*pcolor) * 256);
+    pcolor = (decltype(    pcolor)) malloc(sizeof(*pcolor) * 256);
     if (!pcolor)
     {
         fclose(handle);
@@ -1138,7 +1141,7 @@ void WritePNGfile(char *filename, pixel_t *data,
     png_write_info(ppng, pinfo);
 
 /*
-    rowbuf = malloc(width);
+    rowbuf = (decltype(    rowbuf)) malloc(width);
 
     if (rowbuf)
     {

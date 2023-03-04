@@ -47,24 +47,24 @@
 // default.cfg, savegames, etc.
 
 const char *configdir;
-static char empty_autoload_path[] = "";
-static char *autoload_path = empty_autoload_path;
+
+static const char *autoload_path = "";
 
 // Default filenames for configuration files.
 
 static const char *default_main_config;
 static const char *default_extra_config;
 
-typedef enum 
+enum  default_type_t
 {
     DEFAULT_INT,
     DEFAULT_INT_HEX,
     DEFAULT_STRING,
     DEFAULT_FLOAT,
     DEFAULT_KEY,
-} default_type_t;
+} ;
 
-typedef struct
+struct default_t
 {
     // Name of the variable
     const char *name;
@@ -72,7 +72,7 @@ typedef struct
     // Pointer to the location in memory of the variable
     union {
         int *i;
-        char **s;
+        const char **s;
         float *f;
     } location;
 
@@ -93,7 +93,7 @@ typedef struct
     // If true, this config variable has been bound to a variable
     // and is being used.
     boolean bound;
-} default_t;
+} ;
 
 typedef struct
 {
@@ -2855,7 +2855,7 @@ void M_BindFloatVariable(const char *name, float *location)
     variable->bound = true;
 }
 
-void M_BindStringVariable(const char *name, char **location)
+void M_BindStringVariable(const char *name, const char **location)
 {
     default_t *variable;
 

@@ -325,7 +325,7 @@ txt_joystick_input_t *TXT_NewJoystickInput(int *variable)
 {
     txt_joystick_input_t *joystick_input;
 
-    joystick_input = malloc(sizeof(txt_joystick_input_t));
+    joystick_input = (decltype(    joystick_input)) malloc(sizeof(txt_joystick_input_t));
 
     TXT_InitWidget(joystick_input, &txt_joystick_input_class);
     joystick_input->variable = variable;

@@ -358,7 +358,7 @@ void M_AddLooseFiles(void)
 
     // allocate space for up to three additional regular parameters
 
-    arguments = malloc((myargc + 3) * sizeof(*arguments));
+    arguments = (decltype(    arguments)) malloc((myargc + 3) * sizeof(*arguments));
     memset(arguments, 0, (myargc + 3) * sizeof(*arguments));
 
     // check the command line and make sure it does not already
@@ -410,7 +410,7 @@ void M_AddLooseFiles(void)
         myargc++;
     }
 
-    newargv = malloc(myargc * sizeof(*newargv));
+    newargv = (decltype(    newargv)) malloc(myargc * sizeof(*newargv));
 
     // sort the argument list by file type, except for the zeroth argument
     // which is the executable invocation itself

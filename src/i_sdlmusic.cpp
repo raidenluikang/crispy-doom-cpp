@@ -43,10 +43,10 @@
 #include "z_zone.hpp"
 
 
-char *fluidsynth_sf_path = "";
-char *timidity_cfg_path = "";
+const char *fluidsynth_sf_path = "";
+const char *timidity_cfg_path = "";
 
-static char *temp_timidity_cfg = nullptr;
+static  char *temp_timidity_cfg = nullptr;
 
 // If the temp_timidity_cfg config variable is set, generate a "wrapper"
 // config file for Timidity to point to the actual config file. This
@@ -431,7 +431,7 @@ static void *I_SDL_RegisterSong(void *data, int len)
 /*
     if (IsMid(data, len) && len < MAXMIDLENGTH)
 */
-    if (!IsMus(data, len)) // [crispy] MUS_HEADER_MAGIC
+    if (!IsMus((byte*)data, len)) // [crispy] MUS_HEADER_MAGIC
     {
         M_WriteFile(filename, data, len);
     }
@@ -439,7 +439,7 @@ static void *I_SDL_RegisterSong(void *data, int len)
     {
 	// Assume a MUS file and try to convert
 
-        ConvertMus(data, len, filename);
+        ConvertMus((byte*)data, len, filename);
     }
 
     // Load the MIDI. In an ideal world we'd be using Mix_LoadMUS_RW()

@@ -31,6 +31,9 @@
 #include "w_wad.hpp"
 #include "z_zone.hpp"
 
+#include "../utils/memory.hpp"
+
+
 typedef enum 
 { 
     SECTION_NORMAL, 
@@ -146,7 +149,7 @@ static void InitSpriteList(void)
     if (sprite_frames == nullptr)
     {
         sprite_frames_alloced = 128;
-        sprite_frames = zmalloc<decltype(        sprite_frames)>(sizeof(*sprite_frames) * sprite_frames_alloced,
+        sprite_frames = zmalloc<decltype(sprite_frames)>(sizeof(*sprite_frames) * sprite_frames_alloced,
                                  PU_STATIC, nullptr);
     }
 
@@ -393,7 +396,7 @@ static void DoMerge(void)
     int i, n;
 
     // Can't ever have more lumps than we already have
-    newlumps = calloc(numlumps, sizeof(lumpinfo_t *));
+    newlumps = (lumpinfo_t**)calloc(numlumps, sizeof(lumpinfo_t *));
     num_newlumps = 0;
 
     // Add IWAD lumps
@@ -729,11 +732,12 @@ int W_MergeDump (const char *file)
     uint32_t i, dir_p;
 
     // [crispy] WAD directory structure
-    typedef struct {
-	uint32_t pos;
-	uint32_t size;
-	char name[8];
-    } directory_t;
+    struct directory_t 
+    {
+        uint32_t pos;
+        uint32_t size;
+        char name[16];
+    } ;
     directory_t *dir = nullptr;
 
     // [crispy] open file for writing
@@ -744,7 +748,7 @@ int W_MergeDump (const char *file)
     }
 
     // [crispy] prepare directory
-    dir = calloc(numlumps, sizeof(*dir));
+    dir = (directory_t*)calloc(numlumps, sizeof(*dir));
     if (!dir)
     {
 	I_Error("W_MergeDump: Error allocating memory!");

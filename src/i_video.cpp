@@ -21,7 +21,7 @@
 #include <string.h>
 
 #include <SDL.h>
-#include "SDL_opengl.hpp"
+#include <SDL_opengl.h>
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
@@ -120,11 +120,11 @@ int png_screenshots = 1; // [crispy]
 
 // SDL video driver name
 
-char *video_driver = "";
+const char *video_driver = "";
 
 // Window position:
 
-char *window_position = "center";
+const char *window_position = "center";
 
 // SDL display number on which to run.
 
@@ -285,7 +285,7 @@ static void SetShowCursor(boolean show)
     {
         // When the cursor is hidden, grab the input.
         // Relative mode implicitly hides the cursor.
-        SDL_SetRelativeMouseMode(!show);
+        SDL_SetRelativeMouseMode((SDL_bool)!show);
         SDL_GetRelativeMouseState(nullptr, nullptr);
     }
 }
@@ -492,7 +492,7 @@ void I_GetEvent(void)
                 else
                 {
                     event_t event;
-                    event.type = ev_quit;
+                    event.type = evtype_t::ev_quit;
                     D_PostEvent(&event);
                 }
                 break;
@@ -940,7 +940,7 @@ void I_SetGammaTable (void)
 {
 	int i;
 
-	gamma2table = malloc(9 * sizeof(*gamma2table));
+	gamma2table = (byte**)malloc(9 * sizeof(*gamma2table));
 
 	// [crispy] 5 original gamma levels
 	for (i = 0; i < 5; i++)
@@ -953,7 +953,7 @@ void I_SetGammaTable (void)
 	{
 		int j;
 
-		gamma2table[2*i+1] = malloc(256 * sizeof(**gamma2table));
+		gamma2table[2*i+1] = (byte*)malloc(256 * sizeof(**gamma2table));
 
 		for (j = 0; j < 256; j++)
 		{
@@ -1503,7 +1503,7 @@ static void SetVideoMode(void)
 
     // Force integer scales for resolution-independent rendering.
 
-    SDL_RenderSetIntegerScale(renderer, integer_scaling);
+    SDL_RenderSetIntegerScale(renderer, (SDL_bool)integer_scaling);
 
     // Blank out the full screen area in case there is any junk in
     // the borders that won't otherwise be overwritten.
@@ -1750,7 +1750,7 @@ void I_InitGraphics(void)
     // finally rendered into our window or full screen in I_FinishUpdate().
 
 #ifndef CRISPY_TRUECOLOR
-    I_VideoBuffer = screenbuffer->pixels;
+    I_VideoBuffer = (pixel_t*)screenbuffer->pixels;
 #else
     I_VideoBuffer = argbbuffer->pixels;
 #endif
@@ -1806,7 +1806,7 @@ void I_ReInitGraphics (int reinit)
 		                                  rmask, gmask, bmask, amask);
 #ifndef CRISPY_TRUECOLOR
 		// [crispy] re-set the framebuffer pointer
-		I_VideoBuffer = screenbuffer->pixels;
+		I_VideoBuffer = (pixel_t*)screenbuffer->pixels;
 #else
 		I_VideoBuffer = argbbuffer->pixels;
 #endif
@@ -1880,7 +1880,7 @@ void I_ReInitGraphics (int reinit)
 		}
 
 		#if SDL_VERSION_ATLEAST(2, 0, 5)
-		SDL_RenderSetIntegerScale(renderer, integer_scaling);
+		SDL_RenderSetIntegerScale(renderer, (SDL_bool)integer_scaling);
 		#endif
 	}
 
@@ -1960,7 +1960,7 @@ void I_RenderReadPixels(byte **data, int *w, int *h, int *p)
 	}
 
 	// [crispy] allocate memory for screenshot image
-	pixels = malloc(rect.h * temp);
+	pixels = static_cast<decltype(pixels)>( malloc(rect.h * temp) );
 	SDL_RenderReadPixels(renderer, &rect, format->format, pixels, temp);
 
 	*data = pixels;

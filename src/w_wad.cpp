@@ -35,6 +35,9 @@
 
 #include "w_wad.hpp"
 
+#include "../utils/memory.hpp"
+
+
 typedef PACKED_STRUCT (
 {
     // Should be "IWAD" or "PWAD".
@@ -165,7 +168,7 @@ wad_file_t *W_AddFile (const char *filename)
         // them back.  Effectively we're constructing a "fake WAD directory"
         // here, as it would appear on disk.
 
-	fileinfo = zmalloc<decltype(	fileinfo)>(sizeof(filelump_t), PU_STATIC, 0);
+	fileinfo = zmalloc<decltype(fileinfo)>(sizeof(filelump_t), PU_STATIC, 0);
 	fileinfo->filepos = LONG(0);
 	fileinfo->size = LONG(wad_file->length);
 
@@ -214,7 +217,7 @@ wad_file_t *W_AddFile (const char *filename)
     }
 
     // Increase size of numlumps array to accomodate the new file.
-    filelumps = calloc(numfilelumps, sizeof(lumpinfo_t));
+    filelumps = (lumpinfo_t*)calloc(numfilelumps, sizeof(lumpinfo_t));
     if (filelumps == nullptr)
     {
         W_CloseFile(wad_file);
@@ -441,7 +444,7 @@ void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
     {
         // Already cached, so just switch the zone tag.
 
-        result = lump->cache;
+        result = (byte*)lump->cache;
         Z_ChangeTag(lump->cache, tag);
     }
     else
@@ -450,7 +453,7 @@ void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
 
         lump->cache = zmalloc<decltype(lump->cache)>(W_LumpLength(lumpnum), tag, &lump->cache);
 	    W_ReadLump (lumpnum, lump->cache);
-        result = lump->cache;
+        result = (byte*)lump->cache;
     }
 	
     return result;
@@ -685,7 +688,7 @@ int W_LumpDump (const char *lumpname)
     }
     free(filename);
 
-    lump_p = malloc(lumpinfo[i]->size);
+    lump_p = (char*)malloc(lumpinfo[i]->size);
     W_ReadLump(i, lump_p);
     fwrite(lump_p, 1, lumpinfo[i]->size, fp);
     free(lump_p);

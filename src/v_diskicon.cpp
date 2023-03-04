@@ -27,6 +27,8 @@
 
 #include "v_diskicon.hpp"
 
+#include "../utils/memory.hpp"
+
 // Only display the disk icon if more then this much bytes have been read
 // during the previous tic.
 
@@ -67,7 +69,7 @@ static void SaveDiskData(const char *disk_lump, int xoffs, int yoffs)
     patch_t *disk;
 
     // Allocate a complete temporary screen where we'll draw the patch.
-    tmpscreen = zmalloc<decltype(    tmpscreen)>(SCREENWIDTH * SCREENHEIGHT * sizeof(*tmpscreen),
+    tmpscreen = zmalloc<decltype( tmpscreen)>(SCREENWIDTH * SCREENHEIGHT * sizeof(*tmpscreen),
                          PU_STATIC, nullptr);
     memset(tmpscreen, 0, SCREENWIDTH * SCREENHEIGHT * sizeof(*tmpscreen));
     V_UseBuffer(tmpscreen);
@@ -80,7 +82,7 @@ static void SaveDiskData(const char *disk_lump, int xoffs, int yoffs)
         disk_data = nullptr;
     }
 
-    disk_data = zmalloc<decltype(    disk_data)>(LOADING_DISK_W * LOADING_DISK_H * sizeof(*disk_data),
+    disk_data = zmalloc<decltype(disk_data)>(LOADING_DISK_W * LOADING_DISK_H * sizeof(*disk_data),
                          PU_STATIC, nullptr);
 
     // Draw the patch and save the result to disk_data.
@@ -106,7 +108,7 @@ void V_EnableLoadingDisk(const char *lump_name, int xoffs, int yoffs)
         saved_background = nullptr;
     }
 
-    saved_background = zmalloc<decltype(    saved_background)>(LOADING_DISK_W * LOADING_DISK_H
+    saved_background = zmalloc<decltype(saved_background)>(LOADING_DISK_W * LOADING_DISK_H
                                  * sizeof(*saved_background),
                                 PU_STATIC, nullptr);
     SaveDiskData(lump_name, xoffs, yoffs);

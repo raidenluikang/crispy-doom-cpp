@@ -62,7 +62,7 @@ static wchar_t *ConvertMultiByteToWide(const char *str, UINT code_page)
         return nullptr;
     }
 
-    wstr = malloc(sizeof(wchar_t) * wlen);
+    wstr = (decltype(    wstr)) malloc(sizeof(wchar_t) * wlen);
 
     if (!wstr)
     {
@@ -95,7 +95,7 @@ static char *ConvertWideToMultiByte(const wchar_t *wstr, UINT code_page)
         return nullptr;
     }
 
-    str = malloc(sizeof(char) * len);
+    str = (decltype(    str)) malloc(sizeof(char) * len);
 
     if (!str)
     {

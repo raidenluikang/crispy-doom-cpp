@@ -24,6 +24,8 @@
 
 #include "z_zone.hpp"
 
+#include "../utils/memory.hpp"
+
 typedef enum {
 	MODE_READ,
 	MODE_WRITE,
@@ -43,7 +45,7 @@ MEMFILE *mem_fopen_read(void *buf, size_t buflen)
 {
 	MEMFILE *file;
 
-	file = zmalloc<decltype(	file)>(sizeof(MEMFILE), PU_STATIC, 0);
+	file = zmalloc<decltype(file)>(sizeof(MEMFILE), PU_STATIC, 0);
 
 	file->buf = (unsigned char *) buf;
 	file->buflen = buflen;

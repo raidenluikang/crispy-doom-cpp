@@ -432,7 +432,7 @@ void D_BindVariables(void)
 
         chat_macros[i] = M_StringDuplicate(chat_macro_defaults[i]);
         M_snprintf(buf, sizeof(buf), "chatmacro%i", i);
-        M_BindStringVariable(buf, &chat_macros[i]);
+        M_BindStringVariable(buf, (const char**)&chat_macros[i]);
     }
 
     // [crispy] bind "crispness" config variables

@@ -69,7 +69,7 @@ char *P_SaveGameFile(int slot)
     if (filename == nullptr)
     {
         filename_size = strlen(savegamedir) + 32;
-        filename = malloc(filename_size);
+        filename = (decltype(        filename)) malloc(filename_size);
     }
 
     DEH_snprintf(basename, 32, SAVEGAMENAME "%d.dsg", slot);

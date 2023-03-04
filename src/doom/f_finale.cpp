@@ -112,7 +112,7 @@ void	F_CastTicker (void);
 boolean F_CastResponder (event_t *ev);
 void	F_CastDrawer (void);
 
-extern void A_RandomJump();
+extern void A_RandomJump(void*, void*, void*);
 
 //
 // F_StartFinale
@@ -438,9 +438,9 @@ static int F_RandomizeSound (int sound)
 	}
 }
 
-extern void A_BruisAttack();
+extern void A_BruisAttack(void*);
 extern void A_BspiAttack();
-extern void A_CPosAttack();
+extern void A_CPosAttack(void*);
 extern void A_CPosRefire();
 extern void A_CyberAttack();
 extern void A_FatAttack1();
@@ -448,31 +448,37 @@ extern void A_FatAttack2();
 extern void A_FatAttack3();
 extern void A_HeadAttack();
 extern void A_PainAttack();
-extern void A_PosAttack();
+extern void A_PosAttack(void*);
 extern void A_SargAttack();
 extern void A_SkelFist();
 extern void A_SkelMissile();
 extern void A_SkelWhoosh();
 extern void A_SkullAttack();
-extern void A_SPosAttack();
+extern void A_SPosAttack(void*);
 extern void A_TroopAttack();
 extern void A_VileTarget();
 
 
 struct actionsound_t
 {
-    using action_function_t = void(*)();
+    union u
+    {
+        void(*av0)();
+        void(*av1)(void*);
+        void(*av2)(void*, void*);
+        void(*av3)(void*, void*, void*);
+    };
 
-	action_function_t const action;
+    const u action;
 	const int sound;
 	const boolean early;
 } ;
 
 static const actionsound_t actionsounds[] =
 {
-	{A_PosAttack,   sfx_pistol, false},
-	{A_SPosAttack,  sfx_shotgn, false},
-	{A_CPosAttack,  sfx_shotgn, false},
+	{{.av1 = A_PosAttack},   sfx_pistol, false},
+	{{.av1 = A_SPosAttack},  sfx_shotgn, false},
+	{{.av1 = A_CPosAttack},  sfx_shotgn, false},
 	{A_CPosRefire,  sfx_shotgn, false},
 	{A_VileTarget,  sfx_vilatk, true},
 	{A_SkelWhoosh,  sfx_skeswg, false},
@@ -482,7 +488,7 @@ static const actionsound_t actionsounds[] =
 	{A_FatAttack2,  sfx_firsht, false},
 	{A_FatAttack3,  sfx_firsht, false},
 	{A_HeadAttack,  sfx_firsht, true},
-	{A_BruisAttack, sfx_firsht, true},
+	{{.av1 = A_BruisAttack}, sfx_firsht, true},
 	{A_TroopAttack, sfx_claw,   false},
 	{A_SargAttack,  sfx_sgtatk, true},
 	{A_SkullAttack, sfx_sklatk, false},
@@ -511,8 +517,8 @@ static int F_SoundForState (int st)
 		{
 			const actionsound_t *const as = &actionsounds[i];
 
-			if ((!as->early && castaction == as->action) ||
-			    (as->early && nextaction == as->action))
+			if ((!as->early && castaction == (void*)as->action.av0) ||
+			    (as->early && nextaction == (void*)as->action.av0))
 			{
 				return as->sound;
 			}
@@ -583,7 +589,7 @@ void F_CastTicker (void)
             goto stopattack;	// Oh, gross hack!
         */
         // [crispy] Allow A_RandomJump() in deaths in cast sequence
-        if (caststate->action.acv == A_RandomJump && Crispy_Random() < caststate->misc2)
+        if (caststate->action.acp3 == A_RandomJump && Crispy_Random() < caststate->misc2)
         {
             st = caststate->misc1;
         }
@@ -676,7 +682,7 @@ void F_CastTicker (void)
     if (casttics == -1)
     {
 	// [crispy] Allow A_RandomJump() in deaths in cast sequence
-	if (caststate->action.acv == A_RandomJump)
+	if (caststate->action.acp3 == A_RandomJump)
 	{
 	    if (Crispy_Random() < caststate->misc2)
 	    {
@@ -751,7 +757,7 @@ boolean F_CastResponder (event_t* ev)
     caststate = &states[mobjinfo[castorder[castnum].type].deathstate];
     casttics = caststate->tics;
     // [crispy] Allow A_RandomJump() in deaths in cast sequence
-    if (casttics == -1 && caststate->action.acv == A_RandomJump)
+    if (casttics == -1 && caststate->action.acp3 == A_RandomJump)
     {
         if (Crispy_Random() < caststate->misc2)
         {
