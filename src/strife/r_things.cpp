@@ -415,7 +415,7 @@ R_DrawVisSprite
     int                 clip;   // villsa [STRIFE]
     int                 translation;    // villsa [STRIFE]
 
-    patch = W_CacheLumpNum (vis->patch+firstspritelump, PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)> (vis->patch+firstspritelump, PU_CACHE);
 
     dc_colormap = vis->colormap;
 

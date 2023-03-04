@@ -200,7 +200,7 @@ static void AllocateBuffer(const unsigned int size)
     }
 
     buffer.size = PADDED_SIZE(size);
-    buffer.data = I_Realloc(buffer.data, buffer.size);
+    buffer.data = (decltype(    buffer.data)) I_Realloc(buffer.data, buffer.size);
 
     hdr->lpData = (LPSTR)buffer.data;
     hdr->dwBytesRecorded = 0;

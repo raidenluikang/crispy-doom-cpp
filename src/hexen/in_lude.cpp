@@ -253,7 +253,7 @@ static void LoadPics(void)
         FontBLumpBase = W_GetNumForName("FONTB16");
         for (int i = 0; i < 10; i++)
         {
-            FontBNumbers[i] = W_CacheLumpNum(FontBLumpBase + i, PU_STATIC);
+            FontBNumbers[i] = W_CacheLumpNum_cast<decltype(            FontBNumbers[i])>(FontBLumpBase + i, PU_STATIC);
         }
         FontBLump = W_GetNumForName("FONTB_S") + 1;
         FontBNegative = W_CacheLumpName_patch("FONTB13", PU_STATIC);
@@ -594,7 +594,7 @@ static void DrawHubText(void)
             cx += 5;
             continue;
         }
-        w = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+        w = W_CacheLumpNum_cast<decltype(        w)>(FontABaseLump + c - 33, PU_CACHE);
         if (cx + SHORT(w->width) > SCREENWIDTH)
         {
             break;

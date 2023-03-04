@@ -36,6 +36,8 @@
 
 #include "doomstat.hpp"
 
+#include "../../utils/memory.hpp"
+
 
 void G_PlayerReborn (int player);
 void P_SpawnMapThing (mapthing_t*	mthing);
@@ -364,7 +366,7 @@ void P_ZMovement (mobj_t* mo)
         // So we need to check that this is either retail or commercial
         // (but not doom2)
 	
-	int correct_lost_soul_bounce = gameversion >= exe_ultimate;
+	int correct_lost_soul_bounce = gameversion >= GameVersion_t::exe_ultimate;
 
 	if (correct_lost_soul_bounce && mo->flags & MF_SKULLFLY)
 	{
@@ -651,7 +653,7 @@ P_SpawnMobjSafe
     state_t*	st;
     mobjinfo_t*	info;
 	
-    mobj = zmalloc<decltype(    mobj)>(sizeof(*mobj), PU_LEVEL, nullptr);
+    mobj = zmalloc<decltype(mobj)>(sizeof(*mobj), PU_LEVEL, nullptr);
     memset (mobj, 0, sizeof (*mobj));
     info = &mobjinfo[type];
 	
@@ -664,7 +666,7 @@ P_SpawnMobjSafe
     mobj->flags = info->flags;
     mobj->health = info->spawnhealth;
 
-    if (gameskill != sk_nightmare)
+    if (gameskill != skill_t::sk_nightmare)
 	mobj->reactiontime = info->reactiontime;
     
     mobj->lastlook = safe ? Crispy_Random () % MAXPLAYERS : P_Random () % MAXPLAYERS;
@@ -722,7 +724,7 @@ P_SpawnMobjSafe
 
 		sprframe = &sprdef->spriteframes[mobj->frame & FF_FRAMEMASK];
 		lump = sprframe->lump[0];
-		patch = W_CacheLumpNum(lump + firstspritelump, PU_CACHE);
+		patch = W_CacheLumpNum_cast<decltype(patch)>(lump + firstspritelump, PU_CACHE);
 
 		// [crispy] round up to the next integer multiple of 8
 		info->actualheight = ((SHORT(patch->height) + 7) >> 3) << (FRACBITS + 3);
@@ -850,7 +852,7 @@ void P_RespawnSpecials (void)
     else
 	z = ONFLOORZ;
 
-    mo = P_SpawnMobj (x,y,z, i);
+    mo = P_SpawnMobj (x,y,z, static_cast<mobjtype_t>( i ) );
     mo->spawnpoint = *mthing;	
     mo->angle = ANG45 * (mthing->angle/45);
 
@@ -952,7 +954,6 @@ void P_SpawnPlayer (mapthing_t* mthing)
 //
 void P_SpawnMapThing (mapthing_t* mthing)
 {
-    int			i;
     int			bit;
     mobj_t*		mobj;
     fixed_t		x;
@@ -963,12 +964,12 @@ void P_SpawnMapThing (mapthing_t* mthing)
     // count deathmatch start positions
     if (mthing->type == 11)
     {
-	if (deathmatch_p < &deathmatchstarts[10])
-	{
-	    memcpy (deathmatch_p, mthing, sizeof(*mthing));
-	    deathmatch_p++;
-	}
-	return;
+        if (deathmatch_p < &deathmatchstarts[10])
+        {
+            memcpy (deathmatch_p, mthing, sizeof(*mthing));
+            deathmatch_p++;
+        }
+        return;
     }
 
     if (mthing->type <= 0)
@@ -983,29 +984,29 @@ void P_SpawnMapThing (mapthing_t* mthing)
     if (mthing->type <= 4)
     {
 	// save spots for respawning in network games
-	playerstarts[mthing->type-1] = *mthing;
-	playerstartsingame[mthing->type-1] = true;
-	if (!deathmatch)
-	    P_SpawnPlayer (mthing);
+        playerstarts[mthing->type-1] = *mthing;
+        playerstartsingame[mthing->type-1] = true;
+        if (!deathmatch)
+            P_SpawnPlayer (mthing);
 
-	return;
+        return;
     }
 
     // check for appropriate skill level
     if (!netgame && (mthing->options & 16) )
-	return;
+	    return;
 		
-    if (gameskill == sk_baby)
-	bit = 1;
-    else if (gameskill == sk_nightmare)
-	bit = 4;
+    if (gameskill == skill_t::sk_baby)
+	    bit = 1;
+    else if (gameskill == skill_t::sk_nightmare)
+	    bit = 4;
     else
-	bit = 1<<(gameskill-1);
+	    bit = 1<<( static_cast<int>(gameskill) - 1);
 
     // [crispy] warn about mapthings without any skill tag set
     if (!(mthing->options & (MTF_EASY|MTF_NORMAL|MTF_HARD)))
     {
-	fprintf(stderr, "P_SpawnMapThing: Mapthing type %i without any skill tag at (%i, %i)\n",
+	    fprintf(stderr, "P_SpawnMapThing: Mapthing type %i without any skill tag at (%i, %i)\n",
 	       mthing->type, mthing->x, mthing->y);
     }
 
@@ -1019,30 +1020,33 @@ void P_SpawnMapThing (mapthing_t* mthing)
 	mthing->type = mobjinfo[MT_MUSICSOURCE].doomednum;
     }
 
+    int i;
     // find which type to spawn
-    for (i=0 ; i< NUMMOBJTYPES ; i++)
-	if (mthing->type == mobjinfo[i].doomednum)
-	    break;
+    for (i=0 ; i < static_cast<int>( mobjtype_t::NUMMOBJTYPES ); i++)
+	{
+        if (mthing->type == mobjinfo[i].doomednum)
+	        break;
+    }
 	
-    if (i==NUMMOBJTYPES)
+    if ( i == static_cast<int>( mobjtype_t::NUMMOBJTYPES) )
     {
-	// [crispy] ignore unknown map things
-	fprintf (stderr, "P_SpawnMapThing: Unknown type %i at (%i, %i)\n",
-		 mthing->type,
-		 mthing->x, mthing->y);
-	return;
+        // [crispy] ignore unknown map things
+        fprintf (stderr, "P_SpawnMapThing: Unknown type %i at (%i, %i)\n",
+            mthing->type,
+            mthing->x, mthing->y);
+        return;
     }
 		
     // don't spawn keycards and players in deathmatch
     if (deathmatch && mobjinfo[i].flags & MF_NOTDMATCH)
-	return;
+	    return;
 		
     // don't spawn any monsters if -nomonsters
     if (nomonsters
-	&& ( i == MT_SKULL
+	    && ( i == mobjtype_t::MT_SKULL
 	     || (mobjinfo[i].flags & MF_COUNTKILL)) )
     {
-	return;
+	    return;
     }
     
     // spawn it
@@ -1050,11 +1054,11 @@ void P_SpawnMapThing (mapthing_t* mthing)
     y = mthing->y << FRACBITS;
 
     if (mobjinfo[i].flags & MF_SPAWNCEILING)
-	z = ONCEILINGZ;
+	    z = ONCEILINGZ;
     else
-	z = ONFLOORZ;
+	    z = ONFLOORZ;
     
-    mobj = P_SpawnMobj (x,y,z, i);
+    mobj = P_SpawnMobj (x,y,z, static_cast<mobjtype_t>( i ) );
     mobj->spawnpoint = *mthing;
 
     if (mobj->tics > 0)
@@ -1079,13 +1083,13 @@ void P_SpawnMapThing (mapthing_t* mthing)
 
     // [crispy] blinking key or skull in the status bar
     if (mobj->sprite == SPR_BSKU)
-	st_keyorskull[it_bluecard] = 3;
+	    st_keyorskull[static_cast<int>(card_t::it_bluecard)] = 3;
     else
     if (mobj->sprite == SPR_RSKU)
-	st_keyorskull[it_redcard] = 3;
+	    st_keyorskull[static_cast<int>(card_t::it_redcard)] = 3;
     else
     if (mobj->sprite == SPR_YSKU)
-	st_keyorskull[it_yellowcard] = 3;
+	    st_keyorskull[static_cast<int>(card_t::it_yellowcard)] = 3;
 }
 
 

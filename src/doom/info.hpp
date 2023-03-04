@@ -188,7 +188,7 @@ enum spritenum_t
 
 } ;
 
-enum statenum_t
+enum statenum_t : int
 {
     S_NULL,
     S_LIGHTDONE,
@@ -1423,22 +1423,25 @@ enum mobjtype_t
 
 } ;
 
-typedef struct
+//forward declaration since C++11
+enum statenum_t : int;
+
+struct mobjinfo_t
 {
     int	doomednum;
-    int	spawnstate;
+    statenum_t	spawnstate;
     int	spawnhealth;
-    int	seestate;
+    statenum_t	seestate;
     int	seesound;
     int	reactiontime;
     int	attacksound;
-    int	painstate;
+    statenum_t	painstate;
     int	painchance;
     int	painsound;
-    int	meleestate;
-    int	missilestate;
-    int	deathstate;
-    int	xdeathstate;
+    statenum_t	meleestate;
+    statenum_t	missilestate;
+    statenum_t	deathstate;
+    statenum_t	xdeathstate;
     int	deathsound;
     int	speed;
     int	radius;
@@ -1446,8 +1449,8 @@ typedef struct
     int	mass;
     int	damage;
     int	activesound;
-    int	flags;
-    int	raisestate;
+    unsigned flags;
+    statenum_t	raisestate;
     // [crispy] height of the spawnstate's first sprite in pixels
     int	actualheight;
     // [crispy] mobj to drop after death
@@ -1461,7 +1464,7 @@ typedef struct
     // [crispy] multiplier for likelihood of a missile attack (generaliz. for various)
     int missilechancemult;
 
-} mobjinfo_t;
+} ;
 
 extern mobjinfo_t mobjinfo[NUMMOBJTYPES];
 

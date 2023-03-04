@@ -231,7 +231,7 @@ void M_DrawEmptyCell(menu_t *menu,int item);
 void M_DrawSelCell(menu_t *menu,int item);
 int  M_StringWidth(const char *string);
 int  M_StringHeight(const char *string);
-void M_StartMessage(const char *string,void *routine,boolean input);
+void M_StartMessage(const char *string,void (*routine)(int),boolean input);
 void M_StopMessage(void);
 
 // [crispy] Crispness menu
@@ -1967,7 +1967,7 @@ M_DrawSelCell
 void
 M_StartMessage
 ( const char	*string,
-  void*		routine,
+  void (*routine)(int),
   boolean	input )
 {
     messageLastMenuActive = menuactive;

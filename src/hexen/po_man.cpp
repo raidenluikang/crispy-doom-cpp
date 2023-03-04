@@ -1579,7 +1579,7 @@ void PO_Init(int lump)
     polyobjs = zmalloc<decltype(    polyobjs)>(po_NumPolyobjs * sizeof(polyobj_t), PU_LEVEL, 0);
     memset(polyobjs, 0, po_NumPolyobjs * sizeof(polyobj_t));
 
-    data = W_CacheLumpNum(lump, PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)>(lump, PU_STATIC);
     numthings = W_LumpLength(lump) / sizeof(mapthing_t);
     mt = (mapthing_t *) data;
     polyIndex = 0;              // index polyobj number

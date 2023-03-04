@@ -474,7 +474,7 @@ void MN_DrTextA(const char *text, int x, int y)
         }
         else
         {
-            p = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+            p = W_CacheLumpNum_cast<decltype(            p)>(FontABaseLump + c - 33, PU_CACHE);
             V_DrawPatch(x, y, p);
             x += SHORT(p->width) - 1;
         }
@@ -500,7 +500,7 @@ void MN_DrTextAYellow(const char *text, int x, int y)
         }
         else
         {
-            p = W_CacheLumpNum(FontAYellowBaseLump + c - 33, PU_CACHE);
+            p = W_CacheLumpNum_cast<decltype(            p)>(FontAYellowBaseLump + c - 33, PU_CACHE);
             V_DrawPatch(x, y, p);
             x += SHORT(p->width) - 1;
         }
@@ -530,7 +530,7 @@ int MN_TextAWidth(const char *text)
         }
         else
         {
-            p = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+            p = W_CacheLumpNum_cast<decltype(            p)>(FontABaseLump + c - 33, PU_CACHE);
             width += SHORT(p->width) - 1;
         }
     }
@@ -558,7 +558,7 @@ void MN_DrTextB(const char *text, int x, int y)
         }
         else
         {
-            p = W_CacheLumpNum(FontBBaseLump + c - 33, PU_CACHE);
+            p = W_CacheLumpNum_cast<decltype(            p)>(FontBBaseLump + c - 33, PU_CACHE);
             V_DrawPatch(x, y, p);
             x += SHORT(p->width) - 1;
         }
@@ -588,7 +588,7 @@ int MN_TextBWidth(const char *text)
         }
         else
         {
-            p = W_CacheLumpNum(FontBBaseLump + c - 33, PU_CACHE);
+            p = W_CacheLumpNum_cast<decltype(            p)>(FontBBaseLump + c - 33, PU_CACHE);
             width += SHORT(p->width) - 1;
         }
     }

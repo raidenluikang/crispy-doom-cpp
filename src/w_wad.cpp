@@ -76,7 +76,7 @@ static void AddWADFileName(const char *filename)
 {
     static int i;
 
-    wad_filenames = I_Realloc(wad_filenames, (i + 2) * sizeof(*wad_filenames));
+    wad_filenames = (decltype(    wad_filenames)) I_Realloc(wad_filenames, (i + 2) * sizeof(*wad_filenames));
     wad_filenames[i++] = M_StringDuplicate(filename);
     wad_filenames[i] = nullptr;
 }
@@ -223,7 +223,7 @@ wad_file_t *W_AddFile (const char *filename)
 
     startlump = numlumps;
     numlumps += numfilelumps;
-    lumpinfo = I_Realloc(lumpinfo, numlumps * sizeof(lumpinfo_t *));
+    lumpinfo = (decltype(    lumpinfo)) I_Realloc(lumpinfo, numlumps * sizeof(lumpinfo_t *));
     filerover = fileinfo;
 
     for (i = startlump; i < numlumps; ++i)

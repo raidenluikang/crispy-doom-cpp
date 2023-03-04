@@ -34,6 +34,8 @@
 #include "dstrings.hpp"
 #include "sounds.hpp"
 
+#include "../../utils/memory.hpp"
+
 #if 0
 //
 // Sliding door frame information
@@ -112,7 +114,7 @@ void T_VerticalDoor (vldoor_t* door)
 			  door->speed,
 			  door->sector->floorheight,
 			  false,1,door->direction);
-	if (res == pastdest)
+	if (res == result_e::pastdest)
 	{
 	    switch(door->type)
 	    {
@@ -140,7 +142,7 @@ void T_VerticalDoor (vldoor_t* door)
 		break;
 	    }
 	}
-	else if (res == crushed)
+	else if (res == result_e::crushed)
 	{
 	    switch(door->type)
 	    {
@@ -172,7 +174,7 @@ void T_VerticalDoor (vldoor_t* door)
 			  door->topheight,
 			  false,1,door->direction);
 	
-	if (res == pastdest)
+	if (res == result_e::pastdest)
 	{
 	    switch(door->type)
 	    {
@@ -220,40 +222,40 @@ EV_DoLockedDoor
     {
       case 99:	// Blue Lock
       case 133:
-	if (!p->cards[it_bluecard] && !p->cards[it_blueskull])
+	if (!p->cards[static_cast<int>(card_t::it_bluecard)] && !p->cards[static_cast<int>(card_t::it_blueskull)])
 	{
 	    p->message = DEH_String(PD_BLUEO);
 	    // [NS] Locked door sound.
 	    S_StartSoundOptional(crispy->soundfix ? p->mo : nullptr, sfx_locked, sfx_oof);
 	    // [crispy] blinking key or skull in the status bar
-	    p->tryopen[it_bluecard] = KEYBLINKTICS;
+	    p->tryopen[static_cast<int>(card_t::it_bluecard)] = KEYBLINKTICS;
 	    return 0;
 	}
 	break;
 	
       case 134: // Red Lock
       case 135:
-	if (!p->cards[it_redcard] && !p->cards[it_redskull])
+	if (!p->cards[static_cast<int>(card_t::it_redcard)] && !p->cards[static_cast<int>(card_t::it_redskull)])
 	{
 	    p->message = DEH_String(PD_REDO);
 	    // [NS] Locked door sound.
 	    S_StartSoundOptional(crispy->soundfix ? p->mo : nullptr, sfx_locked, sfx_oof);
 	    // [crispy] blinking key or skull in the status bar
-	    p->tryopen[it_redcard] = KEYBLINKTICS;
+	    p->tryopen[static_cast<int>(card_t::it_redcard)] = KEYBLINKTICS;
 	    return 0;
 	}
 	break;
 	
       case 136:	// Yellow Lock
       case 137:
-	if (!p->cards[it_yellowcard] &&
-	    !p->cards[it_yellowskull])
+	if (!p->cards[static_cast<int>(card_t::it_yellowcard)] &&
+	    !p->cards[static_cast<int>(card_t::it_yellowskull)])
 	{
 	    p->message = DEH_String(PD_YELLOWO);
 	    // [NS] Locked door sound.
 	    S_StartSoundOptional(crispy->soundfix ? p->mo : nullptr, sfx_locked, sfx_oof);
 	    // [crispy] blinking key or skull in the status bar
-	    p->tryopen[it_yellowcard] = KEYBLINKTICS;
+	    p->tryopen[static_cast<int>(card_t::it_yellowcard)] = KEYBLINKTICS;
 	    return 0;
 	}
 	break;	
@@ -284,7 +286,7 @@ EV_DoDoor
 	
 	// new door thinker
 	rtn = 1;
-	door = zmalloc<decltype(	door)>(sizeof(*door), PU_LEVSPEC, 0);
+	door = zmalloc<decltype(door)>(sizeof(*door), PU_LEVSPEC, 0);
 	P_AddThinker (&door->thinker);
 	sec->specialdata = door;
 
@@ -376,13 +378,13 @@ EV_VerticalDoor
 	if ( !player )
 	    return;
 	
-	if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
+	if (!player->cards[static_cast<int>(card_t::it_bluecard)] && !player->cards[static_cast<int>(card_t::it_blueskull)])
 	{
 	    player->message = DEH_String(PD_BLUEK);
 	    // [NS] Locked door sound.
 	    S_StartSoundOptional(crispy->soundfix ? player->mo : nullptr, sfx_locked, sfx_oof);
 	    // [crispy] blinking key or skull in the status bar
-	    player->tryopen[it_bluecard] = KEYBLINKTICS;
+	    player->tryopen[static_cast<int>(card_t::it_bluecard)] = KEYBLINKTICS;
 	    return;
 	}
 	break;
@@ -392,14 +394,14 @@ EV_VerticalDoor
 	if ( !player )
 	    return;
 	
-	if (!player->cards[it_yellowcard] &&
-	    !player->cards[it_yellowskull])
+	if (!player->cards[static_cast<int>(card_t::it_yellowcard)] &&
+	    !player->cards[static_cast<int>(card_t::it_yellowskull)])
 	{
 	    player->message = DEH_String(PD_YELLOWK);
 	    // [NS] Locked door sound.
 	    S_StartSoundOptional(crispy->soundfix ? player->mo : nullptr, sfx_locked, sfx_oof);
 	    // [crispy] blinking key or skull in the status bar
-	    player->tryopen[it_yellowcard] = KEYBLINKTICS;
+	    player->tryopen[static_cast<int>(card_t::it_yellowcard)] = KEYBLINKTICS;
 	    return;
 	}
 	break;
@@ -409,13 +411,13 @@ EV_VerticalDoor
 	if ( !player )
 	    return;
 	
-	if (!player->cards[it_redcard] && !player->cards[it_redskull])
+	if (!player->cards[static_cast<int>(card_t::it_redcard)] && !player->cards[static_cast<int>(card_t::it_redskull)])
 	{
 	    player->message = DEH_String(PD_REDK);
 	    // [NS] Locked door sound.
 	    S_StartSoundOptional(crispy->soundfix ? player->mo : nullptr, sfx_locked, sfx_oof);
 	    // [crispy] blinking key or skull in the status bar
-	    player->tryopen[it_redcard] = KEYBLINKTICS;
+	    player->tryopen[static_cast<int>(card_t::it_redcard)] = KEYBLINKTICS;
 	    return;
 	}
 	break;
@@ -434,66 +436,66 @@ EV_VerticalDoor
 
     if (sec->specialdata)
     {
-	door = sec->specialdata;
-	switch(line->special)
-	{
-	  case	1: // ONLY FOR "RAISE" DOORS, NOT "OPEN"s
-	  case	26:
-	  case	27:
-	  case	28:
-	  case	117:
-	    if (door->direction == -1)
-	    {
-		door->direction = 1;	// go back up
-		// [crispy] play sound effect when the door is opened again while going down
-		if (crispy->soundfix && door->thinker.function.acp1 == (actionf_p1) T_VerticalDoor)
-		S_StartSound(&door->sector->soundorg, line->special == 117 ? sfx_bdopn : sfx_doropn);
-	    }
-	    else
-	    {
-		if (!thing->player)
-		    return;		// JDC: bad guys never close doors
+		door = static_cast<vldoor_t*>( sec->specialdata );
+		switch(line->special)
+		{
+		case	1: // ONLY FOR "RAISE" DOORS, NOT "OPEN"s
+		case	26:
+		case	27:
+		case	28:
+		case	117:
+			if (door->direction == -1)
+			{
+			door->direction = 1;	// go back up
+			// [crispy] play sound effect when the door is opened again while going down
+			if (crispy->soundfix && door->thinker.function.acp1 == (actionf_p1) T_VerticalDoor)
+			S_StartSound(&door->sector->soundorg, line->special == 117 ? sfx_bdopn : sfx_doropn);
+			}
+			else
+			{
+			if (!thing->player)
+				return;		// JDC: bad guys never close doors
 
-                // When is a door not a door?
-                // In Vanilla, door->direction is set, even though
-                // "specialdata" might not actually point at a door.
+					// When is a door not a door?
+					// In Vanilla, door->direction is set, even though
+					// "specialdata" might not actually point at a door.
 
-                if (door->thinker.function.acp1 == (actionf_p1) T_VerticalDoor)
-                {
-                    door->direction = -1;	// start going down immediately
-                    // [crispy] play sound effect when the door is closed manually
-                    if (crispy->soundfix)
-                    S_StartSound(&door->sector->soundorg, line->special == 117 ? sfx_bdcls : sfx_dorcls);
-                }
-                else if (door->thinker.function.acp1 == (actionf_p1) T_PlatRaise)
-                {
-                    // Erm, this is a plat, not a door.
-                    // This notably causes a problem in ep1-0500.lmp where
-                    // a plat and a door are cross-referenced; the door
-                    // doesn't open on 64-bit.
-                    // The direction field in vldoor_t corresponds to the wait
-                    // field in plat_t.  Let's set that to -1 instead.
+					if (door->thinker.function.acp1 == (actionf_p1) T_VerticalDoor)
+					{
+						door->direction = -1;	// start going down immediately
+						// [crispy] play sound effect when the door is closed manually
+						if (crispy->soundfix)
+						S_StartSound(&door->sector->soundorg, line->special == 117 ? sfx_bdcls : sfx_dorcls);
+					}
+					else if (door->thinker.function.acp1 == (actionf_p1) T_PlatRaise)
+					{
+						// Erm, this is a plat, not a door.
+						// This notably causes a problem in ep1-0500.lmp where
+						// a plat and a door are cross-referenced; the door
+						// doesn't open on 64-bit.
+						// The direction field in vldoor_t corresponds to the wait
+						// field in plat_t.  Let's set that to -1 instead.
 
-                    plat_t *plat;
+						plat_t *plat;
 
-                    plat = (plat_t *) door;
-                    plat->wait = -1;
-                }
-                else
-                {
-                    // This isn't a door OR a plat.  Now we're in trouble.
+						plat = (plat_t *) door;
+						plat->wait = -1;
+					}
+					else
+					{
+						// This isn't a door OR a plat.  Now we're in trouble.
 
-                    fprintf(stderr, "EV_VerticalDoor: Tried to close "
-                                    "something that wasn't a door.\n");
+						fprintf(stderr, "EV_VerticalDoor: Tried to close "
+										"something that wasn't a door.\n");
 
-                    // Try closing it anyway. At least it will work on 32-bit
-                    // machines.
+						// Try closing it anyway. At least it will work on 32-bit
+						// machines.
 
-                    door->direction = -1;
-                }
-	    }
-	    return;
-	}
+						door->direction = -1;
+					}
+			}
+			return;
+		}
     }
 	
     // for proper sound
@@ -566,7 +568,7 @@ void P_SpawnDoorCloseIn30 (sector_t* sec)
 {
     vldoor_t*	door;
 	
-    door = zmalloc<decltype(    door)>( sizeof(*door), PU_LEVSPEC, 0);
+    door = zmalloc<decltype(door)>( sizeof(*door), PU_LEVSPEC, 0);
 
     P_AddThinker (&door->thinker);
 

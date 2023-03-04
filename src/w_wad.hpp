@@ -21,6 +21,7 @@
 #define __W_WAD__
 
 #include <stdio.h>
+#include <type_traits>
 
 #include "doomtype.hpp"
 #include "w_file.hpp"
@@ -64,6 +65,13 @@ int W_LumpLength(lumpindex_t lump);
 void W_ReadLump(lumpindex_t lump, void *dest);
 
 void *W_CacheLumpNum(lumpindex_t lump, int tag);
+
+template <typename T>
+std::enable_if_t<std::is_pointer<T>::value, T> W_CacheLumpNum_cast(lumpindex_t lump, int tag)
+{
+    return static_cast<T>(W_CacheLumpNum(lump, tag));
+}
+
 void *W_CacheLumpName(const char *name, int tag);
 
 // Helper functions

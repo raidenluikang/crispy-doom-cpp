@@ -392,7 +392,7 @@ void R_DrawVisSprite(vissprite_t * vis, int x1, int x2)
     fixed_t baseclip;
 
 
-    patch = W_CacheLumpNum(vis->patch + firstspritelump, PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)>(vis->patch + firstspritelump, PU_CACHE);
 
     // [crispy] brightmaps for select sprites
     dc_colormap[0] = vis->colormap[0];

@@ -462,7 +462,7 @@ void HU_Init(void)
 		DEH_snprintf(buffer, 9, "STCFN%.3d", toupper(laserpatch[i].c));
 		laserpatch[i].l = W_GetNumForName(buffer);
 
-		patch = W_CacheLumpNum(laserpatch[i].l, PU_STATIC);
+		patch = W_CacheLumpNum_cast<decltype(		patch)>(laserpatch[i].l, PU_STATIC);
 
 		laserpatch[i].w -= SHORT(patch->leftoffset);
 		laserpatch[i].h -= SHORT(patch->topoffset);
@@ -476,7 +476,7 @@ void HU_Init(void)
 
 	if (!patch)
 	{
-		patch = W_CacheLumpNum(laserpatch[i].l, PU_STATIC);
+		patch = W_CacheLumpNum_cast<decltype(patch)>(laserpatch[i].l, PU_STATIC);
 	}
 
 	laserpatch[i].w += SHORT(patch->width)/2;
@@ -562,20 +562,18 @@ static const speciallevel_t speciallevels[] = {
 
 static void HU_SetSpecialLevelName (const char *wad, const char **name)
 {
-    int i;
-
-    for (i = 0; i < arrlen(speciallevels); i++)
+    for (size_t i = 0; i < arrlen(speciallevels); i++)
     {
-	const speciallevel_t speciallevel = speciallevels[i];
+        const speciallevel_t speciallevel = speciallevels[i];
 
-	if (logical_gamemission == speciallevel.mission &&
-	    (!speciallevel.episode || gameepisode == speciallevel.episode) &&
-	    gamemap == speciallevel.map &&
-	    (!speciallevel.wad || !strcasecmp(wad, speciallevel.wad)))
-	{
-	    *name = speciallevel.name ? speciallevel.name : maplumpinfo->name;
-	    break;
-	}
+        if (logical_gamemission == speciallevel.mission &&
+            (!speciallevel.episode || gameepisode == speciallevel.episode) &&
+            gamemap == speciallevel.map &&
+            (!speciallevel.wad || !strcasecmp(wad, speciallevel.wad)))
+        {
+            *name = speciallevel.name ? speciallevel.name : maplumpinfo->name;
+            break;
+        }
     }
 }
 
@@ -670,41 +668,41 @@ void HU_Start(void)
     
     switch ( logical_gamemission )
     {
-      case doom:
-	s = HU_TITLE;
-	break;
-      case doom2:
-	 s = HU_TITLE2;
+      case GameMission_t::doom:
+	    s = HU_TITLE;
+	    break;
+      case GameMission_t::doom2:
+	    s = HU_TITLE2;
          // Pre-Final Doom compatibility: map33-map35 names don't spill over
-         if (gameversion <= exe_doom_1_9 && gamemap >= 33 && false) // [crispy] disable
+         if (gameversion <= GameVersion_t::exe_doom_1_9 && gamemap >= 33 && false) // [crispy] disable
          {
              s = "";
          }
-	 break;
-      case pack_plut:
-	s = HU_TITLEP;
-	break;
-      case pack_tnt:
-	s = HU_TITLET;
-	break;
-      case pack_nerve:
-	if (gamemap <= 9)
-	  s = HU_TITLEN;
-	else
-	  s = HU_TITLE2;
-	break;
-      case pack_master:
-	if (gamemap <= 21)
-	  s = HU_TITLEM;
-	else
-	  s = HU_TITLE2;
-	break;
+	    break;
+      case GameMission_t::pack_plut:
+	    s = HU_TITLEP;
+	    break;
+      case GameMission_t::pack_tnt:
+	    s = HU_TITLET;
+	    break;
+      case GameMission_t::pack_nerve:
+        if (gamemap <= 9)
+            s = HU_TITLEN;
+        else
+            s = HU_TITLE2;
+        break;
+      case GameMission_t::pack_master:
+        if (gamemap <= 21)
+           s = HU_TITLEM;
+        else
+            s = HU_TITLE2;
+        break;
       default:
          s = "Unknown level";
          break;
     }
 
-    if (logical_gamemission == doom && gameversion == exe_chex)
+    if (logical_gamemission == GameMission_t::doom && gameversion == GameVersion_t::exe_chex)
     {
         s = HU_TITLE_CHEX;
     }
@@ -716,8 +714,8 @@ void HU_Start(void)
     // map is from a PWAD or if the map title string has been dehacked
     if (!W_IsIWADLump(maplumpinfo) &&
         (DEH_HasStringReplacement(s) ||
-        (!(crispy->havenerve && gamemission == pack_nerve) &&
-        !(crispy->havemaster && gamemission == pack_master))))
+        (!(crispy->havenerve && gamemission == GameMission_t::pack_nerve) &&
+        !(crispy->havemaster && gamemission == GameMission_t::pack_master))))
     {
 	char *m;
 
@@ -787,7 +785,7 @@ static void HU_DrawCrosshair (void)
     static patch_t*	patch;
     extern byte *R_LaserspotColor (void);
 
-    if (weaponinfo[plr->readyweapon].ammo == am_noammo ||
+    if (weaponinfo[static_cast<int>(plr->readyweapon)].ammo == ammotype_t::am_noammo ||
         plr->playerstate != PST_LIVE ||
         automapactive ||
         menuactive ||
@@ -797,8 +795,8 @@ static void HU_DrawCrosshair (void)
 
     if (lump != laserpatch[crispy->crosshairtype].l)
     {
-	lump = laserpatch[crispy->crosshairtype].l;
-	patch = W_CacheLumpNum(lump, PU_STATIC);
+	    lump = laserpatch[crispy->crosshairtype].l;
+	    patch = W_CacheLumpNum_cast<decltype(patch)>(lump, PU_STATIC);
     }
 
     dp_translucent = true;
@@ -882,7 +880,7 @@ void HU_Drawer(void)
 	HUlib_drawTextLine(&w_coorda, false);
     }
 
-    if (plr->powers[pw_showfps])
+    if (plr->powers[static_cast<int>(powertype_t::pw_showfps)])
     {
 	HUlib_drawTextLine(&w_fps, false);
     }
@@ -1045,9 +1043,9 @@ void HU_Ticker(void)
 			    message_nottobefuckedwith = true;
 			    message_on = true;
 			    message_counter = HU_MSGTIMEOUT;
-			    if ( gamemode == commercial )
+			    if ( gamemode == GameMode_t::commercial )
 			      S_StartSound(0, sfx_radio);
-			    else if (gameversion > exe_doom_1_2)
+			    else if (gameversion > GameVersion_t::exe_doom_1_2)
 			      S_StartSound(0, sfx_tink);
 			}
 			HUlib_resetIText(&w_inputbuffer[i]);
@@ -1184,7 +1182,7 @@ void HU_Ticker(void)
 	    HUlib_addCharToTextLine(&w_coorda, *(s++));
     }
 
-    if (plr->powers[pw_showfps])
+    if (plr->powers[static_cast<int>(powertype_t::pw_showfps)])
     {
 	M_snprintf(str, sizeof(str), "%s%-4d %sFPS", crstr[CR_GRAY], crispy->fps, cr_stat2);
 	HUlib_clearTextLine(&w_fps);
@@ -1265,112 +1263,113 @@ boolean HU_Responder(event_t *ev)
 
     if (ev->data1 == KEY_RSHIFT)
     {
-	return false;
+	    return false;
     }
     else if (ev->data1 == KEY_RALT || ev->data1 == KEY_LALT)
     {
-	altdown = ev->type == ev_keydown;
-	return false;
+	    altdown = ev->type == evtype_t::ev_keydown;
+	    return false;
     }
 
-    if (ev->type != ev_keydown)
-	return false;
+    if (ev->type != evtype_t::ev_keydown)
+	    return false;
 
     if (!chat_on)
     {
-	if (ev->data1 == key_message_refresh)
-	{
-	    message_on = true;
-	    message_counter = HU_MSGTIMEOUT;
-	    eatkey = true;
-	}
-	else if (netgame && !demoplayback && ev->data2 == key_multi_msg)
-	{
-	    eatkey = true;
+        if (ev->data1 == key_message_refresh)
+        {
+            message_on = true;
+            message_counter = HU_MSGTIMEOUT;
+            eatkey = true;
+        }
+        else if (netgame && !demoplayback && ev->data2 == key_multi_msg)
+        {
+            eatkey = true;
             StartChatInput(HU_BROADCAST);
-	}
-	else if (netgame && !demoplayback && numplayers > 2)
-	{
-	    for (i=0; i<MAXPLAYERS ; i++)
-	    {
-		if (ev->data2 == key_multi_msgplayer[i])
-		{
-		    if (playeringame[i] && i!=consoleplayer)
-		    {
-			eatkey = true;
+        }
+        else if (netgame && !demoplayback && numplayers > 2)
+        {
+            for (i=0; i<MAXPLAYERS ; i++)
+            {
+                if (ev->data2 == key_multi_msgplayer[i])
+                {
+                    if (playeringame[i] && i!=consoleplayer)
+                    {
+                        eatkey = true;
                         StartChatInput(i + 1);
-			break;
-		    }
-		    else if (i == consoleplayer)
-		    {
-			num_nobrainers++;
-			if (num_nobrainers < 3)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF1);
-			else if (num_nobrainers < 6)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF2);
-			else if (num_nobrainers < 9)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF3);
-			else if (num_nobrainers < 32)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF4);
-			else
-			    plr->message = DEH_String(HUSTR_TALKTOSELF5);
-		    }
-		}
-	    }
-	}
+                        break;
+                    }
+                    else if (i == consoleplayer)
+                    {
+                        num_nobrainers++;
+                        if (num_nobrainers < 3)
+                            plr->message = DEH_String(HUSTR_TALKTOSELF1);
+                        else if (num_nobrainers < 6)
+                            plr->message = DEH_String(HUSTR_TALKTOSELF2);
+                        else if (num_nobrainers < 9)
+                            plr->message = DEH_String(HUSTR_TALKTOSELF3);
+                        else if (num_nobrainers < 32)
+                            plr->message = DEH_String(HUSTR_TALKTOSELF4);
+                        else
+                            plr->message = DEH_String(HUSTR_TALKTOSELF5);
+                    }
+                }
+            }
+        }
     }
     else
     {
-	// send a macro
-	if (altdown)
-	{
-	    c = ev->data1 - '0';
-	    if (c > 9)
-		return false;
-	    // fprintf(stderr, "got here\n");
-	    macromessage = chat_macros[c];
+        // send a macro
+        if (altdown)
+        {
+            c = ev->data1 - static_cast<int>('0'); // '0' type char in C++, but int in C.
+            if (c > 9)
+                return false;
+            // fprintf(stderr, "got here\n");
+            macromessage = chat_macros[c];
 
-	    // kill last message with a '\n'
-	    HU_queueChatChar(KEY_ENTER); // DEBUG!!!
+            // kill last message with a '\n'
+            HU_queueChatChar(KEY_ENTER); // DEBUG!!!
 
-	    // send the macro message
-	    while (*macromessage)
-		HU_queueChatChar(*macromessage++);
-	    HU_queueChatChar(KEY_ENTER);
+            // send the macro message
+            while (*macromessage)
+            HU_queueChatChar(*macromessage++);
+            HU_queueChatChar(KEY_ENTER);
 
-            // leave chat mode and notify that it was sent
-            StopChatInput();
-            M_StringCopy(lastmessage, chat_macros[c], sizeof(lastmessage));
-            plr->message = lastmessage;
-            eatkey = true;
-	}
-	else
-	{
+                // leave chat mode and notify that it was sent
+                StopChatInput();
+                M_StringCopy(lastmessage, chat_macros[c], sizeof(lastmessage));
+                plr->message = lastmessage;
+                eatkey = true;
+        }
+        else
+        {
             c = ev->data3;
 
-	    eatkey = HUlib_keyInIText(&w_chat, c);
-	    if (eatkey)
-	    {
-		// static unsigned char buf[20]; // DEBUG
-		HU_queueChatChar(c);
+            eatkey = HUlib_keyInIText(&w_chat, c);
+            if (eatkey)
+            {
+                // static unsigned char buf[20]; // DEBUG
+                HU_queueChatChar(c);
 
-		// M_snprintf(buf, sizeof(buf), "KEY: %d => %d", ev->data1, c);
-		//        plr->message = buf;
-	    }
-	    if (c == KEY_ENTER)
-	    {
-		StopChatInput();
+                // M_snprintf(buf, sizeof(buf), "KEY: %d => %d", ev->data1, c);
+                //        plr->message = buf;
+            }
+           
+            if (c == KEY_ENTER)
+            {
+                StopChatInput();
                 if (w_chat.l.len)
                 {
                     M_StringCopy(lastmessage, w_chat.l.l, sizeof(lastmessage));
                     plr->message = lastmessage;
                 }
-	    }
-	    else if (c == KEY_ESCAPE)
-	    {
+            }
+            else if (c == KEY_ESCAPE)
+            {
                 StopChatInput();
             }
-	}
+        }
     }
 
     return eatkey;

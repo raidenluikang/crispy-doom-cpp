@@ -42,7 +42,7 @@ static void ResetSnow()
     last_screen_size = SCREENWIDTH * SCREENHEIGHT;
     snowflakes_num = last_screen_size / 100;
 
-    snowflakes = I_Realloc(snowflakes, snowflakes_num * sizeof(snowflake_t));
+    snowflakes = (decltype(    snowflakes)) I_Realloc(snowflakes, snowflakes_num * sizeof(snowflake_t));
 
     for (i = 0; i < snowflakes_num; i++)
     {

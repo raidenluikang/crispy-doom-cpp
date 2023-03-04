@@ -490,7 +490,7 @@ void ST_refreshBackground(boolean force)
 		int x, y;
 		byte *src;
 		pixel_t *dest;
-		const char *name = (gamemode == commercial) ? DEH_String("GRNROCK") : DEH_String("FLOOR7_2");
+		const char *name = (gamemode == GameMode_t::commercial) ? DEH_String("GRNROCK") : DEH_String("FLOOR7_2");
 
 		src = W_CacheLumpName_byte(name, PU_CACHE);
 		dest = st_backing_screen;
@@ -645,37 +645,37 @@ static int ST_cheat_spechits()
 
     // [crispy] trigger tag 666/667 events
     dummy.tag = 666;
-    if (gamemode == commercial)
+    if (gamemode == GameMode_t::commercial)
     {
-	if (gamemap == 7 ||
-	// [crispy] Master Levels in PC slot 7
-	(gamemission == pack_master && (gamemap == 14 || gamemap == 15 || gamemap == 16)))
-	{
-	    // Mancubi
-	    speciallines += EV_DoFloor(&dummy, lowerFloorToLowest);
+		if (gamemap == 7 ||
+		// [crispy] Master Levels in PC slot 7
+		(gamemission == GameMission_t::pack_master && (gamemap == 14 || gamemap == 15 || gamemap == 16)))
+		{
+			// Mancubi
+			speciallines += EV_DoFloor(&dummy, lowerFloorToLowest);
 
-	    // Arachnotrons
-	    dummy.tag = 667;
-	    speciallines += EV_DoFloor(&dummy, raiseToTexture);
-	    dummy.tag = 666;
-	}
+			// Arachnotrons
+			dummy.tag = 667;
+			speciallines += EV_DoFloor(&dummy, raiseToTexture);
+			dummy.tag = 666;
+		}
     }
     else
     {
-	if (gameepisode == 1)
-	    // Barons of Hell
-	    speciallines += EV_DoFloor(&dummy, lowerFloorToLowest);
-	else
-	if (gameepisode == 4)
-	{
-	     if (gamemap == 6)
-		// Cyberdemons
-		speciallines += EV_DoDoor(&dummy, vld_blazeOpen);
-	    else
-	    if (gamemap == 8)
-		// Spider Masterminds
-		speciallines += EV_DoFloor(&dummy, lowerFloorToLowest);
-	}
+		if (gameepisode == 1)
+			// Barons of Hell
+			speciallines += EV_DoFloor(&dummy, lowerFloorToLowest);
+		else
+		if (gameepisode == 4)
+		{
+			if (gamemap == 6)
+				// Cyberdemons
+				speciallines += EV_DoDoor(&dummy, vld_blazeOpen);
+			else
+				if (gamemap == 8)
+					// Spider Masterminds
+					speciallines += EV_DoFloor(&dummy, lowerFloorToLowest);
+		}
     }
     // Keens (no matter which level they are on)
     // this call will be ignored if the tagged sector is already moving
@@ -691,10 +691,12 @@ static boolean WeaponAvailable (int w)
 	if (w < 0 || w >= NUMWEAPONS)
 	    return false;
 
-	if (w == wp_supershotgun && !crispy->havessg)
+	const weapontype_t w_value = static_cast<weapontype_t>(w);
+
+	if (w_value == weapontype_t::wp_supershotgun && !crispy->havessg)
 	    return false;
 
-	if ((w == wp_bfg || w == wp_plasma) && gamemode == shareware)
+	if ((w_value == weapontype_t::wp_bfg || w_value == weapontype_t::wp_plasma) && gamemode == GameMode_t::shareware)
 	    return false;
 
 	return true;
@@ -732,7 +734,7 @@ ST_Responder (event_t* ev)
   int		i;
     
   // Filter automap on/off.
-  if (ev->type == ev_keyup
+  if (ev->type == evtype_t::ev_keyup
       && ((ev->data1 & 0xffff0000) == AM_MSGHEADER))
   {
     switch(ev->data1)
@@ -750,9 +752,9 @@ ST_Responder (event_t* ev)
   }
 
   // if a user keypress...
-  else if (ev->type == ev_keydown)
+  else if (ev->type == evtype_t::ev_keydown)
   {
-    if (!netgame && gameskill != sk_nightmare)
+    if (!netgame && gameskill != skill_t::sk_nightmare)
     {
       // 'dqd' cheat for toggleable god mode
       if (cht_CheckCheatSP(&cheat_god, ev->data2))
@@ -862,7 +864,7 @@ ST_Responder (event_t* ev)
 	else
 	// [JN] Fixed: using a proper IDMUS selection for shareware
 	// and registered game versions.
-	if (gamemode == commercial /* || gameversion < exe_ultimate */ )
+	if (gamemode == GameMode_t::commercial /* || gameversion < exe_ultimate */ )
 	{
 	  musnum = mus_runnin + (buf[0]-'0')*10 + buf[1]-'0' - 1;
 	  
@@ -929,17 +931,17 @@ ST_Responder (event_t* ev)
       // 'behold?' power-up cheats
       for (i=0;i<6;i++)
       {
-	if (i < 4 ? cht_CheckCheatSP(&cheat_powerup[i], ev->data2) : cht_CheckCheat(&cheat_powerup[i], ev->data2))
-	{
-	  if (!plyr->powers[i])
-	    P_GivePower( plyr, i);
-	  else if (i!=pw_strength && i!=pw_allmap) // [crispy] disable full Automap
-	    plyr->powers[i] = 1;
-	  else
-	    plyr->powers[i] = 0;
-	  
-	  plyr->message = DEH_String(STSTR_BEHOLDX);
-	}
+			if (i < 4 ? cht_CheckCheatSP(&cheat_powerup[i], ev->data2) : cht_CheckCheat(&cheat_powerup[i], ev->data2))
+			{
+				if (!plyr->powers[i])
+					P_GivePower( plyr, static_cast<powertype_t>(i) );
+				else if (i!=pw_strength && i!=pw_allmap) // [crispy] disable full Automap
+					plyr->powers[i] = 1;
+				else
+					plyr->powers[i] = 0;
+				
+				plyr->message = DEH_String(STSTR_BEHOLDX);
+			}
       }
       // [crispy] idbehold0
       if (cht_CheckCheatSP(&cheat_powerup[7], ev->data2))
@@ -957,7 +959,7 @@ ST_Responder (event_t* ev)
       // 'choppers' invulnerability & chainsaw
       else if (cht_CheckCheatSP(&cheat_choppers, ev->data2))
       {
-	plyr->weaponowned[wp_chainsaw] = true;
+	plyr->weaponowned[(int)weapontype_t::wp_chainsaw] = true;
 	plyr->powers[pw_invulnerability] = true;
 	plyr->message = DEH_String(STSTR_CHOPPERS);
       }
@@ -984,8 +986,8 @@ ST_Responder (event_t* ev)
                cht_CheckCheatSP(&cheat_massacre3, ev->data2))
       {
 	int killcount = ST_cheat_massacre();
-	const char *const monster = (gameversion == exe_chex) ? "Flemoid" : "Monster";
-	const char *const killed = (gameversion == exe_chex) ? "returned" : "killed";
+	const char *const monster = (gameversion == GameVersion_t::exe_chex) ? "Flemoid" : "Monster";
+	const char *const killed = (gameversion == GameVersion_t::exe_chex) ? "returned" : "killed";
 
 	M_snprintf(msg, sizeof(msg), "%s%d %s%s%s %s",
 	           crstr[CR_GOLD],
@@ -1084,20 +1086,21 @@ ST_Responder (event_t* ev)
 
 	    for (i = 0; i < NUMWEAPONS; i++)
 	    {
-		oldweaponsowned[i] = plyr->weaponowned[i] = false;
+			oldweaponsowned[i] = plyr->weaponowned[i] = false;
 	    }
-	    oldweaponsowned[wp_fist] = plyr->weaponowned[wp_fist] = true;
-	    oldweaponsowned[wp_pistol] = plyr->weaponowned[wp_pistol] = true;
+
+	    oldweaponsowned[(int)weapontype_t::wp_fist] = plyr->weaponowned[(int)weapontype_t::wp_fist] = true;
+	    oldweaponsowned[(int)weapontype_t::wp_pistol] = plyr->weaponowned[(int)weapontype_t::wp_pistol] = true;
 
 	    for (i = 0; i < NUMAMMO; i++)
 	    {
-		plyr->ammo[i] = 0;
+			plyr->ammo[i] = 0;
 	    }
-	    plyr->ammo[am_clip] = deh_initial_bullets;
+	    plyr->ammo[(int)ammotype_t::am_clip] = deh_initial_bullets;
 
-	    if (plyr->readyweapon > wp_pistol)
+	    if (plyr->readyweapon > weapontype_t::wp_pistol)
 	    {
-		plyr->pendingweapon = wp_pistol;
+			plyr->pendingweapon =weapontype_t:: wp_pistol;
 	    }
 
 	    plyr->message = "All weapons removed!";
@@ -1110,37 +1113,37 @@ ST_Responder (event_t* ev)
 	    return false;
 
 	// make '1' apply beserker strength toggle
-	if (w == wp_fist)
+	if (w == (int)weapontype_t::wp_fist)
 	{
 	    if (!plyr->powers[pw_strength])
 	    {
-		P_GivePower(plyr, pw_strength);
-		S_StartSound(nullptr, sfx_getpow);
-		plyr->message = DEH_String(GOTBERSERK);
+			P_GivePower(plyr, pw_strength);
+			S_StartSound(nullptr, sfx_getpow);
+			plyr->message = DEH_String(GOTBERSERK);
 	    }
 	    else
 	    {
-		plyr->powers[pw_strength] = 0;
-		plyr->message = DEH_String(STSTR_BEHOLDX);
+			plyr->powers[pw_strength] = 0;
+			plyr->message = DEH_String(STSTR_BEHOLDX);
 	    }
 	}
 	else
 	{
 	    if (!plyr->weaponowned[w])
 	    {
-		extern boolean P_GiveWeapon (player_t* player, weapontype_t weapon, boolean dropped);
-		extern const char *const WeaponPickupMessages[NUMWEAPONS];
+			extern boolean P_GiveWeapon (player_t* player, weapontype_t weapon, boolean dropped);
+			extern const char *const WeaponPickupMessages[NUMWEAPONS];
 
-		P_GiveWeapon(plyr, w, false);
-		S_StartSound(nullptr, sfx_wpnup);
+			P_GiveWeapon(plyr, static_cast<weapontype_t>( w ), false);
+			S_StartSound(nullptr, sfx_wpnup);
 
-		if (w > 1)
-		{
-		    plyr->message = DEH_String(WeaponPickupMessages[w]);
-		}
+			if (w > 1)
+			{
+				plyr->message = DEH_String(WeaponPickupMessages[w]);
+			}
 
-		// [crispy] trigger evil grin now
-		plyr->bonuscount += 2;
+			// [crispy] trigger evil grin now
+			plyr->bonuscount += 2;
 	    }
 	    else
 	    {
@@ -1148,7 +1151,7 @@ ST_Responder (event_t* ev)
 		oldweaponsowned[w] = plyr->weaponowned[w] = false;
 
 		// [crispy] removed current weapon, select another one
-		if (w == plyr->readyweapon)
+		if (static_cast<weapontype_t>( w ) == plyr->readyweapon)
 		{
 		    extern boolean P_CheckAmmo (player_t* player);
 
@@ -1224,25 +1227,25 @@ ST_Responder (event_t* ev)
       
       cht_GetParam(&cheat_clev, buf);
       
-      if (gamemode == commercial)
+      if (gamemode == GameMode_t::commercial)
       {
-	if (gamemission == pack_master)
-	    epsd = 3;
-	else
-	if (gamemission == pack_nerve)
-	    epsd = 2;
-	else
-	epsd = 0;
-	map = (buf[0] - '0')*10 + buf[1] - '0';
+			if (gamemission == GameMission_t::pack_master)
+	    		epsd = 3;
+			else
+			if (gamemission == GameMission_t::pack_nerve)
+				epsd = 2;
+			else
+				epsd = 0;
+			map = (buf[0] - '0')*10 + buf[1] - '0';
       }
       else
       {
-	epsd = buf[0] - '0';
-	map = buf[1] - '0';
+			epsd = buf[0] - '0';
+			map = buf[1] - '0';
 
         // Chex.exe always warps to episode 1.
 
-        if (gameversion == exe_chex)
+        if (gameversion == GameVersion_t::exe_chex)
         {
             if (epsd > 1)
             {
@@ -1259,7 +1262,7 @@ ST_Responder (event_t* ev)
   if (P_GetNumForMap(epsd, map, false) < 0)
   {
       // Catch invalid maps.
-      if (gamemode != commercial)
+      if (gamemode != GameMode_t::commercial)
       {
           // [crispy] allow IDCLEV0x to work in Doom 1
           if (epsd == 0)
@@ -1276,7 +1279,7 @@ ST_Responder (event_t* ev)
               if (!(crispy->haved1e5 && epsd == 5))
               return false;
           }
-          if (epsd == 4 && gameversion < exe_ultimate)
+          if (epsd == 4 && gameversion < GameVersion_t::exe_ultimate)
           {
               return false;
           }
@@ -1316,11 +1319,11 @@ ST_Responder (event_t* ev)
           {
               return false;
           }
-          if (map > 9 && gamemission == pack_nerve)
+          if (map > 9 && gamemission == GameMission_t::pack_nerve)
           {
               return false;
           }
-          if (map > 21 && gamemission == pack_master)
+          if (map > 21 && gamemission == GameMission_t::pack_master)
           {
               return false;
           }
@@ -1588,10 +1591,10 @@ void ST_updateWidgets(void)
     // must redirect the pointer if the ready weapon has changed.
     //  if (w_ready.data != plyr->readyweapon)
     //  {
-    if (weaponinfo[plyr->readyweapon].ammo == am_noammo)
-	w_ready.num = &largeammo;
+    if (weaponinfo[plyr->readyweapon_i()].ammo == ammotype_t::am_noammo)
+		w_ready.num = &largeammo;
     else
-	w_ready.num = &plyr->ammo[weaponinfo[plyr->readyweapon].ammo];
+		w_ready.num = &plyr->ammo[(int)weaponinfo[plyr->readyweapon_i()].ammo];
     //{
     // static int tic=0;
     // static int dir=-1;
@@ -1601,7 +1604,7 @@ void ST_updateWidgets(void)
     //   dir = 1;
     // tic++;
     // }
-    w_ready.data = plyr->readyweapon;
+    w_ready.data = (int)plyr->readyweapon;
 
     // if (*w_ready.on)
     //  STlib_updateNum(&w_ready, true);
@@ -1611,39 +1614,39 @@ void ST_updateWidgets(void)
     // update keycard multiple widgets
     for (i=0;i<3;i++)
     {
-	keyboxes[i] = plyr->cards[i] ? i : -1;
+		keyboxes[i] = plyr->cards[i] ? i : -1;
 
-	if (plyr->cards[i+3])
-	    keyboxes[i] = (keyboxes[i] == -1) ? i+3 : i+6; // [crispy] support combined card and skull keys
+		if (plyr->cards[i+3])
+			keyboxes[i] = (keyboxes[i] == -1) ? i+3 : i+6; // [crispy] support combined card and skull keys
 
-	// [crispy] blinking key or skull in the status bar
-	if (plyr->tryopen[i])
-	{
-#if defined(CRISPY_KEYBLINK_WITH_SOUND)
-		if (!(plyr->tryopen[i] & (2*KEYBLINKMASK-1)))
+		// [crispy] blinking key or skull in the status bar
+		if (plyr->tryopen[i])
 		{
-			S_StartSound(nullptr, sfx_itemup);
-		}
-#endif
-#if defined(CRISPY_KEYBLINK_IN_CLASSIC_HUD)
-		if (st_classicstatusbar && !(plyr->tryopen[i] & (KEYBLINKMASK-1)))
-		{
-			st_firsttime = true;
-		}
-#endif
-		plyr->tryopen[i]--;
-#if !defined(CRISPY_KEYBLINK_IN_CLASSIC_HUD)
-		if (st_crispyhud)
-#endif
-		{
-			keyboxes[i] = (plyr->tryopen[i] & KEYBLINKMASK) ? i + st_keyorskull[i] : -1;
-		}
+	#if defined(CRISPY_KEYBLINK_WITH_SOUND)
+			if (!(plyr->tryopen[i] & (2*KEYBLINKMASK-1)))
+			{
+				S_StartSound(nullptr, sfx_itemup);
+			}
+	#endif
+	#if defined(CRISPY_KEYBLINK_IN_CLASSIC_HUD)
+			if (st_classicstatusbar && !(plyr->tryopen[i] & (KEYBLINKMASK-1)))
+			{
+				st_firsttime = true;
+			}
+	#endif
+			plyr->tryopen[i]--;
+	#if !defined(CRISPY_KEYBLINK_IN_CLASSIC_HUD)
+			if (st_crispyhud)
+	#endif
+			{
+				keyboxes[i] = (plyr->tryopen[i] & KEYBLINKMASK) ? i + st_keyorskull[i] : -1;
+			}
 
-		if (!plyr->tryopen[i])
-		{
-			w_keyboxes[i].oldinum = -1;
+			if (!plyr->tryopen[i])
+			{
+				w_keyboxes[i].oldinum = -1;
+			}
 		}
-	}
     }
 
     // refresh everything if this is him coming back to life
@@ -1749,7 +1752,7 @@ void ST_doPaletteStuff(void)
     // as though the player is being covered in goo by an
     // attacking flemoid.
 
-    if (gameversion == exe_chex
+    if (gameversion == GameVersion_t::exe_chex
      && palette >= STARTREDPALS && palette < STARTREDPALS + NUMREDPALS)
     {
         palette = RADIATIONPAL;
@@ -1774,13 +1777,13 @@ void ST_doPaletteStuff(void)
 
 }
 
-enum
+enum hudcolor_t
 {
     hudcolor_ammo,
     hudcolor_health,
     hudcolor_frags,
     hudcolor_armor
-} hudcolor_t;
+} ;
 
 // [crispy] return ammo/health/armor widget color
 static byte* ST_WidgetColor(int i)
@@ -1792,14 +1795,14 @@ static byte* ST_WidgetColor(int i)
     {
         case hudcolor_ammo:
         {
-            if (weaponinfo[plyr->readyweapon].ammo == am_noammo)
+            if (weaponinfo[plyr->readyweapon_i()].ammo == am_noammo)
             {
                 return nullptr;
             }
             else
             {
-                int ammo =  plyr->ammo[weaponinfo[plyr->readyweapon].ammo];
-                int fullammo = maxammo[weaponinfo[plyr->readyweapon].ammo];
+                int ammo =  plyr->ammo[(int)weaponinfo[plyr->readyweapon_i()].ammo];
+                int fullammo = maxammo[(int)weaponinfo[plyr->readyweapon_i()].ammo];
 
                 if (ammo < fullammo/4)
                     return cr[CR_RED];
@@ -1904,7 +1907,7 @@ static inline void ST_DrawGibbedPlayerSprites (void)
 	}
 
 	sprframe = &sprdef->spriteframes[state->frame & FF_FRAMEMASK];
-	patch = W_CacheLumpNum(sprframe->lump[0] + firstspritelump, PU_CACHE);
+	patch = W_CacheLumpNum_cast<decltype(	patch)>(sprframe->lump[0] + firstspritelump, PU_CACHE);
 
 	if (plyr->mo->flags & MF_TRANSLATION)
 	{
@@ -1950,7 +1953,7 @@ void ST_drawWidgets(boolean refresh)
 			}
 		}
 
-		patch = W_CacheLumpNum(lump, PU_CACHE);
+		patch = W_CacheLumpNum_cast<decltype(		patch)>(lump, PU_CACHE);
 
 		// [crispy] (23,179) is the center of the Ammo widget
 		V_DrawPatch(ST_AMMOX - 21 - SHORT(patch->width)/2 + SHORT(patch->leftoffset),
@@ -2200,7 +2203,7 @@ void ST_loadData(void)
 	DEH_snprintf(lumpname, 9, "STKEYS%d", i);
 	lumpnum = W_CheckNumForName(lumpname);
 
-	keys[i] = (lumpnum != -1) ? W_CacheLumpNum(lumpnum, PU_STATIC) : keys[i-3];
+	keys[i] = (lumpnum != -1) ? W_CacheLumpNum_cast<patch_t*>(lumpnum, PU_STATIC) : keys[i-3];
     }
 }
 
@@ -2441,7 +2444,7 @@ void ST_Stop (void)
 	return;
 
 #ifndef CRISPY_TRUECOLOR
-    I_SetPalette (W_CacheLumpNum (lu_palette, PU_CACHE));
+    I_SetPalette (W_CacheLumpNum_cast<byte*> (lu_palette, PU_CACHE));
 #else
     I_SetPalette (0);
 #endif

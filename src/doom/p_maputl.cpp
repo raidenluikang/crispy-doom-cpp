@@ -550,7 +550,7 @@ static void check_intercept(void)
 	if (offset >= num_intercepts)
 	{
 		num_intercepts = num_intercepts ? num_intercepts * 2 : MAXINTERCEPTS_ORIGINAL;
-		intercepts = I_Realloc(intercepts, sizeof(*intercepts) * num_intercepts);
+		intercepts = static_cast<intercept_t*>( I_Realloc(intercepts, sizeof(*intercepts) * num_intercepts) );
 		intercept_p = intercepts + offset;
 	}
 }

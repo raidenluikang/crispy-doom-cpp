@@ -150,8 +150,8 @@ void S_Init(int sfxVolume, int musicVolume, int voiceVolume)
     // (the maximum numer of sounds rendered
     // simultaneously) within zone memory.
     // [crispy] variable number of sound channels
-    channels = I_Realloc(nullptr, snd_channels*sizeof(channel_t));
-    sobjs = I_Realloc(nullptr, snd_channels*sizeof(degenmobj_t)); // [crispy] sound objects
+    channels = (decltype(    channels)) I_Realloc(nullptr, snd_channels*sizeof(channel_t));
+    sobjs = (decltype(    sobjs)) I_Realloc(nullptr, snd_channels*sizeof(degenmobj_t)); // [crispy] sound objects
 
     // Free all channels for use
     for (i=0 ; i<snd_channels ; i++)
@@ -848,7 +848,7 @@ void S_ChangeMusic(int musicnum, int looping)
         music->lumpnum = W_GetNumForName(namebuf);
     }
 
-    music->data = W_CacheLumpNum(music->lumpnum, PU_STATIC);
+    music->data = W_CacheLumpNum_cast<decltype(    music->data)>(music->lumpnum, PU_STATIC);
 
     handle = I_RegisterSong(music->data, W_LumpLength(music->lumpnum));
     music->handle = handle;
@@ -900,8 +900,8 @@ void S_UpdateSndChannels (int choice)
     else if (snd_channels < 8)
         snd_channels = 32;
 
-    channels = I_Realloc(channels, snd_channels * sizeof(channel_t));
-    sobjs = I_Realloc(sobjs, snd_channels * sizeof(degenmobj_t)); // [crispy] sound objects
+    channels = (decltype(    channels)) I_Realloc(channels, snd_channels * sizeof(channel_t));
+    sobjs = (decltype(    sobjs)) I_Realloc(sobjs, snd_channels * sizeof(degenmobj_t)); // [crispy] sound objects
 
     for (i = 0; i < snd_channels; i++)
     {

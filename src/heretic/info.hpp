@@ -17,7 +17,7 @@
 #ifndef HERETIC_INFO_H
 #define HERETIC_INFO_H
 
-typedef enum
+enum spritenum_t
 {
     SPR_IMPX,
     SPR_ACLO,
@@ -148,9 +148,9 @@ typedef enum
     SPR_AMB1,
     SPR_AMB2,
     NUMSPRITES
-} spritenum_t;
+} ;
 
-typedef enum
+enum statenum_t
 {
     S_NULL,
     S_FREETARGMOBJ,
@@ -1361,23 +1361,23 @@ typedef enum
     S_SND_WIND,
     S_SND_WATERFALL,
     NUMSTATES
-} statenum_t;
+} ;
 
 
-struct mobj_s;
-struct player_s;
-struct pspdef_s;
+struct mobj_t;
+struct player_t;
+struct pspdef_t;
 
 
-typedef struct
+struct state_t
 {
     spritenum_t sprite;
     int frame;
     int tics;
-    void (*action) (struct mobj_s *, struct player_s *, struct pspdef_s *);
+    void (*action) (struct mobj_t *, struct player_t *, struct pspdef_t *);
     statenum_t nextstate;
     int misc1, misc2;
-} state_t;
+} ;
 
 extern state_t states[NUMSTATES];
 extern const char *sprnames[];

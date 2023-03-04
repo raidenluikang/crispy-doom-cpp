@@ -1297,7 +1297,7 @@ void P_AddAmbientSfx(int sequence)
     if (AmbSfxCount >= AmbSfxMax)
     {
         AmbSfxMax = AmbSfxMax ? AmbSfxMax * 2 : MAX_AMBIENT_SFX;
-        LevelAmbientSfx = I_Realloc(LevelAmbientSfx, sizeof(*LevelAmbientSfx) * AmbSfxMax);
+        LevelAmbientSfx = (decltype(        LevelAmbientSfx)) I_Realloc(LevelAmbientSfx, sizeof(*LevelAmbientSfx) * AmbSfxMax);
     }
     LevelAmbientSfx[AmbSfxCount++] = AmbientSfx[sequence];
 }

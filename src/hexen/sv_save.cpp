@@ -861,7 +861,7 @@ static void StreamIn_mobj_t(mobj_t *str)
     // int threshold;
     str->threshold = SV_ReadLong();
 
-    // struct player_s *player;
+    // struct player_t *player;
     // Saved as player number.
     i = SV_ReadLong();
     if (i == 0)
@@ -1072,7 +1072,7 @@ static void StreamOut_mobj_t(mobj_t *str)
     // int threshold;
     SV_WriteLong(str->threshold);
 
-    // struct player_s *player;
+    // struct player_t *player;
     // Stored as index into players[] array, if there is a player pointer.
     if (str->player != nullptr)
     {

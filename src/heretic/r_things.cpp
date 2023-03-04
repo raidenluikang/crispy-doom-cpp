@@ -318,7 +318,7 @@ vissprite_t *R_NewVisSprite(void)
         return &overflowsprite;
 
 	numvissprites = numvissprites ? 2 * numvissprites : MAXVISSPRITES;
-	vissprites = I_Realloc(vissprites, numvissprites * sizeof(*vissprites));
+	vissprites = (decltype(	vissprites)) I_Realloc(vissprites, numvissprites * sizeof(*vissprites));
 	memset(vissprites + numvissprites_old, 0, (numvissprites - numvissprites_old) * sizeof(*vissprites));
 
 	vissprite_p = vissprites + numvissprites_old;
@@ -402,7 +402,7 @@ void R_DrawVisSprite(vissprite_t * vis, int x1, int x2)
     fixed_t baseclip;
 
 
-    patch = W_CacheLumpNum(vis->patch + firstspritelump, PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)>(vis->patch + firstspritelump, PU_CACHE);
 
     // [crispy] brightmaps for select sprites
     dc_colormap[0] = vis->colormap[0];

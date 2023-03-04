@@ -23,16 +23,17 @@
 #include "doomdef.hpp"
 
 
+enum statenum_t : int;
 
 // Weapon info: sprite frames, ammunition use.
 struct weaponinfo_t
 {
     ammotype_t	ammo;
-    int		upstate;
-    int		downstate;
-    int		readystate;
-    int		atkstate;
-    int		flashstate;
+    statenum_t	upstate;
+    statenum_t	downstate;
+    statenum_t	readystate;
+    statenum_t	atkstate;
+    statenum_t	flashstate;
 
 };
 

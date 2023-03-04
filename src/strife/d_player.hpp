@@ -94,7 +94,7 @@ typedef struct inventory_s
 // haleyjd 08/30/10: [STRIFE]
 // * Transformed to match binary structure layout.
 //
-typedef struct player_s
+typedef struct player_t
 {
     mobj_t*		mo;
     playerstate_t	playerstate;

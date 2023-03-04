@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <utility> //std::swap since C++11
 
 #include "m_random.hpp"
 #include "i_system.hpp"
@@ -41,7 +42,7 @@
 
 
 
-typedef enum
+enum dirtype_t
 {
     DI_EAST,
     DI_NORTHEAST,
@@ -52,9 +53,8 @@ typedef enum
     DI_SOUTH,
     DI_SOUTHEAST,
     DI_NODIR,
-    NUMDIRS
-    
-} dirtype_t;
+    NUMDIRS 
+};
 
 
 //
@@ -180,7 +180,7 @@ boolean P_CheckMeleeRange (mobj_t*	actor)
     pl = actor->target;
     dist = P_AproxDistance (pl->x-actor->x, pl->y-actor->y);
 
-    if (gameversion <= exe_doom_1_2)
+    if (gameversion <= GameVersion_t::exe_doom_1_2)
         range = MELEERANGE;
     else
         range = MELEERANGE-20*FRACUNIT+pl->info->radius;
@@ -299,34 +299,37 @@ boolean P_Move (mobj_t*	actor)
 
     if (!try_ok)
     {
-	// open any specials
-	if (actor->flags & MF_FLOAT && floatok)
-	{
-	    // must adjust height
-	    if (actor->z < tmfloorz)
-		actor->z += FLOATSPEED;
-	    else
-		actor->z -= FLOATSPEED;
+        // open any specials
+        if (actor->flags & MF_FLOAT && floatok)
+        {
+            // must adjust height
+            if (actor->z < tmfloorz)
+            actor->z += FLOATSPEED;
+            else
+            actor->z -= FLOATSPEED;
 
-	    actor->flags |= MF_INFLOAT;
-	    return true;
-	}
-		
-	if (!numspechit)
-	    return false;
-			
-	actor->movedir = DI_NODIR;
-	good = false;
-	while (numspechit--)
-	{
-	    ld = spechit[numspechit];
-	    // if the special is not a door
-	    // that can be opened,
-	    // return false
-	    if (P_UseSpecialLine (actor, ld,0))
-		good = true;
-	}
-	return good;
+            actor->flags |= MF_INFLOAT;
+            return true;
+        }
+            
+        if (!spechit.empty())
+            return false;
+                
+        actor->movedir = DI_NODIR;
+        good = false;
+        while ( spechit.size() > 0 )
+        {
+            ld = spechit.back();
+            
+            // if the special is not a door
+            // that can be opened,
+            // return false
+            if (P_UseSpecialLine (actor, ld,0))
+                good = true;
+            
+            spechit.pop_back();
+        }
+        return good;
     }
     else
     {
@@ -380,7 +383,7 @@ void P_NewChaseDir (mobj_t*	actor)
     if (!actor->target)
 	I_Error ("P_NewChaseDir: called with no target");
 		
-    olddir = actor->movedir;
+    olddir = static_cast<dirtype_t>( actor->movedir );
     turnaround=opposite[olddir];
 
     deltax = actor->target->x - actor->x;
@@ -410,12 +413,9 @@ void P_NewChaseDir (mobj_t*	actor)
     }
 
     // try other directions
-    if (P_Random() > 200
-	||  abs(deltay)>abs(deltax))
+    if (P_Random() > 200 ||  abs(deltay) > abs(deltax))
     {
-	tdir=d[1];
-	d[1]=d[2];
-	d[2]=tdir;
+        std::swap(d[1], d[2]);
     }
 
     if (d[1]==turnaround)
@@ -677,7 +677,7 @@ void A_Look (mobj_t* actor)
 	}
     }
 
-    P_SetMobjState (actor, actor->info->seestate);
+    P_SetMobjState (actor, static_cast<statenum_t>( actor->info->seestate ) );
 }
 
 
@@ -697,7 +697,7 @@ void A_Chase (mobj_t*	actor)
     // modify target threshold
     if  (actor->threshold)
     {
-        if (gameversion > exe_doom_1_2 && 
+        if (gameversion > GameVersion_t::exe_doom_1_2 && 
             (!actor->target || actor->target->health <= 0))
 	{
 	    actor->threshold = 0;
@@ -725,17 +725,17 @@ void A_Chase (mobj_t*	actor)
 	if (P_LookForPlayers(actor,true))
 	    return; 	// got a new target
 	
-	P_SetMobjState (actor, actor->info->spawnstate);
+	P_SetMobjState (actor, static_cast<statenum_t>(actor->info->spawnstate));
 	return;
     }
     
     // do not attack twice in a row
     if (actor->flags & MF_JUSTATTACKED)
     {
-	actor->flags &= ~MF_JUSTATTACKED;
-	if (gameskill != sk_nightmare && !fastparm)
-	    P_NewChaseDir (actor);
-	return;
+        actor->flags &= ~MF_JUSTATTACKED;
+        if (gameskill != skill_t::sk_nightmare && !fastparm)
+            P_NewChaseDir (actor);
+        return;
     }
     
     // check for melee attack
@@ -745,50 +745,46 @@ void A_Chase (mobj_t*	actor)
 	if (actor->info->attacksound)
 	    S_StartSound (actor, actor->info->attacksound);
 
-	P_SetMobjState (actor, actor->info->meleestate);
+	P_SetMobjState (actor, static_cast<statenum_t>(actor->info->meleestate));
 	return;
     }
     
     // check for missile attack
     if (actor->info->missilestate)
     {
-	if (gameskill < sk_nightmare
-	    && !fastparm && actor->movecount)
-	{
-	    goto nomissile;
-	}
-	
-	if (!P_CheckMissileRange (actor))
-	    goto nomissile;
-	
-	P_SetMobjState (actor, actor->info->missilestate);
-	actor->flags |= MF_JUSTATTACKED;
-	return;
+        if (gameskill < skill_t::sk_nightmare
+            && !fastparm && actor->movecount)
+        {
+            goto nomissile;
+        }
+        
+        if (!P_CheckMissileRange (actor))
+            goto nomissile;
+        
+        P_SetMobjState (actor, static_cast<statenum_t>(actor->info->missilestate));
+        actor->flags |= MF_JUSTATTACKED;
+        return;
     }
 
     // ?
   nomissile:
     // possibly choose another target
-    if (netgame
-	&& !actor->threshold
-	&& !P_CheckSight (actor, actor->target) )
+    if (netgame && !actor->threshold && !P_CheckSight (actor, actor->target) )
     {
-	if (P_LookForPlayers(actor,true))
-	    return;	// got a new target
+	    if (P_LookForPlayers(actor,true))
+	        return;	// got a new target
     }
     
     // chase towards player
-    if (--actor->movecount<0
-	|| !P_Move (actor))
+    if ( --actor->movecount < 0 || !P_Move (actor))
     {
-	P_NewChaseDir (actor);
+	    P_NewChaseDir (actor);
     }
     
     // make active sound
-    if (actor->info->activesound
-	&& P_Random () < 3)
+    if (actor->info->activesound && P_Random () < 3)
     {
-	S_StartSound (actor, actor->info->activesound);
+	    S_StartSound (actor, actor->info->activesound);
     }
 }
 
@@ -809,7 +805,7 @@ void A_FaceTarget (mobj_t* actor)
 				    actor->target->y);
     
     if (actor->target->flags & MF_SHADOW)
-	actor->angle += P_SubRandom() << 21;
+	    actor->angle += P_SubRandom() << 21;
 }
 
 
@@ -887,11 +883,9 @@ void A_CPosRefire (mobj_t* actor)
     if (P_Random () < 40)
 	return;
 
-    if (!actor->target
-	|| actor->target->health <= 0
-	|| !P_CheckSight (actor, actor->target) )
+    if ( !actor->target  || actor->target->health <= 0 || !P_CheckSight (actor, actor->target) )
     {
-	P_SetMobjState (actor, actor->info->seestate);
+	    P_SetMobjState (actor, static_cast<statenum_t>(actor->info->seestate));
     }
 }
 
@@ -958,7 +952,7 @@ void A_SargAttack (mobj_t* actor)
 		
     A_FaceTarget (actor);
 
-    if (gameversion > exe_doom_1_2)
+    if (gameversion > GameVersion_t::exe_doom_1_2)
     {
         if (!P_CheckMeleeRange (actor))
             return;
@@ -966,7 +960,7 @@ void A_SargAttack (mobj_t* actor)
 
     damage = ((P_Random()%10)+1)*4;
 
-    if (gameversion <= exe_doom_1_2)
+    if (gameversion <= GameVersion_t::exe_doom_1_2)
         P_LineAttack(actor, actor->angle, MELEERANGE, 0, damage);
     else
         P_DamageMobj (actor->target, actor, actor, damage);
@@ -1678,7 +1672,7 @@ void A_Explode (mobj_t* thingy)
 
 static boolean CheckBossEnd(mobjtype_t motype)
 {
-    if (gameversion < exe_ultimate)
+    if (gameversion < GameVersion_t::exe_ultimate)
     {
         if (gamemap != 8)
         {
@@ -1738,11 +1732,11 @@ void A_BossDeath (mobj_t* mo)
     line_t	junk;
     int		i;
 		
-    if ( gamemode == commercial)
+    if ( gamemode == GameMode_t::commercial)
     {
 	if (gamemap != 7 &&
 	// [crispy] Master Levels in PC slot 7
-	!(gamemission == pack_master && (gamemap == 14 || gamemap == 15 || gamemap == 16)))
+	!(gamemission == GameMission_t::pack_master && (gamemap == 14 || gamemap == 15 || gamemap == 16)))
 	    return;
 		
 	if ((mo->type != MT_FATSO)
@@ -1783,11 +1777,11 @@ void A_BossDeath (mobj_t* mo)
     }
 	
     // victory!
-    if ( gamemode == commercial)
+    if ( gamemode == GameMode_t::commercial)
     {
 	if (gamemap == 7 ||
 	// [crispy] Master Levels in PC slot 7
-	(gamemission == pack_master && (gamemap == 14 || gamemap == 15 || gamemap == 16)))
+	(gamemission == GameMission_t::pack_master && (gamemap == 14 || gamemap == 15 || gamemap == 16)))
 	{
 	    if (mo->type == MT_FATSO)
 	    {
@@ -1921,11 +1915,11 @@ void A_BrainAwake (mobj_t* mo)
 	    // [crispy] remove braintargets limit
 	    if (numbraintargets == maxbraintargets)
 	    {
-		maxbraintargets = maxbraintargets ? 2 * maxbraintargets : 32;
-		braintargets = I_Realloc(braintargets, maxbraintargets * sizeof(*braintargets));
+            maxbraintargets = maxbraintargets ? 2 * maxbraintargets : 32;
+            braintargets = static_cast<mobj_t**>( I_Realloc(braintargets, maxbraintargets * sizeof(*braintargets)) );
 
-		if (maxbraintargets > 32)
-		    fprintf(stderr, "R_BrainAwake: Raised braintargets limit to %d.\n", maxbraintargets);
+            if (maxbraintargets > 32)
+                fprintf(stderr, "R_BrainAwake: Raised braintargets limit to %d.\n", maxbraintargets);
 	    }
 
 	    braintargets[numbraintargets] = m;
@@ -2018,7 +2012,7 @@ void A_BrainSpit (mobj_t*	mo)
     static int	easy = 0;
 	
     easy ^= 1;
-    if (gameskill <= sk_easy && (!easy))
+    if (gameskill <= skill_t::sk_easy && (!easy))
 	return;
 		
     // [crispy] avoid division by zero by recalculating the number of spawn spots
@@ -2124,7 +2118,7 @@ void A_PlayerScream (mobj_t* mo)
     // Default death sound.
     int		sound = sfx_pldeth;
 	
-    if ( (gamemode == commercial)
+    if ( (gamemode == GameMode_t::commercial)
 	&& 	(mo->health < -50))
     {
 	// IF THE PLAYER DIES

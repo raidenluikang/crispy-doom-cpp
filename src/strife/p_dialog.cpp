@@ -455,7 +455,7 @@ void P_DialogLoad(void)
         numleveldialogs = 0;
     else
     {
-        byte *leveldialogptr = W_CacheLumpNum(lumpnum, PU_STATIC);
+        byte *leveldialogptr = W_CacheLumpNum_cast<decltype(        byte *leveldialogptr)>(lumpnum, PU_STATIC);
         numleveldialogs = W_LumpLength(lumpnum) / ORIG_MAPDIALOG_SIZE;
         P_ParseDialogLump(leveldialogptr, &leveldialogs, numleveldialogs, 
                           PU_LEVEL);
@@ -470,7 +470,7 @@ void P_DialogLoad(void)
         script0loaded = true; 
         // BUG: Rogue should have used W_GetNumForName here...
         lumpnum = W_CheckNumForName(DEH_String("script00")); 
-        script0ptr = W_CacheLumpNum(lumpnum, PU_STATIC);
+        script0ptr = W_CacheLumpNum_cast<decltype(        script0ptr)>(lumpnum, PU_STATIC);
         numscript0dialogs = W_LumpLength(lumpnum) / ORIG_MAPDIALOG_SIZE;
         P_ParseDialogLump(script0ptr, &script0dialogs, numscript0dialogs,
                           PU_STATIC);
@@ -1082,7 +1082,7 @@ static void P_DialogDrawer(void)
     // draw background
     if(dialogbgpiclumpnum != -1)
     {
-        patch_t *patch = W_CacheLumpNum(dialogbgpiclumpnum, PU_CACHE);
+        patch_t *patch = W_CacheLumpNum_cast<decltype(        patch_t *patch)>(dialogbgpiclumpnum, PU_CACHE);
         V_DrawPatchDirect(0, 0, patch);
     }
 

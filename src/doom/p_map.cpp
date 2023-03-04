@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 #include "deh_misc.hpp"
 
@@ -82,9 +83,9 @@ line_t*		ceilingline;
 // keep track of special lines as they are hit,
 // but don't process them until the move is proven valid
 
-line_t**	spechit; // [crispy] remove SPECHIT limit
-int		numspechit;
-static int spechit_max; // [crispy] remove SPECHIT limit
+std::vector< line_t* >	spechit; // [crispy] remove SPECHIT limit
+//int		numspechit;
+//static int spechit_max; // [crispy] remove SPECHIT limit
 
 
 
@@ -166,7 +167,8 @@ P_TeleportMove
     tmceilingz = newsubsec->sector->ceilingheight;
 			
     validcount++;
-    numspechit = 0;
+    //numspechit = 0;
+    spechit.clear();
     
     // stomp on any things contacted
     xl = (tmbbox[BOXLEFT] - bmaporgx - MAXRADIUS)>>MAPBLOCKSHIFT;
@@ -262,19 +264,20 @@ boolean PIT_CheckLine (line_t* ld)
     if (ld->special)
     {
         // [crispy] remove SPECHIT limit
-        if (numspechit >= spechit_max)
-        {
-            spechit_max = spechit_max ? spechit_max * 2 : MAXSPECIALCROSS;
-            spechit = I_Realloc(spechit, sizeof(*spechit) * spechit_max);
-        }
-        spechit[numspechit] = ld;
-	numspechit++;
+    //     if (numspechit >= spechit_max)
+    //     {
+    //         spechit_max = spechit_max ? spechit_max * 2 : MAXSPECIALCROSS;
+    //         spechit = (decltype(    //         spechit)) I_Realloc(spechit, sizeof(*spechit) * spechit_max);
+    //     }
+    //     spechit[numspechit] = ld;
+	// numspechit++;
+        spechit.push_back(ld);
 
         // fraggle: spechits overrun emulation code from prboom-plus
-        if (numspechit > MAXSPECIALCROSS_ORIGINAL)
+        if (spechit.size() > MAXSPECIALCROSS_ORIGINAL)
         {
             // [crispy] print a warning
-            if (numspechit == MAXSPECIALCROSS_ORIGINAL + 1)
+            if (spechit.size() == MAXSPECIALCROSS_ORIGINAL + 1)
                 fprintf(stderr, "PIT_CheckLine: Triggered SPECHITS overflow!\n");
             SpechitOverrun(ld);
         }
@@ -520,7 +523,8 @@ P_CheckPosition
     tmceilingz = newsubsec->sector->ceilingheight;
 			
     validcount++;
-    numspechit = 0;
+    //numspechit = 0;
+    spechit.clear();
 
     if ( tmflags & MF_NOCLIP )
 	return true;
@@ -612,16 +616,19 @@ P_TryMove
     // if any special lines were hit, do the effect
     if (! (thing->flags&(MF_TELEPORT|MF_NOCLIP)) )
     {
-	while (numspechit--)
+	while (spechit.size() > 0 )
 	{
 	    // see if the line was crossed
-	    ld = spechit[numspechit];
+	    ld = spechit.back();
+        
+        spechit.pop_back();
+
 	    side = P_PointOnLineSide (thing->x, thing->y, ld);
 	    oldside = P_PointOnLineSide (oldx, oldy, ld);
 	    if (side != oldside)
 	    {
-		if (ld->special)
-		    P_CrossSpecialLine (ld-lines, oldside, thing);
+		    if (ld->special)
+		        P_CrossSpecialLine (ld-lines, oldside, thing);
 	    }
 	}
     }
@@ -1529,7 +1536,7 @@ boolean PIT_ChangeSector (mobj_t*	thing)
 	if (thing->flags & MF_NOBLOOD)
 		thing->sprite = SPR_TNT1;
 
-    if (gameversion > exe_doom_1_2)
+    if (gameversion > GameVersion_t::exe_doom_1_2)
 	    thing->flags &= ~MF_SOLID;
 	thing->height = 0;
 	thing->radius = 0;
@@ -1648,13 +1655,13 @@ static void SpechitOverrun(line_t *ld)
 
     addr = baseaddr + (ld - lines) * 0x3E;
 
-    switch(numspechit)
+    switch(spechit.size())
     {
         case 9: 
         case 10:
         case 11:
         case 12:
-            tmbbox[numspechit-9] = addr;
+            tmbbox[spechit.size() - 9] = addr;
             break;
         case 13: 
             crushchange = addr; 
@@ -1664,8 +1671,8 @@ static void SpechitOverrun(line_t *ld)
             break;
         default:
             fprintf(stderr, "SpechitOverrun: Warning: unable to emulate"
-                            "an overrun where numspechit=%i\n",
-                            numspechit);
+                            "an overrun where numspechit=%zu\n",
+                            spechit.size());
             break;
     }
 }

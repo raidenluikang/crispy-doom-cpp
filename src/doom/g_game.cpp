@@ -80,6 +80,9 @@
 #include "deh_main.hpp" // [crispy] for demo footer
 #include "memio.hpp"
 
+#include "../../utils/memory.hpp"
+
+
 #define SAVEGAMESIZE	0x2c000
 
 void	G_ReadDemoTiccmd (ticcmd_t* cmd); 
@@ -2084,9 +2087,9 @@ void G_DoCompleted (void)
     automapactive = false; 
 
     // [crispy] no statdump output for ExM8
-    if (gamemode == commercial || gamemap != 8)
+    if (gamemode == GameMode_t::commercial || gamemap != 8)
     {
-    StatCopy(&wminfo);
+        StatCopy(&wminfo);
     }
  
     WI_Start (&wminfo); 
@@ -2106,50 +2109,47 @@ void G_WorldDone (void)
       if (!crispy->havee1m10 || gameepisode != 1 || gamemap != 1)
 	players[consoleplayer].didsecret = true; 
 
-    if ( gamemission == pack_nerve )
+    if ( gamemission == GameMission_t::pack_nerve )
     {
-	switch (gamemap)
-	{
-	  case 8:
-	    F_StartFinale ();
-	    break;
-	}
+        switch (gamemap)
+        {
+        case 8:
+            F_StartFinale ();
+            break;
+        }
     }
-    else
-    if ( gamemission == pack_master )
+    else if ( gamemission == GameMission_t::pack_master )
     {
-	switch (gamemap)
-	{
-	  case 20:
-	    if (secretexit)
-		break;
-	  case 21:
-	    F_StartFinale ();
-	    break;
-	}
+        switch (gamemap)
+        {
+        case 20:
+            if (secretexit)
+            break;
+        case 21:
+            F_StartFinale ();
+            break;
+        }
     }
-    else
-    if ( gamemode == commercial )
+    else if ( gamemode == GameMode_t::commercial )
     {
-	switch (gamemap)
-	{
-	  case 15:
-	  case 31:
-	    if (!secretexit)
-		break;
-	  case 6:
-	  case 11:
-	  case 20:
-	  case 30:
-	    F_StartFinale ();
-	    break;
-	}
+        switch (gamemap)
+        {
+        case 15:
+        case 31:
+            if (!secretexit)
+            break;
+        case 6:
+        case 11:
+        case 20:
+        case 30:
+            F_StartFinale ();
+            break;
+        }
     }
     // [crispy] display tally screen after ExM8
-    else
-    if ( gamemap == 8 || (gameversion == exe_chex && gamemap == 5) )
+    else if ( gamemap == 8 || (gameversion == GameVersion_t::exe_chex && gamemap == 5) )
     {
-	gameaction = ga_victory;
+	    gameaction = ga_victory;
     }
 } 
  
@@ -2490,11 +2490,11 @@ G_InitNew
     }
     */
 
-    if (skill > sk_nightmare)
-	skill = sk_nightmare;
+    if (skill > skill_t::sk_nightmare)
+	    skill = skill_t::sk_nightmare;
 
   // [crispy] if NRFTL is not available, "episode 2" may mean The Master Levels ("episode 3")
-  if (gamemode == commercial)
+  if (gamemode == GameMode_t::commercial)
   {
     if (episode < 1)
       episode = 1;
@@ -2506,7 +2506,7 @@ G_InitNew
   // [crispy] only fix episode/map if it doesn't exist
   if (P_GetNumForMap(episode, map, false) < 0)
   {
-    if (gameversion >= exe_ultimate)
+    if (gameversion >= GameVersion_t::exe_ultimate)
     {
         if (episode == 0)
         {
@@ -2525,59 +2525,62 @@ G_InitNew
         }
     }
 
-    if (episode > 1 && gamemode == shareware)
+    if (episode > 1 && gamemode == GameMode_t::shareware)
     {
         episode = 1;
     }
 
     if (map < 1)
-	map = 1;
+	    map = 1;
 
-    if ( (map > 9)
-	 && ( gamemode != commercial) )
+    if ( (map > 9) && (gamemode != GameMode_t::commercial) )
     {
       // [crispy] support E1M10 "Sewers"
       if (!crispy->havee1m10 || episode != 1)
-      map = 9;
+        map = 9;
       else
-      map = 10;
+        map = 10;
     }
   }
 
     M_ClearRandom ();
 
-    if (skill == sk_nightmare || respawnparm )
-	respawnmonsters = true;
+    if (skill == skill_t::sk_nightmare || respawnparm )
+	    respawnmonsters = true;
     else
-	respawnmonsters = false;
+	    respawnmonsters = false;
 
     // [crispy] make sure "fast" parameters are really only applied once
-    if ((fastparm || skill == sk_nightmare) && !fast_applied)
+    if ((fastparm || skill == skill_t::sk_nightmare) && !fast_applied)
     {
-	for (i=S_SARG_RUN1 ; i<=S_SARG_PAIN2 ; i++)
-	    // [crispy] Fix infinite loop caused by Demon speed bug
-	    if (states[i].tics > 1)
+	    for (i=S_SARG_RUN1 ; i<=S_SARG_PAIN2 ; i++)
 	    {
-	    states[i].tics >>= 1;
-	    }
-	mobjinfo[MT_BRUISERSHOT].speed = 20*FRACUNIT;
-	mobjinfo[MT_HEADSHOT].speed = 20*FRACUNIT;
-	mobjinfo[MT_TROOPSHOT].speed = 20*FRACUNIT;
-	fast_applied = true;
+            // [crispy] Fix infinite loop caused by Demon speed bug
+	        if (states[i].tics > 1)
+	        {
+	            states[i].tics >>= 1;
+	        }
+        }
+
+        mobjinfo[MT_BRUISERSHOT].speed = 20 * FRACUNIT;
+        mobjinfo[MT_HEADSHOT].speed    = 20 * FRACUNIT;
+        mobjinfo[MT_TROOPSHOT].speed   = 20 * FRACUNIT;
+        fast_applied = true;
     }
-    else if (!fastparm && skill != sk_nightmare && fast_applied)
+    else if (!fastparm && skill != skill_t::sk_nightmare && fast_applied)
     {
-	for (i=S_SARG_RUN1 ; i<=S_SARG_PAIN2 ; i++)
-	    states[i].tics <<= 1;
-	mobjinfo[MT_BRUISERSHOT].speed = 15*FRACUNIT;
-	mobjinfo[MT_HEADSHOT].speed = 10*FRACUNIT;
-	mobjinfo[MT_TROOPSHOT].speed = 10*FRACUNIT;
-	fast_applied = false;
+	    for (i=S_SARG_RUN1 ; i<=S_SARG_PAIN2 ; i++)
+	        states[i].tics <<= 1;
+ 
+        mobjinfo[MT_BRUISERSHOT].speed = 15*FRACUNIT;
+        mobjinfo[MT_HEADSHOT].speed = 10*FRACUNIT;
+        mobjinfo[MT_TROOPSHOT].speed = 10*FRACUNIT;
+        fast_applied = false;
     }
 
     // force players to be initialized upon first level load
     for (i=0 ; i<MAXPLAYERS ; i++)
-	players[i].playerstate = PST_REBORN;
+	    players[i].playerstate = PST_REBORN;
 
     usergame = true;                // will be set false if a demo
     paused = false;
@@ -2603,7 +2606,7 @@ G_InitNew
     // restore from a saved game.  This was fixed before the Doom
     // source release, but this IS the way Vanilla DOS Doom behaves.
 
-    if (gamemode == commercial)
+    if (gamemode == GameMode_t::commercial)
     {
         skytexturename = DEH_String("SKY3");
         skytexture = R_TextureNumForName(skytexturename);
@@ -2851,13 +2854,13 @@ int G_VanillaVersionCode(void)
 {
     switch (gameversion)
     {
-        case exe_doom_1_666:
+        case GameVersion_t::exe_doom_1_666:
             return 106;
-        case exe_doom_1_7:
+        case GameVersion_t::exe_doom_1_7:
             return 107;
-        case exe_doom_1_8:
+        case GameVersion_t::exe_doom_1_8:
             return 108;
-        case exe_doom_1_9:
+        case GameVersion_t::exe_doom_1_9:
         default:  // All other versions are variants on v1.9:
             return 109;
     }
@@ -2885,15 +2888,15 @@ void G_BeginRecording (void)
     {
         *demo_p++ = DOOM_191_VERSION;
     }
-    else if (gameversion > exe_doom_1_2)
+    else if (gameversion > GameVersion_t::exe_doom_1_2)
     {
         *demo_p++ = G_VanillaVersionCode();
     }
 
-    *demo_p++ = gameskill; 
+    *demo_p++ = static_cast<byte>( gameskill ); 
     *demo_p++ = gameepisode; 
     *demo_p++ = gamemap; 
-    if (longtics || gameversion > exe_doom_1_2)
+    if (longtics || gameversion > GameVersion_t::exe_doom_1_2)
     {
         *demo_p++ = deathmatch; 
         *demo_p++ = respawnparm;
@@ -2984,7 +2987,7 @@ void G_DoPlayDemo (void)
 
     lumpnum = W_GetNumForName(defdemoname);
     gameaction = ga_nothing;
-    demobuffer = W_CacheLumpNum(lumpnum, PU_STATIC);
+    demobuffer = static_cast<byte*>( W_CacheLumpNum(lumpnum, PU_STATIC) );
     demo_p = demobuffer;
 
     // [crispy] ignore empty demo lumps
@@ -3014,7 +3017,7 @@ void G_DoPlayDemo (void)
         longtics = true;
     }
     else if (demoversion != G_VanillaVersionCode() &&
-             !(gameversion <= exe_doom_1_2 && olddemo))
+             !(gameversion <= GameVersion_t::exe_doom_1_2 && olddemo))
     {
         const char *message = "Demo is from a different game version!\n"
                               "(read %i, should be %i)\n"
@@ -3026,21 +3029,21 @@ void G_DoPlayDemo (void)
                               "    This appears to be %s.";
 
         if (singledemo)
-        I_Error(message, demoversion, G_VanillaVersionCode(),
+            I_Error(message, demoversion, G_VanillaVersionCode(),
                          DemoVersionDescription(demoversion));
         // [crispy] make non-fatal
         else
         {
-        fprintf(stderr, message, demoversion, G_VanillaVersionCode(),
+            fprintf(stderr, message, demoversion, G_VanillaVersionCode(),
                          DemoVersionDescription(demoversion));
-	fprintf(stderr, "\n");
-	demoplayback = true;
-	G_CheckDemoStatus();
-	return;
+	        fprintf(stderr, "\n");
+	        demoplayback = true;
+	        G_CheckDemoStatus();
+	        return;
         }
     }
 
-    skill = *demo_p++; 
+    skill = static_cast<skill_t>( *demo_p++ ) ; 
     episode = *demo_p++; 
     map = *demo_p++; 
     if (!olddemo)

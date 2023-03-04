@@ -738,31 +738,31 @@ void R_InitLightTables (void)
 	LIGHTZSHIFT = 20;
     }
 
-    scalelight = malloc(LIGHTLEVELS * sizeof(*scalelight));
-    scalelightfixed = malloc(MAXLIGHTSCALE * sizeof(*scalelightfixed));
-    zlight = malloc(LIGHTLEVELS * sizeof(*zlight));
+    scalelight = (lighttable_t ***)malloc(LIGHTLEVELS * sizeof(*scalelight));
+    scalelightfixed = (lighttable_t **) malloc(MAXLIGHTSCALE * sizeof(*scalelightfixed));
+    zlight = (lighttable_t ***) malloc(LIGHTLEVELS * sizeof(*zlight));
 
     // Calculate the light levels to use
     //  for each level / distance combination.
     for (i=0 ; i< LIGHTLEVELS ; i++)
     {
-	zlight[i] = malloc(MAXLIGHTZ * sizeof(**zlight));
+        zlight[i] = (lighttable_t **)malloc(MAXLIGHTZ * sizeof(**zlight));
 
-	startmap = ((LIGHTLEVELS-LIGHTBRIGHT-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
-	for (j=0 ; j<MAXLIGHTZ ; j++)
-	{
-	    scale = FixedDiv ((ORIGWIDTH/2*FRACUNIT), (j+1)<<LIGHTZSHIFT);
-	    scale >>= LIGHTSCALESHIFT;
-	    level = startmap - scale/DISTMAP;
-	    
-	    if (level < 0)
-		level = 0;
+        startmap = ((LIGHTLEVELS-LIGHTBRIGHT-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
+        for (j=0 ; j<MAXLIGHTZ ; j++)
+        {
+            scale = FixedDiv ((ORIGWIDTH/2*FRACUNIT), (j+1)<<LIGHTZSHIFT);
+            scale >>= LIGHTSCALESHIFT;
+            level = startmap - scale/DISTMAP;
+            
+            if (level < 0)
+                level = 0;
 
-	    if (level >= NUMCOLORMAPS)
-		level = NUMCOLORMAPS-1;
+            if (level >= NUMCOLORMAPS)
+                level = NUMCOLORMAPS-1;
 
-	    zlight[i][j] = colormaps + level*256;
-	}
+            zlight[i][j] = colormaps + level * 256;
+        }
     }
 }
 
@@ -884,43 +884,44 @@ void R_ExecuteSetViewSize (void)
     // planes
     for (i=0 ; i<viewheight ; i++)
     {
-	// [crispy] re-generate lookup-table for yslope[] (free look)
-	// whenever "detailshift" or "screenblocks" change
-	const fixed_t num = (viewwidth_nonwide<<detailshift)/2*FRACUNIT;
-	for (j = 0; j < LOOKDIRS; j++)
-	{
-	dy = ((i-(viewheight/2 + ((j-LOOKDIRMIN) * (1 << crispy->hires)) * (screenblocks < 11 ? screenblocks : 11) / 10))<<FRACBITS)+FRACUNIT/2;
-	dy = abs(dy);
-	yslopes[j][i] = FixedDiv (num, dy);
-	}
+        // [crispy] re-generate lookup-table for yslope[] (free look)
+        // whenever "detailshift" or "screenblocks" change
+        const fixed_t num = (viewwidth_nonwide<<detailshift)/2*FRACUNIT;
+        for (j = 0; j < LOOKDIRS; j++)
+        {
+            dy = ((i-(viewheight/2 + ((j-LOOKDIRMIN) * (1 << crispy->hires)) * (screenblocks < 11 ? screenblocks : 11) / 10))<<FRACBITS)+FRACUNIT/2;
+            dy = abs(dy);
+            yslopes[j][i] = FixedDiv (num, dy);
+        }
     }
+ 
     yslope = yslopes[LOOKDIRMIN];
 	
     for (i=0 ; i<viewwidth ; i++)
     {
-	cosadj = abs(finecosine[xtoviewangle[i]>>ANGLETOFINESHIFT]);
-	distscale[i] = FixedDiv (FRACUNIT,cosadj);
+	    cosadj = abs(finecosine[xtoviewangle[i]>>ANGLETOFINESHIFT]);
+	    distscale[i] = FixedDiv (FRACUNIT,cosadj);
     }
     
     // Calculate the light levels to use
     //  for each level / scale combination.
     for (i=0 ; i< LIGHTLEVELS ; i++)
     {
-	scalelight[i] = malloc(MAXLIGHTSCALE * sizeof(**scalelight));
+        scalelight[i] = (lighttable_t **) malloc(MAXLIGHTSCALE * sizeof(**scalelight));
 
-	startmap = ((LIGHTLEVELS-LIGHTBRIGHT-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
-	for (j=0 ; j<MAXLIGHTSCALE ; j++)
-	{
-	    level = startmap - j*NONWIDEWIDTH/(viewwidth_nonwide<<detailshift)/DISTMAP;
-	    
-	    if (level < 0)
-		level = 0;
+        startmap = ((LIGHTLEVELS-LIGHTBRIGHT-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
+        for (j=0 ; j<MAXLIGHTSCALE ; j++)
+        {
+            level = startmap - j*NONWIDEWIDTH/(viewwidth_nonwide<<detailshift)/DISTMAP;
+            
+            if (level < 0)
+            level = 0;
 
-	    if (level >= NUMCOLORMAPS)
-		level = NUMCOLORMAPS-1;
+            if (level >= NUMCOLORMAPS)
+            level = NUMCOLORMAPS-1;
 
-	    scalelight[i][j] = colormaps + level*256;
-	}
+            scalelight[i][j] = colormaps + level*256;
+        }
     }
 
     // [crispy] lookup table for horizontal screen coordinates

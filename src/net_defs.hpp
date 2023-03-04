@@ -251,8 +251,8 @@ struct net_full_ticcmd_t
 // Data sent in response to server queries
 
 //forward declaration of enum allowed from C++11
-enum GameMode_t;
-enum GameMission_t;
+enum class GameMode_t;
+enum class GameMission_t;
 
 struct net_querydata_t
 {

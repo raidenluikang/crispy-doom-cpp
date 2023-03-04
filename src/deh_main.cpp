@@ -57,7 +57,7 @@ void AddDEHFileName(const char *filename)
 {
     static int i;
 
-    deh_filenames = I_Realloc(deh_filenames, (i + 2) * sizeof(*deh_filenames));
+    deh_filenames = (decltype(    deh_filenames)) I_Realloc(deh_filenames, (i + 2) * sizeof(*deh_filenames));
     deh_filenames[i++] = M_StringDuplicate(filename);
     deh_filenames[i] = nullptr;
 }

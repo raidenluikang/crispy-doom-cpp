@@ -50,6 +50,8 @@
 // Data.
 #include "sounds.hpp"
 
+#include "../../utils/memory.hpp"
+
 #define HUSTR_SECRETFOUND	"A secret is revealed!"
 
 //
@@ -175,7 +177,7 @@ void P_InitPicAnims (void)
 	if (lastanim >= anims + maxanims)
 	{
 	    size_t newmax = maxanims ? 2 * maxanims : MAXANIMS;
-	    anims = I_Realloc(anims, newmax * sizeof(*anims));
+	    anims = static_cast<decltype(anims)>( I_Realloc(anims, newmax * sizeof(*anims)) );
 	    lastanim = anims + maxanims;
 	    maxanims = newmax;
 	}
@@ -392,11 +394,13 @@ P_FindNextHighestFloor
     // from prboom-plus/src/p_spec.c:404-411
     if (sec->linecount > heightlist_size)
     {
-	do
-	{
-	    heightlist_size = heightlist_size ? 2 * heightlist_size : MAX_ADJOINING_SECTORS;
-	} while (sec->linecount > heightlist_size);
-	heightlist = I_Realloc(heightlist, heightlist_size * sizeof(*heightlist));
+		do
+		{
+			heightlist_size = heightlist_size ? 2 * heightlist_size : MAX_ADJOINING_SECTORS;
+		} 
+		while (sec->linecount > heightlist_size);
+	
+		heightlist = static_cast<decltype(heightlist)>( I_Realloc(heightlist, heightlist_size * sizeof(*heightlist)) );
     }
 
     for (i=0, h=0; i < sec->linecount; i++)
@@ -601,7 +605,7 @@ P_CrossSpecialLinePtr
 
 //  line = &lines[linenum];
     
-    if (gameversion <= exe_doom_1_2)
+    if (gameversion <= GameVersion_t::exe_doom_1_2)
     {
         if (line->special > 98 && line->special != 104)
         {
@@ -1136,68 +1140,68 @@ void P_PlayerInSpecialSector (player_t* player)
     switch (sector->special)
     {
       case 5:
-	// HELLSLIME DAMAGE
-	// [crispy] no nukage damage with NOCLIP cheat
-	if (!player->powers[pw_ironfeet] && !(player->mo->flags & MF_NOCLIP))
-	    if (!(leveltime&0x1f))
-		P_DamageMobj (player->mo, nullptr, nullptr, 10);
-	break;
+		// HELLSLIME DAMAGE
+		// [crispy] no nukage damage with NOCLIP cheat
+		if (!player->powers[static_cast<int>(powertype_t::pw_ironfeet) ] && !(player->mo->flags & MF_NOCLIP))
+			if (!(leveltime&0x1f))
+			P_DamageMobj (player->mo, nullptr, nullptr, 10);
+		break;
 	
       case 7:
-	// NUKAGE DAMAGE
-	// [crispy] no nukage damage with NOCLIP cheat
-	if (!player->powers[pw_ironfeet] && !(player->mo->flags & MF_NOCLIP))
-	    if (!(leveltime&0x1f))
-		P_DamageMobj (player->mo, nullptr, nullptr, 5);
-	break;
+		// NUKAGE DAMAGE
+		// [crispy] no nukage damage with NOCLIP cheat
+		if (!player->powers[static_cast<int>(powertype_t::pw_ironfeet)] && !(player->mo->flags & MF_NOCLIP))
+			if (!(leveltime&0x1f))
+			P_DamageMobj (player->mo, nullptr, nullptr, 5);
+		break;
 	
       case 16:
-	// SUPER HELLSLIME DAMAGE
+		// SUPER HELLSLIME DAMAGE
       case 4:
-	// STROBE HURT
-	// [crispy] no nukage damage with NOCLIP cheat
-	if ((!player->powers[pw_ironfeet]
-	    || (P_Random()<5) ) && !(player->mo->flags & MF_NOCLIP))
-	{
-	    if (!(leveltime&0x1f))
-		P_DamageMobj (player->mo, nullptr, nullptr, 20);
-	}
-	break;
+		// STROBE HURT
+		// [crispy] no nukage damage with NOCLIP cheat
+		if ((!player->powers[static_cast<int>(powertype_t::pw_ironfeet)]
+			|| (P_Random()<5) ) && !(player->mo->flags & MF_NOCLIP))
+		{
+			if (!(leveltime&0x1f))
+			P_DamageMobj (player->mo, nullptr, nullptr, 20);
+		}
+		break;
 			
       case 9:
-	// SECRET SECTOR
-	player->secretcount++;
-	// [crispy] show centered "Secret Revealed!" message
-	if (showMessages && crispy->secretmessage && player == &players[consoleplayer])
-	{
-	    int sfx_id;
-	    static char str_count[32];
+		// SECRET SECTOR
+		player->secretcount++;
+		// [crispy] show centered "Secret Revealed!" message
+		if (showMessages && crispy->secretmessage && player == &players[consoleplayer])
+		{
+			int sfx_id;
+			static char str_count[32];
 
-	    M_snprintf(str_count, sizeof(str_count), "Secret %d of %d revealed!", player->secretcount, totalsecret);
+			M_snprintf(str_count, sizeof(str_count), "Secret %d of %d revealed!", player->secretcount, totalsecret);
 
-	    // [crispy] play DSSECRET if available
-	    sfx_id = I_GetSfxLumpNum(&S_sfx[sfx_secret]) != -1 ? sfx_secret :
-	             I_GetSfxLumpNum(&S_sfx[sfx_itmbk]) != -1 ? sfx_itmbk : -1;
+			// [crispy] play DSSECRET if available
+			sfx_id = I_GetSfxLumpNum(&S_sfx[sfx_secret]) != -1 ? sfx_secret :
+					I_GetSfxLumpNum(&S_sfx[sfx_itmbk]) != -1 ? sfx_itmbk : -1;
 
-	    player->centermessage = (crispy->secretmessage == SECRETMESSAGE_COUNT) ? str_count : HUSTR_SECRETFOUND;
-	    if (sfx_id != -1)
-		S_StartSound(nullptr, sfx_id);
-	}
-	// [crispy] remember revealed secrets
-	sector->oldspecial = sector->special;
-	sector->special = 0;
-	break;
+			player->centermessage = (crispy->secretmessage == SECRETMESSAGE_COUNT) ? str_count : HUSTR_SECRETFOUND;
+			if (sfx_id != -1)
+			S_StartSound(nullptr, sfx_id);
+		}
+		// [crispy] remember revealed secrets
+		sector->oldspecial = sector->special;
+		sector->special = 0;
+		break;
 			
       case 11:
-	// EXIT SUPER DAMAGE! (for E1M8 finale)
-	player->cheats &= ~CF_GODMODE;
+		// EXIT SUPER DAMAGE! (for E1M8 finale)
+		player->cheats &= ~CF_GODMODE;
 
-	if (!(leveltime&0x1f))
-	    P_DamageMobj (player->mo, nullptr, nullptr, 20);
+		if (!(leveltime&0x1f))
+			P_DamageMobj (player->mo, nullptr, nullptr, 20);
 
-	if (player->health <= 10)
-	    G_ExitLevel();
-	break;
+		if (player->health <= 10)
+			G_ExitLevel();
+		break;
 			
       default:
 	// [crispy] ignore unknown special sectors
@@ -1517,7 +1521,7 @@ int EV_DoDonut(line_t*	line)
             }
 
 	    //	Spawn rising slime
-	    floor = zmalloc<decltype(	    floor)>(sizeof(*floor), PU_LEVSPEC, 0);
+	    floor = zmalloc<decltype(floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	    P_AddThinker (&floor->thinker);
 	    s2->specialdata = floor;
 	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;

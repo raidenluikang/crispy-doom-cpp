@@ -374,7 +374,7 @@ static void LoadLumpCallback(const char *lumpname, int lumpnum, patch_t **ptr)
 
     // Cache the lump
 
-    *ptr = W_CacheLumpNum(lumpnum, PU_STATIC);
+    *ptr = W_CacheLumpNum_cast<decltype(    *ptr)>(lumpnum, PU_STATIC);
 }
 
 void IN_LoadPics(void)
@@ -1130,7 +1130,7 @@ void IN_DrTextB(const char *text, int x, int y)
         }
         else
         {
-            p = W_CacheLumpNum(FontBLump + c - 33, PU_CACHE);
+            p = W_CacheLumpNum_cast<decltype(            p)>(FontBLump + c - 33, PU_CACHE);
             V_DrawShadowedPatch(x, y, p);
             x += SHORT(p->width) - 1;
         }

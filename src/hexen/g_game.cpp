@@ -2239,7 +2239,7 @@ void G_DoPlayDemo(void)
 
     gameaction = ga_nothing;
     lumpnum = W_GetNumForName(defdemoname);
-    demobuffer = W_CacheLumpNum(lumpnum, PU_STATIC);
+    demobuffer = W_CacheLumpNum_cast<decltype(    demobuffer)>(lumpnum, PU_STATIC);
     demo_p = demobuffer;
     skill = *demo_p++;
     episode = *demo_p++;

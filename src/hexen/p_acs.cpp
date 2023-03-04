@@ -452,7 +452,7 @@ void P_LoadACScripts(int lump)
     acsHeader_t *header;
     acsInfo_t *info;
 
-    ActionCodeBase = W_CacheLumpNum(lump, PU_LEVEL);
+    ActionCodeBase = W_CacheLumpNum_cast<decltype(    ActionCodeBase)>(lump, PU_LEVEL);
     ActionCodeSize = W_LumpLength(lump);
 
     M_snprintf(EvalContext, sizeof(EvalContext),

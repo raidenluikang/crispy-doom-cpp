@@ -41,6 +41,7 @@
 #include "v_trans.hpp" // [crispy] tranmap, CRMAX
 #include "r_bmaps.hpp" // [crispy] R_BrightmapForTexName()
 
+#include "../../utils/memory.hpp"
 //
 // Graphics.
 // DOOM graphics for walls and sprites
@@ -288,54 +289,52 @@ void R_GenerateComposite (int texnum)
     colofs2 = texturecolumnofs2[texnum];
     
     // killough 4/9/98: marks to identify transparent regions in merged textures
-    marks = calloc(texture->width, texture->height);
+    marks = static_cast<byte*>(calloc(texture->width, texture->height));
 
     // [crispy] initialize composite background to palette index 0 (usually black)
     memset(block, 0, texturecompositesize[texnum]);
 
     // Composite the columns together.
-    for (i=0 , patch = texture->patches;
-	 i<texture->patchcount;
-	 i++, patch++)
+    for (i=0 , patch = texture->patches; i<texture->patchcount; i++, patch++)
     {
-	realpatch = W_CacheLumpNum (patch->patch, PU_CACHE);
-	x1 = patch->originx;
-	x2 = x1 + SHORT(realpatch->width);
+		realpatch = W_CacheLumpNum_cast<decltype(	realpatch)> (patch->patch, PU_CACHE);
+		x1 = patch->originx;
+		x2 = x1 + SHORT(realpatch->width);
 
-	if (x1<0)
-	    x = 0;
-	else
-	    x = x1;
-	
-	if (x2 > texture->width)
-	    x2 = texture->width;
+		if (x1<0)
+			x = 0;
+		else
+			x = x1;
+		
+		if (x2 > texture->width)
+			x2 = texture->width;
 
-	for ( ; x<x2 ; x++)
-	{
-	    // Column does not have multiple patches?
-	    // [crispy] generate composites for single-patched columns as well
-	    /*
-	    if (collump[x] >= 0)
-		continue;
-	    */
-	    
-	    patchcol = (column_t *)((byte *)realpatch
-				    + LONG(realpatch->columnofs[x-x1]));
-	    R_DrawColumnInCache (patchcol,
-				 block + colofs[x],
-				 // [crispy] single-patched columns are normally not composited
-				 // but directly read from the patch lump ignoring their originy
-				 collump[x] >= 0 ? 0 : patch->originy,
-				 texture->height,
-				 marks + x * texture->height);
-	}
-						
+		for ( ; x<x2 ; x++)
+		{
+			// Column does not have multiple patches?
+			// [crispy] generate composites for single-patched columns as well
+			/*
+			if (collump[x] >= 0)
+			continue;
+			*/
+			
+			patchcol = (column_t *)((byte *)realpatch
+						+ LONG(realpatch->columnofs[x-x1]));
+			R_DrawColumnInCache (patchcol,
+					block + colofs[x],
+					// [crispy] single-patched columns are normally not composited
+					// but directly read from the patch lump ignoring their originy
+					collump[x] >= 0 ? 0 : patch->originy,
+					texture->height,
+					marks + x * texture->height);
+		}
+							
     }
 
     // killough 4/9/98: Next, convert multipatched columns into true columns,
     // to fix Medusa bug while still allowing for transparent regions.
 
-    source = I_Realloc(nullptr, texture->height); // temporary column
+    source = static_cast<byte*>(I_Realloc(nullptr, texture->height) ) ; // temporary column
     for (i = 0; i < texture->width; i++)
     {
 	// [crispy] generate composites for all columns
@@ -448,7 +447,7 @@ void R_GenerateLookup (int texnum)
 	 i<texture->patchcount;
 	 i++, patch++)
     {
-	realpatch = W_CacheLumpNum (patch->patch, PU_CACHE);
+	realpatch = W_CacheLumpNum_cast<decltype(	realpatch)> (patch->patch, PU_CACHE);
 	x1 = patch->originx;
 	x2 = x1 + SHORT(realpatch->width);
 
@@ -499,7 +498,7 @@ void R_GenerateLookup (int texnum)
 	for (i = texture->patchcount, patch = texture->patches; --i >= 0; )
 	{
 	    int pat = patch->patch;
-	    const patch_t *realpatch = W_CacheLumpNum(pat, PU_CACHE);
+	    const patch_t *realpatch = W_CacheLumpNum_cast<const patch_t*>(pat, PU_CACHE);
 	    int x, x1 = patch++->originx, x2 = x1 + SHORT(realpatch->width);
 	    const int *cofs = realpatch->columnofs - x1;
 
@@ -637,8 +636,7 @@ static void GenerateTextureHashTable(void)
     int i;
     int key;
 
-    textures_hashtable 
-            = zmalloc<decltype(           )>(sizeof(texture_t *) * numtextures, PU_STATIC, 0);
+    textures_hashtable = zmalloc<decltype(textures_hashtable)>(sizeof(texture_t *) * numtextures, PU_STATIC, 0);
 
     memset(textures_hashtable, 0, sizeof(texture_t *) * numtextures);
 
@@ -735,8 +733,8 @@ void R_InitTextures (void)
     int			numtexturelumps = 0;
 
     // [crispy] allocate memory for the pnameslumps and texturelumps arrays
-    pnameslumps = I_Realloc(pnameslumps, maxpnameslumps * sizeof(*pnameslumps));
-    texturelumps = I_Realloc(texturelumps, maxtexturelumps * sizeof(*texturelumps));
+    pnameslumps = (decltype(    pnameslumps)) I_Realloc(pnameslumps, maxpnameslumps * sizeof(*pnameslumps));
+    texturelumps = (decltype(    texturelumps)) I_Realloc(texturelumps, maxtexturelumps * sizeof(*texturelumps));
 
     // [crispy] make sure the first available TEXTURE1/2 lumps
     // are always processed first
@@ -755,12 +753,12 @@ void R_InitTextures (void)
 	{
 	    if (numpnameslumps == maxpnameslumps)
 	    {
-		maxpnameslumps++;
-		pnameslumps = I_Realloc(pnameslumps, maxpnameslumps * sizeof(*pnameslumps));
+			maxpnameslumps++;
+			pnameslumps = (decltype(			pnameslumps)) I_Realloc(pnameslumps, maxpnameslumps * sizeof(*pnameslumps));
 	    }
 
 	    pnameslumps[numpnameslumps].lumpnum = i;
-	    pnameslumps[numpnameslumps].names = W_CacheLumpNum(pnameslumps[numpnameslumps].lumpnum, PU_STATIC);
+	    pnameslumps[numpnameslumps].names = W_CacheLumpNum_cast<decltype(pnameslumps[numpnameslumps].names)>(pnameslumps[numpnameslumps].lumpnum, PU_STATIC);
 	    pnameslumps[numpnameslumps].nummappatches = LONG(*((int *) pnameslumps[numpnameslumps].names));
 
 	    // [crispy] accumulated number of patches in the lookup tables
@@ -788,8 +786,8 @@ void R_InitTextures (void)
 
 	    if (numtexturelumps == maxtexturelumps)
 	    {
-		maxtexturelumps++;
-		texturelumps = I_Realloc(texturelumps, maxtexturelumps * sizeof(*texturelumps));
+			maxtexturelumps++;
+			texturelumps = (decltype(			texturelumps)) I_Realloc(texturelumps, maxtexturelumps * sizeof(*texturelumps));
 	    }
 
 	    // [crispy] do not proceed any further, yet
@@ -825,7 +823,7 @@ void R_InitTextures (void)
     numtextures = 0;
     for (i = 0; i < numtexturelumps; i++)
     {
-	texturelumps[i].maptex = W_CacheLumpNum(texturelumps[i].lumpnum, PU_STATIC);
+	texturelumps[i].maptex = W_CacheLumpNum_cast<decltype(	texturelumps[i].maptex)>(texturelumps[i].lumpnum, PU_STATIC);
 	texturelumps[i].maxoff = W_LumpLength(texturelumps[i].lumpnum);
 	texturelumps[i].numtextures = LONG(*texturelumps[i].maptex);
 
@@ -920,10 +918,7 @@ void R_InitTextures (void)
 	
 	mtexture = (maptexture_t *) ( (byte *)maptex + offset);
 
-	texture = textures[i] =
-	    Z_Malloc (sizeof(texture_t)
-		      + sizeof(texpatch_t)*(SHORT(mtexture->patchcount)-1),
-		      PU_STATIC, 0);
+	texture = textures[i] = (texture_t*)Z_Malloc (sizeof(texture_t) + sizeof(texpatch_t)  * (SHORT(mtexture->patchcount)-1), PU_STATIC, 0);
 	
 	texture->width = SHORT(mtexture->width);
 	texture->height = SHORT(mtexture->height);
@@ -958,9 +953,9 @@ void R_InitTextures (void)
 		patch->patch = W_CheckNumForName("WIPCNT"); // [crispy] dummy patch
 	    }
 	}		
-	texturecolumnlump[i] = zmalloc<decltype(	texturecolumnlump[i])>(texture->width*sizeof(**texturecolumnlump), PU_STATIC,0);
+	texturecolumnlump[i] = zmalloc<decltype(texturecolumnlump[i])>(texture->width*sizeof(**texturecolumnlump), PU_STATIC,0);
 	texturecolumnofs[i] = zmalloc<decltype(	texturecolumnofs[i])>(texture->width*sizeof(**texturecolumnofs), PU_STATIC,0);
-	texturecolumnofs2[i] = zmalloc<decltype(	texturecolumnofs2[i])>(texture->width*sizeof(**texturecolumnofs2), PU_STATIC,0);
+	texturecolumnofs2[i] = zmalloc<decltype(texturecolumnofs2[i])>(texture->width*sizeof(**texturecolumnofs2), PU_STATIC,0);
 
 	j = 1;
 	while (j*2 <= texture->width)
@@ -1041,7 +1036,7 @@ void R_InitSpriteLumps (void)
 	if (!(i&63))
 	    printf (".");
 
-	patch = W_CacheLumpNum (firstspritelump+i, PU_CACHE);
+	patch = W_CacheLumpNum_cast<decltype(	patch)> (firstspritelump+i, PU_CACHE);
 	spritewidth[i] = SHORT(patch->width)<<FRACBITS;
 	spriteoffset[i] = SHORT(patch->leftoffset)<<FRACBITS;
 	spritetopoffset[i] = SHORT(patch->topoffset)<<FRACBITS;
@@ -1052,9 +1047,10 @@ void R_InitSpriteLumps (void)
 // [crispy] initialize translucency filter map
 // based in parts on the implementation from boom202s/R_DATA.C:676-787
 
-enum {
+enum rgb_t
+{
     r, g, b
-} rgb_t;
+} ;
 
 static const int tran_filter_pct = 66;
 
@@ -1066,7 +1062,7 @@ static void R_InitTranMap()
     if (lump != -1 && W_LumpLength(lump) == 256*256)
     {
         // Set a pointer to the translucency filter maps.
-        tranmap = W_CacheLumpNum(lump, PU_STATIC);
+        tranmap = W_CacheLumpNum_cast<decltype(        tranmap)>(lump, PU_STATIC);
         // [crispy] loaded from a lump
         printf(":");
     }
@@ -1128,7 +1124,7 @@ void R_InitColormaps (void)
     // Load in the light tables, 
     //  256 byte align tables.
     lump = W_GetNumForName(DEH_String("COLORMAP"));
-    colormaps = W_CacheLumpNum(lump, PU_STATIC);
+    colormaps = W_CacheLumpNum_cast<decltype(    colormaps)>(lump, PU_STATIC);
 #else
 	byte *playpal;
 	int c, i, j = 0;
@@ -1205,7 +1201,7 @@ void R_InitColormaps (void)
 	boolean keepgray = false;
 
 	if (!crstr)
-	    crstr = I_Realloc(nullptr, CRMAX * sizeof(*crstr));
+	    crstr = (decltype(	    crstr)) I_Realloc(nullptr, CRMAX * sizeof(*crstr));
 
 	// [crispy] check for status bar graphics replacements
 	i = W_CheckNumForName(DEH_String("sttnum0")); // [crispy] Status Bar '0'

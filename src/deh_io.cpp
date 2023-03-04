@@ -113,7 +113,7 @@ deh_context_t *DEH_OpenLump(int lumpnum)
     deh_context_t *context;
     void *lump;
 
-    lump = W_CacheLumpNum(lumpnum, PU_STATIC);
+    lump = W_CacheLumpNum_cast<decltype(    lump)>(lumpnum, PU_STATIC);
 
     context = DEH_NewContext();
 

@@ -251,7 +251,7 @@ static void saveg_write_mapthing_t(mapthing_t *str)
 static void saveg_read_actionf_t(actionf_t *str)
 {
     // actionf_p1 acp1;
-    str->acp1 = saveg_readp();
+    str->acp1 = static_cast< decltype(     str->acp1 ) >( saveg_readp() ) ;
 }
 
 static void saveg_write_actionf_t(actionf_t *str)
@@ -276,10 +276,10 @@ static void saveg_write_actionf_t(actionf_t *str)
 static void saveg_read_thinker_t(thinker_t *str)
 {
     // struct thinker_s* prev;
-    str->prev = saveg_readp();
+    str->prev = static_cast< decltype(     str->prev ) >( saveg_readp() ) ;
 
     // struct thinker_s* next;
-    str->next = saveg_readp();
+    str->next = static_cast< decltype(     str->next ) >( saveg_readp() ) ;
 
     // think_t function;
     saveg_read_think_t(&str->function);
@@ -320,28 +320,28 @@ static void saveg_read_mobj_t(mobj_t *str)
     str->z = saveg_read32();
 
     // struct mobj_s* snext;
-    str->snext = saveg_readp();
+    str->snext = static_cast< decltype(     str->snext ) >( saveg_readp() ) ;
 
     // struct mobj_s* sprev;
-    str->sprev = saveg_readp();
+    str->sprev = static_cast< decltype(     str->sprev ) >( saveg_readp() ) ;
 
     // angle_t angle;
     str->angle = saveg_read32();
 
     // spritenum_t sprite;
-    str->sprite = saveg_read_enum();
+    str->sprite = static_cast< decltype(     str->sprite ) >( saveg_read_enum() ) ;
 
     // int frame;
     str->frame = saveg_read32();
 
     // struct mobj_s* bnext;
-    str->bnext = saveg_readp();
+    str->bnext = static_cast< decltype(     str->bnext ) >( saveg_readp() ) ;
 
     // struct mobj_s* bprev;
-    str->bprev = saveg_readp();
+    str->bprev = static_cast< decltype(     str->bprev ) >( saveg_readp() ) ;
 
     // struct subsector_s* subsector;
-    str->subsector = saveg_readp();
+    str->subsector = static_cast< decltype(     str->subsector ) >( saveg_readp() ) ;
 
     // fixed_t floorz;
     str->floorz = saveg_read32();
@@ -368,10 +368,10 @@ static void saveg_read_mobj_t(mobj_t *str)
     str->validcount = saveg_read32();
 
     // mobjtype_t type;
-    str->type = saveg_read_enum();
+    str->type = static_cast< decltype(     str->type ) >( saveg_read_enum() ) ;
 
     // mobjinfo_t* info;
-    str->info = saveg_readp();
+    str->info = static_cast< decltype(     str->info ) >( saveg_readp() ) ;
 
     // int tics;
     str->tics = saveg_read32();
@@ -392,7 +392,7 @@ static void saveg_read_mobj_t(mobj_t *str)
     str->movecount = saveg_read32();
 
     // struct mobj_s* target;
-    str->target = saveg_readp();
+    str->target = static_cast< decltype(     str->target ) >( saveg_readp() ) ;
 
     // int reactiontime;
     str->reactiontime = saveg_read32();
@@ -400,7 +400,7 @@ static void saveg_read_mobj_t(mobj_t *str)
     // int threshold;
     str->threshold = saveg_read32();
 
-    // struct player_s* player;
+    // struct player_t* player;
     pl = saveg_read32();
 
     if (pl > 0)
@@ -421,7 +421,7 @@ static void saveg_read_mobj_t(mobj_t *str)
     saveg_read_mapthing_t(&str->spawnpoint);
 
     // struct mobj_s* tracer;
-    str->tracer = saveg_readp();
+    str->tracer = static_cast< decltype(     str->tracer ) >( saveg_readp() ) ;
 
     // byte miscdata;
     str->miscdata = saveg_read8(); // [STRIFE] Only change to mobj_t.
@@ -504,7 +504,7 @@ static void saveg_write_mobj_t(mobj_t *str)
     saveg_write32(str->angle);
 
     // spritenum_t sprite;
-    saveg_write_enum(str->sprite);
+    saveg_write_enum(static_cast<int>( str->sprite ) );
 
     // int frame;
     saveg_write32(str->frame);
@@ -543,7 +543,7 @@ static void saveg_write_mobj_t(mobj_t *str)
     saveg_write32(str->validcount);
 
     // mobjtype_t type;
-    saveg_write_enum(str->type);
+    saveg_write_enum(static_cast<int>( str->type ) );
 
     // mobjinfo_t* info;
     saveg_writep(str->info);
@@ -577,7 +577,7 @@ static void saveg_write_mobj_t(mobj_t *str)
     // int threshold;
     saveg_write32(str->threshold);
 
-    // struct player_s* player;
+    // struct player_t* player;
     if (str->player)
     {
         saveg_write32(str->player - players + 1);
@@ -757,10 +757,10 @@ static void saveg_read_player_t(player_t *str)
     int i;
 
     // mobj_t* mo;
-    str->mo = saveg_readp();
+    str->mo = static_cast< decltype(     str->mo ) >( saveg_readp() ) ;
 
     // playerstate_t playerstate;
-    str->playerstate = saveg_read_enum();
+    str->playerstate = static_cast< decltype(     str->playerstate ) >( saveg_read_enum() ) ;
 
     // ticcmd_t cmd;
     saveg_read_ticcmd_t(&str->cmd);
@@ -856,10 +856,10 @@ static void saveg_read_player_t(player_t *str)
     }
 
     // weapontype_t readyweapon;
-    str->readyweapon = saveg_read_enum();
+    str->readyweapon = static_cast< decltype(     str->readyweapon ) >( saveg_read_enum() ) ;
 
     // weapontype_t pendingweapon;
-    str->pendingweapon = saveg_read_enum();
+    str->pendingweapon = static_cast< decltype(     str->pendingweapon ) >( saveg_read_enum() ) ;
 
     // boolean weaponowned[NUMWEAPONS];
     for (i=0; i<NUMWEAPONS; ++i)
@@ -897,7 +897,7 @@ static void saveg_read_player_t(player_t *str)
     //str->secretcount = saveg_read32();
 
     // char* message;
-    str->message = saveg_readp();
+    str->message = static_cast< decltype(     str->message ) >( saveg_readp() ) ;
 
     // int damagecount;
     str->damagecount = saveg_read32();
@@ -906,7 +906,7 @@ static void saveg_read_player_t(player_t *str)
     str->bonuscount = saveg_read32();
 
     // mobj_t* attacker;
-    str->attacker = saveg_readp();
+    str->attacker = static_cast< decltype(     str->attacker ) >( saveg_readp() ) ;
 
     // int extralight;
     str->extralight = saveg_read32();
@@ -945,7 +945,7 @@ static void saveg_write_player_t(player_t *str)
     saveg_writep(str->mo);
 
     // playerstate_t playerstate;
-    saveg_write_enum(str->playerstate);
+    saveg_write_enum(static_cast<int>( str->playerstate ) );
 
     // ticcmd_t cmd;
     saveg_write_ticcmd_t(&str->cmd);
@@ -1038,10 +1038,10 @@ static void saveg_write_player_t(player_t *str)
     }
 
     // weapontype_t readyweapon;
-    saveg_write_enum(str->readyweapon);
+    saveg_write_enum(static_cast<int>( str->readyweapon ) );
 
     // weapontype_t pendingweapon;
-    saveg_write_enum(str->pendingweapon);
+    saveg_write_enum(static_cast<int>( str->pendingweapon ) );
 
     // boolean weaponowned[NUMWEAPONS];
     for (i=0; i<NUMWEAPONS; ++i)
@@ -1133,7 +1133,7 @@ static void saveg_read_ceiling_t(ceiling_t *str)
     saveg_read_thinker_t(&str->thinker);
 
     // ceiling_e type;
-    str->type = saveg_read_enum();
+    str->type = static_cast< decltype(     str->type ) >( saveg_read_enum() ) ;
 
     // sector_t* sector;
     sector = saveg_read32();
@@ -1167,7 +1167,7 @@ static void saveg_write_ceiling_t(ceiling_t *str)
     saveg_write_thinker_t(&str->thinker);
 
     // ceiling_e type;
-    saveg_write_enum(str->type);
+    saveg_write_enum(static_cast<int>( str->type ) );
 
     // sector_t* sector;
     saveg_write32(str->sector - sectors);
@@ -1208,7 +1208,7 @@ static void saveg_read_vldoor_t(vldoor_t *str)
     saveg_read_thinker_t(&str->thinker);
 
     // vldoor_e type;
-    str->type = saveg_read_enum();
+    str->type = static_cast< decltype(     str->type ) >( saveg_read_enum() ) ;
 
     // sector_t* sector;
     sector = saveg_read32();
@@ -1244,7 +1244,7 @@ static void saveg_write_vldoor_t(vldoor_t *str)
     saveg_write_thinker_t(&str->thinker);
 
     // vldoor_e type;
-    saveg_write_enum(str->type);
+    saveg_write_enum(static_cast<int>( str->type ) );
 
     // sector_t* sector;
     saveg_write32(str->sector - sectors);
@@ -1286,7 +1286,7 @@ static void saveg_read_slidedoor_t(slidedoor_t *str)
     saveg_read_thinker_t(&str->thinker);
 
     // sdt_e type;
-    str->type = saveg_read_enum();
+    str->type = static_cast< decltype(     str->type ) >( saveg_read_enum() ) ;
 
     // line_t *line1;
     line = saveg_read32();
@@ -1310,7 +1310,7 @@ static void saveg_read_slidedoor_t(slidedoor_t *str)
     str->frontsector = &sectors[sector];
 
     // sd_e status;
-    str->status = saveg_read_enum();
+    str->status = static_cast< decltype(     str->status ) >( saveg_read_enum() ) ;
 }
 
 static void saveg_write_slidedoor_t(slidedoor_t *str)
@@ -1319,7 +1319,7 @@ static void saveg_write_slidedoor_t(slidedoor_t *str)
     saveg_write_thinker_t(&str->thinker);
 
     // sdt_e type;
-    saveg_write_enum(str->type);
+    saveg_write_enum(static_cast<int>( str->type ) );
 
     // line_t *line1;
     saveg_write32(str->line1 - lines);
@@ -1340,7 +1340,7 @@ static void saveg_write_slidedoor_t(slidedoor_t *str)
     saveg_write32(str->frontsector - sectors);
 
     // sd_e status;
-    saveg_write_enum(str->status);
+    saveg_write_enum(static_cast<int>( str->status ) );
 }
 
 //
@@ -1355,7 +1355,7 @@ static void saveg_read_floormove_t(floormove_t *str)
     saveg_read_thinker_t(&str->thinker);
 
     // floor_e type;
-    str->type = saveg_read_enum();
+    str->type = static_cast< decltype(     str->type ) >( saveg_read_enum() ) ;
 
     // boolean crush;
     str->crush = saveg_read32();
@@ -1386,7 +1386,7 @@ static void saveg_write_floormove_t(floormove_t *str)
     saveg_write_thinker_t(&str->thinker);
 
     // floor_e type;
-    saveg_write_enum(str->type);
+    saveg_write_enum(static_cast<int>( str->type ) );
 
     // boolean crush;
     saveg_write32(str->crush);
@@ -1441,10 +1441,10 @@ static void saveg_read_plat_t(plat_t *str)
     str->count = saveg_read32();
 
     // plat_e status;
-    str->status = saveg_read_enum();
+    str->status = static_cast< decltype(     str->status ) >( saveg_read_enum() ) ;
 
     // plat_e oldstatus;
-    str->oldstatus = saveg_read_enum();
+    str->oldstatus = static_cast< decltype(     str->oldstatus ) >( saveg_read_enum() ) ;
 
     // boolean crush;
     str->crush = saveg_read32();
@@ -1453,7 +1453,7 @@ static void saveg_read_plat_t(plat_t *str)
     str->tag = saveg_read32();
 
     // plattype_e type;
-    str->type = saveg_read_enum();
+    str->type = static_cast< decltype(     str->type ) >( saveg_read_enum() ) ;
 }
 
 static void saveg_write_plat_t(plat_t *str)
@@ -1480,10 +1480,10 @@ static void saveg_write_plat_t(plat_t *str)
     saveg_write32(str->count);
 
     // plat_e status;
-    saveg_write_enum(str->status);
+    saveg_write_enum(static_cast<int>( str->status ) );
 
     // plat_e oldstatus;
-    saveg_write_enum(str->oldstatus);
+    saveg_write_enum(static_cast<int>( str->oldstatus ) );
 
     // boolean crush;
     saveg_write32(str->crush);
@@ -1492,7 +1492,7 @@ static void saveg_write_plat_t(plat_t *str)
     saveg_write32(str->tag);
 
     // plattype_e type;
-    saveg_write_enum(str->type);
+    saveg_write_enum(static_cast<int>( str->type ) );
 }
 
 //

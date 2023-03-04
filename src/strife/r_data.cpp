@@ -248,7 +248,7 @@ void R_GenerateComposite (int texnum)
 	 i<texture->patchcount;
 	 i++, patch++)
     {
-	realpatch = W_CacheLumpNum (patch->patch, PU_CACHE);
+	realpatch = W_CacheLumpNum_cast<decltype(	realpatch)> (patch->patch, PU_CACHE);
 	x1 = patch->originx;
 	x2 = x1 + SHORT(realpatch->width);
 
@@ -319,7 +319,7 @@ void R_GenerateLookup (int texnum)
 	 i<texture->patchcount;
 	 i++, patch++)
     {
-	realpatch = W_CacheLumpNum (patch->patch, PU_CACHE);
+	realpatch = W_CacheLumpNum_cast<decltype(	realpatch)> (patch->patch, PU_CACHE);
 	x1 = patch->originx;
 	x2 = x1 + SHORT(realpatch->width);
 	
@@ -676,7 +676,7 @@ void R_InitSpriteLumps (void)
                 D_IntroTick();
         }
 
-        patch = W_CacheLumpNum (firstspritelump+i, PU_CACHE);
+        patch = W_CacheLumpNum_cast<decltype(        patch)> (firstspritelump+i, PU_CACHE);
         spritewidth[i] = SHORT(patch->width)<<FRACBITS;
         spriteoffset[i] = SHORT(patch->leftoffset)<<FRACBITS;
         spritetopoffset[i] = SHORT(patch->topoffset)<<FRACBITS;
@@ -694,7 +694,7 @@ void R_InitColormaps (void)
 
     // Load in the light tables, 256 byte align tables.
     lump = W_GetNumForName(DEH_String("COLORMAP"));
-    colormaps = W_CacheLumpNum(lump, PU_STATIC);
+    colormaps = W_CacheLumpNum_cast<decltype(    colormaps)>(lump, PU_STATIC);
 
     // [crispy] initialize color translation and color strings tables
     {
@@ -703,7 +703,7 @@ void R_InitColormaps (void)
         int i, j;
 
         if (!crstr)
-            crstr = I_Realloc(nullptr, CRMAX * sizeof(*crstr));
+            crstr = (decltype(            crstr)) I_Realloc(nullptr, CRMAX * sizeof(*crstr));
 
         // [crispy] CRMAX - 2: don't override the original GREN and BLUE2 Boom tables
         for (i = 0; i < CRMAX - 2; i++)

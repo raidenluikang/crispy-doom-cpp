@@ -69,29 +69,31 @@ P_GiveAmmo
   int		num,
   boolean	dropped ) // [NS] Dropped ammo/weapons give half as much.
 {
-    int		oldammo;
+    if (ammo == ammotype_t::am_noammo)
+		return false;
 	
-    if (ammo == am_noammo)
-	return false;
+	const int ammo_i = static_cast<int>(ammo);
+
+    if (ammo_i > NUMAMMO || ammo_i < 0)
+		I_Error ("P_GiveAmmo: bad type %i", ammo_i);
 		
-    if (ammo > NUMAMMO)
-	I_Error ("P_GiveAmmo: bad type %i", ammo);
-		
-    if ( player->ammo[ammo] == player->maxammo[ammo]  )
-	return false;
+	
+
+    if ( player->ammo[ammo_i] == player->maxammo[ammo_i]  )
+		return false;
 		
     if (num)
-	num *= clipammo[ammo];
+	num *= clipammo[ammo_i];
     else
-	num = clipammo[ammo]/2;
+	num = clipammo[ammo_i]/2;
     
-    if (gameskill == sk_baby
-	|| gameskill == sk_nightmare
+    if (gameskill == skill_t::sk_baby
+	|| gameskill == skill_t::sk_nightmare
 	|| critical->moreammo)
     {
-	// give double ammo in trainer mode,
-	// you'll need in nightmare
-	num <<= 1;
+		// give double ammo in trainer mode,
+		// you'll need in nightmare
+		num <<= 1;
     }
     
 	// [NS] Halve if needed.
@@ -103,56 +105,56 @@ P_GiveAmmo
 			num = 1;
 	}
 		
-    oldammo = player->ammo[ammo];
-    player->ammo[ammo] += num;
+    int oldammo = player->ammo[ammo_i];
+    player->ammo[ammo_i] += num;
 
-    if (player->ammo[ammo] > player->maxammo[ammo])
-	player->ammo[ammo] = player->maxammo[ammo];
+    if (player->ammo[ammo_i] > player->maxammo[ammo_i])
+		player->ammo[ammo_i] = player->maxammo[ammo_i];
 
     // If non zero ammo, 
     // don't change up weapons,
     // player was lower on purpose.
     if (oldammo)
-	return true;	
+		return true;	
 
     // We were down to zero,
     // so select a new weapon.
     // Preferences are not user selectable.
     switch (ammo)
     {
-      case am_clip:
-	if (player->readyweapon == wp_fist)
+      case ammotype_t::am_clip:
+	if (player->readyweapon == weapontype_t::wp_fist)
 	{
-	    if (player->weaponowned[wp_chaingun])
-		player->pendingweapon = wp_chaingun;
+	    if (player->weaponowned[ static_cast<int>(weapontype_t::wp_chaingun)])
+			player->pendingweapon =  weapontype_t::wp_chaingun;
 	    else
-		player->pendingweapon = wp_pistol;
+			player->pendingweapon =  weapontype_t::wp_pistol;
 	}
 	break;
 	
-      case am_shell:
-	if (player->readyweapon == wp_fist
-	    || player->readyweapon == wp_pistol)
+      case ammotype_t::am_shell:
+	if (player->readyweapon ==  weapontype_t::wp_fist
+	    || player->readyweapon ==  weapontype_t::wp_pistol)
 	{
-	    if (player->weaponowned[wp_shotgun])
-		player->pendingweapon = wp_shotgun;
+	    if (player->weaponowned[static_cast<int>( weapontype_t::wp_shotgun ) ])
+			player->pendingweapon =  weapontype_t::wp_shotgun;
 	}
 	break;
 	
-      case am_cell:
-	if (player->readyweapon == wp_fist
-	    || player->readyweapon == wp_pistol)
+      case ammotype_t::am_cell:
+	if (player->readyweapon ==  weapontype_t::wp_fist
+	    || player->readyweapon ==  weapontype_t::wp_pistol)
 	{
-	    if (player->weaponowned[wp_plasma])
-		player->pendingweapon = wp_plasma;
+	    if (player->weaponowned[ static_cast<int>(weapontype_t::wp_plasma)])
+			player->pendingweapon = weapontype_t:: wp_plasma;
 	}
 	break;
 	
-      case am_misl:
-	if (player->readyweapon == wp_fist)
+      case ammotype_t::am_misl:
+	if (player->readyweapon ==  weapontype_t::wp_fist)
 	{
-	    if (player->weaponowned[wp_missile])
-		player->pendingweapon = wp_missile;
+	    if (player->weaponowned[ static_cast<int>(weapontype_t::wp_missile)])
+			player->pendingweapon =  weapontype_t::wp_missile;
 	}
       default:
 	break;
@@ -189,53 +191,53 @@ P_GiveWeapon
     boolean	gaveammo;
     boolean	gaveweapon;
 	
-    if (netgame
-	&& (deathmatch!=2)
-	 && !dropped )
+	const int weapon_i = static_cast<int>(weapon);
+
+    if ( netgame && ( deathmatch != 2 ) && !dropped )
     {
-	// leave placed weapons forever on net games
-	if (player->weaponowned[weapon])
-	    return false;
+		// leave placed weapons forever on net games
+		if (player->weaponowned[weapon_i])
+			return false;
 
-	player->bonuscount += BONUSADD;
-	player->weaponowned[weapon] = true;
+		player->bonuscount += BONUSADD;
+		player->weaponowned[weapon_i] = true;
 
-	if (deathmatch)
-	    P_GiveAmmo (player, weaponinfo[weapon].ammo, 5, false);
-	else
-	    P_GiveAmmo (player, weaponinfo[weapon].ammo, 2, false);
-	player->pendingweapon = weapon;
-	// [crispy] show weapon pickup messages in multiplayer games
-	player->message = DEH_String(WeaponPickupMessages[weapon]);
+		if (deathmatch)
+			P_GiveAmmo (player, weaponinfo[weapon_i].ammo, 5, false);
+		else
+			P_GiveAmmo (player, weaponinfo[weapon_i].ammo, 2, false);
+		player->pendingweapon = weapon;
+		// [crispy] show weapon pickup messages in multiplayer games
+		player->message = DEH_String(WeaponPickupMessages[weapon_i]);
 
-	if (player == &players[displayplayer])
-	    S_StartSound (nullptr, sfx_wpnup);
-	return false;
+		if (player == &players[displayplayer])
+			S_StartSound (nullptr, sfx_wpnup);
+		return false;
     }
 	
-    if (weaponinfo[weapon].ammo != am_noammo)
+    if (weaponinfo[weapon_i].ammo != ammotype_t::am_noammo)
     {
-	// give one clip with a dropped weapon,
-	// two clips with a found weapon
-	// [NS] Just need to pass that it's dropped.
-	gaveammo = P_GiveAmmo (player, weaponinfo[weapon].ammo, 2, dropped);
-	/*
-	if (dropped)
-	    gaveammo = P_GiveAmmo (player, weaponinfo[weapon].ammo, 1);
-	else
-	    gaveammo = P_GiveAmmo (player, weaponinfo[weapon].ammo, 2);
-	*/
+		// give one clip with a dropped weapon,
+		// two clips with a found weapon
+		// [NS] Just need to pass that it's dropped.
+		gaveammo = P_GiveAmmo (player, weaponinfo[weapon_i].ammo, 2, dropped);
+		/*
+		if (dropped)
+			gaveammo = P_GiveAmmo (player, weaponinfo[weapon].ammo, 1);
+		else
+			gaveammo = P_GiveAmmo (player, weaponinfo[weapon].ammo, 2);
+		*/
     }
     else
-	gaveammo = false;
+		gaveammo = false;
 	
-    if (player->weaponowned[weapon])
-	gaveweapon = false;
+    if (player->weaponowned[weapon_i])
+		gaveweapon = false;
     else
     {
-	gaveweapon = true;
-	player->weaponowned[weapon] = true;
-	player->pendingweapon = weapon;
+		gaveweapon = true;
+		player->weaponowned[weapon_i] = true;
+		player->pendingweapon = weapon;
     }
 	
     return (gaveweapon || gaveammo);
@@ -297,11 +299,12 @@ P_GiveCard
 ( player_t*	player,
   card_t	card )
 {
-    if (player->cards[card])
-	return;
+	const int card_i = static_cast<int>(card);
+    if (player->cards[card_i])
+		return;
     
     player->bonuscount += netgame ? BONUSADD : 0; // [crispy] Fix "Key pickup resets palette"
-    player->cards[card] = 1;
+    player->cards[card_i] = 1;
 }
 
 
@@ -311,44 +314,46 @@ P_GiveCard
 boolean
 P_GivePower
 ( player_t*	player,
-  int /*powertype_t*/	power )
+  powertype_t	power )
 {
-    if (power == pw_invulnerability)
+	const int power_i = static_cast<int>(power);
+
+    if (power == powertype_t::pw_invulnerability)
     {
-	player->powers[power] = INVULNTICS;
-	return true;
+		player->powers[power_i] = static_cast<int>( powerduration_t::INVULNTICS );
+		return true;
     }
     
-    if (power == pw_invisibility)
+    if (power == powertype_t::pw_invisibility)
     {
-	player->powers[power] = INVISTICS;
-	player->mo->flags |= MF_SHADOW;
-	return true;
+		player->powers[power_i] =  static_cast<int>( powerduration_t::INVISTICS );
+		player->mo->flags |= MF_SHADOW;
+		return true;
     }
     
-    if (power == pw_infrared)
+    if (power == powertype_t::pw_infrared)
     {
-	player->powers[power] = INFRATICS;
-	return true;
+		player->powers[power_i] = static_cast<int>( powerduration_t::INFRATICS );
+		return true;
     }
     
-    if (power == pw_ironfeet)
+    if (power == powertype_t::pw_ironfeet)
     {
-	player->powers[power] = IRONTICS;
-	return true;
+		player->powers[power_i] = static_cast<int>( powerduration_t::IRONTICS ) ;
+		return true;
     }
     
-    if (power == pw_strength)
+    if (power == powertype_t::pw_strength)
     {
-	P_GiveBody (player, 100);
-	player->powers[power] = 1;
-	return true;
+		P_GiveBody (player, 100);
+		player->powers[power_i] = 1;
+		return true;
     }
 	
-    if (player->powers[power])
-	return false;	// already got it
+    if (player->powers[power_i])
+		return false;	// already got it
 		
-    player->powers[power] = 1;
+    player->powers[power_i] = 1;
     return true;
 }
 
@@ -413,7 +418,7 @@ P_TouchSpecialThing
 	
       case SPR_BON2:
 	player->armorpoints++;		// can go over 100%
-	if (player->armorpoints > deh_max_armor && gameversion > exe_doom_1_2)
+	if (player->armorpoints > deh_max_armor && gameversion > GameVersion_t::exe_doom_1_2)
 	    player->armorpoints = deh_max_armor;
         // deh_green_armor_class only applies to the green armor shirt;
         // for the armor helmets, armortype 1 is always used.
@@ -428,12 +433,12 @@ P_TouchSpecialThing
 	    player->health = deh_max_soulsphere;
 	player->mo->health = player->health;
 	player->message = DEH_String(GOTSUPER);
-	if (gameversion > exe_doom_1_2)
+	if (gameversion > GameVersion_t::exe_doom_1_2)
 	    sound = sfx_getpow;
 	break;
 	
       case SPR_MEGA:
-	if (gamemode != commercial)
+	if (gamemode != GameMode_t::commercial)
 	    return;
 	player->health = deh_megasphere_health;
 	player->mo->health = player->health;
@@ -441,61 +446,61 @@ P_TouchSpecialThing
         // affects the MegaArmor.
 	P_GiveArmor (player, 2);
 	player->message = DEH_String(GOTMSPHERE);
-	if (gameversion > exe_doom_1_2)
+	if (gameversion > GameVersion_t::exe_doom_1_2)
 	    sound = sfx_getpow;
 	break;
 	
 	// cards
 	// leave cards for everyone
       case SPR_BKEY:
-	if (!player->cards[it_bluecard])
+	if (!player->cards[static_cast<int>(card_t::it_bluecard)])
 	    player->message = DEH_String(GOTBLUECARD);
-	P_GiveCard (player, it_bluecard);
+	P_GiveCard (player, card_t::it_bluecard);
 	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
 	
       case SPR_YKEY:
-	if (!player->cards[it_yellowcard])
+	if (!player->cards[static_cast<int>(card_t::it_yellowcard)])
 	    player->message = DEH_String(GOTYELWCARD);
-	P_GiveCard (player, it_yellowcard);
+	P_GiveCard (player, card_t::it_yellowcard);
 	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
 	
       case SPR_RKEY:
-	if (!player->cards[it_redcard])
+	if (!player->cards[static_cast<int>(card_t::it_redcard)])
 	    player->message = DEH_String(GOTREDCARD);
-	P_GiveCard (player, it_redcard);
+	P_GiveCard (player, card_t::it_redcard);
 	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
 	
       case SPR_BSKU:
-	if (!player->cards[it_blueskull])
+	if (!player->cards[static_cast<int>(card_t::it_blueskull)])
 	    player->message = DEH_String(GOTBLUESKUL);
-	P_GiveCard (player, it_blueskull);
+	P_GiveCard (player, card_t::it_blueskull);
 	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
 	
       case SPR_YSKU:
-	if (!player->cards[it_yellowskull])
+	if (!player->cards[static_cast<int>(card_t::it_yellowskull)])
 	    player->message = DEH_String(GOTYELWSKUL);
-	P_GiveCard (player, it_yellowskull);
+	P_GiveCard (player, card_t::it_yellowskull);
 	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
 	return;
 	
       case SPR_RSKU:
-	if (!player->cards[it_redskull])
+	if (!player->cards[static_cast<int>(card_t::it_redskull)])
 	    player->message = DEH_String(GOTREDSKULL);
-	P_GiveCard (player, it_redskull);
+	P_GiveCard (player, card_t::it_redskull);
 	sound = sfx_keyup; // [NS] Optional key pickup sound.
 	if (!netgame)
 	    break;
@@ -522,52 +527,54 @@ P_TouchSpecialThing
 	
 	// power ups
       case SPR_PINV:
-	if (!P_GivePower (player, pw_invulnerability))
+	if (!P_GivePower (player, powertype_t::pw_invulnerability))
 	    return;
 	player->message = DEH_String(GOTINVUL);
-	if (gameversion > exe_doom_1_2)
+	if (gameversion > GameVersion_t::exe_doom_1_2)
 	    sound = sfx_getpow;
 	break;
 	
       case SPR_PSTR:
-	if (!P_GivePower (player, pw_strength))
+	if (!P_GivePower (player, powertype_t::pw_strength))
 	    return;
 	player->message = DEH_String(GOTBERSERK);
-	if (player->readyweapon != wp_fist)
-	    player->pendingweapon = wp_fist;
-	if (gameversion > exe_doom_1_2)
+
+	if (player->readyweapon != weapontype_t::wp_fist)
+	    player->pendingweapon = weapontype_t::wp_fist;
+
+	if (gameversion > GameVersion_t::exe_doom_1_2)
 	    sound = sfx_getpow;
 	break;
 	
       case SPR_PINS:
-	if (!P_GivePower (player, pw_invisibility))
+	if (!P_GivePower (player, powertype_t::pw_invisibility))
 	    return;
 	player->message = DEH_String(GOTINVIS);
-	if (gameversion > exe_doom_1_2)
+	if (gameversion > GameVersion_t::exe_doom_1_2)
 	    sound = sfx_getpow;
 	break;
 	
       case SPR_SUIT:
-	if (!P_GivePower (player, pw_ironfeet))
+	if (!P_GivePower (player, powertype_t::pw_ironfeet))
 	    return;
 	player->message = DEH_String(GOTSUIT);
-	if (gameversion > exe_doom_1_2)
+	if (gameversion > GameVersion_t::exe_doom_1_2)
 	    sound = sfx_getpow;
 	break;
 	
       case SPR_PMAP:
-	if (!P_GivePower (player, pw_allmap))
+	if (!P_GivePower (player, powertype_t::pw_allmap))
 	    return;
 	player->message = DEH_String(GOTMAP);
-	if (gameversion > exe_doom_1_2)
+	if (gameversion > GameVersion_t::exe_doom_1_2)
 	    sound = sfx_getpow;
 	break;
 	
       case SPR_PVIS:
-	if (!P_GivePower (player, pw_infrared))
+	if (!P_GivePower (player, powertype_t::pw_infrared))
 	    return;
 	player->message = DEH_String(GOTVISOR);
-	if (gameversion > exe_doom_1_2)
+	if (gameversion > GameVersion_t::exe_doom_1_2)
 	    sound = sfx_getpow;
 	break;
 	
@@ -586,49 +593,50 @@ P_TouchSpecialThing
 		return;
 	}
 	*/
-	    if (!P_GiveAmmo (player,am_clip,1,dropped))
-		return;
-	player->message = DEH_String(GOTCLIP);
+	    if (!P_GiveAmmo (player, ammotype_t::am_clip, 1, dropped))
+			return;
+		
+		player->message = DEH_String(GOTCLIP);
 	break;
 	
       case SPR_AMMO:
-	if (!P_GiveAmmo (player, am_clip,5,dropped))
-	    return;
-	player->message = DEH_String(GOTCLIPBOX);
+			if (!P_GiveAmmo (player, ammotype_t::am_clip,5,dropped))
+	    		return;
+			player->message = DEH_String(GOTCLIPBOX);
 	break;
 	
       case SPR_ROCK:
-	if (!P_GiveAmmo (player, am_misl,1,dropped))
+	if (!P_GiveAmmo (player, ammotype_t::am_misl,1,dropped))
 	    return;
 	player->message = DEH_String(GOTROCKET);
 	break;
 	
       case SPR_BROK:
-	if (!P_GiveAmmo (player, am_misl,5,dropped))
+	if (!P_GiveAmmo (player, ammotype_t::am_misl,5,dropped))
 	    return;
 	player->message = DEH_String(GOTROCKBOX);
 	break;
 	
       case SPR_CELL:
-	if (!P_GiveAmmo (player, am_cell,1,dropped))
+	if (!P_GiveAmmo (player, ammotype_t::am_cell,1,dropped))
 	    return;
 	player->message = DEH_String(GOTCELL);
 	break;
 	
       case SPR_CELP:
-	if (!P_GiveAmmo (player, am_cell,5,dropped))
+	if (!P_GiveAmmo (player, ammotype_t::am_cell,5,dropped))
 	    return;
 	player->message = DEH_String(GOTCELLBOX);
 	break;
 	
       case SPR_SHEL:
-	if (!P_GiveAmmo (player, am_shell,1,dropped))
+	if (!P_GiveAmmo (player, ammotype_t::am_shell,1,dropped))
 	    return;
 	player->message = DEH_String(GOTSHELLS);
 	break;
 	
       case SPR_SBOX:
-	if (!P_GiveAmmo (player, am_shell,5,dropped))
+	if (!P_GiveAmmo (player, ammotype_t::am_shell,5,dropped))
 	    return;
 	player->message = DEH_String(GOTSHELLBOX);
 	break;
@@ -641,21 +649,21 @@ P_TouchSpecialThing
 	    player->backpack = true;
 	}
 	for (i=0 ; i<NUMAMMO ; i++)
-	    P_GiveAmmo (player, i, 1, false);
+	    P_GiveAmmo (player, static_cast<ammotype_t>( i ), 1, false);
 	player->message = DEH_String(GOTBACKPACK);
 	break;
 	
 	// weapons
 	// [NS] Give half ammo for all dropped weapons.
       case SPR_BFUG:
-	if (!P_GiveWeapon (player, wp_bfg, dropped) )
+	if (!P_GiveWeapon (player, weapontype_t::wp_bfg, dropped) )
 	    return;
 	player->message = DEH_String(GOTBFG9000);
 	sound = sfx_wpnup;	
 	break;
 	
       case SPR_MGUN:
-        if (!P_GiveWeapon(player, wp_chaingun,
+        if (!P_GiveWeapon(player, weapontype_t::wp_chaingun,
                           (special->flags & MF_DROPPED) != 0))
             return;
 	player->message = DEH_String(GOTCHAINGUN);
@@ -663,28 +671,28 @@ P_TouchSpecialThing
 	break;
 	
       case SPR_CSAW:
-	if (!P_GiveWeapon (player, wp_chainsaw, dropped) )
+	if (!P_GiveWeapon (player,weapontype_t:: wp_chainsaw, dropped) )
 	    return;
 	player->message = DEH_String(GOTCHAINSAW);
 	sound = sfx_wpnup;	
 	break;
 	
       case SPR_LAUN:
-	if (!P_GiveWeapon (player, wp_missile, dropped) )
+	if (!P_GiveWeapon (player,weapontype_t:: wp_missile, dropped) )
 	    return;
 	player->message = DEH_String(GOTLAUNCHER);
 	sound = sfx_wpnup;	
 	break;
 	
       case SPR_PLAS:
-	if (!P_GiveWeapon (player, wp_plasma, dropped) )
+	if (!P_GiveWeapon (player, weapontype_t::wp_plasma, dropped) )
 	    return;
 	player->message = DEH_String(GOTPLASMA);
 	sound = sfx_wpnup;	
 	break;
 	
       case SPR_SHOT:
-        if (!P_GiveWeapon(player, wp_shotgun,
+        if (!P_GiveWeapon(player, weapontype_t::wp_shotgun,
                           (special->flags & MF_DROPPED) != 0))
             return;
 	player->message = DEH_String(GOTSHOTGUN);
@@ -692,7 +700,7 @@ P_TouchSpecialThing
 	break;
 		
       case SPR_SGN2:
-        if (!P_GiveWeapon(player, wp_supershotgun,
+        if (!P_GiveWeapon(player, weapontype_t::wp_supershotgun,
                           (special->flags & MF_DROPPED) != 0))
             return;
 	player->message = DEH_String(GOTSHOTGUN2);
@@ -770,7 +778,7 @@ P_KillMobj
 	// [JN] & [crispy] Reset the yellow bonus palette when the player dies
 	target->player->bonuscount = 0;
 	// [JN] & [crispy] Remove the effect of the inverted palette when the player dies
-	target->player->fixedcolormap = target->player->powers[pw_infrared] ? 1 : 0;
+	target->player->fixedcolormap = target->player->powers[static_cast<int>(powertype_t::pw_infrared)] ? 1 : 0;
 
 	if (target->player == &players[consoleplayer]
 	    && automapactive
@@ -811,7 +819,7 @@ P_KillMobj
 
     // In Chex Quest, monsters don't drop items.
 
-    if (gameversion == exe_chex)
+    if (gameversion == GameVersion_t::exe_chex)
     {
         return;
     }
@@ -869,7 +877,7 @@ P_DamageMobj
     }
 	
     player = target->player;
-    if (player && gameskill == sk_baby)
+    if (player && gameskill == skill_t::sk_baby)
 	damage >>= 1; 	// take half damage in trainer mode
 		
 
@@ -880,7 +888,7 @@ P_DamageMobj
 	&& !(target->flags & MF_NOCLIP)
 	&& (!source
 	    || !source->player
-	    || source->player->readyweapon != wp_chainsaw))
+	    || source->player->readyweapon != weapontype_t::wp_chainsaw))
     {
 	ang = R_PointToAngle2 ( inflictor->x,
 				inflictor->y,
@@ -919,7 +927,7 @@ P_DamageMobj
 	// ignore damage in GOD mode, or with INVUL power.
 	if ( damage < 1000
 	     && ( (player->cheats&CF_GODMODE)
-		  || player->powers[pw_invulnerability] ) )
+		  || player->powers[static_cast<int>(powertype_t::pw_invulnerability)] ) )
 	{
 	    return;
 	}
@@ -979,7 +987,7 @@ P_DamageMobj
     target->reactiontime = 0;		// we're awake now...	
 
     if ( (!target->threshold || target->type == MT_VILE)
-	 && source && (source != target || gameversion <= exe_doom_1_2)
+	 && source && (source != target || gameversion <= GameVersion_t::exe_doom_1_2)
 	 && source->type != MT_VILE)
     {
 	// if not intent on another player,

@@ -51,15 +51,15 @@
 // drawn directly on the view screen,
 // coordinates are given for a 320*200 view screen.
 //
-typedef enum
+enum psprnum_t
 {
     ps_weapon,
     ps_flash,
     NUMPSPRITES
 
-} psprnum_t;
+} ;
 
-typedef struct
+struct pspdef_t
 {
     state_t*	state;	// a nullptr state means not active
     int		tics;
@@ -69,7 +69,7 @@ typedef struct
     // [crispy] variable weapon sprite bob
     fixed_t	sx2;
     fixed_t	sy2;
-} pspdef_t;
+} ;
 
 
 extern fixed_t bulletslope;

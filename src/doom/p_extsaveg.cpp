@@ -32,6 +32,8 @@
 #include "s_musinfo.hpp"
 #include "z_zone.hpp"
 
+#include "../../utils/memory.hpp"
+
 #define MAX_LINE_LEN 260
 #define MAX_STRING_LEN 80
 
@@ -154,7 +156,7 @@ static void P_ReadFireFlicker (const char *key)
 	{
 		fireflicker_t *flick;
 
-		flick = zmalloc<decltype(		flick)>(sizeof(*flick), PU_LEVEL, nullptr);
+		flick = zmalloc<decltype(flick)>(sizeof(*flick), PU_LEVEL, nullptr);
 
 		flick->sector = &sectors[sector];
 		flick->count = count;
@@ -306,7 +308,7 @@ static void P_ReadButton (const char *key)
 	           &btimer) == 5 &&
 	    !strncmp(string, key, MAX_STRING_LEN))
 	{
-		P_StartButton(&lines[linedef], where, btexture, btimer);
+		P_StartButton(&lines[linedef], static_cast<bwhere_e>(where), btexture, btimer);
 	}
 }
 
@@ -495,7 +497,7 @@ void P_WriteExtendedSaveGameData (void)
 {
 	int i;
 
-	line = malloc(MAX_LINE_LEN);
+	line = static_cast<char*>( malloc(MAX_LINE_LEN) );
 
 	for (i = 0; i < arrlen(extsavegdata); i++)
 	{
@@ -535,8 +537,8 @@ void P_ReadExtendedSaveGameData (int pass)
 	byte episode, map;
 	int lumpnum = -1;
 
-	line = malloc(MAX_LINE_LEN);
-	string = malloc(MAX_STRING_LEN);
+	line = static_cast<char*>( malloc(MAX_LINE_LEN) );
+	string = static_cast<char*>( malloc(MAX_STRING_LEN) );
 
 	// [crispy] two-pass reading of extended savegame data
 	if (pass == 1)

@@ -132,7 +132,7 @@ void P_LoadVertexes (int lump)
     vertexes = zmalloc<decltype(    vertexes)>(numvertexes*sizeof(vertex_t),PU_LEVEL,0);	
 
     // Load data into cache.
-    data = W_CacheLumpNum (lump, PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump, PU_STATIC);
 	
     ml = (mapvertex_t *)data;
     li = vertexes;
@@ -173,7 +173,7 @@ void P_LoadSegs (int lump)
     numsegs = W_LumpLength (lump) / sizeof(mapseg_t);
     segs = zmalloc<decltype(    segs)>(numsegs*sizeof(seg_t),PU_LEVEL,0);	
     memset (segs, 0, numsegs*sizeof(seg_t));
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     ml = (mapseg_t *)data;
     li = segs;
@@ -288,7 +288,7 @@ void P_LoadSubsectors (int lump)
 	
     numsubsectors = W_LumpLength (lump) / sizeof(mapsubsector_t);
     subsectors = zmalloc<decltype(    subsectors)>(numsubsectors*sizeof(subsector_t),PU_LEVEL,0);	
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     ms = (mapsubsector_t *)data;
     memset (subsectors,0, numsubsectors*sizeof(subsector_t));
@@ -318,7 +318,7 @@ void P_LoadSectors (int lump)
     numsectors = W_LumpLength (lump) / sizeof(mapsector_t);
     sectors = zmalloc<decltype(    sectors)>(numsectors*sizeof(sector_t),PU_LEVEL,0);	
     memset (sectors, 0, numsectors*sizeof(sector_t));
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     ms = (mapsector_t *)data;
     ss = sectors;
@@ -369,7 +369,7 @@ void P_LoadNodes (int lump)
 	
     numnodes = W_LumpLength (lump) / sizeof(mapnode_t);
     nodes = zmalloc<decltype(    nodes)>(numnodes*sizeof(node_t),PU_LEVEL,0);	
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     mn = (mapnode_t *)data;
     no = nodes;
@@ -406,7 +406,7 @@ void P_LoadThings (int lump)
     int			numthings;
 //    boolean		spawn;
 
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
     numthings = W_LumpLength (lump) / sizeof(mapthing_t);
 
     mt = (mapthing_t *)data;
@@ -482,7 +482,7 @@ void P_LoadLineDefs (int lump)
     numlines = W_LumpLength (lump) / sizeof(maplinedef_t);
     lines = zmalloc<decltype(    lines)>(numlines*sizeof(line_t),PU_LEVEL,0);	
     memset (lines, 0, numlines*sizeof(line_t));
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     mld = (maplinedef_t *)data;
     ld = lines;
@@ -561,7 +561,7 @@ void P_LoadSideDefs (int lump)
     numsides = W_LumpLength (lump) / sizeof(mapsidedef_t);
     sides = zmalloc<decltype(    sides)>(numsides*sizeof(side_t),PU_LEVEL,0);	
     memset (sides, 0, numsides*sizeof(side_t));
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     msd = (mapsidedef_t *)data;
     sd = sides;
@@ -866,7 +866,7 @@ static void P_LoadReject(int lumpnum)
 
     if (lumplen >= minlength)
     {
-        rejectmatrix = W_CacheLumpNum(lumpnum, PU_LEVEL);
+        rejectmatrix = W_CacheLumpNum_cast<decltype(        rejectmatrix)>(lumpnum, PU_LEVEL);
     }
     else
     {

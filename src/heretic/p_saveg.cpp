@@ -904,7 +904,7 @@ static void saveg_read_mobj_t(mobj_t *str)
     // int threshold;
     str->threshold = SV_ReadLong();
 
-    // struct player_s *player;
+    // struct player_t *player;
     i = SV_ReadLong();
     if (i != 0)
     {
@@ -1078,7 +1078,7 @@ static void saveg_write_mobj_t(mobj_t *str)
     // int threshold;
     SV_WriteLong(str->threshold);
 
-    // struct player_s *player;
+    // struct player_t *player;
     if (str->player != nullptr)
     {
         SV_WriteLong(str->player - players + 1);

@@ -19,11 +19,11 @@
 
 // [crispy] adapted from smmu/r_ripple.c, by Simon Howard
 
-#include <tables.h>
+#include "tables.hpp"
 
-#include <i_system.h>
-#include <w_wad.h>
-#include <z_zone.h>
+#include "i_system.hpp"
+#include "w_wad.hpp"
+#include "z_zone.hpp"
 
 #include "doomstat.hpp"
 
@@ -51,7 +51,7 @@ void R_InitDistortedFlats()
 	{
 		int i;
 
-		offsets = I_Realloc(nullptr, SEQUENCE * FLATSIZE * sizeof(*offsets));
+		offsets = (decltype(		offsets)) I_Realloc(nullptr, SEQUENCE * FLATSIZE * sizeof(*offsets));
 		offset = offsets;
 
 		for (i = 0; i < SEQUENCE; i++)
@@ -108,7 +108,7 @@ char *R_DistortedFlat(int flatnum)
 		char *normalflat;
 		int i;
 
-		normalflat = W_CacheLumpNum(flatnum, PU_STATIC);
+		normalflat = W_CacheLumpNum_cast<decltype(		normalflat)>(flatnum, PU_STATIC);
 
 		for (i = 0; i < FLATSIZE; i++)
 		{

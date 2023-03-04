@@ -298,14 +298,14 @@ void SB_Init(void)
     startLump = W_GetNumForName("IN0");
     for (i = 0; i < 10; i++)
     {
-        PatchINumbers[i] = W_CacheLumpNum(startLump + i, PU_STATIC);
+        PatchINumbers[i] = W_CacheLumpNum_cast<decltype(        PatchINumbers[i])>(startLump + i, PU_STATIC);
     }
     PatchNEGATIVE = W_CacheLumpName_patch("NEGNUM", PU_STATIC);
     FontBNumBase = W_GetNumForName("FONTB16");
     startLump = W_GetNumForName("SMALLIN0");
     for (i = 0; i < 10; i++)
     {
-        PatchSmNumbers[i] = W_CacheLumpNum(startLump + i, PU_STATIC);
+        PatchSmNumbers[i] = W_CacheLumpNum_cast<decltype(        PatchSmNumbers[i])>(startLump + i, PU_STATIC);
     }
     PlayPalette = W_GetNumForName("PLAYPAL");
     SpinFlylump = W_GetNumForName("SPFLY0");
@@ -360,25 +360,25 @@ void SB_SetClassData(void)
     int class;
 
     class = PlayerClass[consoleplayer]; // original player class (not pig)
-    PatchWEAPONSLOT = W_CacheLumpNum(W_GetNumForName("wpslot0")
+    PatchWEAPONSLOT = W_CacheLumpNum_cast<decltype(    PatchWEAPONSLOT)>(W_GetNumForName("wpslot0")
                                      + class, PU_STATIC);
-    PatchWEAPONFULL = W_CacheLumpNum(W_GetNumForName("wpfull0")
+    PatchWEAPONFULL = W_CacheLumpNum_cast<decltype(    PatchWEAPONFULL)>(W_GetNumForName("wpfull0")
                                      + class, PU_STATIC);
-    PatchPIECE1 = W_CacheLumpNum(W_GetNumForName("wpiecef1")
+    PatchPIECE1 = W_CacheLumpNum_cast<decltype(    PatchPIECE1)>(W_GetNumForName("wpiecef1")
                                  + class, PU_STATIC);
-    PatchPIECE2 = W_CacheLumpNum(W_GetNumForName("wpiecef2")
+    PatchPIECE2 = W_CacheLumpNum_cast<decltype(    PatchPIECE2)>(W_GetNumForName("wpiecef2")
                                  + class, PU_STATIC);
-    PatchPIECE3 = W_CacheLumpNum(W_GetNumForName("wpiecef3")
+    PatchPIECE3 = W_CacheLumpNum_cast<decltype(    PatchPIECE3)>(W_GetNumForName("wpiecef3")
                                  + class, PU_STATIC);
-    PatchCHAIN = W_CacheLumpNum(W_GetNumForName("chain") + class, PU_STATIC);
+    PatchCHAIN = W_CacheLumpNum_cast<decltype(    PatchCHAIN)>(W_GetNumForName("chain") + class, PU_STATIC);
     if (!netgame)
     {                           // single player game uses red life gem (the second gem)
-        PatchLIFEGEM = W_CacheLumpNum(W_GetNumForName("lifegem")
+        PatchLIFEGEM = W_CacheLumpNum_cast<decltype(        PatchLIFEGEM)>(W_GetNumForName("lifegem")
                                       + maxplayers * class + 1, PU_STATIC);
     }
     else
     {
-        PatchLIFEGEM = W_CacheLumpNum(W_GetNumForName("lifegem")
+        PatchLIFEGEM = W_CacheLumpNum_cast<decltype(        PatchLIFEGEM)>(W_GetNumForName("lifegem")
                                       + maxplayers * class + consoleplayer,
                                       PU_STATIC);
     }
@@ -514,7 +514,7 @@ static void DrRedINumber(signed int val, int x, int y)
         V_DrawPatch(x + 8, y, patch);
     }
     val = val % 10;
-    patch = W_CacheLumpNum(W_GetNumForName("inred0") + val, PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)>(W_GetNumForName("inred0") + val, PU_CACHE);
     V_DrawPatch(x + 16, y, patch);
 }
 
@@ -540,19 +540,19 @@ static void DrBNumber(signed int val, int x, int y)
     }
     if (val > 99)
     {
-        patch = W_CacheLumpNum(FontBNumBase + val / 100, PU_CACHE);
+        patch = W_CacheLumpNum_cast<decltype(        patch)>(FontBNumBase + val / 100, PU_CACHE);
         V_DrawShadowedPatch(xpos + 6 - SHORT(patch->width) / 2, y, patch);
     }
     val = val % 100;
     xpos += 12;
     if (val > 9 || oldval > 99)
     {
-        patch = W_CacheLumpNum(FontBNumBase + val / 10, PU_CACHE);
+        patch = W_CacheLumpNum_cast<decltype(        patch)>(FontBNumBase + val / 10, PU_CACHE);
         V_DrawShadowedPatch(xpos + 6 - SHORT(patch->width) / 2, y, patch);
     }
     val = val % 10;
     xpos += 12;
-    patch = W_CacheLumpNum(FontBNumBase + val, PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)>(FontBNumBase + val, PU_CACHE);
     V_DrawShadowedPatch(xpos + 6 - SHORT(patch->width) / 2, y, patch);
 }
 
@@ -1557,7 +1557,7 @@ void DrawFullScreenStuff(void)
 void Draw_TeleportIcon(void)
 {
     patch_t *patch;
-    patch = W_CacheLumpNum(W_GetNumForName("teleicon"), PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)>(W_GetNumForName("teleicon"), PU_CACHE);
     V_DrawPatch(100, 68, patch);
     UpdateState |= I_FULLSCRN;
     I_FinishUpdate();
@@ -1572,7 +1572,7 @@ void Draw_TeleportIcon(void)
 void Draw_SaveIcon(void)
 {
     patch_t *patch;
-    patch = W_CacheLumpNum(W_GetNumForName("saveicon"), PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)>(W_GetNumForName("saveicon"), PU_CACHE);
     V_DrawPatch(100, 68, patch);
     UpdateState |= I_FULLSCRN;
     I_FinishUpdate();
@@ -1587,7 +1587,7 @@ void Draw_SaveIcon(void)
 void Draw_LoadIcon(void)
 {
     patch_t *patch;
-    patch = W_CacheLumpNum(W_GetNumForName("loadicon"), PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)>(W_GetNumForName("loadicon"), PU_CACHE);
     V_DrawPatch(100, 68, patch);
     UpdateState |= I_FULLSCRN;
     I_FinishUpdate();

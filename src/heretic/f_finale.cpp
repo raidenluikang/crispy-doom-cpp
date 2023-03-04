@@ -207,7 +207,7 @@ void F_TextWrite(void)
             continue;
         }
 
-        w = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+        w = W_CacheLumpNum_cast<decltype(        w)>(FontABaseLump + c - 33, PU_CACHE);
         if (cx + SHORT(w->width) > SCREENWIDTH)
             break;
         V_DrawPatch(cx, cy, w);
@@ -268,8 +268,8 @@ void F_DemonScroll(void)
     }
     i1 = W_GetNumForName(DEH_String("FINAL1"));
     i2 = W_GetNumForName(DEH_String("FINAL2"));
-    p1 = W_CacheLumpNum(i1, PU_LEVEL);
-    p2 = W_CacheLumpNum(i2, PU_LEVEL);
+    p1 = W_CacheLumpNum_cast<decltype(    p1)>(i1, PU_LEVEL);
+    p2 = W_CacheLumpNum_cast<decltype(    p2)>(i2, PU_LEVEL);
     if (finalecount < 70)
     {
         V_DrawFullscreenRawOrPatch(i1);

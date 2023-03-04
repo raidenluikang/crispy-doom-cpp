@@ -637,8 +637,8 @@ static const byte *R_BrightmapForTexName_Doom (const char *texname)
 	{
 		const fullbright_t *fullbright = &fullbright_doom[i];
 
-		if ((gamemission == doom && fullbright->game == DOOM2ONLY) ||
-		    (gamemission != doom && fullbright->game == DOOM1ONLY))
+		if ((gamemission == GameMission_t::doom && fullbright->game == DOOM2ONLY) ||
+		    (gamemission != GameMission_t::doom && fullbright->game == DOOM1ONLY))
 		{
 			continue;
 		}
@@ -934,7 +934,7 @@ const byte *(*R_BrightmapForState) (const int state);
 
 void R_InitBrightmaps ()
 {
-	if (gameversion == exe_hacx)
+	if (gameversion == GameVersion_t::exe_hacx)
 	{
 		bmapflatnum[0] = R_FlatNumForName("FLOOR1_1");
 		bmapflatnum[1] = R_FlatNumForName("FLOOR1_7");
@@ -955,7 +955,7 @@ void R_InitBrightmaps ()
 		R_BrightmapForState = R_BrightmapForState_Hacx;
 	}
 	else
-	if (gameversion == exe_chex)
+	if (gameversion == GameVersion_t::exe_chex)
 	{
 		int lump;
 

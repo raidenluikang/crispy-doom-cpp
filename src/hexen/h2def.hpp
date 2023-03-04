@@ -160,28 +160,28 @@ typedef enum
 */
 
 
-struct thinker_s;
+struct thinker_t;
 
 
 // think_t is a function pointer to a routine to handle an actor
-typedef void (*think_t)(struct thinker_s *);
+typedef void (*think_t)(struct thinker_t *);
 
-typedef struct thinker_s
+struct thinker_t
 {
     struct thinker_s *prev, *next;
     think_t function;
-} thinker_t;
+} ;
 
-struct player_s;
+struct player_t;
 
-typedef union
+union specialval_t
 {
     intptr_t i;
     struct mobj_s *m;
-    struct player_s *p;
-} specialval_t;
+    struct player_t *p;
+} ;
 
-typedef struct mobj_s
+struct mobj_t
 {
     thinker_t thinker;          // thinker node
 
@@ -219,7 +219,7 @@ typedef struct mobj_s
     // teleporting
     int threshold;              // if > 0, the target will be chased
     // no matter what (even if shot)
-    struct player_s *player;    // only valid if type == MT_PLAYER
+    struct player_t *player;    // only valid if type == MT_PLAYER
     int lastlook;               // player number last looked for
     fixed_t floorclip;          // value to use for floor clipping
     int archiveNum;             // Identity during archive
@@ -236,14 +236,14 @@ typedef struct mobj_s
     fixed_t		oldy;
     fixed_t		oldz;
     angle_t		oldangle;
-} mobj_t;
+} ;
 
 // each sector has a degenmobj_t in it's center for sound origin purposes
-typedef struct
+struct degenmobj_t
 {
     thinker_t thinker;          // not used for anything
     fixed_t x, y, z;
-} degenmobj_t;
+} ;
 
 //
 // frame flags
@@ -340,49 +340,49 @@ typedef struct
 //=============================================================================
 
 // ===== Player Class Types =====
-typedef enum
+enum pclass_t
 {
     PCLASS_FIGHTER,
     PCLASS_CLERIC,
     PCLASS_MAGE,
     PCLASS_PIG,
     NUMCLASSES
-} pclass_t;
+} ;
 
-typedef enum
+enum playerstate_t
 {
     PST_LIVE,                   // playing
     PST_DEAD,                   // dead on the ground
     PST_REBORN                  // ready to restart
-} playerstate_t;
+} ;
 
 // psprites are scaled shapes directly on the view screen
 // coordinates are given for a 320*200 view screen
-typedef enum
+enum psprnum_t
 {
     ps_weapon,
     ps_flash,
     NUMPSPRITES
-} psprnum_t;
+} ;
 
-typedef struct pspdef_s
+struct pspdef_t
 {
     state_t *state;             // a nullptr state means not active
     int tics;
     fixed_t sx, sy;
-} pspdef_t;
+} ;
 
 /* Old Heretic key type
-typedef enum
+enum keytype_t
 {
 	key_yellow,
 	key_green,
 	key_blue,
 	NUM_KEY_TYPES
-} keytype_t;
+} ;
 */
 
-typedef enum
+enum keytype_t
 {
     KEY_1,
     KEY_2,
@@ -396,18 +396,18 @@ typedef enum
     KEY_A,
     KEY_B,
     NUM_KEY_TYPES
-} keytype_t;
+} ;
 
-typedef enum
+enum armortype_t
 {
     ARMOR_ARMOR,
     ARMOR_SHIELD,
     ARMOR_HELMET,
     ARMOR_AMULET,
     NUMARMOR
-} armortype_t;
+} ;
 
-typedef enum
+enum weapontype_t
 {
     WP_FIRST,
     WP_SECOND,
@@ -415,16 +415,16 @@ typedef enum
     WP_FOURTH,
     NUMWEAPONS,
     WP_NOCHANGE
-} weapontype_t;
+} ;
 
-typedef enum
+enum manatype_t
 {
     MANA_1,
     MANA_2,
     NUMMANA,
     MANA_BOTH,
     MANA_NONE
-} manatype_t;
+} ;
 
 #define MAX_MANA	200
 
@@ -432,7 +432,7 @@ typedef enum
 #define WPIECE2		2
 #define WPIECE3		4
 
-typedef struct
+struct weaponinfo_t
 {
     manatype_t mana;
     int upstate;
@@ -441,11 +441,11 @@ typedef struct
     int atkstate;
     int holdatkstate;
     int flashstate;
-} weaponinfo_t;
+} ;
 
 extern weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES];
 
-typedef enum
+enum artitype_t
 {
     arti_none,
     arti_invulnerability,
@@ -483,9 +483,9 @@ typedef enum
     arti_puzzgear3,
     arti_puzzgear4,
     NUMARTIFACTS
-} artitype_t;
+} ;
 
-typedef enum
+enum powertype_t
 {
     pw_None,
     pw_invulnerability,
@@ -497,7 +497,7 @@ typedef enum
     pw_speed,
     pw_minotaur,
     NUMPOWERS
-} powertype_t;
+} ;
 
 #define	INVULNTICS (30*35)
 #define	INVISTICS (60*35)
@@ -528,7 +528,7 @@ typedef struct
 ================
 */
 
-typedef struct player_s
+struct player_t
 {
     mobj_t *mo;
     playerstate_t playerstate;
@@ -585,7 +585,7 @@ typedef struct player_s
     // [AM] Previous position of viewz before think.
     //      Used to interpolate between camera positions.
     fixed_t		oldviewz;
-} player_t;
+} ;
 
 #define CF_NOCLIP		1
 #define	CF_GODMODE		2

@@ -356,7 +356,7 @@ void CT_Drawer(void)
             }
             else
             {
-                patch = W_CacheLumpNum(FontABaseLump +
+                patch = W_CacheLumpNum_cast<decltype(                patch)>(FontABaseLump +
                                        chat_msg[consoleplayer][i] - 33,
                                        PU_CACHE);
                 V_DrawPatch(x, 10, patch);
@@ -426,7 +426,7 @@ void CT_AddChar(int player, char c)
     }
     else
     {
-        patch = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+        patch = W_CacheLumpNum_cast<decltype(        patch)>(FontABaseLump + c - 33, PU_CACHE);
         msglen[player] += patch->width;
     }
 }
@@ -455,7 +455,7 @@ void CT_BackSpace(int player)
     }
     else
     {
-        patch = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+        patch = W_CacheLumpNum_cast<decltype(        patch)>(FontABaseLump + c - 33, PU_CACHE);
         msglen[player] -= patch->width;
     }
     chat_msg[player][msgptr[player]] = 0;

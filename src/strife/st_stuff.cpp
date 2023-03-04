@@ -1131,7 +1131,7 @@ void ST_doRefresh(void)
             if(lumpnum == -1)
                 patch = W_CacheLumpName_patch(DEH_String("STCFN063"), PU_CACHE);
             else
-                patch = W_CacheLumpNum(lumpnum, PU_STATIC);
+                patch = W_CacheLumpNum_cast<decltype(                patch)>(lumpnum, PU_STATIC);
 
             V_DrawPatch(icon_x, 182, patch);
             ST_drawNumFontY(num_x, 191, plyr->inventory[i].amount);
@@ -1448,7 +1448,7 @@ static void ST_drawCrispyHUD(void)
         if (lumpnum == -1)
             patch = W_CacheLumpName_patch(DEH_String("STCFN063"), PU_CACHE);
         else
-            patch = W_CacheLumpNum(lumpnum, PU_STATIC);
+            patch = W_CacheLumpNum_cast<decltype(            patch)>(lumpnum, PU_STATIC);
 
         ST_drawCrispyPair(ST_INVX, ST_INVY, patch, inv->amount);
     }
@@ -1503,7 +1503,7 @@ static void ST_drawCrispyHUD(void)
             if (lumpnum == -1)
                 patch = W_CacheLumpName_patch(DEH_String("STCFN063"), PU_CACHE);
             else
-                patch = W_CacheLumpNum(lumpnum, PU_STATIC);
+                patch = W_CacheLumpNum_cast<decltype(                patch)>(lumpnum, PU_STATIC);
 
             V_DrawPatch(icon_x, 182, patch);
             ST_drawNumFontY2(icon_x + 20, 191, plyr->inventory[i].amount);

@@ -459,7 +459,7 @@ static boolean ReadTrack(midi_track_t *track, FILE *stream)
     {
         // Resize the track slightly larger to hold another event:
 
-        new_events = I_Realloc(track->events, 
+        new_events = (decltype(        new_events)) I_Realloc(track->events, 
                              sizeof(midi_event_t) * (track->num_events + 1));
         track->events = new_events;
 

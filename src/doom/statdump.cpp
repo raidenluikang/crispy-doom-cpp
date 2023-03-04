@@ -54,7 +54,7 @@ static const char *player_colors[] =
 static wbstartstruct_t captured_stats[MAX_CAPTURES];
 static int num_captured_stats = 0;
 
-static GameMission_t discovered_gamemission = none;
+static GameMission_t discovered_gamemission = GameMission_t::none;
 
 /* Try to work out whether this is a Doom 1 or Doom 2 game, by looking
  * at the episode and map, and the par times.  This is used to decide
@@ -67,7 +67,7 @@ static void DiscoverGamemode(const wbstartstruct_t *stats, int num_stats)
     int level;
     int i;
 
-    if (discovered_gamemission != none)
+    if (discovered_gamemission != GameMission_t::none)
     {
         return;
     }
@@ -80,7 +80,7 @@ static void DiscoverGamemode(const wbstartstruct_t *stats, int num_stats)
 
         if (stats[i].epsd > 0)
         {
-            discovered_gamemission = doom;
+            discovered_gamemission = GameMission_t::doom;
             return;
         }
 
@@ -89,7 +89,7 @@ static void DiscoverGamemode(const wbstartstruct_t *stats, int num_stats)
 
         if (level >= 9)
         {
-            discovered_gamemission = doom2;
+            discovered_gamemission = GameMission_t::doom2;
             return;
         }
 
@@ -101,14 +101,14 @@ static void DiscoverGamemode(const wbstartstruct_t *stats, int num_stats)
         if (partime == doom1_par_times[level] * TICRATE
          && partime != doom2_par_times[level] * TICRATE)
         {
-            discovered_gamemission = doom;
+            discovered_gamemission = GameMission_t::doom;
             return;
         }
 
         if (partime != doom1_par_times[level] * TICRATE
          && partime == doom2_par_times[level] * TICRATE)
         {
-            discovered_gamemission = doom2;
+            discovered_gamemission = GameMission_t::doom2;
             return;
         }
     }
@@ -249,14 +249,14 @@ static void PrintLevelName(FILE *stream, int episode, int level)
     switch (discovered_gamemission)
     {
 
-        case doom:
+        case GameMission_t::doom:
             fprintf(stream, "E%iM%i\n", episode + 1, level + 1);
             break;
-        case doom2:
+        case GameMission_t::doom2:
             fprintf(stream, "MAP%02i\n", level + 1);
             break;
         default:
-        case none:
+        case GameMission_t::none:
             fprintf(stream, "E%iM%i / MAP%02i\n", 
                     episode + 1, level + 1, level + 1);
             break;

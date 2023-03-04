@@ -39,6 +39,8 @@
 #include "p_local.hpp" // [crispy] MLOOKUNIT
 #include "r_bmaps.hpp" // [crispy] R_BrightmapForTexName()
 
+#include "../../utils/memory.hpp"
+
 
 #define MINZ				(FRACUNIT*4)
 #define BASEYCENTER			(ORIGHEIGHT/2)
@@ -223,7 +225,7 @@ void R_InitSpriteDefs(const char **namelist)
     if (!numsprites)
 	return;
 		
-    sprites = zmalloc<decltype(    sprites)>(numsprites *sizeof(*sprites), PU_STATIC, nullptr);
+    sprites = zmalloc<decltype(sprites)>(numsprites *sizeof(*sprites), PU_STATIC, nullptr);
 	
     start = firstspritelump-1;
     end = lastspritelump+1;
@@ -233,86 +235,85 @@ void R_InitSpriteDefs(const char **namelist)
     // Just compare 4 characters as ints
     for (i=0 ; i<numsprites ; i++)
     {
-	spritename = DEH_String(namelist[i]);
-	memset (sprtemp,-1, sizeof(sprtemp));
-		
-	maxframe = -1;
+        spritename = DEH_String(namelist[i]);
+        memset (sprtemp,-1, sizeof(sprtemp));
+            
+        maxframe = -1;
+        
+        // scan the lumps,
+        //  filling in the frames for whatever is found
+        for (l=start+1 ; l<end ; l++)
+        {
+            if (!strncasecmp(lumpinfo[l]->name, spritename, 4))
+            {
+            frame = lumpinfo[l]->name[4] - 'A';
+            rotation = lumpinfo[l]->name[5];
+
+            if (modifiedgame)
+                patched = W_GetNumForName (lumpinfo[l]->name);
+            else
+                patched = l;
+
+            R_InstallSpriteLump (patched, frame, rotation, false);
+
+            if (lumpinfo[l]->name[6])
+            {
+                frame = lumpinfo[l]->name[6] - 'A';
+                rotation = lumpinfo[l]->name[7];
+                R_InstallSpriteLump (l, frame, rotation, true);
+            }
+            }
+        }
+        
+        // check the frames that were found for completeness
+        if (maxframe == -1)
+        {
+            sprites[i].numframes = 0;
+            continue;
+        }
+            
+        maxframe++;
+        
+        for (frame = 0 ; frame < maxframe ; frame++)
+        {
+            switch ((int)sprtemp[frame].rotate)
+            {
+            case -1:
+            // no rotations were found for that frame at all
+            // [crispy] make non-fatal
+            fprintf (stderr, "R_InitSprites: No patches found "
+                "for %s frame %c\n", spritename, frame+'A');
+            break;
+            
+            case 0:
+            // only the first rotation is needed
+            break;
+                
+            case 1:
+            // must have all 8 frames
+            for (rotation=0 ; rotation<8 ; rotation++)
+                if (sprtemp[frame].lump[rotation] == -1)
+                I_Error ("R_InitSprites: Sprite %s frame %c "
+                    "is missing rotations",
+                    spritename, frame+'A');
+
+            // [crispy] support 16 sprite rotations
+            sprtemp[frame].rotate = 2;
+            for ( ; rotation<16 ; rotation++)
+                if (sprtemp[frame].lump[rotation] == -1)
+                {
+                sprtemp[frame].rotate = 1;
+                break;
+                }
+
+            break;
+            }
+        }
 	
-	// scan the lumps,
-	//  filling in the frames for whatever is found
-	for (l=start+1 ; l<end ; l++)
-	{
-	    if (!strncasecmp(lumpinfo[l]->name, spritename, 4))
-	    {
-		frame = lumpinfo[l]->name[4] - 'A';
-		rotation = lumpinfo[l]->name[5];
-
-		if (modifiedgame)
-		    patched = W_GetNumForName (lumpinfo[l]->name);
-		else
-		    patched = l;
-
-		R_InstallSpriteLump (patched, frame, rotation, false);
-
-		if (lumpinfo[l]->name[6])
-		{
-		    frame = lumpinfo[l]->name[6] - 'A';
-		    rotation = lumpinfo[l]->name[7];
-		    R_InstallSpriteLump (l, frame, rotation, true);
-		}
-	    }
-	}
-	
-	// check the frames that were found for completeness
-	if (maxframe == -1)
-	{
-	    sprites[i].numframes = 0;
-	    continue;
-	}
-		
-	maxframe++;
-	
-	for (frame = 0 ; frame < maxframe ; frame++)
-	{
-	    switch ((int)sprtemp[frame].rotate)
-	    {
-	      case -1:
-		// no rotations were found for that frame at all
-		// [crispy] make non-fatal
-		fprintf (stderr, "R_InitSprites: No patches found "
-			 "for %s frame %c\n", spritename, frame+'A');
-		break;
-		
-	      case 0:
-		// only the first rotation is needed
-		break;
-			
-	      case 1:
-		// must have all 8 frames
-		for (rotation=0 ; rotation<8 ; rotation++)
-		    if (sprtemp[frame].lump[rotation] == -1)
-			I_Error ("R_InitSprites: Sprite %s frame %c "
-				 "is missing rotations",
-				 spritename, frame+'A');
-
-		// [crispy] support 16 sprite rotations
-		sprtemp[frame].rotate = 2;
-		for ( ; rotation<16 ; rotation++)
-		    if (sprtemp[frame].lump[rotation] == -1)
-		    {
-			sprtemp[frame].rotate = 1;
-			break;
-		    }
-
-		break;
-	    }
-	}
-	
-	// allocate space for the frames present and copy sprtemp to it
-	sprites[i].numframes = maxframe;
-	sprites[i].spriteframes = 
-	    Z_Malloc (maxframe * sizeof(spriteframe_t), PU_STATIC, nullptr);
-	memcpy (sprites[i].spriteframes, sprtemp, maxframe*sizeof(spriteframe_t));
+        // allocate space for the frames present and copy sprtemp to it
+        sprites[i].numframes = maxframe;
+        sprites[i].spriteframes = zmalloc<spriteframe_t*> (maxframe * sizeof(spriteframe_t), PU_STATIC, nullptr);
+        memcpy (sprites[i].spriteframes, sprtemp, maxframe*sizeof(spriteframe_t));
     }
 
 }
@@ -382,7 +383,7 @@ vissprite_t* R_NewVisSprite (void)
 	return &overflowsprite;
 
 	numvissprites = numvissprites ? 2 * numvissprites : MAXVISSPRITES;
-	vissprites = I_Realloc(vissprites, numvissprites * sizeof(*vissprites));
+	vissprites = (decltype(	vissprites)) I_Realloc(vissprites, numvissprites * sizeof(*vissprites));
 	memset(vissprites + numvissprites_old, 0, (numvissprites - numvissprites_old) * sizeof(*vissprites));
 
 	vissprite_p = vissprites + numvissprites_old;
@@ -477,7 +478,7 @@ R_DrawVisSprite
     patch_t*		patch;
 	
 	
-    patch = W_CacheLumpNum (vis->patch+firstspritelump, PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)> (vis->patch+firstspritelump, PU_CACHE);
 
     // [crispy] brightmaps for select sprites
     dc_colormap[0] = vis->colormap[0];
@@ -790,7 +791,7 @@ void R_ProjectSprite (mobj_t* thing)
         thing->target)
     {
 	// [crispy] Thorn Things in Hacx bleed green blood
-	if (gamemission == pack_hacx)
+	if (gamemission == GameMission_t::pack_hacx)
 	{
 	    if (thing->target->type == MT_BABY)
 	    {
@@ -872,14 +873,14 @@ static void R_DrawLSprite (void)
     static int		lump;
     static patch_t*	patch;
 
-    if (weaponinfo[viewplayer->readyweapon].ammo == am_noammo ||
+    if (weaponinfo[viewplayer->readyweapon_i()].ammo == ammotype_t::am_noammo ||
         viewplayer->playerstate != PST_LIVE)
 	return;
 
     if (lump != laserpatch[crispy->crosshairtype].l)
     {
 	lump = laserpatch[crispy->crosshairtype].l;
-	patch = W_CacheLumpNum(lump, PU_STATIC);
+	patch = W_CacheLumpNum_cast<decltype(	patch)>(lump, PU_STATIC);
     }
 
     P_LineLaser(viewplayer->mo, viewangle,
@@ -1157,12 +1158,11 @@ void R_DrawPlayerSprites (void)
 	R_DrawLSprite();
 
     // add all active psprites
-    for (i=0, psp=viewplayer->psprites;
-	 i<numrpsprites; // [crispy] A11Y number of player sprites to draw
-	 i++,psp++)
+    for (i=0, psp=viewplayer->psprites; i<numrpsprites; // [crispy] A11Y number of player sprites to draw
+        i++,psp++)
     {
-	if (psp->state)
-	    R_DrawPSprite (psp, i); // [crispy] pass gun or flash sprite
+        if (psp->state)
+            R_DrawPSprite (psp, static_cast<psprnum_t>(i) ); // [crispy] pass gun or flash sprite
     }
 }
 

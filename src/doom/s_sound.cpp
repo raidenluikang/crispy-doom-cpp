@@ -199,12 +199,12 @@ static void S_RegisterAltMusic()
 {
 	const altmusic_t *altmusic_fromto, *altmusic;
 
-	if (gamemission == pack_tnt)
+	if (gamemission == GameMission_t::pack_tnt)
 	{
 		altmusic_fromto = altmusic_tnt;
 	}
 	else
-	if (gamemission == pack_plut)
+	if (gamemission == GameMission_t::pack_plut)
 	{
 		altmusic_fromto = altmusic_plut;
 	}
@@ -242,9 +242,9 @@ void S_Init(int sfxVolume, int musicVolume)
 {
     int i;
 
-    if (gameversion == exe_doom_1_666)
+    if (gameversion == GameVersion_t::exe_doom_1_666)
     {
-        if (logical_gamemission == doom)
+        if (logical_gamemission == GameMission_t::doom)
         {
             I_SetOPLDriverVer(opl_doom1_1_666);
         }
@@ -267,8 +267,8 @@ void S_Init(int sfxVolume, int musicVolume)
     // (the maximum numer of sounds rendered
     // simultaneously) within zone memory.
     // [crispy] variable number of sound channels
-    channels = I_Realloc(nullptr, snd_channels*sizeof(channel_t));
-    sobjs = I_Realloc(nullptr, snd_channels*sizeof(degenmobj_t));
+    channels = (decltype(    channels)) I_Realloc(nullptr, snd_channels*sizeof(channel_t));
+    sobjs = (decltype(    sobjs)) I_Realloc(nullptr, snd_channels*sizeof(degenmobj_t));
 
     // Free all channels for use
     for (i=0 ; i<snd_channels ; i++)
@@ -377,7 +377,7 @@ void S_Start(void)
     if (musicVolume) // [crispy] do not reset pause state at zero music volume
     mus_paused = 0;
 
-    if (gamemode == commercial)
+    if (gamemode == GameMode_t::commercial)
     {
         const int nmus[] =
         {
@@ -392,7 +392,7 @@ void S_Start(void)
             mus_ddtbl2,
         };
 
-        if ((gameepisode == 2 || gamemission == pack_nerve) &&
+        if ((gameepisode == 2 || gamemission == GameMission_t::pack_nerve) &&
             gamemap <= arrlen(nmus))
         {
             mnum = nmus[gamemap - 1];
@@ -570,7 +570,7 @@ static int S_AdjustSoundParams(mobj_t *listener, mobj_t *source,
     angle_t        angle;
 
     // [crispy] proper sound clipping in Doom 2 MAP08 and The Ultimate Doom E4M8 / Sigil E5M8
-    const boolean doom1map8 = (gamemap == 8 && ((gamemode != commercial && gameepisode < 4) || !crispy->soundfix));
+    const boolean doom1map8 = (gamemap == 8 && ((gamemode != GameMode_t::commercial && gameepisode < 4) || !crispy->soundfix));
 
     // calculate the distance to sound origin
     //  and clip it if necessary
@@ -960,13 +960,13 @@ void S_ChangeMusic(int musicnum, int looping)
     }
 
     // [crispy] prevent music number under- and overflows
-    if (musicnum <= mus_None || (gamemode == commercial && musicnum < mus_runnin) ||
-        musicnum >= NUMMUSIC || (gamemode != commercial && musicnum >= mus_runnin) ||
+    if (musicnum <= mus_None || (gamemode == GameMode_t::commercial && musicnum < mus_runnin) ||
+        musicnum >= NUMMUSIC || (gamemode != GameMode_t::commercial && musicnum >= mus_runnin) ||
         S_music[musicnum].lumpnum == -1)
     {
         const unsigned int umusicnum = (unsigned int) musicnum;
 
-        if (gamemode == commercial)
+        if (gamemode == GameMode_t::commercial)
         {
             musicnum = mus_runnin + (umusicnum % (NUMMUSIC - mus_runnin));
         }
@@ -1002,7 +1002,7 @@ void S_ChangeMusic(int musicnum, int looping)
         music->lumpnum = W_GetNumForName(namebuf);
     }
 
-    music->data = W_CacheLumpNum(music->lumpnum, PU_STATIC);
+    music->data = W_CacheLumpNum_cast<decltype(    music->data)>(music->lumpnum, PU_STATIC);
 
     handle = I_RegisterSong(music->data, W_LumpLength(music->lumpnum));
     music->handle = handle;
@@ -1057,7 +1057,7 @@ void S_ChangeMusInfoMusic (int lumpnum, int looping)
 
     music->lumpnum = lumpnum;
 
-    music->data = W_CacheLumpNum(music->lumpnum, PU_STATIC);
+    music->data = W_CacheLumpNum_cast<decltype(    music->data)>(music->lumpnum, PU_STATIC);
     music->handle = I_RegisterSong(music->data, W_LumpLength(music->lumpnum));
 
     I_PlaySong(music->handle, looping);
@@ -1127,8 +1127,8 @@ void S_UpdateSndChannels (int choice)
 		snd_channels = 32;
 	}
 
-	channels = I_Realloc(channels, snd_channels * sizeof(channel_t));
-	sobjs = I_Realloc(sobjs, snd_channels * sizeof(degenmobj_t));
+	channels = (decltype(	channels)) I_Realloc(channels, snd_channels * sizeof(channel_t));
+	sobjs = (decltype(	sobjs)) I_Realloc(sobjs, snd_channels * sizeof(degenmobj_t));
 
 	for (i = 0; i < snd_channels; i++)
 	{

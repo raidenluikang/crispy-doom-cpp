@@ -3173,7 +3173,7 @@ typedef enum
 
 
 struct mobj_s;
-struct player_s;
+struct player_t;
 struct pspdef_s;
 
 
@@ -3182,7 +3182,7 @@ typedef struct
     spritenum_t sprite;
     int frame;
     int tics;
-    void (*action) (struct mobj_s *, struct player_s *, struct pspdef_s *);
+    void (*action) (struct mobj_s *, struct player_t *, struct pspdef_s *);
     statenum_t nextstate;
     int misc1, misc2;
 } state_t;

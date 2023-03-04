@@ -398,35 +398,35 @@ void P_PlayerThink (player_t* player)
 	// The actual changing of the weapon is done
 	//  when the weapon psprite can do it
 	//  (read: not in the middle of an attack).
-	newweapon = (cmd->buttons&BT_WEAPONMASK)>>BT_WEAPONSHIFT;
+	newweapon = static_cast<weapontype_t>( (cmd->buttons & BT_WEAPONMASK ) >> BT_WEAPONSHIFT ) ;
 	
-	if (newweapon == wp_fist
-	    && player->weaponowned[wp_chainsaw]
-	    && !(player->readyweapon == wp_chainsaw
-		 && player->powers[pw_strength]))
+	if (newweapon == weapontype_t::wp_fist
+	    && player->weaponowned[static_cast<int>(weapontype_t::wp_chainsaw)]
+	    && !(player->readyweapon == weapontype_t::wp_chainsaw
+		 && player->powers[static_cast<int>(powertype_t::pw_strength)]))
 	{
-	    newweapon = wp_chainsaw;
+	    newweapon = weapontype_t::wp_chainsaw;
 	}
 	
 	if ( (crispy->havessg)
-	    && newweapon == wp_shotgun 
-	    && player->weaponowned[wp_supershotgun]
-	    && player->readyweapon != wp_supershotgun)
+	    && newweapon == weapontype_t::wp_shotgun 
+	    && player->weaponowned[(int)weapontype_t::wp_supershotgun]
+	    && player->readyweapon != weapontype_t::wp_supershotgun)
 	{
-	    newweapon = wp_supershotgun;
+	    newweapon = weapontype_t::wp_supershotgun;
 	}
 	
 
-	if (player->weaponowned[newweapon]
+	if (player->weaponowned[(int)newweapon]
 	    && newweapon != player->readyweapon)
 	{
 	    // Do not go to plasma or BFG in shareware,
 	    //  even if cheated.
-	    if ((newweapon != wp_plasma
-		 && newweapon != wp_bfg)
-		|| (gamemode != shareware) )
+	    if ((newweapon != weapontype_t::wp_plasma
+		 && newweapon != weapontype_t::wp_bfg)
+		|| (gamemode != GameMode_t::shareware) )
 	    {
-		player->pendingweapon = newweapon;
+		    player->pendingweapon = newweapon;
 	    }
 	}
     }

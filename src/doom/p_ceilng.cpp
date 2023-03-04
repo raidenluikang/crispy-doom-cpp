@@ -29,6 +29,7 @@
 
 // Data.
 #include "sounds.hpp"
+#include "../../utils/memory.hpp"
 
 //
 // CEILINGS
@@ -71,7 +72,7 @@ void T_MoveCeiling (ceiling_t* ceiling)
 	    }
 	}
 	
-	if (res == pastdest)
+	if (res == result_e::pastdest)
 	{
 	    switch(ceiling->type)
 	    {
@@ -110,7 +111,7 @@ void T_MoveCeiling (ceiling_t* ceiling)
 	    }
 	}
 	
-	if (res == pastdest)
+	if (res == result_e::pastdest)
 	{
 	    switch(ceiling->type)
 	    {
@@ -133,7 +134,7 @@ void T_MoveCeiling (ceiling_t* ceiling)
 	}
 	else // ( res != pastdest )
 	{
-	    if (res == crushed)
+	    if (res == result_e::crushed)
 	    {
 		switch(ceiling->type)
 		{

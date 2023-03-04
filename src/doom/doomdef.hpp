@@ -102,13 +102,16 @@ enum class card_t
     NUMCARDS
     
 } ;
-
+#if __cplusplus >= 201703L
+inline
+#endif
+constexpr int NUMCARDS = static_cast<int>(card_t::NUMCARDS);
 
 
 // The defined weapons,
 //  including a marker indicating
 //  user has not changed weapon.
-enum class weapontype_t
+enum weapontype_t
 {
     wp_fist,
     wp_pistol,
@@ -125,11 +128,15 @@ enum class weapontype_t
     // No pending weapon change.
     wp_nochange
 
-} ;
+};
 
+// #if __cplusplus >= 201703L
+// inline
+// #endif
+// constexpr int NUMWEAPONS = static_cast<int>(weapontype_t::NUMWEAPONS);
 
 // Ammunition types defined.
-enum class ammotype_t
+enum ammotype_t
 {
     am_clip,	// Pistol / chaingun ammo.
     am_shell,	// Shotgun / double barreled shotgun.
@@ -138,11 +145,14 @@ enum class ammotype_t
     NUMAMMO,
     am_noammo	// Unlimited for chainsaw / fist.	
 
-} ;
-
+};
+// #if __cplusplus >= 201703L
+// inline
+// #endif
+// constexpr int NUMAMMO = static_cast<int>(ammotype_t::NUMAMMO);
 
 // Power up artifacts.
-enum class powertype_t
+enum powertype_t
 {
     pw_invulnerability,
     pw_strength,
@@ -156,7 +166,10 @@ enum class powertype_t
     pw_mapcoords
     
 } ;
-
+// #if __cplusplus >= 201703L
+// inline
+// #endif
+// constexpr int NUMPOWERS = static_cast<int>(powertype_t::NUMPOWERS);
 
 
 //

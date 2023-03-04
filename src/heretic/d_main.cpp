@@ -176,7 +176,7 @@ static void CrispyDrawStats (void)
     if (!height || !coord_x || !coord_w)
     {
         const int FontABaseLump = W_GetNumForName(DEH_String("FONTA_S")) + 1;
-        const patch_t *const p = W_CacheLumpNum(FontABaseLump + 'A' - 33, PU_CACHE);
+        const patch_t *const p = W_CacheLumpNum_cast<decltype(        const patch_t *const p)>(FontABaseLump + 'A' - 33, PU_CACHE);
 
         height = SHORT(p->height) + 1;
         coord_w = 7 * SHORT(p->width);

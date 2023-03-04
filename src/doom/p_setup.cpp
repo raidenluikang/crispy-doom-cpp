@@ -45,6 +45,8 @@
 
 #include "p_extnodes.hpp" // [crispy] support extended node formats
 
+#include "../../utils/memory.hpp"
+
 void	P_SpawnMapThing (mapthing_t*	mthing);
 
 
@@ -145,10 +147,10 @@ void P_LoadVertexes (int lump)
     numvertexes = W_LumpLength (lump) / sizeof(mapvertex_t);
 
     // Allocate zone memory for buffer.
-    vertexes = zmalloc<decltype(    vertexes)>(numvertexes*sizeof(vertex_t),PU_LEVEL,0);	
+    vertexes = zmalloc<decltype(vertexes)>(numvertexes*sizeof(vertex_t),PU_LEVEL,0);	
 
     // Load data into cache.
-    data = W_CacheLumpNum (lump, PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(data)>(lump, PU_STATIC);
 	
     ml = (mapvertex_t *)data;
     li = vertexes;
@@ -206,7 +208,7 @@ void P_LoadSegs (int lump)
     numsegs = W_LumpLength (lump) / sizeof(mapseg_t);
     segs = zmalloc<decltype(    segs)>(numsegs*sizeof(seg_t),PU_LEVEL,0);	
     memset (segs, 0, numsegs*sizeof(seg_t));
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(data)>(lump,PU_STATIC);
 	
     ml = (mapseg_t *)data;
     li = segs;
@@ -347,7 +349,7 @@ void P_LoadSubsectors (int lump)
 	
     numsubsectors = W_LumpLength (lump) / sizeof(mapsubsector_t);
     subsectors = zmalloc<decltype(    subsectors)>(numsubsectors*sizeof(subsector_t),PU_LEVEL,0);	
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     // [crispy] fail on missing subsectors
     if (!data || !numsubsectors)
@@ -385,7 +387,7 @@ void P_LoadSectors (int lump)
     numsectors = W_LumpLength (lump) / sizeof(mapsector_t);
     sectors = zmalloc<decltype(    sectors)>(numsectors*sizeof(sector_t),PU_LEVEL,0);	
     memset (sectors, 0, numsectors*sizeof(sector_t));
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     // [crispy] fail on missing sectors
     if (!data || !numsectors)
@@ -436,7 +438,7 @@ void P_LoadNodes (int lump)
 	
     numnodes = W_LumpLength (lump) / sizeof(mapnode_t);
     nodes = zmalloc<decltype(    nodes)>(numnodes*sizeof(node_t),PU_LEVEL,0);	
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     // [crispy] warn about missing nodes
     if (!data || !numnodes)
@@ -496,7 +498,7 @@ void P_LoadThings (int lump)
     int			numthings;
     boolean		spawn;
 
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
     numthings = W_LumpLength (lump) / sizeof(mapthing_t);
 	
     mt = (mapthing_t *)data;
@@ -505,7 +507,7 @@ void P_LoadThings (int lump)
 	spawn = true;
 
 	// Do not spawn cool, new monsters if !commercial
-	if (gamemode != commercial)
+	if (gamemode != GameMode_t::commercial)
 	{
 	    switch (SHORT(mt->type))
 	    {
@@ -569,7 +571,7 @@ void P_LoadLineDefs (int lump)
     numlines = W_LumpLength (lump) / sizeof(maplinedef_t);
     lines = zmalloc<decltype(    lines)>(numlines*sizeof(line_t),PU_LEVEL,0);	
     memset (lines, 0, numlines*sizeof(line_t));
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     mld = (maplinedef_t *)data;
     ld = lines;
@@ -711,7 +713,7 @@ void P_LoadSideDefs (int lump)
     numsides = W_LumpLength (lump) / sizeof(mapsidedef_t);
     sides = zmalloc<decltype(    sides)>(numsides*sizeof(side_t),PU_LEVEL,0);	
     memset (sides, 0, numsides*sizeof(side_t));
-    data = W_CacheLumpNum (lump,PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump,PU_STATIC);
 	
     msd = (mapsidedef_t *)data;
     sd = sides;
@@ -1036,7 +1038,7 @@ static void P_LoadReject(int lumpnum)
 
     if (lumplen >= minlength)
     {
-        rejectmatrix = W_CacheLumpNum(lumpnum, PU_LEVEL);
+        rejectmatrix = W_CacheLumpNum_cast<decltype(        rejectmatrix)>(lumpnum, PU_LEVEL);
     }
     else
     {
@@ -1064,7 +1066,7 @@ int P_GetNumForMap (int episode, int map, boolean critical)
     char lumpname[9];
 
     // find map name
-    if ( gamemode == commercial)
+    if ( gamemode == GameMode_t::commercial)
     {
 	if (map<10)
 	    DEH_snprintf(lumpname, 9, "map0%i", map);
@@ -1133,26 +1135,26 @@ P_SetupLevel
     {
         if (crispy->havemaster && episode == 3)
         {
-            gamemission = pack_master;
+            gamemission = GameMission_t::pack_master;
         }
         else
         if (crispy->havenerve && episode == 2)
         {
-            gamemission = pack_nerve;
+            gamemission = GameMission_t::pack_nerve;
         }
         else
         {
-            gamemission = doom2;
+            gamemission = GameMission_t::doom2;
         }
     }
     else
     {
-        if (gamemission == pack_master)
+        if (gamemission == GameMission_t::pack_master)
         {
             episode = gameepisode = 3;
         }
         else
-        if (gamemission == pack_nerve)
+        if (gamemission == GameMission_t::pack_nerve)
         {
             episode = gameepisode = 2;
         }
@@ -1300,7 +1302,7 @@ P_SetupLevel
 			
     }
     // [crispy] support MUSINFO lump (dynamic music changing)
-    if (gamemode != shareware)
+    if (gamemode != GameMode_t::shareware)
     {
 	S_ParseMusInfo(lumpname);
     }

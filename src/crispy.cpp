@@ -22,7 +22,7 @@
 
 // [crispy] "regular" config variables
 static crispy_t crispy_s = {
-	0,
+	//0,  // --> mixing only on C99 mode.
 	.extautomap = 1,
 	.hires = 1,
 	.smoothscaling = 1,

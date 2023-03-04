@@ -17,7 +17,7 @@
 
 
 #include <SDL.h>
-#include "SDL_joystick.hpp"
+#include <SDL_joystick.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -45,7 +45,8 @@ static SDL_Joystick *joystick = nullptr;
 static int usejoystick = 0;
 
 // SDL GUID and index of the joystick to use.
-static char *joystick_guid = "";
+static char joystick_guid_empty[] = "";
+static char *joystick_guid = joystick_guid_empty;
 static int joystick_index = -1;
 
 // Which joystick axis to use for horizontal movement, and whether to
@@ -366,7 +367,7 @@ void I_UpdateJoystick(void)
     {
         event_t ev;
 
-        ev.type = ev_joystick;
+        ev.type = evtype_t::ev_joystick;
         ev.data1 = GetButtonsState();
         ev.data2 = GetAxisState(joystick_x_axis, joystick_x_invert);
         ev.data3 = GetAxisState(joystick_y_axis, joystick_y_invert);

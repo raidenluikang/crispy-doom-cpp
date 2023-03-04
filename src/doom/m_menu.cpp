@@ -247,7 +247,7 @@ static void M_DrawThermo(int x,int y,int thermWidth,int thermDot);
 static void M_WriteText(int x, int y, const char *string);
 int  M_StringWidth(const char *string); // [crispy] un-static
 static int  M_StringHeight(const char *string);
-static void M_StartMessage(const char *string, void *routine, boolean input);
+static void M_StartMessage(const char *string, void (*routine)(int), boolean input);
 static void M_ClearMenus (void);
 
 // [crispy] Crispness menu
@@ -264,6 +264,7 @@ static void M_DrawCrispness4(void);
 //
 // DOOM MENU
 //
+[[maybe_unused]]
 enum
 {
     newgame = 0,
@@ -300,6 +301,7 @@ menu_t  MainDef =
 //
 // EPISODE SELECT
 //
+[[maybe_unused]]
 enum
 {
     ep1,
@@ -332,7 +334,7 @@ menu_t  EpiDef =
 //
 // NEW GAME
 //
-enum
+enum newgame_t
 {
     killthings,
     toorough,
@@ -366,6 +368,7 @@ menu_t  NewDef =
 //
 // OPTIONS MENU
 //
+[[maybe_unused]]
 enum
 {
     endgame,
@@ -402,6 +405,7 @@ menu_t  OptionsDef =
 };
 
 // [crispy] mouse sensitivity menu
+[[maybe_unused]]
 enum
 {
     mouse_horiz,
@@ -436,6 +440,7 @@ static menu_t  MouseDef =
 };
 
 // [crispy] Crispness menu
+[[maybe_unused]]
 enum
 {
     crispness_sep_rendering,
@@ -493,6 +498,7 @@ static menu_t  Crispness1Def =
     1
 };
 
+[[maybe_unused]]
 enum
 {
     crispness_sep_audible,
@@ -548,6 +554,7 @@ static menu_t  Crispness2Def =
     1
 };
 
+[[maybe_unused]]
 enum
 {
     crispness_sep_tactical,
@@ -603,6 +610,7 @@ static menu_t  Crispness3Def =
     1
 };
 
+[[maybe_unused]]
 enum
 {
     crispness_sep_physical,
@@ -664,6 +672,7 @@ static int crispness_cur;
 //
 // Read This! MENU 1 & 2
 //
+[[maybe_unused]]
 enum
 {
     rdthsempty1,
@@ -685,6 +694,7 @@ menu_t  ReadDef1 =
     0
 };
 
+[[maybe_unused]]
 enum
 {
     rdthsempty2,
@@ -709,6 +719,7 @@ menu_t  ReadDef2 =
 //
 // SOUND VOLUME MENU
 //
+[[maybe_unused]]
 enum
 {
     sfx_vol,
@@ -739,7 +750,7 @@ menu_t  SoundDef =
 //
 // LOAD GAME MENU
 //
-enum
+enum load_t
 {
     load1,
     load2,
@@ -750,7 +761,9 @@ enum
     load7, // [crispy] up to 8 savegames
     load8, // [crispy] up to 8 savegames
     load_end
-} load_e;
+};
+
+[[maybe_unused]] enum load_t load_e;
 
 menuitem_t LoadMenu[]=
 {
@@ -1285,7 +1298,7 @@ void M_NewGame(int choice)
 	
     // Chex Quest disabled the episode select screen, as did Doom II.
 
-    if ((gamemode == commercial && !crispy->havenerve && !crispy->havemaster) || gameversion == exe_chex) // [crispy] NRFTL / The Master Levels
+    if ((gamemode == GameMode_t::commercial && !crispy->havenerve && !crispy->havemaster) || gameversion == GameVersion_t::exe_chex) // [crispy] NRFTL / The Master Levels
 	M_SetupNextMenu(&NewDef);
     else
 	M_SetupNextMenu(&EpiDef);
@@ -1315,8 +1328,10 @@ void M_VerifyNightmare(int key)
 {
     if (key != key_menu_confirm)
 	return;
-		
-    G_DeferedInitNew(nightmare,epi+1,1);
+	
+    static_assert( static_cast<int>(skill_t::sk_nightmare) == nightmare, "!");
+
+    G_DeferedInitNew(skill_t::sk_nightmare /*nightmare*/,epi+1,1);
     M_ClearMenus ();
 }
 
@@ -1324,22 +1339,21 @@ void M_ChooseSkill(int choice)
 {
     if (choice == nightmare)
     {
-	M_StartMessage(DEH_String(NIGHTMARE),M_VerifyNightmare,true);
-	return;
+	    M_StartMessage(DEH_String(NIGHTMARE),M_VerifyNightmare,true);
+	    return;
     }
 	
-    G_DeferedInitNew(choice,epi+1,1);
+    G_DeferedInitNew(static_cast<skill_t>(choice), epi + 1, 1);
     M_ClearMenus ();
 }
 
 void M_Episode(int choice)
 {
-    if ( (gamemode == shareware)
-	 && choice)
+    if ( (gamemode == GameMode_t::shareware) && choice)
     {
-	M_StartMessage(DEH_String(SWSTRING),nullptr,false);
-	M_SetupNextMenu(&ReadDef1);
-	return;
+	    M_StartMessage(DEH_String(SWSTRING),nullptr,false);
+	    M_SetupNextMenu(&ReadDef1);
+	    return;
     }
 
     epi = choice;
@@ -1444,7 +1458,7 @@ static void M_DrawCrispnessBackground(void)
 	int lump = W_CheckNumForName("CRISPYBG");
 	if (lump != -1 && W_LumpLength(lump) >= 64*64)
 	{
-		src = W_CacheLumpNum(lump, PU_STATIC);
+		src = W_CacheLumpNum_cast<decltype(src)>(lump, PU_STATIC);
 	}
 	dest = I_VideoBuffer;
 
@@ -1544,8 +1558,8 @@ static void M_DrawCrispness1(void)
     M_DrawCrispnessMultiItem(crispness_translucency, "Enable Translucency", multiitem_translucency, crispy->translucency, true);
     M_DrawCrispnessItem(crispness_smoothlight, "Smooth Diminishing Lighting", crispy->smoothlight, true);
     M_DrawCrispnessMultiItem(crispness_brightmaps, "Apply Brightmaps to", multiitem_brightmaps, crispy->brightmaps, true);
-    M_DrawCrispnessMultiItem(crispness_coloredblood, "Colored Blood", multiitem_coloredblood, crispy->coloredblood, gameversion != exe_chex);
-    M_DrawCrispnessItem(crispness_flipcorpses, "Randomly Mirrored Corpses", crispy->flipcorpses, gameversion != exe_chex);
+    M_DrawCrispnessMultiItem(crispness_coloredblood, "Colored Blood", multiitem_coloredblood, crispy->coloredblood, gameversion != GameVersion_t::exe_chex);
+    M_DrawCrispnessItem(crispness_flipcorpses, "Randomly Mirrored Corpses", crispy->flipcorpses, gameversion != GameVersion_t::exe_chex);
 
     M_DrawCrispnessGoto(crispness1_next, "Next Page >");
     M_DrawCrispnessGoto(crispness1_prev, "< Last Page");
@@ -1664,9 +1678,9 @@ static void M_CrispnessCur(int choice)
 
 static void M_CrispnessNext(int choice)
 {
-    if (++crispness_cur > arrlen(CrispnessMenus) - 1)
+    if (++crispness_cur > static_cast<int>( arrlen(CrispnessMenus) ) - 1)
     {
-	crispness_cur = 0;
+	    crispness_cur = 0;
     }
 
     M_CrispnessCur(0);
@@ -1803,7 +1817,7 @@ void M_QuitResponse(int key)
     // [crispy] play quit sound only if the ENDOOM screen is also shown
     if (!netgame && show_endoom)
     {
-	if (gamemode == commercial)
+	if (gamemode == GameMode_t::commercial)
 	    S_StartSound(nullptr,quitsounds2[(gametic>>2)&7]);
 	else
 	    S_StartSound(nullptr,quitsounds[(gametic>>2)&7]);
@@ -1817,7 +1831,7 @@ static const char *M_SelectEndMessage(void)
 {
     const char **endmsg;
 
-    if (logical_gamemission == doom)
+    if (logical_gamemission == GameMission_t::doom)
     {
         // Doom 1
 
@@ -1999,7 +2013,7 @@ M_DrawThermo
 void
 M_StartMessage
 ( const char	*string,
-  void*		routine,
+  void (*routine)(int),
   boolean	input )
 {
     messageLastMenuActive = menuactive;
@@ -2175,7 +2189,7 @@ static int G_GotoNextLevel(void)
 
   int changed = false;
 
-    if (gamemode == commercial)
+    if (gamemode == GameMode_t::commercial)
     {
       if (crispy->havemap33)
         doom2_next[1] = 33;
@@ -2183,13 +2197,13 @@ static int G_GotoNextLevel(void)
       if (W_CheckNumForName("map31") < 0)
         doom2_next[14] = 16;
 
-      if (gamemission == pack_hacx)
+      if (gamemission == GameMission_t::pack_hacx)
       {
         doom2_next[30] = 16;
         doom2_next[20] = 1;
       }
 
-      if (gamemission == pack_master)
+      if (gamemission == GameMission_t::pack_master)
       {
         doom2_next[1] = 3;
         doom2_next[14] = 16;
@@ -2198,16 +2212,16 @@ static int G_GotoNextLevel(void)
     }
     else
     {
-      if (gamemode == shareware)
+      if (gamemode == GameMode_t::shareware)
         doom_next[0][7] = 11;
 
-      if (gamemode == registered)
+      if (gamemode == GameMode_t::registered)
         doom_next[2][7] = 11;
 
       if (!crispy->haved1e5)
         doom_next[3][7] = 11;
 
-      if (gameversion == exe_chex)
+      if (gameversion == GameVersion_t::exe_chex)
       {
         doom_next[0][2] = 14;
         doom_next[0][4] = 11;
@@ -2218,10 +2232,10 @@ static int G_GotoNextLevel(void)
   {
     int epsd, map;
 
-    if (gamemode == commercial)
+    if (gamemode == GameMode_t::commercial)
     {
       epsd = gameepisode;
-      if (gamemission == pack_nerve)
+      if (gamemission == GameMission_t::pack_nerve)
         map = nerve_next[gamemap-1];
       else
         map = doom2_next[gamemap-1];
@@ -2278,8 +2292,8 @@ boolean M_Responder (event_t* ev)
 
     if (testcontrols)
     {
-        if (ev->type == ev_quit
-         || (ev->type == ev_keydown
+        if (ev->type == evtype_t::ev_quit
+         || (ev->type == evtype_t::ev_keydown
           && (ev->data1 == key_menu_activate || ev->data1 == key_menu_quit)))
         {
             I_Quit();
@@ -2290,7 +2304,7 @@ boolean M_Responder (event_t* ev)
     }
 
     // "close" button pressed on window?
-    if (ev->type == ev_quit)
+    if (ev->type == evtype_t::ev_quit)
     {
         // First click on close button = bring up quit confirm message.
         // Second click on close button = confirm quit
@@ -2313,7 +2327,7 @@ boolean M_Responder (event_t* ev)
     ch = 0;
     key = -1;
 	
-    if (ev->type == ev_joystick)
+    if (ev->type == evtype_t::ev_joystick)
     {
         // Simulate key presses from joystick events to interact with the menu.
 
@@ -2393,7 +2407,7 @@ boolean M_Responder (event_t* ev)
     }
     else
     {
-	if (ev->type == ev_mouse && mousewait < I_GetTime() && menuactive)
+	if (ev->type == evtype_t::ev_mouse && mousewait < I_GetTime() && menuactive)
 	{
 	    // [crispy] novert disables controlling the menus with the mouse
 	    if (!novert)
@@ -2456,7 +2470,7 @@ boolean M_Responder (event_t* ev)
 	}
 	else
 	{
-	    if (ev->type == ev_keydown)
+	    if (ev->type == evtype_t::ev_keydown)
 	    {
 		key = ev->data1;
 		ch = ev->data2;
@@ -2503,7 +2517,7 @@ boolean M_Responder (event_t* ev)
             // instead, use ev->data3 which gives the fully-translated and
             // modified key input.
 
-            if (ev->type != ev_keydown)
+            if (ev->type != evtype_t::ev_keydown)
             {
                 break;
             }
@@ -2566,7 +2580,7 @@ boolean M_Responder (event_t* ev)
                 }
                 break;
             default:
-                if (ev->type != ev_keydown)
+                if (ev->type != evtype_t::ev_keydown)
                 {
                     break;
                 }
@@ -2656,7 +2670,7 @@ boolean M_Responder (event_t* ev)
         {
 	    M_StartControlPanel ();
 
-	    if (gameversion >= exe_ultimate)
+	    if (gameversion >= GameVersion_t::exe_ultimate)
 	      currentMenu = &ReadDef2;
 	    else
 	      currentMenu = &ReadDef1;
@@ -3243,20 +3257,20 @@ void M_Init (void)
 
     // The same hacks were used in the original Doom EXEs.
 
-    if (gameversion >= exe_ultimate)
+    if (gameversion >= GameVersion_t::exe_ultimate)
     {
         MainMenu[readthis].routine = M_ReadThis2;
         ReadDef2.prevMenu = nullptr;
     }
 
-    if (gameversion >= exe_final && gameversion <= exe_final2)
+    if (gameversion >= GameVersion_t::exe_final && gameversion <= GameVersion_t::exe_final2)
     {
         ReadDef2.routine = M_DrawReadThisCommercial;
         // [crispy] rearrange Skull in Final Doom HELP screen
         ReadDef2.y -= 10;
     }
 
-    if (gamemode == commercial)
+    if (gamemode == GameMode_t::commercial)
     {
         MainMenu[readthis] = MainMenu[quitdoom];
         MainDef.numitems--;
@@ -3278,12 +3292,12 @@ void M_Init (void)
     // three episodes; if we're emulating one of those then don't try
     // to show episode four. If we are, then do show episode four
     // (should crash if missing).
-    if (gameversion < exe_ultimate)
+    if (gameversion < GameVersion_t::exe_ultimate)
     {
         EpiDef.numitems--;
     }
     // chex.exe shows only one episode.
-    else if (gameversion == exe_chex)
+    else if (gameversion == GameVersion_t::exe_chex)
     {
         EpiDef.numitems = 1;
         // [crispy] never show the Episode menu
@@ -3296,13 +3310,13 @@ void M_Init (void)
         int i, j;
 
         NewDef.prevMenu = &EpiDef;
-        EpisodeMenu[0].alphaKey = gamevariant == freedm ||
-                                  gamevariant == freedoom ?
+        EpisodeMenu[0].alphaKey = gamevariant == GameVariant_t::freedm ||
+                                  gamevariant == GameVariant_t::freedoom ?
                                  'f' :
                                  'h';
-        EpisodeMenu[0].alttext = gamevariant == freedm ?
+        EpisodeMenu[0].alttext = gamevariant == GameVariant_t::freedm ?
                                  "FreeDM" :
-                                 gamevariant == freedoom ?
+                                 gamevariant == GameVariant_t::freedoom ?
                                  "Freedoom: Phase 2" :
                                  "Hell on Earth";
         EpiDef.numitems = 1;
@@ -3325,8 +3339,8 @@ void M_Init (void)
                 {
                     const patch_t *pi, *pj;
 
-                    pi = W_CacheLumpNum(i, PU_CACHE);
-                    pj = W_CacheLumpNum(j, PU_CACHE);
+                    pi = W_CacheLumpNum_cast<decltype(pi)>(i, PU_CACHE);
+                    pj = W_CacheLumpNum_cast<decltype(pj)>(j, PU_CACHE);
 
                     // ... and if the patch width for "Hell on Earth"
                     //     is longer than "No Rest for the Living"
@@ -3502,7 +3516,7 @@ void M_ConfirmDeleteGame ()
 // [crispy] indicate game version mismatch
 void M_LoadGameVerMismatch ()
 {
-	M_StartMessage("Game Version Mismatch\n\n"PRESSKEY, nullptr, false);
+	M_StartMessage("Game Version Mismatch\n\n" PRESSKEY, nullptr, false);
 	messageToPrint = 2;
 	S_StartSoundOptional(nullptr, sfx_mnuopn, sfx_swtchn); // [NS] Optional menu sounds.
 }

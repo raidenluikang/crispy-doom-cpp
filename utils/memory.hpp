@@ -50,15 +50,17 @@ template <typename T, class ... Args>
 std::enable_if_t< ::details::is_bounded_array<T>::value> 
 create_structure(Args&& ... ) = delete;
 
-//declared in z_zone.hpp file.
-#ifndef __Z_ZONE__
-void*	Z_Malloc (int size, int tag, void *ptr);
-#endif //declare first
+//please, include z_zone.hpp before using zmalloc
+#ifdef __Z_ZONE__
+//void*	Z_Malloc (int size, int tag, void *ptr);
 
 template <typename T>
-T zmalloc(int size, int tag, void* ptr)
+std::remove_reference_t<T> zmalloc(int size, int tag, void* ptr)
 {
-    return static_cast<T>(Z_Malloc(size, tag, ptr));
+    return static_cast<std::remove_reference_t<T>>(Z_Malloc(size, tag, ptr));
 }
+#endif //declare first
+
+
 
 #endif //CRISPY_DOOM_CPP_UTILS_MEMORY_HPP

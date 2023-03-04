@@ -128,11 +128,11 @@ void P_InitSwitchList(void)
     // we support more switch textures.
     switch (gamemode)
     {
-        case registered:
-        case retail:
+        case GameMode_t::registered:
+        case GameMode_t::retail:
             episode = 2;
             break;
-        case commercial:
+        case GameMode_t::commercial:
             episode = 3;
             break;
         default:
@@ -152,7 +152,7 @@ void P_InitSwitchList(void)
 	if (slindex + 1 >= maxswitches)
 	{
 	    size_t newmax = maxswitches ? 2 * maxswitches : MAXSWITCHES;
-	    switchlist = I_Realloc(switchlist, newmax * sizeof(*switchlist));
+	    switchlist = static_cast<decltype(switchlist)>( I_Realloc(switchlist, newmax * sizeof(*switchlist)) );
 	    maxswitches = newmax;
 	}
 
@@ -190,7 +190,7 @@ void P_InitSwitchList(void)
     }
 
     // [crispy] pre-allocate some memory for the buttonlist[] array
-    buttonlist = I_Realloc(nullptr, sizeof(*buttonlist) * (maxbuttons = MAXBUTTONS));
+    buttonlist = static_cast< decltype(buttonlist)>( I_Realloc(nullptr, sizeof(*buttonlist) * (maxbuttons = MAXBUTTONS)) );
     memset(buttonlist, 0, sizeof(*buttonlist) * maxbuttons);
 }
 
@@ -239,10 +239,10 @@ P_StartButton
     
     // [crispy] remove MAXBUTTONS limit
     {
-	maxbuttons = 2 * maxbuttons;
-	buttonlist = I_Realloc(buttonlist, sizeof(*buttonlist) * maxbuttons);
-	memset(buttonlist + maxbuttons/2, 0, sizeof(*buttonlist) * maxbuttons/2);
-	return P_StartButton(line, w, texture, time);
+		maxbuttons = 2 * maxbuttons;
+		buttonlist = static_cast<decltype(buttonlist)>( I_Realloc(buttonlist, sizeof(*buttonlist) * maxbuttons) );
+		memset(buttonlist + maxbuttons/2, 0, sizeof(*buttonlist) * maxbuttons/2);
+		return P_StartButton(line, w, texture, time);
     }
 
     I_Error("P_StartButton: no button slots left!");

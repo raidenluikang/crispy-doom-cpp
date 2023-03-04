@@ -895,7 +895,7 @@ void V_DrawFullscreenRawOrPatch(lumpindex_t index)
 {
     patch_t *patch;
 
-    patch = W_CacheLumpNum(index, PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)>(index, PU_CACHE);
 
     if (W_LumpLength(index) == ORIGWIDTH * ORIGHEIGHT)
     {

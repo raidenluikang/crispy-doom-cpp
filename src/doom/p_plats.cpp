@@ -34,6 +34,7 @@
 // Data.
 #include "sounds.hpp"
 
+#include "../../utils/memory.hpp"
 
 plat_t*		activeplats[MAXPLATS];
 
@@ -62,7 +63,7 @@ void T_PlatRaise(plat_t* plat)
 	}
 	
 				
-	if (res == crushed && (!plat->crush))
+	if (res == result_e::crushed && (!plat->crush))
 	{
 	    plat->count = plat->wait;
 	    plat->status = down;
@@ -70,7 +71,7 @@ void T_PlatRaise(plat_t* plat)
 	}
 	else
 	{
-	    if (res == pastdest)
+	    if (res == result_e::pastdest)
 	    {
 		plat->count = plat->wait;
 		plat->status = waiting;
@@ -87,7 +88,7 @@ void T_PlatRaise(plat_t* plat)
 		  case raiseToNearestAndChange:
 		    // In versions <= v1.2 (at least), platform types besides
 		    // downWaitUpStay always remain active.
-		    if (gameversion > exe_doom_1_2)
+		    if (gameversion > GameVersion_t::exe_doom_1_2)
 		        P_RemoveActivePlat(plat);
 		    break;
 		    
@@ -101,7 +102,7 @@ void T_PlatRaise(plat_t* plat)
       case	down:
 	res = T_MovePlane(plat->sector,plat->speed,plat->low,false,0,-1);
 
-	if (res == pastdest)
+	if (res == result_e::pastdest)
 	{
 	    plat->count = plat->wait;
 	    plat->status = waiting;
@@ -163,7 +164,7 @@ EV_DoPlat
 	
 	// Find lowest & highest floors around sector
 	rtn = 1;
-	plat = zmalloc<decltype(	plat)>( sizeof(*plat), PU_LEVSPEC, 0);
+	plat = zmalloc<decltype(plat)>( sizeof(*plat), PU_LEVSPEC, 0);
 	P_AddThinker(&plat->thinker);
 		
 	plat->type = type;
@@ -236,7 +237,7 @@ EV_DoPlat
 		plat->high = sec->floorheight;
 
 	    plat->wait = TICRATE*PLATWAIT;
-	    plat->status = P_Random()&1;
+	    plat->status = static_cast<plat_e>( P_Random() & 1 ) ;
 
 	    S_StartSound(&sec->soundorg,sfx_pstart);
 	    break;

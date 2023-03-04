@@ -44,7 +44,7 @@ mapformat_t P_CheckMapFormat(int lumpnum)
     int b;
 
     if (!((b = lumpnum + ML_NODES) < numlumps &&
-          (nodes = W_CacheLumpNum(b, PU_CACHE)) &&
+          (nodes = W_CacheLumpNum_cast<decltype(          (nodes)>(b, PU_CACHE)) &&
           W_LumpLength(b) > 0))
     {
         fprintf(stderr, "no nodes");
@@ -172,7 +172,7 @@ void P_LoadNodes_DeePBSP(int lump)
 
     numnodes = (W_LumpLength (lump) - 8) / sizeof(mapnode_deepbsp_t);
     nodes = zmalloc<decltype(    nodes)>(numnodes * sizeof(node_t), PU_LEVEL, 0);
-    data = W_CacheLumpNum (lump, PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)> (lump, PU_STATIC);
 
     // [crispy] warn about missing nodes
     if (!data || !numnodes)
@@ -234,7 +234,7 @@ void P_LoadNodes_ZDBSP (int lump, boolean compressed)
     unsigned int numNodes;
     vertex_t *newvertarray = nullptr;
 
-    data = W_CacheLumpNum(lump, PU_LEVEL);
+    data = W_CacheLumpNum_cast<decltype(    data)>(lump, PU_LEVEL);
 
     // 0. Uncompress nodes lump (or simply skip header)
 
@@ -266,7 +266,7 @@ void P_LoadNodes_ZDBSP (int lump, boolean compressed)
         {
             int outlen_old = outlen;
             outlen = 2 * outlen_old;
-            output = I_Realloc(output, outlen);
+            output = (decltype(            output)) I_Realloc(output, outlen);
             zstream->next_out = output + outlen_old;
             zstream->avail_out = outlen - outlen_old;
         }

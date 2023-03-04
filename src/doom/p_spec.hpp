@@ -220,16 +220,16 @@ typedef PACKED_STRUCT (
 }) switchlist_t;
 
 
-typedef enum
+enum bwhere_e
 {
     top,
     middle,
     bottom
 
-} bwhere_e;
+} ;
 
 
-typedef struct
+struct button_t
 {
     line_t*	line;
     bwhere_e	where;
@@ -237,7 +237,7 @@ typedef struct
     int		btimer;
     degenmobj_t *soundorg;
 
-} button_t;
+} ;
 
 
 
@@ -265,18 +265,18 @@ void P_InitSwitchList(void);
 //
 // P_PLATS
 //
-typedef enum
+enum plat_e
 {
     up,
     down,
     waiting,
     in_stasis
 
-} plat_e;
+} ;
 
 
 
-typedef enum
+enum plattype_e
 {
     perpetualRaise,
     downWaitUpStay,
@@ -284,11 +284,11 @@ typedef enum
     raiseToNearestAndChange,
     blazeDWUS
 
-} plattype_e;
+} ;
 
 
 
-typedef struct
+struct plat_t
 {
     thinker_t	thinker;
     sector_t*	sector;
@@ -303,7 +303,7 @@ typedef struct
     int		tag;
     plattype_e	type;
     
-} plat_t;
+} ;
 
 
 
@@ -331,7 +331,7 @@ void    P_ActivateInStasis(int tag);
 //
 // P_DOORS
 //
-typedef enum
+enum vldoor_e
 {
     vld_normal,
     vld_close30ThenOpen,
@@ -342,11 +342,11 @@ typedef enum
     vld_blazeOpen,
     vld_blazeClose
 
-} vldoor_e;
+} ;
 
 
 
-typedef struct
+struct vldoor_t
 {
     thinker_t	thinker;
     vldoor_e	type;
@@ -363,7 +363,7 @@ typedef struct
     // when it reaches 0, start going down
     int             topcountdown;
     
-} vldoor_t;
+} ;
 
 
 
@@ -483,7 +483,7 @@ EV_SlidingDoor
 //
 // P_CEILNG
 //
-typedef enum
+enum ceiling_e
 {
     lowerToFloor,
     raiseToHighest,
@@ -492,11 +492,11 @@ typedef enum
     fastCrushAndRaise,
     silentCrushAndRaise
 
-} ceiling_e;
+} ;
 
 
 
-typedef struct
+struct ceiling_t
 {
     thinker_t	thinker;
     ceiling_e	type;
@@ -513,7 +513,7 @@ typedef struct
     int		tag;                   
     int		olddirection;
     
-} ceiling_t;
+} ;
 
 
 
@@ -540,7 +540,7 @@ void    P_ActivateInStasisCeiling(line_t* line);
 //
 // P_FLOOR
 //
-typedef enum
+enum floor_e
 {
     // lower floor to highest surrounding floor
     lowerFloor,
@@ -573,21 +573,21 @@ typedef enum
     donutRaise,
     raiseFloor512
     
-} floor_e;
+} ;
 
 
 
 
-typedef enum
+enum stair_e
 {
     build8,	// slowly build by 8
     turbo16	// quickly build by 16
     
-} stair_e;
+} ;
 
 
 
-typedef struct
+struct floormove_t
 {
     thinker_t	thinker;
     floor_e	type;
@@ -599,19 +599,24 @@ typedef struct
     fixed_t	floordestheight;
     fixed_t	speed;
 
-} floormove_t;
+} ;
 
 
 
 #define FLOORSPEED		FRACUNIT
 
-typedef enum
+enum class result_e
 {
     ok,
     crushed,
     pastdest
     
-} result_e;
+};
+
+constexpr result_e operator & (result_e lhs, result_e rhs) noexcept 
+{
+    return static_cast<result_e>(static_cast<int>(rhs) & static_cast<int>(rhs));
+}
 
 result_e
 T_MovePlane

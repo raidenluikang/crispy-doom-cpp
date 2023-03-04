@@ -238,7 +238,7 @@ void SB_Init(void)
     }
     else
     {
-        PatchLIFEGEM = W_CacheLumpNum(W_GetNumForName(DEH_String("LIFEGEM0"))
+        PatchLIFEGEM = W_CacheLumpNum_cast<decltype(        PatchLIFEGEM)>(W_GetNumForName(DEH_String("LIFEGEM0"))
                                       + consoleplayer, PU_STATIC);
     }
     PatchLTFCTOP = W_CacheLumpName_patch(DEH_String("LTFCTOP"), PU_STATIC);
@@ -254,14 +254,14 @@ void SB_Init(void)
     startLump = W_GetNumForName(DEH_String("IN0"));
     for (i = 0; i < 10; i++)
     {
-        PatchINumbers[i] = W_CacheLumpNum(startLump + i, PU_STATIC);
+        PatchINumbers[i] = W_CacheLumpNum_cast<decltype(        PatchINumbers[i])>(startLump + i, PU_STATIC);
     }
     PatchNEGATIVE = W_CacheLumpName_patch(DEH_String("NEGNUM"), PU_STATIC);
     FontBNumBase = W_GetNumForName(DEH_String("FONTB16"));
     startLump = W_GetNumForName(DEH_String("SMALLIN0"));
     for (i = 0; i < 10; i++)
     {
-        PatchSmNumbers[i] = W_CacheLumpNum(startLump + i, PU_STATIC);
+        PatchSmNumbers[i] = W_CacheLumpNum_cast<decltype(        PatchSmNumbers[i])>(startLump + i, PU_STATIC);
     }
     playpalette = W_GetNumForName(DEH_String("PLAYPAL"));
     spinbooklump = W_GetNumForName(DEH_String("SPINBK0"));
@@ -384,19 +384,19 @@ static void DrBNumber(signed int val, int x, int y)
     }
     if (val > 99)
     {
-        patch = W_CacheLumpNum(FontBNumBase + val / 100, PU_CACHE);
+        patch = W_CacheLumpNum_cast<decltype(        patch)>(FontBNumBase + val / 100, PU_CACHE);
         V_DrawShadowedPatch(xpos + 6 - SHORT(patch->width) / 2, y, patch);
     }
     val = val % 100;
     xpos += 12;
     if (val > 9 || oldval > 99)
     {
-        patch = W_CacheLumpNum(FontBNumBase + val / 10, PU_CACHE);
+        patch = W_CacheLumpNum_cast<decltype(        patch)>(FontBNumBase + val / 10, PU_CACHE);
         V_DrawShadowedPatch(xpos + 6 - SHORT(patch->width) / 2, y, patch);
     }
     val = val % 10;
     xpos += 12;
-    patch = W_CacheLumpNum(FontBNumBase + val, PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(    patch)>(FontBNumBase + val, PU_CACHE);
     V_DrawShadowedPatch(xpos + 6 - SHORT(patch->width) / 2, y, patch);
 }
 

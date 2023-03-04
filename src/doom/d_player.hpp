@@ -45,7 +45,7 @@
 //
 // Player states.
 //
-typedef enum
+enum playerstate_t
 {
     // Playing or camping.
     PST_LIVE,
@@ -54,13 +54,13 @@ typedef enum
     // Ready to restart/respawn???
     PST_REBORN		
 
-} playerstate_t;
+} ;
 
 
 //
 // Player internal flags, for cheats and debug.
 //
-typedef enum
+enum cheat_t
 {
     // No clipping, walk through barriers.
     CF_NOCLIP		= 1,
@@ -71,13 +71,13 @@ typedef enum
     // [crispy] monsters don't target
     CF_NOTARGET         = 8
 
-} cheat_t;
+} ;
 
 
 //
 // Extended player object info: player_t
 //
-typedef struct player_s
+struct player_t
 {
     mobj_t*		mo;
     playerstate_t	playerstate;
@@ -167,7 +167,7 @@ typedef struct player_s
     fixed_t		oldviewz;
 
     // [crispy] show centered "Secret Revealed!" message
-    char	*centermessage;
+    const char	*centermessage;
 
     // [crispy] free look / mouse look
     int	lookdir, oldlookdir;
@@ -186,14 +186,16 @@ typedef struct player_s
     fixed_t	bob2;
 
     // [crispy] blinking key or skull in the status bar
-    boolean		tryopen[static_cast<size_t>(card_t::NUMCARDS)];
+    int	tryopen[static_cast<size_t>(card_t::NUMCARDS)];
 
     // [crispy] negative player health
-    int			neghealth;
+    int	neghealth;
 
     // [crispy] "use" button timer
-    int			btuse, btuse_tics;
-} player_t;
+    int	btuse, btuse_tics;
+
+    constexpr int readyweapon_i()const noexcept { return static_cast<int>(readyweapon); }
+} ;
 
 
 //

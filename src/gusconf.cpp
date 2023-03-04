@@ -30,6 +30,8 @@
 #include "w_wad.hpp"
 #include "z_zone.hpp"
 
+#include "../utils/memory.hpp"
+
 #define MAX_INSTRUMENTS 256
 
 typedef struct
@@ -40,7 +42,8 @@ typedef struct
     unsigned int count;
 } gus_config_t;
 
-char *gus_patch_path = "";
+static char gus_patch_path_empty[] = "";
+char *gus_patch_path = gus_patch_path_empty;
 int gus_ram_kb = 1024;
 
 static unsigned int MappingIndex(void)
@@ -217,7 +220,7 @@ static char *ReadDMXConfig(void)
     }
 
     len = W_LumpLength(lumpnum);
-    data = zmalloc<decltype(    data)>(len + 1, PU_STATIC, nullptr);
+    data = zmalloc<decltype(data)>(len + 1, PU_STATIC, nullptr);
     W_ReadLump(lumpnum, data);
 
     data[len] = '\0';

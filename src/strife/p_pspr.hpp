@@ -76,7 +76,7 @@ typedef struct
 
 } pspdef_t;
 
-typedef struct player_s *playerptr;
+typedef struct player_t *playerptr;
 
 
 extern fixed_t bulletslope;

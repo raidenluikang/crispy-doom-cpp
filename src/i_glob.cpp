@@ -104,7 +104,7 @@ glob_t *I_StartMultiGlob(const char *directory, int flags,
     va_list args;
     char *directory_native;
 
-    globs = malloc(sizeof(char *));
+    globs = (char**)malloc(sizeof(char *));
     if (globs == nullptr)
     {
         return nullptr;
@@ -123,7 +123,7 @@ glob_t *I_StartMultiGlob(const char *directory, int flags,
             break;
         }
 
-        new_globs = realloc(globs, sizeof(char *) * (num_globs + 1));
+        new_globs = (char**)realloc(globs, sizeof(char *) * (num_globs + 1));
         if (new_globs == nullptr)
         {
             FreeStringList(globs, num_globs);
@@ -134,7 +134,7 @@ glob_t *I_StartMultiGlob(const char *directory, int flags,
     }
     va_end(args);
 
-    result = malloc(sizeof(glob_t));
+    result = (glob_t*)malloc(sizeof(glob_t));
     if (result == nullptr)
     {
         FreeStringList(globs, num_globs);
@@ -283,7 +283,7 @@ static void ReadAllFilenames(glob_t *glob)
         {
             break;
         }
-        glob->filenames = realloc(glob->filenames,
+        glob->filenames = (char**)realloc(glob->filenames,
                                   (glob->filenames_len + 1) * sizeof(char *));
         glob->filenames[glob->filenames_len] = name;
         ++glob->filenames_len;

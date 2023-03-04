@@ -756,7 +756,7 @@ static boolean CacheSFX(sfxinfo_t *sfxinfo)
     // need to load the sound
 
     lumpnum = sfxinfo->lumpnum;
-    data = W_CacheLumpNum(lumpnum, PU_STATIC);
+    data = W_CacheLumpNum_cast<decltype(    data)>(lumpnum, PU_STATIC);
     lumplen = W_LumpLength(lumpnum);
 
     // [crispy] Check if this is a valid RIFF wav file

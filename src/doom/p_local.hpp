@@ -24,6 +24,8 @@
 #include "r_local.hpp"
 #endif
 
+#include <vector>
+
 #define TOCENTER                -8
 #define AFLAG_JUMP              0x80
 #define FLOATSPEED		(FRACUNIT*4)
@@ -225,8 +227,8 @@ extern	line_t*		ceilingline;
 #define MAXSPECIALCROSS 		20
 #define MAXSPECIALCROSS_ORIGINAL	8
 
-extern	line_t**	spechit; // [crispy] remove SPECHIT limit
-extern	int	numspechit;
+extern	std::vector<line_t*>	spechit; // [crispy] remove SPECHIT limit
+//extern	int	numspechit;
 
 boolean P_CheckPosition (mobj_t *thing, fixed_t x, fixed_t y);
 boolean P_TryMove (mobj_t* thing, fixed_t x, fixed_t y);

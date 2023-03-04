@@ -30,6 +30,8 @@
 // Data.
 #include "sounds.hpp"
 
+#include "../../utils/memory.hpp"
+
 //e6y
 #define STAIRS_UNINITIALIZED_CRUSH_FIELD_VALUE 10
 
@@ -76,7 +78,7 @@ T_MovePlane
 		    P_ChangeSector(sector,crush);
 		    //return crushed;
 		}
-		return pastdest;
+		return result_e::pastdest;
 	    }
 	    else
 	    {
@@ -87,7 +89,7 @@ T_MovePlane
 		{
 		    sector->floorheight = lastpos;
 		    P_ChangeSector(sector,crush);
-		    return crushed;
+		    return result_e::crushed;
 		}
 	    }
 	    break;
@@ -105,7 +107,7 @@ T_MovePlane
 		    P_ChangeSector(sector,crush);
 		    //return crushed;
 		}
-		return pastdest;
+		return result_e::pastdest;
 	    }
 	    else
 	    {
@@ -116,10 +118,10 @@ T_MovePlane
 		if (flag == true)
 		{
 		    if (crush == true)
-			return crushed;
+			return result_e::crushed;
 		    sector->floorheight = lastpos;
 		    P_ChangeSector(sector,crush);
-		    return crushed;
+		    return result_e::crushed;
 		}
 	    }
 	    break;
@@ -144,7 +146,7 @@ T_MovePlane
 		    P_ChangeSector(sector,crush);
 		    //return crushed;
 		}
-		return pastdest;
+		return result_e::pastdest;
 	    }
 	    else
 	    {
@@ -156,10 +158,10 @@ T_MovePlane
 		if (flag == true)
 		{
 		    if (crush == true)
-			return crushed;
+			return result_e::crushed;
 		    sector->ceilingheight = lastpos;
 		    P_ChangeSector(sector,crush);
-		    return crushed;
+		    return result_e::crushed;
 		}
 	    }
 	    break;
@@ -177,7 +179,7 @@ T_MovePlane
 		    P_ChangeSector(sector,crush);
 		    //return crushed;
 		}
-		return pastdest;
+		return result_e::pastdest;
 	    }
 	    else
 	    {
@@ -199,7 +201,7 @@ T_MovePlane
 	break;
 		
     }
-    return ok;
+    return result_e::ok;
 }
 
 
@@ -218,7 +220,7 @@ void T_MoveFloor(floormove_t* floor)
     if (!(leveltime&7))
 	S_StartSound(&floor->sector->soundorg, sfx_stnmov);
     
-    if (res == pastdest)
+    if (res == result_e::pastdest)
     {
 	floor->sector->specialdata = nullptr;
 
@@ -273,7 +275,7 @@ void T_MoveGoobers (floormove_t *floor)
 
     // [crispy] remove thinker once both the sector's floor and ceiling
     // have reached their respective destination heights
-    if ((res1 & res2) == pastdest)
+    if ((res1 & res2) == result_e::pastdest)
     {
 	floor->sector->specialdata = nullptr;
 	P_RemoveThinker(&floor->thinker);
@@ -297,12 +299,12 @@ void EV_DoGoobers (void)
 	// [crispy] remove thinker for sectors that are already moving
 	if (sec->specialdata)
 	{
-	    floor = sec->specialdata;
+	    floor = static_cast<decltype(floor)>( sec->specialdata );
 	    P_RemoveThinker(&floor->thinker);
 	    sec->specialdata = nullptr;
 	}
 
-	floor = zmalloc<decltype(	floor)>(sizeof(*floor), PU_LEVSPEC, 0);
+	floor = zmalloc<decltype(floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	P_AddThinker(&floor->thinker);
 	sec->specialdata = floor;
 	floor->thinker.function.acp1 = (actionf_p1) T_MoveGoobers;
@@ -376,7 +378,7 @@ EV_DoFloor
 	    floor->speed = FLOORSPEED * 4;
 	    floor->floordestheight = 
 		P_FindHighestFloorSurrounding(sec);
-	    if (gameversion <= exe_doom_1_2 ||
+	    if (gameversion <= GameVersion_t::exe_doom_1_2 ||
 	        floor->floordestheight != sec->floorheight)
 		floor->floordestheight += 8*FRACUNIT;
 	    break;

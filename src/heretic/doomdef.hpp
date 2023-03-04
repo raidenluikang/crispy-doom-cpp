@@ -145,7 +145,7 @@ typedef union
     struct mobj_s *m;
 } specialval_t;
 
-struct player_s;
+struct player_t;
 
 typedef struct mobj_s
 {
@@ -186,7 +186,7 @@ typedef struct mobj_s
     // teleporting
     int threshold;              // if >0, the target will be chased
     // no matter what (even if shot)
-    struct player_s *player;    // only valid if type == MT_PLAYER
+    struct player_t *player;    // only valid if type == MT_PLAYER
     int lastlook;               // player number last looked for
 
     mapthing_t spawnpoint;      // for nightmare respawn
@@ -429,7 +429,7 @@ typedef struct
 ================
 */
 
-typedef struct player_s
+typedef struct player_t
 {
     mobj_t *mo;
     playerstate_t playerstate;

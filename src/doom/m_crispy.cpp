@@ -216,9 +216,9 @@ void M_CrispyToggleColoredblood(int choice)
 {
     thinker_t *th;
 
-    if (gameversion == exe_chex)
+    if (gameversion == GameVersion_t::exe_chex)
     {
-	return;
+	    return;
     }
 
     ChangeSettingEnum(&crispy->coloredblood, choice, NUM_COLOREDBLOOD);
@@ -313,7 +313,7 @@ void M_CrispyToggleExtAutomap(int choice)
 
 void M_CrispyToggleFlipcorpses(int choice)
 {
-    if (gameversion == exe_chex)
+    if (gameversion == GameVersion_t::exe_chex)
     {
 	return;
     }

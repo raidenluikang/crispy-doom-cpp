@@ -36,7 +36,7 @@
 #define CRISPY_FPSLIMIT_MIN 35
 #define CRISPY_FPSLIMIT_MAX 500
 
-typedef struct
+struct crispy_t
 {
 	// [crispy] "crispness" config variables
 	int automapoverlay;
@@ -118,7 +118,7 @@ typedef struct
 	const char *platform;
 
 	void (*post_rendering_hook) (void);
-} crispy_t;
+} ;
 
 extern crispy_t *const crispy;
 extern const crispy_t *critical;

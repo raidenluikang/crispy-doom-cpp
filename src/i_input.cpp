@@ -19,7 +19,7 @@
 #include <string.h>
 
 #include <SDL.h>
-#include "SDL_keycode.hpp"
+#include <SDL_keycode.h>
 
 #include "doomkeys.hpp"
 #include "doomtype.hpp"
@@ -260,7 +260,7 @@ void I_HandleKeyboardEvent(SDL_Event *sdlevent)
     switch (sdlevent->type)
     {
         case SDL_KEYDOWN:
-            event.type = ev_keydown;
+            event.type = evtype_t::ev_keydown;
             event.data1 = TranslateKey(&sdlevent->key.keysym);
             event.data2 = GetLocalizedKey(&sdlevent->key.keysym);
             event.data3 = GetTypedChar(&sdlevent->key.keysym);
@@ -272,7 +272,7 @@ void I_HandleKeyboardEvent(SDL_Event *sdlevent)
             break;
 
         case SDL_KEYUP:
-            event.type = ev_keyup;
+            event.type = evtype_t::ev_keyup;
             event.data1 = TranslateKey(&sdlevent->key.keysym);
 
             // data2/data3 are initialized to zero for ev_keyup.
@@ -366,7 +366,7 @@ static void UpdateMouseButtonState(unsigned int button, boolean on)
 
     // Post an event with the new button state.
 
-    event.type = ev_mouse;
+    event.type = evtype_t::ev_mouse;
     event.data1 = mouse_button_state;
     event.data2 = event.data3 = 0;
     D_PostEvent(&event);
@@ -391,14 +391,14 @@ static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
 
     // post a button down event
     mouse_button_state |= (1 << button);
-    down.type = ev_mouse;
+    down.type = evtype_t::ev_mouse;
     down.data1 = mouse_button_state;
     down.data2 = down.data3 = 0;
     D_PostEvent(&down);
 
     // post a button up event
     mouse_button_state &= ~(1 << button);
-    up.type = ev_mouse;
+    up.type = evtype_t::ev_mouse;
     up.data1 = mouse_button_state;
     up.data2 = up.data3 = 0;
     D_PostEvent(&up);
@@ -501,7 +501,7 @@ void I_ReadMouse(void)
 
     if (x != 0 || y != 0) 
     {
-        ev.type = ev_mouse;
+        ev.type = evtype_t::ev_mouse;
         ev.data1 = mouse_button_state;
         ev.data2 = AccelerateMouse(x);
 
