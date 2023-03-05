@@ -70,7 +70,7 @@
 // [crispy]
 #define HU_COORDX       ((ORIGWIDTH - 8 * hu_font['A'-HU_FONTSTART]->width) + WIDESCREENDELTA)
 
-char *chat_macros[10];
+const char *chat_macros[10];
 
 // villsa [STRIFE]
 char player_names[8][16] =
@@ -735,7 +735,7 @@ static void StopChatInput(void)
 boolean HU_Responder(event_t *ev)
 {
     static char         lastmessage[HU_MAXLINELENGTH+1];
-    char*               macromessage;
+    const char*               macromessage;
     boolean             eatkey = false;
     static boolean      altdown = false;
     unsigned char       c;
@@ -749,11 +749,11 @@ boolean HU_Responder(event_t *ev)
     }
     else if (ev->data1 == KEY_RALT || ev->data1 == KEY_LALT)
     {
-        altdown = ev->type == ev_keydown;
+        altdown = ev->type == evtype_t::ev_keydown;
         return false;
     }
 
-    if (ev->type != ev_keydown)
+    if (ev->type != evtype_t::ev_keydown)
         return false;
 
     if (!chat_on)

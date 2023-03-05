@@ -40,6 +40,7 @@
 
 #include "doomstat.hpp"
 
+#include "../../utils/memory.hpp"
 
 void	P_SpawnMapThing (mapthing_t*	mthing);
 
@@ -417,7 +418,7 @@ void P_LoadThings (int lump)
         // Do not spawn cool, new monsters if !commercial
         // STRIFE-TODO: replace with isregistered stuff
         /*
-        if (gamemode != commercial)
+        if (gamemode != GameMission_t::commercial)
         {
             switch (SHORT(mt->type))
             {

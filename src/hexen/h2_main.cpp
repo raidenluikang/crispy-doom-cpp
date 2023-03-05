@@ -44,7 +44,7 @@
 #include "w_main.hpp"
 #include "am_map.hpp"
 
-#include "hexen_icon.c"
+#include "hexen_icon.cpp"
 
 // MACROS ------------------------------------------------------------------
 
@@ -120,7 +120,7 @@ static int WarpMap;
 static int demosequence;
 static int pagetic;
 static const char *pagename;
-static char *SavePathConfig;
+static const char *SavePathConfig;
 
 // CODE --------------------------------------------------------------------
 
@@ -225,9 +225,11 @@ static void D_SetDefaultSavePath(void)
             // If we are not using a savegame path (probably because we are on
             // Windows and not using a config dir), behave like Vanilla Hexen
             // and use hexndata/:
+            char * path = (char*)malloc(16);
+            
+            M_snprintf(path, 16, "hexndata%c", DIR_SEPARATOR);
 
-            SavePath = (decltype(            SavePath)) malloc(10);
-            M_snprintf(SavePath, 10, "hexndata%c", DIR_SEPARATOR);
+            SavePath = path;
         }
         else
         {
@@ -320,7 +322,7 @@ void D_IdentifyVersion(void)
     if (W_CheckNumForName("SKY1") == -1 &&
         W_CheckNumForName("MAP05") == -1 )
     {
-	gamemode = shareware;
+	gamemode = GameMode_t::shareware;
 	maxplayers = 4;
     }
 
@@ -337,7 +339,7 @@ void D_IdentifyVersion(void)
     //
 
     if (!M_ParmExists("-v10override")
-     && gamemode != shareware && W_CheckNumForName("CLUS1MSG") < 0)
+     && gamemode != GameMode_t::shareware && W_CheckNumForName("CLUS1MSG") < 0)
     {
         I_Error(
             "You are trying to use the Hexen v1.0 IWAD. This isn't\n"
@@ -361,7 +363,7 @@ void D_SetGameDescription(void)
     Press any key to continue.
 */
 
-    if (gamemode == shareware)
+    if (gamemode == GameMode_t::shareware)
     {
 	gamedescription = "Hexen: 4 Level Demo Version";
     }
@@ -389,7 +391,7 @@ void D_DoomMain(void)
     startepisode = 1;
     autostart = false;
     startmap = 1;
-    gamemode = commercial;
+    gamemode = GameMode_t::commercial;
 
     I_PrintBanner(PACKAGE_STRING);
 
@@ -433,7 +435,7 @@ void D_DoomMain(void)
     I_AtExit(M_SaveDefaults, false);
 
     // [crispy] set defaultskill after loading config
-    startskill = (crispy->defaultskill + SKILL_HMP) % NUM_SKILLS;
+    startskill = skill_t{ (crispy->defaultskill + SKILL_HMP) % NUM_SKILLS } ;
 
     // Now that the savedir is loaded, make sure it exists
     CreateSavePath();
@@ -454,7 +456,7 @@ void D_DoomMain(void)
     }
 
     D_AddFile(iwadfile);
-    W_CheckCorrectIWAD(hexen);
+    W_CheckCorrectIWAD(GameMission_t::hexen);
     D_IdentifyVersion();
     D_SetGameDescription();
     AdjustForMacIWAD();
@@ -493,7 +495,7 @@ void D_DoomMain(void)
     //
     // Disable auto-loading of .wad files.
     //
-    if (!M_ParmExists("-noautoload") && gamemode != shareware)
+    if (!M_ParmExists("-noautoload") && gamemode != GameMode_t::shareware)
     {
         char *autoload_dir;
         autoload_dir = M_GetAutoloadDir("hexen.wad", true);
@@ -735,13 +737,13 @@ static void HandleArgs(void)
 
     if (p)
     {
-        startskill = myargv[p+1][0] - '1';
+        startskill = skill_t{ myargv[p+1][0] - static_cast<int>( '1' ) };
         autostart = true;
     }
 
     // [crispy] add wad files from autoload PWAD directories
 
-    if (!M_ParmExists("-noautoload") && gamemode != shareware)
+    if (!M_ParmExists("-noautoload") && gamemode != GameMode_t::shareware)
     {
         int i;
 
@@ -1113,7 +1115,7 @@ static void CrispyDrawStats (void)
     if (!height || !coord_x || !coord_w)
     {
         const int FontABaseLump = W_GetNumForName("FONTA_S") + 1;
-        const patch_t *const p = W_CacheLumpNum_cast<decltype(        const patch_t *const p)>(FontABaseLump + 'A' - 33, PU_CACHE);
+        const patch_t *const p = W_CacheLumpNum_cast<const patch_t *>(FontABaseLump + 'A' - 33, PU_CACHE);
 
         height = SHORT(p->height) + 1;
         coord_w = 7 * SHORT(p->width);

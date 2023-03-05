@@ -17,6 +17,8 @@
 #include "m_random.hpp"
 #include "p_local.hpp"
 #include "v_video.hpp"
+#include "../../utils/memory.hpp"
+
 
 //==================================================================
 //==================================================================
@@ -68,7 +70,7 @@ void P_SpawnLightFlash(sector_t * sector)
 
     sector->special = 0;        // nothing special about it during gameplay
 
-    flash = zmalloc<decltype(    flash)>(sizeof(*flash), PU_LEVSPEC, 0);
+    flash = zmalloc<decltype(flash)>(sizeof(*flash), PU_LEVSPEC, 0);
     P_AddThinker(&flash->thinker);
     flash->thinker.function = T_LightFlash;
     flash->sector = sector;

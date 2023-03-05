@@ -79,7 +79,7 @@ extern byte*		translationtables;
 extern byte*		dc_translation;
 extern byte*		xlatab;            // haleyjd 08/26/10: [STRIFE]
 
-extern char *back_flat; // haleyjd 08/29/10: [STRIFE]
+extern const char *back_flat; // haleyjd 08/29/10: [STRIFE]
 
 // Span blitting for rows, floor/ceiling.
 // No Sepctre effect needed.

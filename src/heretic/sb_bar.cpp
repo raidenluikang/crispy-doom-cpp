@@ -595,7 +595,7 @@ static void RefreshBackground()
         int x, y;
         byte *src;
         pixel_t *dest;
-        const char *name = (gamemode == shareware) ?
+        const char *name = (gamemode == GameMode_t::shareware) ?
                            DEH_String("FLOOR04") :
                            DEH_String("FLAT513");
 
@@ -721,13 +721,13 @@ void SB_Drawer(void)
                 if (hitCenterFrame && (frame != 15 && frame != 0))
                 {
                     V_DrawPatch(spinfly_x, 17,
-                                W_CacheLumpNum(spinflylump + 15,
+                                (patch_t*)W_CacheLumpNum(spinflylump + 15,
                                                 PU_CACHE));
                 }
                 else
                 {
                     V_DrawPatch(spinfly_x, 17,
-                                W_CacheLumpNum(spinflylump + frame,
+                                (patch_t*)W_CacheLumpNum(spinflylump + frame,
                                                 PU_CACHE));
                     hitCenterFrame = false;
                 }
@@ -737,14 +737,14 @@ void SB_Drawer(void)
                 if (!hitCenterFrame && (frame != 15 && frame != 0))
                 {
                     V_DrawPatch(spinfly_x, 17,
-                                W_CacheLumpNum(spinflylump + frame,
+                                 (patch_t*)W_CacheLumpNum(spinflylump + frame,
                                                 PU_CACHE));
                     hitCenterFrame = false;
                 }
                 else
                 {
                     V_DrawPatch(spinfly_x, 17,
-                                W_CacheLumpNum(spinflylump + 15,
+                                (patch_t*) W_CacheLumpNum(spinflylump + 15,
                                                 PU_CACHE));
                     hitCenterFrame = true;
                 }
@@ -772,7 +772,7 @@ void SB_Drawer(void)
         {
             frame = (leveltime / 3) & 15;
             V_DrawPatch(spinbook_x, 17,
-                        W_CacheLumpNum(spinbooklump + frame, PU_CACHE));
+                         (patch_t*)W_CacheLumpNum(spinbooklump + frame, PU_CACHE));
             BorderTopRefresh = true;
             UpdateState |= I_MESSAGES;
         }
@@ -893,7 +893,7 @@ void DrawMainBar(void)
 
         temp = W_GetNumForName(DEH_String("useartia")) + ArtifactFlash - 1;
 
-        V_DrawPatch(182, 161, W_CacheLumpNum(temp, PU_CACHE));
+        V_DrawPatch(182, 161, (patch_t*) W_CacheLumpNum(temp, PU_CACHE));
         ArtifactFlash--;
         oldarti = -1;           // so that the correct artifact fills in after the flash
         UpdateState |= I_STATBAR;
@@ -1112,7 +1112,7 @@ void DrawFullScreenStuff(void)
 
 boolean SB_Responder(event_t * event)
 {
-    if (event->type == ev_keydown)
+    if (event->type == evtype_t::ev_keydown)
     {
         if (HandleCheats(event->data1))
         {                       // Need to eat the key
@@ -1163,7 +1163,7 @@ static boolean HandleCheats(byte key)
 //
 //--------------------------------------------------------------------------
 
-#define NIGHTMARE_NETGAME_CHECK if(netgame||gameskill==sk_nightmare){return;}
+#define NIGHTMARE_NETGAME_CHECK if(netgame||gameskill==skill_t::sk_nightmare){return;}
 #define NETGAME_CHECK if(netgame){return;}
 
 static void CheatGodFunc(player_t * player, Cheat_t * cheat)
@@ -1214,7 +1214,7 @@ static void CheatWeaponsFunc(player_t * player, Cheat_t * cheat)
     {
         player->weaponowned[i] = true;
     }
-    if (gamemode == shareware)
+    if (gamemode == GameMode_t::shareware)
     {
         player->weaponowned[wp_skullrod] = false;
         player->weaponowned[wp_phoenixrod] = false;
@@ -1323,14 +1323,14 @@ static void CheatArtifact3Func(player_t * player, Cheat_t * cheat)
     {                           // All artifacts
         for (i = arti_none + 1; i < NUMARTIFACTS; i++)
         {
-            if (gamemode == shareware 
+            if (gamemode == GameMode_t::shareware 
              && (i == arti_superhealth || i == arti_teleport))
             {
                 continue;
             }
             for (j = 0; j < 16; j++)
             {
-                P_GiveArtifact(player, i, nullptr);
+                P_GiveArtifact(player, artitype_t{ i }, nullptr);
             }
         }
         P_SetMessage(player, DEH_String(TXT_CHEATARTIFACTS3), false);
@@ -1338,7 +1338,7 @@ static void CheatArtifact3Func(player_t * player, Cheat_t * cheat)
     else if (type > arti_none && type < NUMARTIFACTS
              && count > 0 && count < 10)
     {
-        if (gamemode == shareware
+        if (gamemode == GameMode_t::shareware
          && (type == arti_superhealth || type == arti_teleport))
         {
             P_SetMessage(player, DEH_String(TXT_CHEATARTIFACTSFAIL), false);
@@ -1346,7 +1346,7 @@ static void CheatArtifact3Func(player_t * player, Cheat_t * cheat)
         }
         for (i = 0; i < count; i++)
         {
-            P_GiveArtifact(player, type, nullptr);
+            P_GiveArtifact(player, artitype_t{type}, nullptr);
         }
         P_SetMessage(player, DEH_String(TXT_CHEATARTIFACTS3), false);
     }
@@ -1367,7 +1367,7 @@ static void CheatWarpFunc(player_t * player, Cheat_t * cheat)
 
     episode = args[0] - '0';
     map = args[1] - '0';
-    if (D_ValidEpisodeMap(heretic, gamemode, episode, map))
+    if (D_ValidEpisodeMap(GameMission_t::heretic, gamemode, episode, map))
     {
         G_DeferedInitNew(gameskill, episode, map);
         P_SetMessage(player, DEH_String(TXT_CHEATWARP), false);
@@ -1451,7 +1451,7 @@ static boolean WeaponAvailable (int w)
         return false;
     }
 
-    if (shareware && (w >= wp_skullrod && w != wp_gauntlets))
+    if (GameMode_t::shareware == gamemode && (w >= wp_skullrod && w != wp_gauntlets))
     {
         return false;
     }
@@ -1468,7 +1468,7 @@ static weapontype_t PickBestWeapon(player_t *player)
     {
         if (player->weaponowned[i])
         {
-            return i;
+            return weapontype_t{ i };
         }
     }
 
@@ -1547,7 +1547,7 @@ static void CheatAddRemoveWpnFunc(player_t *player, Cheat_t *cheat)
 
     if (!player->weaponowned[w])
     {
-        P_GiveWeapon(player, w);
+        P_GiveWeapon(player, weapontype_t{ w } );
         S_StartSound(nullptr, sfx_wpnup);
 
         // no pickup message for staff or wand

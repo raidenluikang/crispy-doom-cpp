@@ -24,6 +24,8 @@
 #include "s_sound.hpp"
 #include "sounds.hpp"
 
+#include "../../utils/memory.hpp"
+
 // MACROS ------------------------------------------------------------------
 
 #define MAX_TID_COUNT 200
@@ -641,9 +643,9 @@ void P_XYMovement(mobj_t * mo)
         if (player)
         {
             if ((unsigned) ((player->mo->state - states)
-                            - PStateRun[player->class]) < 4)
+                            - PStateRun[player->mclass]) < 4)
             {
-                P_SetMobjState(player->mo, PStateNormal[player->class]);
+                P_SetMobjState(player->mo, statenum_t{ PStateNormal[player->mclass] } );
             }
         }
         mo->momx = 0;
@@ -803,7 +805,7 @@ void P_ZMovement(mobj_t * mo)
                              && !mo->player->morphTics)
                     {
                         S_StartSound(mo, SFX_PLAYER_LAND);
-                        switch (mo->player->class)
+                        switch (mo->player->mclass)
                         {
                             case PCLASS_FIGHTER:
                                 S_StartSound(mo, SFX_PLAYER_FIGHTER_GRUNT);
@@ -1023,7 +1025,7 @@ static void PlayerLandedOnThing(mobj_t * mo, mobj_t * onmobj)
     else if (mo->momz < -GRAVITY * 12 && !mo->player->morphTics)
     {
         S_StartSound(mo, SFX_PLAYER_LAND);
-        switch (mo->player->class)
+        switch (mo->player->mclass)
         {
             case PCLASS_FIGHTER:
                 S_StartSound(mo, SFX_PLAYER_FIGHTER_GRUNT);
@@ -1195,7 +1197,7 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
     mobjinfo_t *info;
     fixed_t space;
 
-    mobj = zmalloc<decltype(    mobj)>(sizeof(*mobj), PU_LEVEL, nullptr);
+    mobj = zmalloc<decltype(mobj)>(sizeof(*mobj), PU_LEVEL, nullptr);
     memset(mobj, 0, sizeof(*mobj));
     info = &mobjinfo[type];
     mobj->type = type;
@@ -1208,7 +1210,7 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
     mobj->flags2 = info->flags2;
     mobj->damage = info->damage;
     mobj->health = info->spawnhealth;
-    if (gameskill != sk_nightmare && !critical->fast)
+    if (gameskill != skill_t::sk_nightmare && !critical->fast)
     {
         mobj->reactiontime = info->reactiontime;
     }
@@ -1341,19 +1343,19 @@ void P_SpawnPlayer(mapthing_t * mthing)
     z = ONFLOORZ;
     if (randomclass && deathmatch)
     {
-        p->class = P_Random() % 3;
-        if (p->class == PlayerClass[mthing->type - 1])
+        p->mclass = pclass_t{ P_Random() % 3 } ;
+        if (p->mclass == PlayerClass[mthing->type - 1])
         {
-            p->class = (p->class + 1) % 3;
+            p->mclass = pclass_t{ ( (int)p->mclass + 1) % 3 };
         }
-        PlayerClass[mthing->type - 1] = p->class;
+        PlayerClass[mthing->type - 1] = p->mclass;
         SB_SetClassData();
     }
     else
     {
-        p->class = PlayerClass[mthing->type - 1];
+        p->mclass = PlayerClass[mthing->type - 1];
     }
-    switch (p->class)
+    switch (p->mclass)
     {
         case PCLASS_FIGHTER:
             mobj = P_SpawnMobj(x, y, z, MT_PLAYER_FIGHTER);
@@ -1370,7 +1372,7 @@ void P_SpawnPlayer(mapthing_t * mthing)
     }
 
     // Set translation table data
-    if (p->class == PCLASS_FIGHTER
+    if (p->mclass == PCLASS_FIGHTER
         && (mthing->type == 1 || mthing->type == 3))
     {
         // The first type should be blue, and the third should be the
@@ -1479,9 +1481,9 @@ void P_SpawnMapThing(mapthing_t * mthing)
 
     if (mthing->type >= 1400 && mthing->type < 1410)
     {
-        R_PointInSubsector(mthing->x << FRACBITS,
-                           mthing->y << FRACBITS)->sector->seqType =
-            mthing->type - 1400;
+        subsector_t* subs = R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS);
+
+        subs->sector->seqType = seqtype_t{ mthing->type - 1400 };
         return;
     }
 
@@ -1504,11 +1506,11 @@ void P_SpawnMapThing(mapthing_t * mthing)
     }
 
     // Check current skill with spawn flags
-    if (gameskill == sk_baby || gameskill == sk_easy)
+    if (gameskill == skill_t::sk_baby || gameskill == skill_t::sk_easy)
     {
         spawnMask = MTF_EASY;
     }
-    else if (gameskill == sk_hard || gameskill == sk_nightmare)
+    else if (gameskill == skill_t::sk_hard || gameskill == skill_t::sk_nightmare)
     {
         spawnMask = MTF_HARD;
     }
@@ -1598,7 +1600,7 @@ void P_SpawnMapThing(mapthing_t * mthing)
         default:
             break;
     }
-    mobj = P_SpawnMobj(x, y, z, i);
+    mobj = P_SpawnMobj(x, y, z, mobjtype_t{ i } );
     if (z == ONFLOORZ)
     {
         mobj->z += mthing->height << FRACBITS;

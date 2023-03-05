@@ -35,6 +35,8 @@
 #include "sounds.hpp"
 
 
+#include "../../utils/memory.hpp"
+
 plat_t* activeplats[MAXPLATS];
 
 
@@ -177,7 +179,7 @@ int EV_DoPlat(line_t* line, plattype_e type, int amount)
         plat->type = type;
         plat->sector = sec;
         plat->sector->specialdata = plat;
-        plat->thinker.function.acp1 = (actionf_p1) T_PlatRaise;
+        plat->thinker.function.acp1 = (thinkf_p1) T_PlatRaise;
         plat->crush = false;
         plat->tag = line->tag;
 
@@ -269,7 +271,7 @@ int EV_DoPlat(line_t* line, plattype_e type, int amount)
                 plat->high = sec->floorheight;
 
             plat->wait = TICRATE * PLATWAIT;
-            plat->status = P_Random() & 1;
+            plat->status = plat_e{ P_Random() & 1 };
 
             S_StartSound(&sec->soundorg, sfx_pstart);
             break;
@@ -294,8 +296,7 @@ void P_ActivateInStasis(int tag)
             && (activeplats[i])->status == in_stasis)
         {
             (activeplats[i])->status = (activeplats[i])->oldstatus;
-            (activeplats[i])->thinker.function.acp1
-                = (actionf_p1)T_PlatRaise;
+            (activeplats[i])->thinker.function.acp1 = (thinkf_p1)T_PlatRaise;
         }
 }
 

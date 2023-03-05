@@ -177,6 +177,8 @@ enum class GameMission_t ; // forward declaration of enum allowed from C++11
 enum class skill_t;
 enum class GameVersion_t;
 
+enum pclass_t: int;
+
 struct net_connect_data_t
 {
     GameMode_t gamemode;
@@ -187,11 +189,12 @@ struct net_connect_data_t
     int is_freedoom;
     sha1_digest_t wad_sha1sum;
     sha1_digest_t deh_sha1sum;
-    int player_class;
+    pclass_t player_class;
 };
 
 // Game settings sent by client to server when initiating game start,
 // and received from the server by clients when the game starts.
+enum pclass_t : int;
 
 struct net_gamesettings_t
 {
@@ -219,7 +222,7 @@ struct net_gamesettings_t
 
     // Hexen player classes:
 
-    int player_classes[NET_MAXPLAYERS];
+    pclass_t player_classes[NET_MAXPLAYERS];
 
 } ;
 

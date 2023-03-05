@@ -579,7 +579,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
         if (gamekeydown[key_jump] || mousebuttons[mousebjump]
             || joybuttons[joybjump])
         {
-            cmd->arti |= AFLAG_JUMP;
+            cmd->arti = (artitype_t)((int)(cmd->arti) | AFLAG_JUMP);
         }
     }
 

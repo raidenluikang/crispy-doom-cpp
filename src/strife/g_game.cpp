@@ -68,6 +68,7 @@
 
 #include "g_game.hpp"
 
+#include "../../utils/memory.hpp"
 
 #define SAVEGAMESIZE	0x2c000
 
@@ -91,7 +92,7 @@ gamestate_t     oldgamestate;
  
 gameaction_t    gameaction; 
 gamestate_t     gamestate; 
-skill_t         gameskill = 2; // [STRIFE] Default value set to 2.
+skill_t         gameskill = skill_t{2}; // [STRIFE] Default value set to 2.
 boolean         respawnmonsters;
 //int             gameepisode; 
 int             gamemap;
@@ -801,7 +802,7 @@ void G_DoLoadLevel (void)
     levelstarttic = gametic;        // for time calculation
 
     if (wipegamestate == GS_LEVEL) 
-        wipegamestate = -1;             // force a wipe 
+        wipegamestate = INVALID_GAMESTATE;             // force a wipe 
 
     gamestate = GS_LEVEL; 
 
@@ -925,8 +926,8 @@ static void SetMouseButtons(unsigned int buttons_mask)
 boolean G_Responder (event_t* ev) 
 { 
     // allow spy mode changes even during the demo
-    if (gamestate == GS_LEVEL && ev->type == ev_keydown 
-        && ev->data1 == key_spy && (singledemo || !gameskill) ) // [STRIFE]: o_O
+    if (gamestate == GS_LEVEL && ev->type == evtype_t::ev_keydown 
+        && ev->data1 == key_spy && (singledemo || gameskill == skill_t{} ) ) // [STRIFE]: o_O
     {
         // spy mode 
         do 
@@ -943,9 +944,9 @@ boolean G_Responder (event_t* ev)
         (demoplayback || gamestate == GS_DEMOSCREEN) 
         ) 
     { 
-        if (ev->type == ev_keydown ||  
-            (ev->type == ev_mouse && ev->data1) || 
-            (ev->type == ev_joystick && ev->data1) ) 
+        if (ev->type == evtype_t::ev_keydown ||  
+            (ev->type == evtype_t::ev_mouse && ev->data1) || 
+            (ev->type == evtype_t::ev_joystick && ev->data1) ) 
         { 
             if(devparm && ev->data1 == 'g')
                 D_PageTicker(); // [STRIFE]: wat? o_O
@@ -985,7 +986,7 @@ boolean G_Responder (event_t* ev)
             return true;	// finale ate the event 
     } 
 
-    if (testcontrols && ev->type == ev_mouse)
+    if (testcontrols && ev->type == evtype_t::ev_mouse)
     {
         // If we are invoked by setup to test the controls, save the 
         // mouse speed so that we can display it on-screen.
@@ -998,18 +999,18 @@ boolean G_Responder (event_t* ev)
     // If the next/previous weapon keys are pressed, set the next_weapon
     // variable to change weapons when the next ticcmd is generated.
 
-    if (ev->type == ev_keydown && ev->data1 == key_prevweapon)
+    if (ev->type == evtype_t::ev_keydown && ev->data1 == key_prevweapon)
     {
         next_weapon = -1;
     }
-    else if (ev->type == ev_keydown && ev->data1 == key_nextweapon)
+    else if (ev->type == evtype_t::ev_keydown && ev->data1 == key_nextweapon)
     {
         next_weapon = 1;
     }
 
     switch (ev->type) 
     { 
-    case ev_keydown: 
+    case evtype_t::ev_keydown: 
         if (ev->data1 == key_pause) 
         { 
             sendpause = true; 
@@ -1021,12 +1022,12 @@ boolean G_Responder (event_t* ev)
 
         return true;    // eat key down events 
 
-    case ev_keyup: 
+    case evtype_t::ev_keyup: 
         if (ev->data1 <NUMKEYS) 
             gamekeydown[ev->data1] = false; 
         return false;   // always let key up events filter down 
 
-    case ev_mouse: 
+    case evtype_t::ev_mouse: 
         SetMouseButtons(ev->data1);
         if (mouseSensitivity)
             mousex = ev->data2*(mouseSensitivity+5)/10; 
@@ -1042,7 +1043,7 @@ boolean G_Responder (event_t* ev)
             mousey = 0; // [crispy] disable entirely
         return true;    // eat events 
 
-    case ev_joystick: 
+    case evtype_t::ev_joystick: 
         SetJoyButtons(ev->data1);
         joyxmove = ev->data2; 
         joyymove = ev->data3; 
@@ -1617,7 +1618,7 @@ void G_ExitLevel (int dest)
 void G_SecretExitLevel (void) 
 {
     // IF NO WOLF3D LEVELS, NO SECRET EXIT!
-    if ( (gamemode == commercial)
+    if ( (gamemode == GameMission_t::commercial)
         && (W_CheckNumForName("map31")<0))
         secretexit = false;
     else
@@ -1693,7 +1694,7 @@ void G_WorldDone (void)
     if (secretexit) 
         players[consoleplayer].didsecret = true; 
 
-    if ( gamemode == commercial )
+    if ( gamemode == GameMission_t::commercial )
     {
 	switch (gamemap)
 	{
@@ -2137,14 +2138,14 @@ G_InitNew
         S_ResumeSound (); 
     } 
 
-    if (skill > sk_nightmare) 
-        skill = sk_nightmare;
+    if (skill > skill_t::sk_nightmare) 
+        skill = skill_t::sk_nightmare;
 
     // [STRIFE] Removed episode nonsense and gamemap clipping
 
     M_ClearRandom (); 
 
-    if (skill == sk_nightmare || respawnparm )
+    if (skill == skill_t::sk_nightmare || respawnparm )
         respawnmonsters = true;
     else
         respawnmonsters = false;
@@ -2154,7 +2155,7 @@ G_InitNew
     // basically it's impossible to play any skill level properly unless
     // you never quit and reload from the command line.
     // [crispy] fixed in G_DoLoadGame()
-    if(!skill && gameskill)
+    if(skill == skill_t{} && gameskill != skill_t{})
     {
         // Setting to Baby skill... make things easier.
 
@@ -2181,7 +2182,7 @@ G_InitNew
         // The Bishop's homing missiles are faster (what?? BUG?)
         mobjinfo[MT_SEEKMISSILE].speed *= 2;
     }
-    if(skill && !gameskill)
+    if(skill != skill_t{} && skill_t{} == gameskill)
     {
         // Setting a higher skill when previously on baby... make things normal
 
@@ -2208,7 +2209,7 @@ G_InitNew
         // The Bishop's homing missiles - again, seemingly backward.
         mobjinfo[MT_SEEKMISSILE].speed >>= 1;
     }
-    if(fastparm || (skill == sk_nightmare && skill != gameskill))
+    if(fastparm || (skill == skill_t::sk_nightmare && skill != gameskill))
     {
         // BLOODBATH! Make some things super-aggressive.
         
@@ -2220,7 +2221,7 @@ G_InitNew
         // Bishop's homing missiles again get SLOWER and not faster o_O
         mobjinfo[MT_SEEKMISSILE].speed >>= 1;
     }
-    else if(skill != sk_nightmare && gameskill == sk_nightmare)
+    else if(skill != skill_t::sk_nightmare && gameskill == skill_t::sk_nightmare)
     {
         // Setting back to an ordinary skill after being on Bloodbath?
         // Put stuff back to normal.
@@ -2315,7 +2316,7 @@ static void IncreaseDemoBuffer(void)
     // Generate a new buffer twice the size
     new_length = current_length * 2;
     
-    new_demobuffer = zmalloc<decltype(    new_demobuffer)>(new_length, PU_STATIC, 0);
+    new_demobuffer = zmalloc<decltype( new_demobuffer)>(new_length, PU_STATIC, 0);
     new_demop = new_demobuffer + (demo_p - demobuffer);
 
     // Copy over the old data
@@ -2439,7 +2440,7 @@ void G_BeginRecording (void)
     // Save the right version code for this demo
     *demo_p++ = STRIFE_VERSION;
 
-    *demo_p++ = gameskill; 
+    *demo_p++ = (byte)gameskill; 
     //*demo_p++ = gameepisode; [STRIFE] Doesn't have episodes.
     *demo_p++ = gamemap; 
     *demo_p++ = deathmatch; 
@@ -2537,7 +2538,7 @@ void G_DoPlayDemo (void)
                          DemoVersionDescription(demoversion));
     }
     
-    skill = *demo_p++; 
+    skill = (skill_t)*demo_p++; 
     //episode = *demo_p++; [STRIFE] No episodes
     map = *demo_p++; 
     deathmatch = *demo_p++;

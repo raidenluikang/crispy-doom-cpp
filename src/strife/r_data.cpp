@@ -35,6 +35,7 @@
 #include "sounds.hpp" // villsa [STRIFE]
 #include "v_trans.hpp" // [crispy] color translation and color string tables
 
+#include "../../utils/memory.hpp"
 //
 // Graphics.
 // DOOM graphics for walls and sprites
@@ -401,8 +402,7 @@ static void GenerateTextureHashTable(void)
     int i;
     int key;
 
-    textures_hashtable 
-            = zmalloc<decltype(           )>(sizeof(texture_t *) * numtextures, PU_STATIC, 0);
+    textures_hashtable = zmalloc<decltype( textures_hashtable )>(sizeof(texture_t *) * numtextures, PU_STATIC, 0);
 
     memset(textures_hashtable, 0, sizeof(texture_t *) * numtextures);
 
@@ -565,8 +565,7 @@ void R_InitTextures (void)
 
         mtexture = (maptexture_t *) ( (byte *)maptex + offset);
 
-        texture = textures[i] =
-            Z_Malloc (sizeof(texture_t)
+        texture = textures[i] = zmalloc<decltype(texture)> (sizeof(texture_t)
                       + sizeof(texpatch_t)*(SHORT(mtexture->patchcount)-1),
                       PU_STATIC, 0);
 
@@ -1005,7 +1004,7 @@ void R_PrecacheLevel (void)
 	
     for (th = thinkercap.next ; th != &thinkercap ; th=th->next)
     {
-	if (th->function.acp1 == (actionf_p1)P_MobjThinker)
+	if (th->function.acp1 == (thinkf_p1)P_MobjThinker)
 	    spritepresent[((mobj_t *)th)->sprite] = 1;
     }
 	

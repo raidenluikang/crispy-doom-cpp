@@ -55,7 +55,7 @@ void HU_Drawer(void);
 char HU_dequeueChatChar(void);
 void HU_Erase(void);
 
-extern char *chat_macros[10];
+extern const char *chat_macros[10];
 extern char player_names[8][16];   // villsa [STRIFE]
 
 // haleyjd [STRIFE] externalized:

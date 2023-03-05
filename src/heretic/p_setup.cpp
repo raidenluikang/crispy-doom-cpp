@@ -28,6 +28,9 @@
 #include "s_sound.hpp"
 #include "p_extnodes.hpp"
 
+#include "../../utils/memory.hpp"
+
+
 void P_SpawnMapThing(mapthing_t * mthing);
 
 int numvertexes;
@@ -93,7 +96,7 @@ void P_LoadVertexes(int lump)
     vertex_t *li;
 
     numvertexes = W_LumpLength(lump) / sizeof(mapvertex_t);
-    vertexes = zmalloc<decltype(    vertexes)>(numvertexes * sizeof(vertex_t), PU_LEVEL, 0);
+    vertexes = zmalloc<decltype(vertexes)>(numvertexes * sizeof(vertex_t), PU_LEVEL, 0);
     data = W_CacheLumpNum_cast<decltype(    data)>(lump, PU_STATIC);
 
     ml = (mapvertex_t *) data;

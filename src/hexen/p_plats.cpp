@@ -20,6 +20,9 @@
 #include "i_system.hpp"
 #include "p_local.hpp"
 
+#include "../../utils/memory.hpp"
+
+
 plat_t *activeplats[MAXPLATS];
 
 //==================================================================
@@ -187,7 +190,7 @@ int EV_DoPlat(line_t * line, byte * args, plattype_e type, int amount)
                 if (plat->high < sec->floorheight)
                     plat->high = sec->floorheight;
                 plat->wait = args[2];
-                plat->status = P_Random() & 1;
+                plat->status =plat_e{ P_Random() & 1 };
                 break;
         }
         P_AddActivePlat(plat);

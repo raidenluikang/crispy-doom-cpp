@@ -39,13 +39,13 @@ extern	int	levelTimeCount;
 void    P_InitPicAnims (void);
 
 // villsa [STRIFE]
-typedef enum
+enum terraintype_e: int
 {
     FLOOR_WATER = 0,
     FLOOR_SLIME = 1,
     FLOOR_SOLID = 2,
     FLOOR_END   = -1
-} terraintype_e;
+} ;
 
 void P_InitTerrainTypes(void);                  // villsa [STRIFE]
 terraintype_e P_GetTerrainType(mobj_t* mobj);   // villsa [STRIFE]
@@ -269,14 +269,14 @@ void P_InitSwitchList(void);
 //
 // P_PLATS
 //
-typedef enum
+enum plat_e: int
 {
     up,
     down,
     waiting,
     in_stasis
 
-} plat_e;
+} ;
 
 
 

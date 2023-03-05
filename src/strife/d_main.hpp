@@ -57,7 +57,7 @@ extern  boolean         workparm;       // villsa [STRIFE]
 extern boolean advancedemo;
 
 // haleyjd 20130915 [STRIFE]: need nickname
-extern char *nickname;
+extern const char *nickname;
 
 // [crispy] track screen wipe
 extern boolean screenwipe;

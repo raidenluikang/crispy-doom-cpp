@@ -54,7 +54,7 @@ static int usejoystick = 0;
 
 // GUID and index of joystick to use.
 
-char *joystick_guid = "";
+const char *joystick_guid = "";
 int joystick_index = -1;
 
 // Calibration button. This is the button the user pressed at the
@@ -797,7 +797,7 @@ static int OpenAllJoysticks(void)
     // SDL_JoystickOpen() all joysticks.
 
     all_joysticks_len = SDL_NumJoysticks();
-    all_joysticks = calloc(all_joysticks_len, sizeof(SDL_Joystick *));
+    all_joysticks = static_cast<decltype(all_joysticks)>( calloc(all_joysticks_len, sizeof(SDL_Joystick *)) ) ;
 
     result = 0;
 
@@ -867,8 +867,11 @@ static boolean SetJoystickGUID(SDL_JoystickID joy_id)
         if (SDL_JoystickInstanceID(all_joysticks[i]) == joy_id)
         {
             guid = SDL_JoystickGetGUID(all_joysticks[i]);
-            joystick_guid = (decltype(            joystick_guid)) malloc(33);
-            SDL_JoystickGetGUIDString(guid, joystick_guid, 33);
+            
+            char * j_guid = (char*)malloc(36);
+
+            SDL_JoystickGetGUIDString(guid, j_guid, 33);
+            joystick_guid = j_guid;
             joystick_index = i;
             return true;
         }
@@ -1030,7 +1033,7 @@ void ConfigJoystick(TXT_UNCAST_ARG(widget), void *user_data)
                    TXT_TABLE_EMPTY,
                    nullptr);
 
-    if (gamemission == doom || gamemission == heretic || gamemission == hexen || gamemission == strife) // [crispy]
+    if (gamemission == GameMission_t::doom || gamemission == GameMission_t::heretic || gamemission ==GameMission_t:: hexen || gamemission == GameMission_t::strife) // [crispy]
     {
         TXT_AddWidgets(window,
                    TXT_NewLabel("Look up/down"),
@@ -1066,7 +1069,7 @@ void ConfigJoystick(TXT_UNCAST_ARG(widget), void *user_data)
         AddJoystickControl(window, "Run", &joybspeed);
     }
 
-    if (gamemission == doom || gamemission == hexen || gamemission == strife) // [crispy]
+    if (gamemission == GameMission_t::doom || gamemission == GameMission_t::hexen || gamemission == GameMission_t::strife) // [crispy]
     {
         AddJoystickControl(window, "Jump", &joybjump);
     }

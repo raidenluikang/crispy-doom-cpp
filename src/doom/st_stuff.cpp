@@ -569,7 +569,7 @@ static int ST_cheat_massacre()
 
     for (th = thinkercap.next; th != &thinkercap; th = th->next)
     {
-	if (th->function.acp1 == (actionf_p1)P_MobjThinker)
+	if (th->function.acp1 == (thinkf_p1)P_MobjThinker)
 	{
 	    mobj_t *mo = (mobj_t *)th;
 
@@ -732,8 +732,7 @@ extern  const char *const WeaponPickupMessages[NUMWEAPONS];
 
 // Respond to keyboard input events,
 //  intercept cheats.
-boolean
-ST_Responder (event_t* ev)
+boolean ST_Responder (event_t* ev)
 {
   int		i;
     
@@ -1022,7 +1021,7 @@ ST_Responder (event_t* ev)
 		// [crispy] let mobjs forget their target and tracer
 		for (th = thinkercap.next; th != &thinkercap; th = th->next)
 		{
-			if (th->function.acp1 == (actionf_p1)P_MobjThinker)
+			if (th->function.acp1 == (thinkf_p1)P_MobjThinker)
 			{
 				mobj_t *const mo = (mobj_t *)th;
 

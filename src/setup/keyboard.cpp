@@ -194,9 +194,9 @@ static void ConfigExtraKeys(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
     txt_window_t *window;
     txt_scrollpane_t *scrollpane;
     txt_table_t *table;
-    boolean extra_keys = gamemission == heretic
-                      || gamemission == hexen
-                      || gamemission == strife;
+    boolean extra_keys = gamemission == GameMission_t::heretic
+                      || gamemission == GameMission_t::hexen
+                      || gamemission == GameMission_t::strife;
 
     window = TXT_NewWindow("Extra keyboard controls");
 
@@ -214,7 +214,7 @@ static void ConfigExtraKeys(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
         TXT_AddWidget(window, scrollpane);
 
 
-        if (gamemission == doom)
+        if (gamemission == GameMission_t::doom)
         {
         AddSectionLabel(table, "View", false);
 
@@ -248,7 +248,7 @@ static void ConfigExtraKeys(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
         AddKeyControl(table, "Toggle vert. mouse", &key_togglenovert);
         }
 
-        if (gamemission == heretic || gamemission == hexen)
+        if (gamemission == GameMission_t::heretic || gamemission == GameMission_t::hexen)
         {
             AddSectionLabel(table, "Flying", true);
 
@@ -257,7 +257,7 @@ static void ConfigExtraKeys(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
             AddKeyControl(table, "Fly center", &key_flycenter);
         }
 
-        if (gamemission != doom)
+        if (gamemission != GameMission_t::doom)
         {
         AddSectionLabel(table, "Inventory", true);
 
@@ -265,7 +265,7 @@ static void ConfigExtraKeys(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
         AddKeyControl(table, "Inventory right", &key_invright);
         }
 
-        if (gamemission == strife)
+        if (gamemission == GameMission_t::strife)
         {
             AddKeyControl(table, "Home", &key_invhome);
             AddKeyControl(table, "End", &key_invend);
@@ -278,12 +278,12 @@ static void ConfigExtraKeys(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
             AddKeyControl(table, "Use health", &key_usehealth);
         }
         else
-        if (gamemission == heretic || gamemission == hexen)
+        if (gamemission == GameMission_t::heretic || gamemission ==GameMission_t:: hexen)
         {
             AddKeyControl(table, "Use artifact", &key_useartifact);
         }
 
-        if (gamemission == heretic)
+        if (gamemission == GameMission_t::heretic)
         {
             AddSectionLabel(table, "Artifacts", true);
 
@@ -299,7 +299,7 @@ static void ConfigExtraKeys(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
             AddKeyControl(table, "Morph Ovum", &key_arti_morph);
         }
 
-        if (gamemission == hexen)
+        if (gamemission == GameMission_t::hexen)
         {
             AddSectionLabel(table, "Artifacts", true);
 
@@ -411,7 +411,7 @@ static void OtherKeysDialog(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
     AddKeyControl(table, "- to player 3",         &key_multi_msgplayer[2]);
     AddKeyControl(table, "- to player 4",         &key_multi_msgplayer[3]);
 
-    if (gamemission == hexen || gamemission == strife)
+    if (gamemission == GameMission_t::hexen || gamemission == GameMission_t::strife)
     {
         AddKeyControl(table, "- to player 5",     &key_multi_msgplayer[4]);
         AddKeyControl(table, "- to player 6",     &key_multi_msgplayer[5]);
@@ -459,12 +459,12 @@ void ConfigKeyboard(TXT_UNCAST_ARG(widget), void *user_data)
     TXT_AddWidget(window, TXT_TABLE_EMPTY);
     AddKeyControl(window, "Strafe On", &key_strafe);
 
-    if (gamemission == hexen || gamemission == strife)
+    if (gamemission == GameMission_t::hexen || gamemission == GameMission_t::strife)
     {
         AddKeyControl(window, "Jump", &key_jump);
     }
     else
-    if (gamemission == doom) // Crispy
+    if (gamemission == GameMission_t::doom) // Crispy
     {
         AddKeyControl(window, "Jump [*]", &key_jump);
     }
@@ -487,7 +487,7 @@ void ConfigKeyboard(TXT_UNCAST_ARG(widget), void *user_data)
                    nullptr);
 
     // [crispy]
-    if (gamemission == strife)
+    if (gamemission == GameMission_t::strife)
     {
         TXT_AddWidgets(window,
                        TXT_NewCheckBox("Run centers view", &runcentering),
@@ -510,7 +510,7 @@ void BindKeyboardVariables(void)
     M_BindIntVariable("vanilla_keyboard_mapping", &vanilla_keyboard_mapping);
 
     // [crispy]
-    if (gamemission == strife)
+    if (gamemission == GameMission_t::strife)
     {
         M_BindIntVariable("runcentering", &runcentering);
     }

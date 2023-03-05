@@ -30,6 +30,8 @@
 #include "p_local.hpp"
 #include "v_video.hpp"
 
+#include "../../utils/memory.hpp"
+
 #define AM_STARTKEY	9
 
 #define MLOOKUNIT 8 // [crispy] for mouselook
@@ -217,7 +219,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
 
     // haleyjd: removed externdriver crap
 
-    pClass = players[consoleplayer].class;
+    pClass = players[consoleplayer].mclass;
     memset(cmd, 0, sizeof(*cmd));
 
 //      cmd->consistancy =
@@ -444,14 +446,12 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
                 players[consoleplayer].readyArtifact =
                     players[consoleplayer].inventory[inv_ptr].type;
                 inventory = false;
-                cmd->arti = 0;
+                cmd->arti = artitype_t{0};
                 usearti = false;
             }
             else if (usearti)
             {
-                cmd->arti |=
-                    players[consoleplayer].inventory[inv_ptr].
-                    type & AFLAG_MASK;
+                cmd->arti = artitype_t{ (int)(cmd->arti) | ((int)(players[consoleplayer].inventory[inv_ptr].type) & AFLAG_MASK) };
                 usearti = false;
             }
         }
@@ -459,11 +459,11 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
     if (gamekeydown[key_jump] || mousebuttons[mousebjump]
         || joybuttons[joybjump])
     {
-        cmd->arti |= AFLAG_JUMP;
+        cmd->arti = artitype_t{ cmd->arti | AFLAG_JUMP };
     }
     if (mn_SuicideConsole)
     {
-        cmd->arti |= AFLAG_SUICIDE;
+        cmd->arti = artitype_t{ cmd->arti | AFLAG_SUICIDE };
         mn_SuicideConsole = false;
     }
 
@@ -975,7 +975,7 @@ boolean G_Responder(event_t * ev)
     player_t *plr;
 
     plr = &players[consoleplayer];
-    if (ev->type == ev_keyup && ev->data1 == key_useartifact)
+    if (ev->type == evtype_t::ev_keyup && ev->data1 == key_useartifact)
     {                           // flag to denote that it's okay to use an artifact
         if (!inventory)
         {
@@ -985,7 +985,7 @@ boolean G_Responder(event_t * ev)
     }
 
     // Check for spy mode player cycle
-    if (gamestate == GS_LEVEL && ev->type == ev_keydown
+    if (gamestate == GS_LEVEL && ev->type == evtype_t::ev_keydown
         && ev->data1 == key_spy && !deathmatch)
     {                           // Cycle the display player
         do
@@ -1017,23 +1017,23 @@ boolean G_Responder(event_t * ev)
         }
     }
 
-    if (ev->type == ev_mouse)
+    if (ev->type == evtype_t::ev_mouse)
     {
         testcontrols_mousespeed = abs(ev->data2);
     }
 
-    if (ev->type == ev_keydown && ev->data1 == key_prevweapon)
+    if (ev->type == evtype_t::ev_keydown && ev->data1 == key_prevweapon)
     {
         next_weapon = -1;
     }
-    else if (ev->type == ev_keydown && ev->data1 == key_nextweapon)
+    else if (ev->type == evtype_t::ev_keydown && ev->data1 == key_nextweapon)
     {
         next_weapon = 1;
     }
 
     switch (ev->type)
     {
-        case ev_keydown:
+        case evtype_t::ev_keydown:
             if (ev->data1 == key_invleft)
             {
                 if (InventoryMoveLeft())
@@ -1061,14 +1061,14 @@ boolean G_Responder(event_t * ev)
             }
             return (true);      // eat key down events
 
-        case ev_keyup:
+        case evtype_t::ev_keyup:
             if (ev->data1 < NUMKEYS)
             {
                 gamekeydown[ev->data1] = false;
             }
             return (false);     // always let key up events filter down
 
-        case ev_mouse:
+        case evtype_t::ev_mouse:
             SetMouseButtons(ev->data1);
             if (mouseSensitivity)
             mousex = ev->data2 * (mouseSensitivity + 5) / 10;
@@ -1084,7 +1084,7 @@ boolean G_Responder(event_t * ev)
                 mousey = 0; // [crispy] disable entirely
             return (true);      // eat events
 
-        case ev_joystick:
+        case evtype_t::ev_joystick:
             SetJoyButtons(ev->data1);
             joyxmove = ev->data2;
             joyymove = ev->data3;
@@ -1256,7 +1256,7 @@ void G_Ticker(void)
         players[consoleplayer].readyArtifact =
             players[consoleplayer].inventory[inv_ptr].type;
         inventory = false;
-        cmd->arti = 0;
+        cmd->arti = artitype_t{0};
     }
 
     oldleveltime = leveltime; // [crispy] Track if game is running
@@ -1352,7 +1352,7 @@ void G_PlayerExitMap(int playerNumber)
 
     if (player->morphTics)
     {
-        player->readyweapon = player->mo->special1.i;     // Restore weapon
+        player->readyweapon = (weapontype_t)(player->mo->special1.i) ;     // Restore weapon
         player->morphTics = 0;
     }
     player->messageTics = 0;
@@ -1400,7 +1400,7 @@ void G_PlayerReborn(int player)
     players[player].itemcount = itemcount;
     players[player].secretcount = secretcount;
     players[player].worldTimer = worldTimer;
-    players[player].class = PlayerClass[player];
+    players[player].mclass = PlayerClass[player];
 
     p->usedown = p->attackdown = true;  // don't do anything immediately
     p->playerstate = PST_LIVE;
@@ -1593,7 +1593,7 @@ void G_DoReborn(int playernum)
         players[playernum].mana[MANA_2] = 25;
         if (bestWeapon)
         {                       // Bring up the best weapon
-            players[playernum].pendingweapon = bestWeapon;
+            players[playernum].pendingweapon = weapontype_t{ bestWeapon };
         }
     }
 }
@@ -1691,7 +1691,7 @@ void G_SecretExitLevel (void)
 
 void G_Completed(int map, int position)
 {
-    if (gamemode == shareware && map > 4)
+    if (gamemode == GameMode_t::shareware && map > 4)
     {
         P_SetMessage(&players[consoleplayer], "ACCESS DENIED -- DEMO", true);
         S_StartSound(nullptr, SFX_CHAT);
@@ -1936,13 +1936,13 @@ void G_InitNew(skill_t skill, int episode, int map)
         paused = false;
         S_ResumeSound();
     }
-    if (skill < sk_baby)
+    if (skill < skill_t::sk_baby)
     {
-        skill = sk_baby;
+        skill = skill_t::sk_baby;
     }
-    if (skill > sk_nightmare)
+    if (skill > skill_t::sk_nightmare)
     {
-        skill = sk_nightmare;
+        skill = skill_t::sk_nightmare;
     }
     if (map < 1)
     {
@@ -2029,7 +2029,7 @@ void G_ReadDemoTiccmd(ticcmd_t * cmd)
 
     cmd->buttons = (unsigned char) *demo_p++;
     cmd->lookfly = (unsigned char) *demo_p++;
-    cmd->arti = (unsigned char) *demo_p++;
+    cmd->arti = (artitype_t) *demo_p++;
 }
 
 // Increase the size of the demo buffer to allow unlimited demos
@@ -2048,7 +2048,7 @@ static void IncreaseDemoBuffer(void)
     // Generate a new buffer twice the size
     new_length = current_length * 2;
 
-    new_demobuffer = zmalloc<decltype(    new_demobuffer)>(new_length, PU_STATIC, 0);
+    new_demobuffer = zmalloc<decltype(new_demobuffer)>(new_length, PU_STATIC, 0);
     new_demop = new_demobuffer + (demo_p - demobuffer);
 
     // Copy over the old data
@@ -2179,7 +2179,7 @@ void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
     demoend = demobuffer + maxsize;
 
     demo_p = demobuffer;
-    *demo_p++ = skill;
+    *demo_p++ = (byte)skill;
     *demo_p++ = episode;
     *demo_p++ = map;
 
@@ -2241,7 +2241,7 @@ void G_DoPlayDemo(void)
     lumpnum = W_GetNumForName(defdemoname);
     demobuffer = W_CacheLumpNum_cast<decltype(    demobuffer)>(lumpnum, PU_STATIC);
     demo_p = demobuffer;
-    skill = *demo_p++;
+    skill = (skill_t)*demo_p++;
     episode = *demo_p++;
     map = *demo_p++;
 
@@ -2269,7 +2269,7 @@ void G_DoPlayDemo(void)
     for (i = 0; i < maxplayers; i++)
     {
         playeringame[i] = (*demo_p++) != 0;
-        PlayerClass[i] = *demo_p++;
+        PlayerClass[i] = (pclass_t)(*demo_p++);
     }
 
     if (playeringame[1] || M_ParmExists("-solo-net")
@@ -2308,7 +2308,7 @@ void G_TimeDemo(char *name)
     int episode, map, i;
 
     demobuffer = demo_p = W_CacheLumpName_byte(name, PU_STATIC);
-    skill = *demo_p++;
+    skill = (skill_t)( *demo_p++ );
     episode = *demo_p++;
     map = *demo_p++;
 
@@ -2322,7 +2322,7 @@ void G_TimeDemo(char *name)
     for (i = 0; i < maxplayers; i++)
     {
         playeringame[i] = (*demo_p++) != 0;
-        PlayerClass[i] = *demo_p++;
+        PlayerClass[i] = (pclass_t)( *demo_p++ );
     }
 
     if (playeringame[1] || M_ParmExists("-solo-net")

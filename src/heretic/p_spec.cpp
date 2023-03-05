@@ -28,6 +28,8 @@
 #include "s_sound.hpp"
 #include "v_video.hpp"
 
+#include "../../utils/memory.hpp"
+
 // Macros
 
 #define MAX_AMBIENT_SFX 8       // Per level
@@ -36,7 +38,7 @@
 
 // Types
 
-typedef enum
+enum afxcmd_t : int
 {
     afxcmd_play,                // (sound)
     afxcmd_playabsvol,          // (sound, volume)
@@ -44,7 +46,7 @@ typedef enum
     afxcmd_delay,               // (ticks)
     afxcmd_delayrand,           // (andbits)
     afxcmd_end                  // ()
-} afxcmd_t;
+} ;
 
 // Data
 
@@ -244,7 +246,7 @@ void P_InitTerrainTypes(void)
     int size;
 
     size = (numflats + 1) * sizeof(int);
-    TerrainTypes = zmalloc<decltype(    TerrainTypes)>(size, PU_STATIC, 0);
+    TerrainTypes = zmalloc<decltype(TerrainTypes)>(size, PU_STATIC, 0);
     memset(TerrainTypes, 0, size);
     for (i = 0; TerrainTypeDefs[i].type != -1; i++)
     {
@@ -1327,7 +1329,7 @@ void P_AmbientSound(void)
     done = false;
     do
     {
-        cmd = *AmbSfxPtr++;
+        cmd = afxcmd_t{ *AmbSfxPtr++ } ;
         switch (cmd)
         {
             case afxcmd_play:

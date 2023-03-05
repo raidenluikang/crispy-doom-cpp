@@ -19,6 +19,9 @@
 #include "s_sound.hpp"
 #include "v_video.hpp"
 
+#include "../../utils/memory.hpp"
+
+
 //==================================================================
 //==================================================================
 //
@@ -137,7 +140,7 @@ int EV_DoCeiling(line_t * line, ceiling_e type)
         // new door thinker
         //
         rtn = 1;
-        ceiling = zmalloc<decltype(        ceiling)>(sizeof(*ceiling), PU_LEVSPEC, 0);
+        ceiling = zmalloc<decltype(ceiling)>(sizeof(*ceiling), PU_LEVSPEC, 0);
         P_AddThinker(&ceiling->thinker);
         sec->specialdata = ceiling;
         ceiling->thinker.function = T_MoveCeiling;

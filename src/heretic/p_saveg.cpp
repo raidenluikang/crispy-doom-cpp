@@ -25,6 +25,9 @@
 #include "p_local.hpp"
 #include "v_video.hpp"
 
+#include "../../utils/memory.hpp"
+
+
 static FILE *SaveGameFP;
 
 int vanilla_savegame_limit = 1;
@@ -195,7 +198,7 @@ static void saveg_read_ticcmd_t(ticcmd_t *str)
     str->lookfly = SV_ReadByte();
 
     // byte arti;
-    str->arti = SV_ReadByte();
+    str->arti = (artitype_t)SV_ReadByte();
 }
 
 static void saveg_write_ticcmd_t(ticcmd_t *str)
@@ -232,7 +235,7 @@ static void saveg_write_ticcmd_t(ticcmd_t *str)
 static void saveg_read_inventory_t(inventory_t *str)
 {
     // int type;
-    str->type = SV_ReadLong();
+    str->type = (artitype_t)SV_ReadLong();
 
     // int count;
     str->count = SV_ReadLong();
@@ -357,7 +360,7 @@ static void saveg_read_player_t(player_t *str)
     str->mo = nullptr;
 
     // playerstate_t playerstate;
-    str->playerstate = SV_ReadLong();
+    str->playerstate = (playerstate_t)SV_ReadLong();
 
     // ticcmd_t cmd;
     saveg_read_ticcmd_t(&str->cmd);
@@ -397,7 +400,7 @@ static void saveg_read_player_t(player_t *str)
     }
 
     // artitype_t readyArtifact;
-    str->readyArtifact = SV_ReadLong();
+    str->readyArtifact = (artitype_t)SV_ReadLong();
 
     // int artifactCount;
     str->artifactCount = SV_ReadLong();
@@ -427,10 +430,10 @@ static void saveg_read_player_t(player_t *str)
     }
 
     // weapontype_t readyweapon;
-    str->readyweapon = SV_ReadLong();
+    str->readyweapon = (weapontype_t)SV_ReadLong();
 
     // weapontype_t pendingweapon;
-    str->pendingweapon = SV_ReadLong();
+    str->pendingweapon = (weapontype_t)SV_ReadLong();
 
     // boolean weaponowned[NUMWEAPONS];
     for (i=0; i<NUMWEAPONS; ++i)
@@ -743,7 +746,8 @@ static void saveg_write_thinker_t(thinker_t *str)
     SV_WritePtr(str->next);
 
     // think_t function;
-    SV_WritePtr(str->function);
+    static_assert(sizeof(void*) == sizeof(think_t), "!");
+    SV_WritePtr((void*)(str->function));
 }
 
 
@@ -784,7 +788,7 @@ static void saveg_read_mobj_t(mobj_t *str)
     str->y = SV_ReadLong();
     str->z = SV_ReadLong();
 
-    // struct mobj_s *snext, *sprev;
+    // struct mobj_t *snext, *sprev;
     SV_ReadLong();
     str->snext = nullptr;
     SV_ReadLong();
@@ -794,12 +798,12 @@ static void saveg_read_mobj_t(mobj_t *str)
     str->angle = SV_ReadLong();
 
     // spritenum_t sprite;
-    str->sprite = SV_ReadLong();
+    str->sprite = (spritenum_t)SV_ReadLong();
 
     // int frame;
     str->frame = SV_ReadLong();
 
-    // struct mobj_s *bnext, *bprev;
+    // struct mobj_t *bnext, *bprev;
     SV_ReadLong();
     str->bnext = nullptr;
     SV_ReadLong();
@@ -826,13 +830,13 @@ static void saveg_read_mobj_t(mobj_t *str)
     str->validcount = SV_ReadLong();
 
     // mobjtype_t type;
-    str->type = SV_ReadLong();
+    str->type = (mobjtype_t)SV_ReadLong();
 
     // An extra thing type was added for v1.0 HHE compatibility.
     // Map from the v1.3 thing type index to the internal one.
     if (str->type >= MT_PHOENIXFX_REMOVED)
     {
-        ++str->type;
+        str->type = mobjtype_t{(int)(str->type) + 1};
     }
 
     // mobjinfo_t *info;
@@ -890,13 +894,13 @@ static void saveg_read_mobj_t(mobj_t *str)
     str->health = SV_ReadLong();
 
     // int movedir;
-    str->movedir = SV_ReadLong();
+    str->movedir = (dirtype_t)SV_ReadLong();
 
     // int movecount;
     str->movecount = SV_ReadLong();
 
-    // struct mobj_s *target;
-    str->target = (void *)(uintptr_t) SV_ReadLong();
+    // struct mobj_t *target;
+    str->target = (mobj_t*)(void *)(uintptr_t) SV_ReadLong();
 
     // int reactiontime;
     str->reactiontime = SV_ReadLong();
@@ -980,7 +984,7 @@ static void saveg_write_mobj_t(mobj_t *str)
     SV_WriteLong(str->y);
     SV_WriteLong(str->z);
 
-    // struct mobj_s *snext, *sprev;
+    // struct mobj_t *snext, *sprev;
     SV_WritePtr(str->snext);
     SV_WritePtr(str->sprev);
 
@@ -993,7 +997,7 @@ static void saveg_write_mobj_t(mobj_t *str)
     // int frame;
     SV_WriteLong(str->frame);
 
-    // struct mobj_s *bnext, *bprev;
+    // struct mobj_t *bnext, *bprev;
     SV_WritePtr(str->bnext);
     SV_WritePtr(str->bprev);
 
@@ -1069,7 +1073,7 @@ static void saveg_write_mobj_t(mobj_t *str)
     // int movecount;
     SV_WriteLong(str->movecount);
 
-    // struct mobj_s *target;
+    // struct mobj_t *target;
     SV_WritePtr((void *)(uintptr_t) P_ThinkerToIndex((const thinker_t *) str->target));
 
     // int reactiontime;
@@ -1108,7 +1112,7 @@ static void saveg_read_ceiling_t(ceiling_t *str)
     saveg_read_thinker_t(&str->thinker);
 
     // ceiling_e type;
-    str->type = SV_ReadLong();
+    str->type = (ceiling_e)SV_ReadLong();
 
     // sector_t *sector;
     i = SV_ReadLong();
@@ -1178,7 +1182,7 @@ static void saveg_read_vldoor_t(vldoor_t *str)
     saveg_read_thinker_t(&str->thinker);
 
     // vldoor_e type;
-    str->type = SV_ReadLong();
+    str->type = (vldoor_e)SV_ReadLong();
 
     // sector_t *sector;
     i = SV_ReadLong();
@@ -1240,7 +1244,7 @@ static void saveg_read_floormove_t(floormove_t *str)
     saveg_read_thinker_t(&str->thinker);
 
     // floor_e type;
-    str->type = SV_ReadLong();
+    str->type = (floor_e)SV_ReadLong();
 
     // boolean crush;
     str->crush = SV_ReadLong();
@@ -1327,10 +1331,10 @@ static void saveg_read_plat_t(plat_t *str)
     str->count = SV_ReadLong();
 
     // plat_e status;
-    str->status = SV_ReadLong();
+    str->status = (plat_e)SV_ReadLong();
 
     // plat_e oldstatus;
-    str->oldstatus = SV_ReadLong();
+    str->oldstatus = (plat_e)SV_ReadLong();
 
     // boolean crush;
     str->crush = SV_ReadLong();
@@ -1339,7 +1343,7 @@ static void saveg_read_plat_t(plat_t *str)
     str->tag = SV_ReadLong();
 
     // plattype_e type;
-    str->type = SV_ReadLong();
+    str->type = (plattype_e)SV_ReadLong();
 }
 
 static void saveg_write_plat_t(plat_t *str)
@@ -1761,7 +1765,7 @@ void P_UnArchiveThinkers(void)
                 return;         // end of list
 
             case tc_mobj:
-                mobj = zmalloc<decltype(                mobj)>(sizeof(*mobj), PU_LEVEL, nullptr);
+                mobj = zmalloc<decltype(mobj)>(sizeof(*mobj), PU_LEVEL, nullptr);
                 saveg_read_mobj_t(mobj);
 //              mobj->target = nullptr;
                 P_SetThingPosition(mobj);
@@ -1812,7 +1816,7 @@ void P_RestoreTargets (void)
 =
 ====================
 */
-enum
+enum specials_e: int
 {
     tc_ceiling,
     tc_door,
@@ -1822,7 +1826,7 @@ enum
     tc_strobe,
     tc_glow,
     tc_endspecials
-} specials_e;
+} ;
 
 void P_ArchiveSpecials(void)
 {
@@ -1910,16 +1914,16 @@ void P_UnArchiveSpecials(void)
                 return;         // end of list
 
             case tc_ceiling:
-                ceiling = zmalloc<decltype(                ceiling)>(sizeof(*ceiling), PU_LEVEL, nullptr);
+                ceiling = zmalloc<decltype( ceiling)>(sizeof(*ceiling), PU_LEVEL, nullptr);
                 saveg_read_ceiling_t(ceiling);
-                ceiling->sector->specialdata = T_MoveCeiling;  // ???
+                ceiling->sector->specialdata = (void*)T_MoveCeiling;  // ???
                 ceiling->thinker.function = T_MoveCeiling;
                 P_AddThinker(&ceiling->thinker);
                 P_AddActiveCeiling(ceiling);
                 break;
 
             case tc_door:
-                door = zmalloc<decltype(                door)>(sizeof(*door), PU_LEVEL, nullptr);
+                door = zmalloc<decltype(door)>(sizeof(*door), PU_LEVEL, nullptr);
                 saveg_read_vldoor_t(door);
                 door->sector->specialdata = door;
                 door->thinker.function = T_VerticalDoor;
@@ -1927,17 +1931,17 @@ void P_UnArchiveSpecials(void)
                 break;
 
             case tc_floor:
-                floor = zmalloc<decltype(                floor)>(sizeof(*floor), PU_LEVEL, nullptr);
+                floor = zmalloc<decltype(floor)>(sizeof(*floor), PU_LEVEL, nullptr);
                 saveg_read_floormove_t(floor);
-                floor->sector->specialdata = T_MoveFloor;
+                floor->sector->specialdata = (void*)T_MoveFloor;
                 floor->thinker.function = T_MoveFloor;
                 P_AddThinker(&floor->thinker);
                 break;
 
             case tc_plat:
-                plat = zmalloc<decltype(                plat)>(sizeof(*plat), PU_LEVEL, nullptr);
+                plat = zmalloc<decltype(plat)>(sizeof(*plat), PU_LEVEL, nullptr);
                 saveg_read_plat_t(plat);
-                plat->sector->specialdata = T_PlatRaise;
+                plat->sector->specialdata = (void*)T_PlatRaise;
                 // In the original Heretic code this was a conditional "fix"
                 // of the thinker function, but the save code (above) decides
                 // whether to save a T_PlatRaise based on thinker function

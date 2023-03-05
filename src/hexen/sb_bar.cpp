@@ -29,6 +29,7 @@
 #include "i_swap.hpp"
 #include "am_map.hpp"
 
+#include "../../utils/enumforeach.hpp"
 
 // TYPES -------------------------------------------------------------------
 
@@ -320,7 +321,7 @@ void SB_Init(void)
     }
     SB_SetClassData();
 
-    if (gamemode == shareware)
+    if (gamemode == GameMode_t::shareware)
     {
 	SET_CHEAT(CheatGodSeq, "bgokey");
 	SET_CHEAT(CheatNoClipSeq, "rjohnson");
@@ -357,29 +358,29 @@ void SB_Init(void)
 
 void SB_SetClassData(void)
 {
-    int class;
+    int mclass;
 
-    class = PlayerClass[consoleplayer]; // original player class (not pig)
+    mclass = PlayerClass[consoleplayer]; // original player class (not pig)
     PatchWEAPONSLOT = W_CacheLumpNum_cast<decltype(    PatchWEAPONSLOT)>(W_GetNumForName("wpslot0")
-                                     + class, PU_STATIC);
+                                     + mclass, PU_STATIC);
     PatchWEAPONFULL = W_CacheLumpNum_cast<decltype(    PatchWEAPONFULL)>(W_GetNumForName("wpfull0")
-                                     + class, PU_STATIC);
+                                     + mclass, PU_STATIC);
     PatchPIECE1 = W_CacheLumpNum_cast<decltype(    PatchPIECE1)>(W_GetNumForName("wpiecef1")
-                                 + class, PU_STATIC);
+                                 + mclass, PU_STATIC);
     PatchPIECE2 = W_CacheLumpNum_cast<decltype(    PatchPIECE2)>(W_GetNumForName("wpiecef2")
-                                 + class, PU_STATIC);
+                                 + mclass, PU_STATIC);
     PatchPIECE3 = W_CacheLumpNum_cast<decltype(    PatchPIECE3)>(W_GetNumForName("wpiecef3")
-                                 + class, PU_STATIC);
-    PatchCHAIN = W_CacheLumpNum_cast<decltype(    PatchCHAIN)>(W_GetNumForName("chain") + class, PU_STATIC);
+                                 + mclass, PU_STATIC);
+    PatchCHAIN = W_CacheLumpNum_cast<decltype(    PatchCHAIN)>(W_GetNumForName("chain") + mclass, PU_STATIC);
     if (!netgame)
     {                           // single player game uses red life gem (the second gem)
         PatchLIFEGEM = W_CacheLumpNum_cast<decltype(        PatchLIFEGEM)>(W_GetNumForName("lifegem")
-                                      + maxplayers * class + 1, PU_STATIC);
+                                      + maxplayers * mclass + 1, PU_STATIC);
     }
     else
     {
         PatchLIFEGEM = W_CacheLumpNum_cast<decltype(        PatchLIFEGEM)>(W_GetNumForName("lifegem")
-                                      + maxplayers * class + consoleplayer,
+                                      + maxplayers * mclass + consoleplayer,
                                       PU_STATIC);
     }
     SB_state = -1;
@@ -502,19 +503,17 @@ static void DrRedINumber(signed int val, int x, int y)
     }
     if (val > 99)
     {
-        patch =
-            W_CacheLumpNum(W_GetNumForName("inred0") + val / 100, PU_CACHE);
+        patch = (patch_t*)W_CacheLumpNum(W_GetNumForName("inred0") + val / 100, PU_CACHE);
         V_DrawPatch(x, y, patch);
     }
     val = val % 100;
     if (val > 9 || oldval > 99)
     {
-        patch =
-            W_CacheLumpNum(W_GetNumForName("inred0") + val / 10, PU_CACHE);
+        patch = (patch_t*)W_CacheLumpNum(W_GetNumForName("inred0") + val / 10, PU_CACHE);
         V_DrawPatch(x + 8, y, patch);
     }
     val = val % 10;
-    patch = W_CacheLumpNum_cast<decltype(    patch)>(W_GetNumForName("inred0") + val, PU_CACHE);
+    patch = W_CacheLumpNum_cast<decltype(patch)>(W_GetNumForName("inred0") + val, PU_CACHE);
     V_DrawPatch(x + 16, y, patch);
 }
 
@@ -907,13 +906,13 @@ static void DrawAnimatedIcons(void)
                 if (hitCenterFrame && (frame != 15 && frame != 0))
                 {
                     V_DrawPatch(spinfly_x, 19,
-                                W_CacheLumpNum(SpinFlylump + 15,
+                                (patch_t*)W_CacheLumpNum(SpinFlylump + 15,
                                                 PU_CACHE));
                 }
                 else
                 {
                     V_DrawPatch(spinfly_x, 19,
-                                W_CacheLumpNum(SpinFlylump + frame,
+                                (patch_t*)W_CacheLumpNum(SpinFlylump + frame,
                                                 PU_CACHE));
                     hitCenterFrame = false;
                 }
@@ -923,14 +922,14 @@ static void DrawAnimatedIcons(void)
                 if (!hitCenterFrame && (frame != 15 && frame != 0))
                 {
                     V_DrawPatch(spinfly_x, 19,
-                                W_CacheLumpNum(SpinFlylump + frame,
+                               (patch_t*) W_CacheLumpNum(SpinFlylump + frame,
                                                 PU_CACHE));
                     hitCenterFrame = false;
                 }
                 else
                 {
                     V_DrawPatch(spinfly_x, 19,
-                                W_CacheLumpNum(SpinFlylump + 15,
+                               (patch_t*) W_CacheLumpNum(SpinFlylump + 15,
                                                 PU_CACHE));
                     hitCenterFrame = true;
                 }
@@ -950,7 +949,7 @@ static void DrawAnimatedIcons(void)
         {
             frame = (leveltime / 3) & 15;
             V_DrawPatch(spinspeed_x, 19,
-                        W_CacheLumpNum(SpinSpeedLump + frame,
+                       (patch_t*) W_CacheLumpNum(SpinSpeedLump + frame,
                                         PU_CACHE));
         }
         BorderTopRefresh = true;
@@ -968,7 +967,7 @@ static void DrawAnimatedIcons(void)
         {
             frame = (leveltime / 3) & 15;
             V_DrawPatch(spindefense_x, 19,
-                        W_CacheLumpNum(SpinDefenseLump + frame,
+                       (patch_t*) W_CacheLumpNum(SpinDefenseLump + frame,
                                         PU_CACHE));
         }
         BorderTopRefresh = true;
@@ -986,7 +985,7 @@ static void DrawAnimatedIcons(void)
         {
             frame = (leveltime / 3) & 15;
             V_DrawPatch(spinminotaur_x, 19,
-                        W_CacheLumpNum(SpinMinotaurLump + frame,
+                       (patch_t*) W_CacheLumpNum(SpinMinotaurLump + frame,
                                         PU_CACHE));
         }
         BorderTopRefresh = true;
@@ -1120,7 +1119,7 @@ void DrawMainBar(void)
     if (ArtifactFlash)
     {
         V_DrawPatch(144, 160, PatchARTICLEAR);
-        V_DrawPatch(148, 164, W_CacheLumpNum(W_GetNumForName("useartia")
+        V_DrawPatch(148, 164, (patch_t*)W_CacheLumpNum(W_GetNumForName("useartia")
                                              + ArtifactFlash - 1, PU_CACHE));
         ArtifactFlash--;
         oldarti = -1;           // so that the correct artifact fills in after the flash
@@ -1299,7 +1298,7 @@ void DrawMainBar(void)
         UpdateState |= I_STATBAR;
     }
     // Armor
-    temp = AutoArmorSave[CPlayer->class]
+    temp = AutoArmorSave[CPlayer->mclass]
         + CPlayer->armorpoints[ARMOR_ARMOR] +
         CPlayer->armorpoints[ARMOR_SHIELD] +
         CPlayer->armorpoints[ARMOR_HELMET] +
@@ -1384,7 +1383,7 @@ void DrawKeyBar(void)
             if (CPlayer->keys & (1 << i))
             {
                 V_DrawPatch(xPosition, 164,
-                            W_CacheLumpNum(W_GetNumForName("keyslot1") + i,
+                           (patch_t*) W_CacheLumpNum(W_GetNumForName("keyslot1") + i,
                                            PU_CACHE));
                 xPosition += 20;
             }
@@ -1392,7 +1391,7 @@ void DrawKeyBar(void)
         oldkeys = CPlayer->keys;
         UpdateState |= I_STATBAR;
     }
-    temp = AutoArmorSave[CPlayer->class]
+    temp = AutoArmorSave[CPlayer->mclass]
         + CPlayer->armorpoints[ARMOR_ARMOR] +
         CPlayer->armorpoints[ARMOR_SHIELD] +
         CPlayer->armorpoints[ARMOR_HELMET] +
@@ -1406,23 +1405,23 @@ void DrawKeyBar(void)
                 continue;
             }
             if (CPlayer->armorpoints[i] <=
-                (ArmorIncrement[CPlayer->class][i] >> 2))
+                (ArmorIncrement[CPlayer->mclass][i] >> 2))
             {
                 V_DrawTLPatch(150 + 31 * i, 164,
-                              W_CacheLumpNum(W_GetNumForName("armslot1") +
+                              (patch_t*)W_CacheLumpNum(W_GetNumForName("armslot1") +
                                              i, PU_CACHE));
             }
             else if (CPlayer->armorpoints[i] <=
-                     (ArmorIncrement[CPlayer->class][i] >> 1))
+                     (ArmorIncrement[CPlayer->mclass][i] >> 1))
             {
                 V_DrawAltTLPatch(150 + 31 * i, 164,
-                                 W_CacheLumpNum(W_GetNumForName("armslot1")
+                               (patch_t*)  W_CacheLumpNum(W_GetNumForName("armslot1")
                                                 + i, PU_CACHE));
             }
             else
             {
                 V_DrawPatch(150 + 31 * i, 164,
-                            W_CacheLumpNum(W_GetNumForName("armslot1") + i,
+                           (patch_t*) W_CacheLumpNum(W_GetNumForName("armslot1") + i,
                                            PU_CACHE));
             }
         }
@@ -1604,7 +1603,7 @@ void Draw_LoadIcon(void)
 
 boolean SB_Responder(event_t * event)
 {
-    if (event->type == ev_keydown)
+    if (event->type == evtype_t::ev_keydown)
     {
         if (HandleCheats(event->data1))
         {                       // Need to eat the key
@@ -1627,7 +1626,7 @@ static boolean HandleCheats(byte key)
     int i;
     boolean eat;
 
-    if (gameskill == sk_nightmare)
+    if (gameskill == skill_t::sk_nightmare)
     {                           // Can't cheat in nightmare mode
         return (false);
     }
@@ -1749,7 +1748,7 @@ static void CheatWeaponsFunc(player_t * player, Cheat_t * cheat)
 
     for (i = 0; i < NUMARMOR; i++)
     {
-        player->armorpoints[i] = ArmorIncrement[player->class][i];
+        player->armorpoints[i] = ArmorIncrement[player->mclass][i];
     }
     for (i = 0; i < NUMWEAPONS; i++)
     {
@@ -1811,27 +1810,23 @@ static void CheatTickerFunc(player_t * player, Cheat_t * cheat)
 
 static void CheatArtifactAllFunc(player_t * player, Cheat_t * cheat)
 {
-    int i;
-    int j;
-
-    for (i = arti_none + 1; i < arti_firstpuzzitem; i++)
-    {
-        for (j = 0; j < 25; j++)
+    
+    enum_foreach(artitype_t{1}, arti_firstpuzzitem, [player](artitype_t index){
+        for (int j = 0; j < 25; j++)
         {
-            P_GiveArtifact(player, i, nullptr);
+            P_GiveArtifact(player, index, nullptr);
         }
-    }
+    });
     P_SetMessage(player, TXT_CHEATARTIFACTS3, true);
 }
 
 static void CheatPuzzleFunc(player_t * player, Cheat_t * cheat)
 {
-    int i;
-
-    for (i = arti_firstpuzzitem; i < NUMARTIFACTS; i++)
+    enum_foreach(arti_firstpuzzitem, NUMARTIFACTS, [player](artitype_t index)
     {
-        P_GiveArtifact(player, i, nullptr);
-    }
+        P_GiveArtifact(player, index, nullptr);
+    });
+
     P_SetMessage(player, TXT_CHEATARTIFACTS3, true);
 }
 
@@ -1951,7 +1946,7 @@ static void CheatClassFunc1(player_t * player, Cheat_t * cheat)
 static void CheatClassFunc2(player_t * player, Cheat_t * cheat)
 {
     int i;
-    int class;
+    pclass_t mclass;
     char args[2];
 
     cht_GetParam(cheat->seq, args);
@@ -1960,18 +1955,19 @@ static void CheatClassFunc2(player_t * player, Cheat_t * cheat)
     {                           // don't change class if the player is morphed
         return;
     }
-    class = args[0] - '0';
-    if (class > 2 || class < 0)
+    mclass = static_cast<pclass_t>( static_cast<int>( args[0] ) - static_cast<int>( '0' ) );
+
+    if (mclass > 2 || mclass < 0)
     {
         P_SetMessage(player, "INVALID PLAYER CLASS", true);
         return;
     }
-    player->class = class;
+    player->mclass = mclass;
     for (i = 0; i < NUMARMOR; i++)
     {
         player->armorpoints[i] = 0;
     }
-    PlayerClass[consoleplayer] = class;
+    PlayerClass[consoleplayer] = mclass;
     P_PostMorphWeapon(player, WP_FIRST);
     SB_SetClassData();
     SB_state = -1;

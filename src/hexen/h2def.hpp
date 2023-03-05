@@ -71,7 +71,7 @@
 //#else
 //#define HEXEN_VERSIONTEXT "Version 1.1 "__DATE__" ("VER_ID")"
 //#endif
-#define HEXEN_VERSIONTEXT ((gamemode == shareware) ? \
+#define HEXEN_VERSIONTEXT ((gamemode == GameMode_t::shareware) ? \
                            "DEMO 10 16 95" : \
                            "VERSION 1.1 MAR 22 1996 (BCP)")
 
@@ -115,15 +115,15 @@
 #define AFLAG_SUICIDE		0x40
 #define AFLAG_JUMP			0x80
 
-typedef enum
+enum gamestate_t: int
 {
     GS_LEVEL,
     GS_INTERMISSION,
     GS_FINALE,
     GS_DEMOSCREEN
-} gamestate_t;
+} ;
 
-typedef enum
+enum gameaction_t: int
 {
     ga_nothing,
     ga_loadlevel,
@@ -138,9 +138,9 @@ typedef enum
     ga_victory,
     ga_worlddone,
     ga_screenshot
-} gameaction_t;
+} ;
 
-typedef enum
+enum wipe_t
 {
     wipe_0,
     wipe_1,
@@ -149,7 +149,7 @@ typedef enum
     wipe_4,
     NUMWIPES,
     wipe_random
-} wipe_t;
+} ;
 
 /*
 ===============================================================================
@@ -168,18 +168,23 @@ typedef void (*think_t)(struct thinker_t *);
 
 struct thinker_t
 {
-    struct thinker_s *prev, *next;
+    struct thinker_t *prev, *next;
     think_t function;
 } ;
 
 struct player_t;
+enum weapontype_t: int;
 
 union specialval_t
 {
     intptr_t i;
-    struct mobj_s *m;
+    weapontype_t w;
+    struct mobj_t *m;
     struct player_t *p;
 } ;
+
+enum dirtype_t: int;
+
 
 struct mobj_t
 {
@@ -187,13 +192,13 @@ struct mobj_t
 
 // info for drawing
     fixed_t x, y, z;
-    struct mobj_s *snext, *sprev;       // links in sector (if needed)
+    struct mobj_t *snext, *sprev;       // links in sector (if needed)
     angle_t angle;
     spritenum_t sprite;         // used to find patch_t and flip value
     int frame;                  // might be ord with FF_FULLBRIGHT
 
 // interaction info
-    struct mobj_s *bnext, *bprev;       // links in blocks (if needed)
+    struct mobj_t *bnext, *bprev;       // links in blocks (if needed)
     struct subsector_s *subsector;
     fixed_t floorz, ceilingz;   // closest together of contacted secs
     fixed_t floorpic;           // contacted sec floorpic
@@ -210,9 +215,9 @@ struct mobj_t
     specialval_t special1;      // Special info
     specialval_t special2;      // Special info
     int health;
-    int movedir;                // 0-7
+    dirtype_t movedir;                // 0-7
     int movecount;              // when 0, select a new dir
-    struct mobj_s *target;      // thing being chased/attacked (or nullptr)
+    struct mobj_t *target;      // thing being chased/attacked (or nullptr)
     // also the originator for missiles
     int reactiontime;           // if non 0, don't attack yet
     // used by player to freeze a bit after
@@ -340,7 +345,7 @@ struct degenmobj_t
 //=============================================================================
 
 // ===== Player Class Types =====
-enum pclass_t
+enum pclass_t : int
 {
     PCLASS_FIGHTER,
     PCLASS_CLERIC,
@@ -349,7 +354,7 @@ enum pclass_t
     NUMCLASSES
 } ;
 
-enum playerstate_t
+enum playerstate_t : int
 {
     PST_LIVE,                   // playing
     PST_DEAD,                   // dead on the ground
@@ -358,7 +363,7 @@ enum playerstate_t
 
 // psprites are scaled shapes directly on the view screen
 // coordinates are given for a 320*200 view screen
-enum psprnum_t
+enum psprnum_t : int
 {
     ps_weapon,
     ps_flash,
@@ -382,7 +387,7 @@ enum keytype_t
 } ;
 */
 
-enum keytype_t
+enum keytype_t: int
 {
     KEY_1,
     KEY_2,
@@ -398,7 +403,7 @@ enum keytype_t
     NUM_KEY_TYPES
 } ;
 
-enum armortype_t
+enum armortype_t: int
 {
     ARMOR_ARMOR,
     ARMOR_SHIELD,
@@ -407,7 +412,7 @@ enum armortype_t
     NUMARMOR
 } ;
 
-enum weapontype_t
+enum weapontype_t: int
 {
     WP_FIRST,
     WP_SECOND,
@@ -417,7 +422,7 @@ enum weapontype_t
     WP_NOCHANGE
 } ;
 
-enum manatype_t
+enum manatype_t : int
 {
     MANA_1,
     MANA_2,
@@ -432,20 +437,22 @@ enum manatype_t
 #define WPIECE2		2
 #define WPIECE3		4
 
+enum statenum_t: int;
+
 struct weaponinfo_t
 {
     manatype_t mana;
-    int upstate;
-    int downstate;
-    int readystate;
-    int atkstate;
-    int holdatkstate;
-    int flashstate;
+    statenum_t upstate;
+    statenum_t downstate;
+    statenum_t readystate;
+    statenum_t atkstate;
+    statenum_t holdatkstate;
+    statenum_t flashstate;
 } ;
 
 extern weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES];
 
-enum artitype_t
+enum artitype_t: int
 {
     arti_none,
     arti_invulnerability,
@@ -514,11 +521,13 @@ enum powertype_t
 
 #define NUMINVENTORYSLOTS	NUMARTIFACTS
 
-typedef struct
+enum artitype_t: int;
+
+struct inventory_t
 {
-    int type;
+    artitype_t type;
     int count;
-} inventory_t;
+} ;
 
 /*
 ================
@@ -534,7 +543,7 @@ struct player_t
     playerstate_t playerstate;
     ticcmd_t cmd;
 
-    pclass_t class;             // player class type
+    pclass_t mclass;             // player class type
 
     fixed_t viewz;              // focal origin above r.z
     fixed_t viewheight;         // base height above floor for viewz
@@ -864,7 +873,7 @@ extern boolean gamekeydown[NUMKEYS];
 
 extern int savepage; // [crispy]
 
-extern char *SavePath;
+extern const char *SavePath;
 
 void SV_SaveGame(int slot, const char *description);
 void SV_SaveMap(boolean savePlayers);
@@ -1018,7 +1027,7 @@ enum
     SEQ_NUMSEQ
 };
 
-typedef enum
+enum seqtype_t: int
 {
     SEQTYPE_STONE,
     SEQTYPE_HEAVY,
@@ -1031,7 +1040,7 @@ typedef enum
     SEQTYPE_EARTH,
     SEQTYPE_METAL2,
     SEQTYPE_NUMSEQ
-} seqtype_t;
+} ;
 
 void SN_InitSequenceScript(void);
 void SN_StartSequence(mobj_t * mobj, int sequence);

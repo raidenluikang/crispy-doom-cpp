@@ -446,20 +446,19 @@ typedef struct
 // A sprite definition:
 //  a number of animation frames.
 //
-typedef struct
+struct spritedef_t
 {
     int			numframes;
     spriteframe_t*	spriteframes;
-
-} spritedef_t;
+} ;
 
 
 
 //
 // Now what is a visplane, anyway?
 // 
-typedef struct
-{
+struct visplane_t
+{ 
   fixed_t		height;
   int			picnum;
   int			lightlevel;
@@ -478,7 +477,7 @@ typedef struct
   unsigned int		bottom[MAXWIDTH]; // [crispy] hires / 32-bit integer math
   unsigned int		pad4; // [crispy] hires / 32-bit integer math
 
-} visplane_t;
+} ;
 
 
 

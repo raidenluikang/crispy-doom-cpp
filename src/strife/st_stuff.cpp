@@ -319,7 +319,7 @@ boolean ST_Responder(event_t* ev)
     int i;
 
     // Filter automap on/off.
-    if(ev->type == ev_keyup)
+    if(ev->type == evtype_t::ev_keyup)
     {
         if((ev->data1 & 0xffff0000) == AM_MSGHEADER)
         {
@@ -378,7 +378,7 @@ boolean ST_Responder(event_t* ev)
     }
 
     // if a user keypress...
-    if(ev->type != ev_keydown)
+    if(ev->type != evtype_t::ev_keydown)
         return false;
 
     // haleyjd 20100927: No input allowed when the player is dead
@@ -639,7 +639,7 @@ boolean ST_Responder(event_t* ev)
             if(plyr->powers[i])
                 plyr->powers[i] = (i != 1);
             else
-                P_GivePower(plyr, i);
+                P_GivePower(plyr, powertype_t{ i }) ;
             plyr->message = DEH_String(STSTR_BEHOLDX);
         }
     }
@@ -662,7 +662,7 @@ boolean ST_Responder(event_t* ev)
         plyr->backpack = true;
 
         for(i = 0; i < NUMAMMO; ++i)
-            P_GiveAmmo(plyr, i, 1);
+            P_GiveAmmo(plyr, ammotype_t{ i }, 1);
         plyr->message = DEH_String("you got the stuff!");
     }
     if(cht_CheckCheat(&cheat_powerup[ST_PUMPUP_S], ev->data2))
@@ -713,7 +713,7 @@ boolean ST_Responder(event_t* ev)
 
         // haleyjd 20130301: different bounds in v1.31
         // Ohmygod - this is not going to work.
-        if(gameversion == exe_strife_1_31)
+        if(gameversion == GameVersion_t::exe_strife_1_31)
         {
             if ((isdemoversion && (map < 32 || map > 34)) ||
                 (isregistered  && (map <= 0 || map > 34)))
@@ -1024,7 +1024,7 @@ static void RefreshBackground(void)
     pixel_t *dest;
 
     V_UseBuffer(st_backing_screen);
-    src = W_CacheLumpName_patch(back_flat, PU_CACHE);
+    src = W_CacheLumpName_byte(back_flat, PU_CACHE);
     dest = st_backing_screen;
 
     for (y = SCREENHEIGHT-(ST_HEIGHT<<crispy->hires); y < SCREENHEIGHT; y++)
@@ -1815,7 +1815,7 @@ void ST_Stop (void)
     if (st_stopped)
         return;
 
-    I_SetPalette (W_CacheLumpNum (lu_palette, PU_CACHE));
+    I_SetPalette ((byte*)W_CacheLumpNum (lu_palette, PU_CACHE));
 
     st_stopped = true;
 }

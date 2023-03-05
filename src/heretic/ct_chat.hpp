@@ -32,7 +32,7 @@
 #define CT_KEY_BLUE		'b'
 #define CT_KEY_ALL		't'
 
-extern char *chat_macros[10];
+extern const char *chat_macros[10];
 
 #endif /* #ifndef HERETIC_CT_CHAT_H */
 

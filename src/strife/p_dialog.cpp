@@ -40,6 +40,8 @@
 #include "p_local.hpp"
 #include "p_inter.hpp"
 
+#include "../../utils/enumforeach.hpp"
+#include "../../utils/memory.hpp"
 //
 // Defines and Macros
 //
@@ -455,7 +457,7 @@ void P_DialogLoad(void)
         numleveldialogs = 0;
     else
     {
-        byte *leveldialogptr = W_CacheLumpNum_cast<decltype(        byte *leveldialogptr)>(lumpnum, PU_STATIC);
+        byte *leveldialogptr = W_CacheLumpNum_cast< byte *>(lumpnum, PU_STATIC);
         numleveldialogs = W_LumpLength(lumpnum) / ORIG_MAPDIALOG_SIZE;
         P_ParseDialogLump(leveldialogptr, &leveldialogs, numleveldialogs, 
                           PU_LEVEL);
@@ -614,7 +616,7 @@ boolean P_GiveInventoryItem(player_t *player, int sprnum, mobjtype_t type)
     int curinv = 0;
     int i;
     boolean ok = false;
-    mobjtype_t item = 0;
+    mobjtype_t item {};
     inventory_t* invtail;
 
     // repaint the status bar due to inventory changing
@@ -626,7 +628,7 @@ boolean P_GiveInventoryItem(player_t *player, int sprnum, mobjtype_t type)
         if(curinv > player->numinventory)
             return true;
 
-        item = player->inventory[curinv].type;
+        item = mobjtype_t{ player->inventory[curinv].type };
         if(type < item)
         {
             if(curinv != MAXINVENTORYSLOTS)
@@ -704,7 +706,7 @@ boolean P_GiveItemToPlayer(player_t *player, int sprnum, mobjtype_t type)
     // check for keys
     if(type >= MT_KEY_BASE && type <= MT_NEWKEY5)
     {
-        P_GiveCard(player, type - MT_KEY_BASE);
+        P_GiveCard(player, card_t{ (int)type - (int)MT_KEY_BASE});
         return true;
     }
 
@@ -835,8 +837,12 @@ boolean P_GiveItemToPlayer(player_t *player, int sprnum, mobjtype_t type)
 
             player->backpack = true;
         }
-        for(i = 0; i < NUMAMMO; i++)
-            P_GiveAmmo(player, i, 1);
+        
+        enum_foreach(ammotype_t{}, NUMAMMO, [player](ammotype_t index){
+            P_GiveAmmo(player, index, 1);
+        });
+        
+           
         break;
 
     case SPR_RIFL: // Assault Rifle
@@ -909,7 +915,7 @@ boolean P_GiveItemToPlayer(player_t *player, int sprnum, mobjtype_t type)
             break;
 
         case MT_TOKEN_HEALTH: // Health token - from the Front's doctor
-            if(!P_GiveBody(player, healthamounts[gameskill]))
+            if(!P_GiveBody(player, healthamounts[(int)gameskill]))
                 return false;
             break;
 
@@ -1082,7 +1088,7 @@ static void P_DialogDrawer(void)
     // draw background
     if(dialogbgpiclumpnum != -1)
     {
-        patch_t *patch = W_CacheLumpNum_cast<decltype(        patch_t *patch)>(dialogbgpiclumpnum, PU_CACHE);
+        patch_t *patch = W_CacheLumpNum_cast<patch_t *>(dialogbgpiclumpnum, PU_CACHE);
         V_DrawPatchDirect(0, 0, patch);
     }
 
@@ -1166,7 +1172,7 @@ void P_DialogDoChoice(int choice)
     // villsa 09/08/10: converted into for loop
     for(i = 0; i < MDLG_MAXITEMS; i++)
     {
-        if(P_PlayerHasItem(dialogplayer, currentchoice->needitems[i]) <
+        if(P_PlayerHasItem(dialogplayer, mobjtype_t{ currentchoice->needitems[i] } ) <
                                          currentchoice->needamounts[i])
         {
             candochoice = false; // nope, missing something
@@ -1185,7 +1191,7 @@ void P_DialogDoChoice(int choice)
         if(item < 0 || 
            P_GiveItemToPlayer(dialogplayer, 
                               states[mobjinfo[item].spawnstate].sprite, 
-                              item))
+                              mobjtype_t{item}))
         {
             // if successful, take needed items
             int count = 0;
@@ -1325,7 +1331,7 @@ void P_DialogStart(player_t *player)
             // if the item is non-zero, the player must have at least one in his
             // or her inventory
             if(currentdialog->checkitem[i] != 0 &&
-                P_PlayerHasItem(dialogplayer, currentdialog->checkitem[i]) < 1)
+                P_PlayerHasItem(dialogplayer, mobjtype_t{ currentdialog->checkitem[i] } ) < 1)
                 break;
         }
 
@@ -1385,7 +1391,7 @@ void P_DialogStart(player_t *player)
     pic = W_CheckNumForName(currentdialog->backpic);
     dialogbgpiclumpnum = pic;
     if(pic != -1)
-        V_DrawPatchDirect(0, 0, W_CacheLumpNum(pic, PU_CACHE));
+        V_DrawPatchDirect(0, 0, (patch_t*)W_CacheLumpNum(pic, PU_CACHE));
 
     // get voice
     I_StartVoice(currentdialog->voice);

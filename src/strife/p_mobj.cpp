@@ -30,6 +30,8 @@
 #include "doomstat.hpp"
 #include "d_main.hpp"     // villsa [STRIFE]
 
+#include "../../utils/memory.hpp"
+
 
 void G_PlayerReborn (int player);
 void P_SpawnMapThing (mapthing_t*	mthing);
@@ -707,7 +709,7 @@ P_SpawnMobj
     mobj->oldz = mobj->z;
     mobj->oldangle = mobj->angle;
 
-    mobj->thinker.function.acp1 = (actionf_p1)P_MobjThinker;
+    mobj->thinker.function.acp1 = (thinkf_p1)P_MobjThinker;
 
     P_AddThinker (&mobj->thinker);
 
@@ -835,7 +837,7 @@ void P_RespawnSpecials (void)
     else
         z = ONFLOORZ;
 
-    mo = P_SpawnMobj (x,y,z, i);
+    mo = P_SpawnMobj (x,y,z, mobjtype_t{i});
     mo->spawnpoint = *mthing;
     mo->angle = ANG45 * (mthing->angle/45);
 
@@ -1002,12 +1004,12 @@ void P_SpawnMapThing (mapthing_t* mthing)
     if (!netgame && (mthing->options & 16) )
         return;
 
-    if (gameskill == sk_baby)
+    if (gameskill == skill_t::sk_baby)
         bit = 1;
-    else if (gameskill == sk_nightmare)
+    else if (gameskill == skill_t::sk_nightmare)
         bit = 4;
     else
-        bit = 1<<(gameskill-1);
+        bit = 1 << ((int)gameskill - 1);
 
     if (!(mthing->options & bit) )
         return;
@@ -1040,7 +1042,7 @@ void P_SpawnMapThing (mapthing_t* mthing)
     else
         z = ONFLOORZ;
     
-    mobj = P_SpawnMobj (x,y,z, i);
+    mobj = P_SpawnMobj (x,y,z, mobjtype_t{ i });
     mobj->spawnpoint = *mthing;
 
     if (mobj->tics > 0)

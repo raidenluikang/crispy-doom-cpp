@@ -22,13 +22,19 @@
 #ifndef __P_EXTNODES__
 #define __P_EXTNODES__
 
-typedef enum
+enum mapformat_t: int
 {
     MFMT_DOOMBSP = 0x000,
     MFMT_DEEPBSP = 0x001,
     MFMT_ZDBSPX  = 0x002,
     MFMT_ZDBSPZ  = 0x004
-} mapformat_t;
+};
+
+constexpr mapformat_t operator | (mapformat_t lhs, mapformat_t rhs) noexcept
+{
+    return static_cast<mapformat_t>( static_cast<int>(lhs) | static_cast<int>(rhs));
+}
+
 
 extern mapformat_t P_CheckMapFormat(int lumpnum);
 

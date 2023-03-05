@@ -285,7 +285,7 @@ boolean NET_ReadTiccmdDiff(net_packet_t *packet, net_ticdiff_t *diff,
 
         if (!NET_ReadInt8(packet, &val))
             return false;
-        diff->cmd.arti = val;
+        diff->cmd.arti = (artitype_t)val;
     }
 
     if (diff->diff & NET_TICDIFF_STRIFE)
@@ -362,7 +362,7 @@ void NET_TiccmdPatch(ticcmd_t *src, net_ticdiff_t *diff, ticcmd_t *dest)
     }
     else
     {
-        dest->arti = 0;
+        dest->arti = artitype_t{ 0 };
     }
 
     // Strife-specific:

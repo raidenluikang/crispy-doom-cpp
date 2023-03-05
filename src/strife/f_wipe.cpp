@@ -30,6 +30,7 @@
 
 #include "f_wipe.hpp"
 
+#include "../../utils/memory.hpp"
 //
 //                       SCREEN WIPE PACKAGE
 //

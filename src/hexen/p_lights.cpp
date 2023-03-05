@@ -19,6 +19,8 @@
 #include "m_random.hpp"
 #include "p_local.hpp"
 
+#include "../../utils/memory.hpp"
+
 //============================================================================
 //
 //      T_Light
@@ -269,7 +271,7 @@ void P_SpawnPhasedLight(sector_t * sector, int base, int index)
 {
     phase_t *phase;
 
-    phase = zmalloc<decltype(    phase)>(sizeof(*phase), PU_LEVSPEC, 0);
+    phase = zmalloc<decltype(phase)>(sizeof(*phase), PU_LEVSPEC, 0);
     P_AddThinker(&phase->thinker);
     phase->sector = sector;
     if (index == -1)

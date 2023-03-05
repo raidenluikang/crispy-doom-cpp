@@ -581,7 +581,7 @@ void A_KeenDie (mobj_t* mo)
     // to see if all Keens are dead
     for (th = thinkercap.next ; th != &thinkercap ; th=th->next)
     {
-	if (th->function.acp1 != (actionf_p1)P_MobjThinker)
+	if (th->function.acp1 != (thinkf_p1)P_MobjThinker)
 	    continue;
 
 	mo2 = (mobj_t *)th;
@@ -812,9 +812,8 @@ void A_FaceTarget (mobj_t* actor)
 //
 // A_PosAttack
 //
-void A_PosAttack (void* arg_1)
+void A_PosAttack (mobj_t* actor)
 {
-    mobj_t* actor = (mobj_t*)arg_1;
     int		angle;
     int		damage;
     int		slope;
@@ -832,9 +831,8 @@ void A_PosAttack (void* arg_1)
     P_LineAttack (actor, angle, MISSILERANGE, slope, damage);
 }
 
-void A_SPosAttack (void* arg_1)
+void A_SPosAttack (mobj_t* actor)
 {
-    mobj_t* actor = (mobj_t*)arg_1;
     int		i;
     int		angle;
     int		bangle;
@@ -857,9 +855,8 @@ void A_SPosAttack (void* arg_1)
     }
 }
 
-void A_CPosAttack (void* arg_1)
+void A_CPosAttack (mobj_t* actor)
 {
-    mobj_t* actor = (mobj_t*)arg_1;
     int		angle;
     int		bangle;
     int		damage;
@@ -946,7 +943,7 @@ void A_TroopAttack (mobj_t* actor)
 }
 
 
-void A_SargAttack (mobj_t* actor)
+void A_SargAttack ( mobj_t* actor )
 {
     int		damage;
 
@@ -969,7 +966,7 @@ void A_SargAttack (mobj_t* actor)
         P_DamageMobj (actor->target, actor, actor, damage);
 }
 
-void A_HeadAttack (mobj_t* actor)
+void A_HeadAttack (mobj_t* actor )
 {
     int		damage;
 	
@@ -988,7 +985,7 @@ void A_HeadAttack (mobj_t* actor)
     P_SpawnMissile (actor, actor->target, MT_HEADSHOT);
 }
 
-void A_CyberAttack (mobj_t* actor)
+void A_CyberAttack ( mobj_t* actor )
 {	
     if (!actor->target)
 	return;
@@ -998,9 +995,8 @@ void A_CyberAttack (mobj_t* actor)
 }
 
 
-void A_BruisAttack (void* actor_void)
+void A_BruisAttack (mobj_t* actor )
 {
-    mobj_t* actor = (mobj_t*)actor_void;
     int		damage;
 	
     if (!actor->target)
@@ -1116,7 +1112,7 @@ void A_Tracer (mobj_t* actor)
 }
 
 
-void A_SkelWhoosh (mobj_t*	actor)
+void A_SkelWhoosh(mobj_t*	actor)
 {
     if (!actor->target)
 	return;
@@ -1326,7 +1322,7 @@ void A_Fire (mobj_t* actor)
 // A_VileTarget
 // Spawn the hellfire
 //
-void A_VileTarget (mobj_t*	actor)
+void A_VileTarget (mobj_t*	actor )
 {
     mobj_t*	fog;
 	
@@ -1449,7 +1445,7 @@ void A_FatAttack2 (mobj_t* actor)
     mo->momy = FixedMul (mo->info->speed, finesine[an]);
 }
 
-void A_FatAttack3 (mobj_t*	actor)
+void A_FatAttack3 (mobj_t* actor)
 {
     mobj_t*	mo;
     mobj_t*     target;
@@ -1530,7 +1526,7 @@ A_PainShootSkull
     currentthinker = thinkercap.next;
     while (currentthinker != &thinkercap)
     {
-	if (   (currentthinker->function.acp1 == (actionf_p1)P_MobjThinker)
+	if (   (currentthinker->function.acp1 == (thinkf_p1)P_MobjThinker)
 	    && ((mobj_t *)currentthinker)->type == MT_SKULL)
 	    count++;
 	currentthinker = currentthinker->next;
@@ -1767,7 +1763,7 @@ void A_BossDeath (mobj_t* mo)
     // if all bosses are dead
     for (th = thinkercap.next ; th != &thinkercap ; th=th->next)
     {
-	if (th->function.acp1 != (actionf_p1)P_MobjThinker)
+	if (th->function.acp1 != (thinkf_p1)P_MobjThinker)
 	    continue;
 	
 	mo2 = (mobj_t *)th;
@@ -1840,7 +1836,7 @@ void A_Hoof (mobj_t* mo)
     A_Chase (mo);
 }
 
-void A_Metal (mobj_t* mo)
+void A_Metal ( mobj_t* mo)
 {
     S_StartSound (mo, sfx_metal);
     A_Chase (mo);
@@ -1852,41 +1848,25 @@ void A_BabyMetal (mobj_t* mo)
     A_Chase (mo);
 }
 
-void
-A_OpenShotgun2
-( mobj_t*	mobj,
-  player_t*	player,
-  pspdef_t*	psp )
+void A_OpenShotgun2 ( mobj_t*	mobj, player_t*	player, pspdef_t*	psp )
 {
     if (!player) return; // [crispy] let pspr action pointers get called from mobj states
     S_StartSound (player->so, sfx_dbopn); // [crispy] weapon sound source
 }
 
-void
-A_LoadShotgun2
-( mobj_t*	mobj,
-  player_t*	player,
-  pspdef_t*	psp )
+void A_LoadShotgun2 ( mobj_t*	mobj, player_t*	player, pspdef_t*	psp )
 {
     if (!player) return; // [crispy] let pspr action pointers get called from mobj states
     S_StartSound (player->so, sfx_dbload); // [crispy] weapon sound source
 }
 
-void
-A_ReFire
-( mobj_t*	mobj,
-  player_t*	player,
-  pspdef_t*	psp );
+void A_ReFire ( mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
 
-void
-A_CloseShotgun2
-( mobj_t*	mobj,
-  player_t*	player,
-  pspdef_t*	psp )
+void A_CloseShotgun2 ( mobj_t*	mobj, player_t*	player, pspdef_t*	psp )
 {
     if (!player) return; // [crispy] let pspr action pointers get called from mobj states
     S_StartSound (player->so, sfx_dbcls); // [crispy] weapon sound source
-    A_ReFire(nullptr,player,psp); // [crispy] let pspr action pointers get called from mobj states
+    A_ReFire(nullptr, player, psp); // [crispy] let pspr action pointers get called from mobj states
 }
 
 
@@ -1909,7 +1889,7 @@ void A_BrainAwake (mobj_t* mo)
 	 thinker != &thinkercap ;
 	 thinker = thinker->next)
     {
-	if (thinker->function.acp1 != (actionf_p1)P_MobjThinker)
+	if (thinker->function.acp1 != (thinkf_p1)P_MobjThinker)
 	    continue;	// not a mobj
 
 	m = (mobj_t *)thinker;

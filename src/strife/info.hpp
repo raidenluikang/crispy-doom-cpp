@@ -25,7 +25,7 @@
 #include "d_think.hpp"
 
 // villsa [STRIFE]
-typedef enum
+enum spritenum_t: int
 {
     SPR_PLAY, // 0
     SPR_PNCH, // 1
@@ -292,10 +292,15 @@ typedef enum
     SPR_STLG, // 262
     NUMSPRITES
 
-} spritenum_t;
+} ;
+
+enum statenum_t: int;
+constexpr statenum_t operator + (statenum_t lhs, int add) noexcept {
+    return static_cast<statenum_t>(static_cast<int>(lhs) + add);
+}
 
 // villsa [STRIFE]
-typedef enum
+enum statenum_t: int
 {
     S_NULL,     // 00
     S_PNCH_00,      // 01
@@ -1817,7 +1822,7 @@ typedef enum
     S_STLG_05,      // 1517
     NUMSTATES
 
-} statenum_t;
+} ;
 
 
 typedef struct
@@ -1834,8 +1839,14 @@ typedef struct
 
 extern state_t	states[NUMSTATES];
 extern const char *sprnames[];
+enum mobjtype_t: int;
 
-typedef enum
+constexpr mobjtype_t operator + (mobjtype_t lhs , int add) noexcept 
+{
+    return static_cast<mobjtype_t>(static_cast<int>(lhs) + add);
+}
+
+enum mobjtype_t: int
 {
     MT_FIELDGUARD,      //000
     MT_PLAYER,      //001
@@ -2183,26 +2194,28 @@ typedef enum
     MT_SLIDESHOW,       //343
     NUMMOBJTYPES
 
-} mobjtype_t;
+} ;
 
 // villsa [STRIFE] updated mobjinfo struct
-typedef struct
+enum statenum_t: int;
+
+struct mobjinfo_t
 {
     int     doomednum;
-    int     spawnstate;
+    statenum_t     spawnstate;
     int     spawnhealth;
-    int     seestate;
+    statenum_t     seestate;
     int     seesound;
     int     reactiontime;
     int     attacksound;
-    int     painstate;
+    statenum_t     painstate;
     int     painchance;
     int     painsound;
-    int     meleestate;
-    int     missilestate;
-    int     crashstate;
-    int     deathstate;
-    int     xdeathstate;
+    statenum_t     meleestate;
+    statenum_t     missilestate;
+    statenum_t     crashstate;
+    statenum_t     deathstate;
+    statenum_t     xdeathstate;
     int     deathsound;
     int     speed;
     int     radius;
@@ -2210,9 +2223,9 @@ typedef struct
     int     mass;
     int     damage;
     int     activesound;
-    int     flags;
+    unsigned  flags;
     const char *name;
-} mobjinfo_t;
+} ;
 
 extern mobjinfo_t mobjinfo[NUMMOBJTYPES];
 

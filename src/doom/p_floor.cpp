@@ -307,7 +307,7 @@ void EV_DoGoobers (void)
 	floor = zmalloc<decltype(floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	P_AddThinker(&floor->thinker);
 	sec->specialdata = floor;
-	floor->thinker.function.acp1 = (actionf_p1) T_MoveGoobers;
+	floor->thinker.function.acp1 = (thinkf_p1) T_MoveGoobers;
 	floor->sector = sec;
 	// [crispy] actually destination ceilingheight here (destination floorheight is always 0),
 	// leave destination ceilingheight for untagged closed sectors (i.e. DR-type doors) at 0,
@@ -350,7 +350,7 @@ EV_DoFloor
 	floor = zmalloc<decltype(	floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	P_AddThinker (&floor->thinker);
 	sec->specialdata = floor;
-	floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
+	floor->thinker.function.acp1 = (thinkf_p1) T_MoveFloor;
 	floor->type = floortype;
 	floor->crush = false;
 
@@ -554,7 +554,7 @@ EV_BuildStairs
 	floor = zmalloc<decltype(	floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	P_AddThinker (&floor->thinker);
 	sec->specialdata = floor;
-	floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
+	floor->thinker.function.acp1 = (thinkf_p1) T_MoveFloor;
 	floor->direction = 1;
 	floor->sector = sec;
 	switch(type)
@@ -615,7 +615,7 @@ EV_BuildStairs
 		P_AddThinker (&floor->thinker);
 
 		sec->specialdata = floor;
-		floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
+		floor->thinker.function.acp1 = (thinkf_p1) T_MoveFloor;
 		floor->direction = 1;
 		floor->sector = sec;
 		floor->speed = speed;

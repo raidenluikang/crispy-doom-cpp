@@ -731,34 +731,30 @@ static int MaxStringLength(int len)
 
 static void SuggestOtherVersions(unsigned int offset)
 {
-    const int *string_list;
-    unsigned int i;
-    unsigned int v;
-
     // Check main string table.
 
-    for (i=0; i<arrlen(strings); ++i)
+    for (size_t i=0; i<arrlen(strings); ++i)
     {
-        for (v=0; v<deh_hhe_num_versions; ++v)
+        for (int v=0; v<deh_hhe_num_versions; ++v)
         {
             if (strings[i].offsets[v] == offset)
             {
-                DEH_SuggestHereticVersion(v);
+                DEH_SuggestHereticVersion(static_cast< deh_hhe_version_t>( v ) );
             }
         }
     }
 
     // Check unsupported string tables.
 
-    for (v=0; v<deh_hhe_num_versions; ++v)
+    for (int v = 0; v < deh_hhe_num_versions; ++v)
     {
-        string_list = unsupported_strings[v];
+        const int* string_list = unsupported_strings[v];
 
-        for (i=0; string_list[i] >= 0; ++i)
+        for (int i = 0; string_list[i] >= 0; ++i)
         {
             if (string_list[i] == offset)
             {
-                DEH_SuggestHereticVersion(v);
+                DEH_SuggestHereticVersion(static_cast<deh_hhe_version_t>( v ) );
             }
         }
     }

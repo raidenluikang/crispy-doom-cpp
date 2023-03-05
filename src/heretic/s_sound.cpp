@@ -30,6 +30,8 @@
 #include "w_wad.hpp"
 #include "z_zone.hpp"
 
+#include "../../utils/memory.hpp"
+
 /*
 ===============================================================================
 
@@ -130,7 +132,7 @@ static mobj_t *GetSoundListener(void)
 
 void S_StartSound(void *_origin, int sound_id)
 {
-    mobj_t *origin = _origin;
+    mobj_t *origin = (mobj_t*)_origin;
     mobj_t *listener;
     int dist, vol;
     int i;
@@ -297,7 +299,7 @@ void S_StartSound(void *_origin, int sound_id)
 
 void S_StartSoundAtVolume(void *_origin, int sound_id, int volume)
 {
-    mobj_t *origin = _origin;
+    mobj_t *origin = (mobj_t*)_origin;
     mobj_t *listener;
     int i;
 
@@ -397,7 +399,7 @@ boolean S_StopSoundID(int sound_id, int priority)
 
 void S_StopSound(void *_origin)
 {
-    mobj_t *origin = _origin;
+    mobj_t *origin = (mobj_t*)_origin;
     int i;
 
     for (i = 0; i < snd_Channels; i++)
@@ -522,7 +524,7 @@ void S_UpdateSounds(mobj_t * listener)
 void S_Init(void)
 {
     I_SetOPLDriverVer(opl_doom2_1_666);
-    soundCurve = zmalloc<decltype(    soundCurve)>(MAX_SND_DIST, PU_STATIC, nullptr);
+    soundCurve = zmalloc<decltype(soundCurve)>(MAX_SND_DIST, PU_STATIC, nullptr);
     if (snd_Channels > 8)
     {
         snd_Channels = 8;

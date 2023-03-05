@@ -406,7 +406,7 @@ void P_PostChickenWeapon(player_t * player, weapontype_t weapon)
     player->pendingweapon = wp_nochange;
     player->readyweapon = weapon;
     player->psprites[ps_weapon].sy = WEAPONBOTTOM;
-    P_SetPsprite(player, ps_weapon, wpnlev1info[weapon].upstate);
+    P_SetPsprite(player, ps_weapon, statenum_t{ wpnlev1info[weapon].upstate} );
 }
 
 //---------------------------------------------------------------------------
@@ -419,7 +419,7 @@ void P_PostChickenWeapon(player_t * player, weapontype_t weapon)
 
 void P_BringUpWeapon(player_t * player)
 {
-    statenum_t new;
+    statenum_t new_{};
 
     if (player->pendingweapon == wp_nochange)
     {
@@ -431,15 +431,15 @@ void P_BringUpWeapon(player_t * player)
     }
     if (player->powers[pw_weaponlevel2])
     {
-        new = wpnlev2info[player->pendingweapon].upstate;
+        new_ = statenum_t{ wpnlev2info[player->pendingweapon].upstate };
     }
     else
     {
-        new = wpnlev1info[player->pendingweapon].upstate;
+        new_ = statenum_t{ wpnlev1info[player->pendingweapon].upstate } ;
     }
     player->pendingweapon = wp_nochange;
     player->psprites[ps_weapon].sy = WEAPONBOTTOM;
-    P_SetPsprite(player, ps_weapon, new);
+    P_SetPsprite(player, ps_weapon, new_);
 }
 
 //---------------------------------------------------------------------------
@@ -1563,7 +1563,7 @@ void A_SkullRodStorm(mobj_t *actor, player_t *player_, pspdef_t *psp)
     }
     x = actor->x + ((P_Random() & 127) - 64) * FRACUNIT;
     y = actor->y + ((P_Random() & 127) - 64) * FRACUNIT;
-    mo = P_SpawnMobj(x, y, ONCEILINGZ, MT_RAINPLR1 + actor->special2.i);
+    mo = P_SpawnMobj(x, y, ONCEILINGZ, mobjtype_t{ (int)MT_RAINPLR1 + actor->special2.i});
     mo->target = actor->target;
     mo->momx = 1;               // Force collision detection
     mo->momz = -mo->info->speed;
@@ -1586,7 +1586,7 @@ void A_RainImpact(mobj_t *actor, player_t *player, pspdef_t *psp)
 {
     if (actor->z > actor->floorz)
     {
-        P_SetMobjState(actor, S_RAINAIRXPLR1_1 + actor->special2.i);
+        P_SetMobjState(actor, statenum_t{ (int)S_RAINAIRXPLR1_1 + actor->special2.i } );
     }
     else if (P_Random() < 40)
     {

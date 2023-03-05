@@ -26,6 +26,8 @@
 
 #include "crispy.hpp"
 
+#include "../../utils/memory.hpp"
+
 // MACROS ------------------------------------------------------------------
 
 #define PO_MAXPOLYSEGS 64
@@ -613,7 +615,7 @@ static void ThrustMobj(mobj_t * mobj, seg_t * seg, polyobj_t * po)
     }
     thrustAngle = (seg->angle - ANG90) >> ANGLETOFINESHIFT;
 
-    pe = po->specialdata;
+    pe = (polyevent_t*)( po->specialdata ) ;
     if (pe)
     {
         if (pe->thinker.function == T_RotatePoly)
@@ -957,18 +959,18 @@ void PO_InterpolatePolyObjects(void)
 static void RotatePt(int an, fixed_t * x, fixed_t * y, fixed_t startSpotX,
                      fixed_t startSpotY)
 {
-    fixed_t trx, try;
+    fixed_t trx, try_;
     fixed_t gxt, gyt;
 
     trx = *x;
-    try = *y;
+    try_ = *y;
 
     gxt = FixedMul(trx, finecosine[an]);
-    gyt = FixedMul(try, finesine[an]);
+    gyt = FixedMul(try_, finesine[an]);
     *x = (gxt - gyt) + startSpotX;
 
     gxt = FixedMul(trx, finesine[an]);
-    gyt = FixedMul(try, finecosine[an]);
+    gyt = FixedMul(try_, finecosine[an]);
     *y = (gyt + gxt) + startSpotY;
 }
 

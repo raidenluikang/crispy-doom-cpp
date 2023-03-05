@@ -28,6 +28,8 @@
 #include "s_sound.hpp"
 #include "p_local.hpp"
 
+#include "../../utils/memory.hpp"
+
 // MACROS ------------------------------------------------------------------
 
 #define MAPINFO_SCRIPT_NAME "MAPINFO"
@@ -811,7 +813,7 @@ static void InitMapInfo(void)
 
     mapMax = 1;
 
-    if (gamemode == shareware)
+    if (gamemode == GameMode_t::shareware)
     {
 	default_sky_name = "SKY2";
     }

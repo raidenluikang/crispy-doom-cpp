@@ -24,12 +24,14 @@
 #include "p_local.hpp"
 #include "v_trans.hpp" // [crispy] color translation and color string tables
 
-typedef struct
+#include "../../utils/memory.hpp"
+
+struct texpatch_t
 {
     int originx;                // block origin (allways UL), which has allready
     int originy;                // accounted  for the patch's internal origin
     int patch;
-} texpatch_t;
+} ;
 
 // a maptexturedef_t describes a rectangular texture, which is composed of one
 // or more mappatch_t structures that arrange graphic patches
@@ -306,7 +308,7 @@ void R_InitTextures(void)
 //
 // load the patch names from pnames.lmp
 //
-    names = W_CacheLumpName("PNAMES", PU_STATIC);
+    names = (char*)W_CacheLumpName("PNAMES", PU_STATIC);
     nummappatches = LONG(*((int *) names));
     name_p = names + 4;
     patchlookup = zmalloc<decltype(    patchlookup)>(nummappatches * sizeof(*patchlookup), PU_STATIC, nullptr);
@@ -361,7 +363,7 @@ void R_InitTextures(void)
         if (offset > maxoff)
             I_Error("R_InitTextures: bad texture directory");
         mtexture = (maptexture_t *) ((byte *) maptex + offset);
-        texture = textures[i] = zmalloc<decltype(        texture = textures[i])>(sizeof(texture_t)
+        texture = textures[i] = zmalloc<decltype(texture )>(sizeof(texture_t)
                                          +
                                          sizeof(texpatch_t) *
                                          (SHORT(mtexture->patchcount) - 1),

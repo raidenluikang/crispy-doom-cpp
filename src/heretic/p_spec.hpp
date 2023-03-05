@@ -27,25 +27,25 @@
 //
 //      Animating textures and planes
 //
-typedef struct
+struct anim_t
 {
     boolean istexture;
     int picnum;
     int basepic;
     int numpics;
     int speed;
-} anim_t;
+} ;
 
 //
 //      source animation definition
 //
-typedef struct
+struct animdef_t
 {
     int istexture;          // if false, it's a flat
     char endname[9];
     char startname[9];
     int speed;
-} animdef_t;
+} ;
 
 #define	MAXANIMS		32
 
@@ -107,7 +107,7 @@ int EV_DoDonut(line_t * line);
 
 ===============================================================================
 */
-typedef struct
+struct lightflash_t
 {
     thinker_t thinker;
     sector_t *sector;
@@ -116,9 +116,9 @@ typedef struct
     int minlight;
     int maxtime;
     int mintime;
-} lightflash_t;
-
-typedef struct
+} ;
+ 
+struct strobe_t
 {
     thinker_t thinker;
     sector_t *sector;
@@ -127,16 +127,16 @@ typedef struct
     int maxlight;
     int darktime;
     int brighttime;
-} strobe_t;
+} ;
 
-typedef struct
+struct glow_t
 {
     thinker_t thinker;
     sector_t *sector;
     int minlight;
     int maxlight;
     int direction;
-} glow_t;
+} ;
 
 #define GLOWSPEED		8
 #define	STROBEBRIGHT	5
@@ -160,28 +160,28 @@ void P_SpawnGlowingLight(sector_t * sector);
 
 ===============================================================================
 */
-typedef struct
+struct switchlist_t
 {
     char name1[9];
     char name2[9];
     short episode;
-} switchlist_t;
+} ;
 
-typedef enum
+enum bwhere_e
 {
     top,
     middle,
     bottom
-} bwhere_e;
+} ;
 
-typedef struct
+struct button_t
 {
     line_t *line;
     bwhere_e where;
     int btexture;
     int btimer;
     void *soundorg;
-} button_t;
+} ;
 
 #define	MAXSWITCHES	50      // max # of wall switches in a level
 #define	MAXBUTTONS	16      // 4 players, 4 buttons each at once, max.
@@ -199,23 +199,23 @@ void P_InitSwitchList(void);
 
 ===============================================================================
 */
-typedef enum
+enum plat_e: int
 {
     up,
     down,
     waiting,
     in_stasis
-} plat_e;
+} ;
 
-typedef enum
+enum plattype_e: int
 {
     perpetualRaise,
     downWaitUpStay,
     raiseAndChange,
     raiseToNearestAndChange
-} plattype_e;
+} ;
 
-typedef struct
+ struct plat_t
 {
     thinker_t thinker;
     sector_t *sector;
@@ -229,7 +229,7 @@ typedef struct
     boolean crush;
     int tag;
     plattype_e type;
-} plat_t;
+} ;
 
 #define	PLATWAIT	3
 #define	PLATSPEED	FRACUNIT
@@ -251,16 +251,16 @@ void P_ActivateInStasis(int tag);
 
 ===============================================================================
 */
-typedef enum
+enum vldoor_e
 {
     vld_normal,
     vld_close30ThenOpen,
     vld_close,
     vld_open,
     vld_raiseIn5Mins
-} vldoor_e;
+} ;
 
-typedef struct
+struct vldoor_t
 {
     thinker_t thinker;
     vldoor_e type;
@@ -271,7 +271,7 @@ typedef struct
     int topwait;                // tics to wait at the top
     // (keep in case a door going down is reset)
     int topcountdown;           // when it reaches 0, start going down
-} vldoor_t;
+} ;
 
 #define	VDOORSPEED	FRACUNIT*2
 #define	VDOORWAIT		150

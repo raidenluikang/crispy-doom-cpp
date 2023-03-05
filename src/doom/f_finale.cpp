@@ -112,7 +112,7 @@ void	F_CastTicker (void);
 boolean F_CastResponder (event_t *ev);
 void	F_CastDrawer (void);
 
-extern void A_RandomJump(void*, void*, void*);
+extern void A_RandomJump(mobj_t*mobj, player_t*	player, pspdef_t*	psp);
 
 //
 // F_StartFinale
@@ -438,25 +438,25 @@ static int F_RandomizeSound (int sound)
 	}
 }
 
-extern void A_BruisAttack(void*);
-extern void A_BspiAttack();
-extern void A_CPosAttack(void*);
-extern void A_CPosRefire();
-extern void A_CyberAttack();
-extern void A_FatAttack1();
-extern void A_FatAttack2();
-extern void A_FatAttack3();
-extern void A_HeadAttack();
-extern void A_PainAttack();
-extern void A_PosAttack(void*);
-extern void A_SargAttack();
-extern void A_SkelFist();
-extern void A_SkelMissile();
-extern void A_SkelWhoosh();
-extern void A_SkullAttack();
-extern void A_SPosAttack(void*);
-extern void A_TroopAttack();
-extern void A_VileTarget();
+extern void A_BruisAttack(mobj_t*);
+extern void A_BspiAttack(mobj_t*);
+extern void A_CPosAttack(mobj_t*);
+extern void A_CPosRefire(mobj_t*);
+extern void A_CyberAttack(mobj_t*);
+extern void A_FatAttack1(mobj_t*);
+extern void A_FatAttack2(mobj_t*);
+extern void A_FatAttack3(mobj_t*);
+extern void A_HeadAttack(mobj_t*);
+extern void A_PainAttack(mobj_t*);
+extern void A_PosAttack(mobj_t*);
+extern void A_SargAttack(mobj_t*);
+extern void A_SkelFist(mobj_t*);
+extern void A_SkelMissile(mobj_t*);
+extern void A_SkelWhoosh(mobj_t*);
+extern void A_SkullAttack(mobj_t*);
+extern void A_SPosAttack(mobj_t*);
+extern void A_TroopAttack(mobj_t*);
+extern void A_VileTarget(mobj_t*);
 
 
 struct actionsound_t
@@ -464,9 +464,9 @@ struct actionsound_t
     union u
     {
         void(*av0)();
-        void(*av1)(void*);
-        void(*av2)(void*, void*);
-        void(*av3)(void*, void*, void*);
+        void(*av1)(mobj_t*);
+        void(*av2)(mobj_t*, pspdef_t*);
+        void(*av3)(mobj_t*, player_t*, pspdef_t*);
     };
 
     const u action;
@@ -479,22 +479,22 @@ static const actionsound_t actionsounds[] =
 	{{.av1 = A_PosAttack},   sfx_pistol, false},
 	{{.av1 = A_SPosAttack},  sfx_shotgn, false},
 	{{.av1 = A_CPosAttack},  sfx_shotgn, false},
-	{A_CPosRefire,  sfx_shotgn, false},
-	{A_VileTarget,  sfx_vilatk, true},
-	{A_SkelWhoosh,  sfx_skeswg, false},
-	{A_SkelFist,    sfx_skepch, false},
-	{A_SkelMissile, sfx_skeatk, true},
-	{A_FatAttack1,  sfx_firsht, false},
-	{A_FatAttack2,  sfx_firsht, false},
-	{A_FatAttack3,  sfx_firsht, false},
-	{A_HeadAttack,  sfx_firsht, true},
+	{{.av1 = A_CPosRefire},  sfx_shotgn, false},
+	{{.av1 = A_VileTarget},  sfx_vilatk, true},
+	{{.av1 = A_SkelWhoosh},  sfx_skeswg, false},
+	{{.av1 = A_SkelFist},    sfx_skepch, false},
+	{{.av1 = A_SkelMissile}, sfx_skeatk, true},
+	{{.av1 = A_FatAttack1},  sfx_firsht, false},
+	{{.av1 = A_FatAttack2},  sfx_firsht, false},
+	{{.av1 = A_FatAttack3},  sfx_firsht, false},
+	{{.av1 = A_HeadAttack},  sfx_firsht, true},
 	{{.av1 = A_BruisAttack}, sfx_firsht, true},
-	{A_TroopAttack, sfx_claw,   false},
-	{A_SargAttack,  sfx_sgtatk, true},
-	{A_SkullAttack, sfx_sklatk, false},
-	{A_PainAttack,  sfx_sklatk, true},
-	{A_BspiAttack,  sfx_plasma, false},
-	{A_CyberAttack, sfx_rlaunc, false},
+	{{.av1 = A_TroopAttack}, sfx_claw,   false},
+	{{.av1 = A_SargAttack},  sfx_sgtatk, true},
+	{{.av1 = A_SkullAttack}, sfx_sklatk, false},
+	{{.av1 = A_PainAttack},  sfx_sklatk, true},
+	{{.av1 = A_BspiAttack},  sfx_plasma, false},
+	{{.av1 = A_CyberAttack}, sfx_rlaunc, false},
 };
 
 // [crispy] play attack sound based on state action function (instead of state number)

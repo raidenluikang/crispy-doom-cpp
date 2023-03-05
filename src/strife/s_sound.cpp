@@ -607,7 +607,7 @@ static voiceinfo_t *S_getVoice(const char *name, int lumpnum)
 
     if(!voice)
     {
-        voice = calloc(1, sizeof(voiceinfo_t));
+        voice = (voiceinfo_t*)calloc(1, sizeof(voiceinfo_t));
 
         M_StringCopy(voice->sfx.name, name, sizeof(voice->sfx.name));
         voice->sfx.priority = INT_MIN; // make highest possible priority

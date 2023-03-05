@@ -445,7 +445,7 @@ void F_Drawer(void)
         switch (gameepisode)
         {
             case 1:
-                if (gamemode == shareware)
+                if (gamemode == GameMode_t::shareware)
                 {
                     V_DrawFullscreenRawOrPatch(W_GetNumForName("ORDER"));
                 }

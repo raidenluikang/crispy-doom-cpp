@@ -150,7 +150,7 @@ enum spritenum_t
     NUMSPRITES
 } ;
 
-enum statenum_t
+enum statenum_t : int
 {
     S_NULL,
     S_FREETARGMOBJ,
@@ -1384,7 +1384,7 @@ extern const char *sprnames[];
 
 
 
-typedef enum
+enum mobjtype_t : int
 {
     MT_MISC0,
     MT_ITEMSHIELD1,
@@ -1548,25 +1548,25 @@ typedef enum
     MT_SOUNDWIND,
     MT_SOUNDWATERFALL,
     NUMMOBJTYPES
-} mobjtype_t;
+} ;
 
-typedef struct
+struct mobjinfo_t
 {
     int doomednum;
-    int spawnstate;
+    statenum_t spawnstate;
     int spawnhealth;
-    int seestate;
+    statenum_t seestate;
     int seesound;
     int reactiontime;
     int attacksound;
-    int painstate;
+    statenum_t painstate;
     int painchance;
     int painsound;
-    int meleestate;
-    int missilestate;
-    int crashstate;
-    int deathstate;
-    int xdeathstate;
+    statenum_t meleestate;
+    statenum_t missilestate;
+    statenum_t crashstate;
+    statenum_t deathstate;
+    statenum_t xdeathstate;
     int deathsound;
     int speed;
     int radius;
@@ -1576,7 +1576,7 @@ typedef struct
     int activesound;
     int flags;
     int flags2;
-} mobjinfo_t;
+} ;
 
 extern mobjinfo_t mobjinfo[NUMMOBJTYPES];
 

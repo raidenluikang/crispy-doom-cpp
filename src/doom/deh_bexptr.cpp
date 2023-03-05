@@ -25,191 +25,196 @@
 #include "deh_io.hpp"
 #include "deh_main.hpp"
 
-extern void A_Light0();
-extern void A_WeaponReady();
-extern void A_Lower();
-extern void A_Raise();
-extern void A_Punch();
-extern void A_ReFire();
-extern void A_FirePistol();
-extern void A_Light1();
-extern void A_FireShotgun();
-extern void A_Light2();
-extern void A_FireShotgun2();
-extern void A_CheckReload();
-extern void A_OpenShotgun2();
-extern void A_LoadShotgun2();
-extern void A_CloseShotgun2();
-extern void A_FireCGun();
-extern void A_GunFlash();
-extern void A_FireMissile();
-extern void A_Saw();
-extern void A_FirePlasma();
-extern void A_BFGsound();
-extern void A_FireBFG();
-extern void A_BFGSpray();
-extern void A_Explode();
-extern void A_Pain();
-extern void A_PlayerScream();
-extern void A_Fall();
-extern void A_XScream();
-extern void A_Look();
-extern void A_Chase();
-extern void A_FaceTarget();
-extern void A_PosAttack(void*);
-extern void A_Scream();
-extern void A_SPosAttack(void*);
-extern void A_VileChase();
-extern void A_VileStart();
-extern void A_VileTarget();
-extern void A_VileAttack();
-extern void A_StartFire();
-extern void A_Fire();
-extern void A_FireCrackle();
-extern void A_Tracer();
-extern void A_SkelWhoosh();
-extern void A_SkelFist();
-extern void A_SkelMissile();
-extern void A_FatRaise();
-extern void A_FatAttack1();
-extern void A_FatAttack2();
-extern void A_FatAttack3();
-extern void A_BossDeath();
-extern void A_CPosAttack(void*);
-extern void A_CPosRefire();
-extern void A_TroopAttack();
-extern void A_SargAttack();
-extern void A_HeadAttack();
-extern void A_BruisAttack(void*);
-extern void A_SkullAttack();
-extern void A_Metal();
-extern void A_SpidRefire();
-extern void A_BabyMetal();
-extern void A_BspiAttack();
-extern void A_Hoof();
-extern void A_CyberAttack();
-extern void A_PainAttack();
-extern void A_PainDie();
-extern void A_KeenDie();
-extern void A_BrainPain();
-extern void A_BrainScream();
-extern void A_BrainDie();
-extern void A_BrainAwake();
-extern void A_BrainSpit();
-extern void A_SpawnSound();
-extern void A_SpawnFly();
-extern void A_BrainExplode();
-// [crispy] additional BOOM and MBF states, sprites and code pointers
-extern void A_Stop();
-extern void A_Die();
-extern void A_FireOldBFG();
-extern void A_Detonate();
-extern void A_Mushroom();
-extern void A_BetaSkullAttack();
-// [crispy] more MBF code pointers
-extern void A_Spawn();
-extern void A_Turn();
-extern void A_Face();
-extern void A_Scratch();
-extern void A_PlaySound();
-extern void A_RandomJump(void*, void*, void*);
-extern void A_LineEffect();
+struct mobj_t;
+struct player_t;
+struct pspdef_t;
 
-typedef struct {
+extern void A_Light0(mobj_t*	mobj, player_t*	player, pspdef_t*	psp);
+extern void A_WeaponReady(mobj_t*	mobj, player_t*	player, pspdef_t*	psp);
+extern void A_Lower(mobj_t*	mobj, player_t*	player, pspdef_t*	psp);
+extern void A_Raise(mobj_t*	mobj, player_t*	player, pspdef_t*	psp);
+extern void A_Punch(mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
+extern void A_ReFire( mobj_t*	mobj, player_t*	player, pspdef_t*	psp);
+extern void A_FirePistol( mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
+extern void A_Light1(mobj_t*	mobj, player_t*	player, pspdef_t*	psp);
+extern void A_FireShotgun( mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
+extern void A_Light2(mobj_t *mobj, player_t *player, pspdef_t *psp);
+extern void A_FireShotgun2( mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
+extern void A_CheckReload( mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
+extern void A_OpenShotgun2(mobj_t*	mobj, player_t*	player, pspdef_t*	psp);
+extern void A_LoadShotgun2(mobj_t*	mobj, player_t*	player, pspdef_t*	psp);
+extern void A_CloseShotgun2(mobj_t*	mobj, player_t*	player, pspdef_t*	psp);
+extern void A_FireCGun( mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
+extern void A_GunFlash( mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
+extern void A_FireMissile( mobj_t*	mobj, player_t*	player, pspdef_t*	psp);
+extern void A_Saw( mobj_t* mobj, player_t* player, pspdef_t* psp );
+extern void A_FirePlasma( mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
+extern void A_BFGsound( mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
+extern void A_FireBFG( mobj_t*	mobj, player_t*	player, pspdef_t*	psp );
+extern void A_BFGSpray(mobj_t* mo);
+extern void A_Explode(mobj_t* thingy);
+extern void A_Pain(mobj_t* actor);
+extern void A_PlayerScream(mobj_t* mo);
+extern void A_Fall(mobj_t *actor);
+extern void A_XScream(mobj_t* actor);
+extern void A_Look(mobj_t* actor);
+extern void A_Chase(mobj_t*	actor);
+extern void A_FaceTarget(mobj_t* actor);
+extern void A_PosAttack(mobj_t*);
+extern void A_Scream(mobj_t* actor);
+extern void A_SPosAttack(mobj_t*);
+extern void A_VileChase(mobj_t* actor);
+extern void A_VileStart(mobj_t* actor);
+extern void A_VileTarget(mobj_t*);
+extern void A_VileAttack(mobj_t* actor);
+extern void A_StartFire(mobj_t* actor);
+extern void A_Fire(mobj_t* actor);
+extern void A_FireCrackle(mobj_t* actor);
+extern void A_Tracer(mobj_t* actor);
+extern void A_SkelWhoosh(mobj_t*);
+extern void A_SkelFist(mobj_t*);
+extern void A_SkelMissile(mobj_t*);
+extern void A_FatRaise(mobj_t *actor);
+extern void A_FatAttack1(mobj_t*);
+extern void A_FatAttack2(mobj_t*);
+extern void A_FatAttack3(mobj_t*);
+extern void A_BossDeath(mobj_t* mo);
+extern void A_CPosAttack(mobj_t*);
+extern void A_CPosRefire(mobj_t*);
+extern void A_TroopAttack(mobj_t*);
+extern void A_SargAttack(mobj_t*);
+extern void A_HeadAttack(mobj_t*);
+extern void A_BruisAttack(mobj_t*);
+extern void A_SkullAttack(mobj_t*);
+extern void A_Metal(mobj_t*);
+extern void A_SpidRefire(mobj_t* actor);
+extern void A_BabyMetal(mobj_t* mo);
+extern void A_BspiAttack(mobj_t*);
+extern void A_Hoof(mobj_t* mo);
+extern void A_CyberAttack(mobj_t*);
+extern void A_PainAttack(mobj_t*);
+extern void A_PainDie(mobj_t *);
+extern void A_KeenDie(mobj_t* mo);
+extern void A_BrainPain(mobj_t*	mo);
+extern void A_BrainScream(mobj_t*	mo);
+extern void A_BrainDie(mobj_t*	mo);
+extern void A_BrainAwake(mobj_t* mo);
+extern void A_BrainSpit(mobj_t*	mo);
+extern void A_SpawnSound(mobj_t* mo);
+extern void A_SpawnFly(mobj_t* mo);
+extern void A_BrainExplode(mobj_t* mo);
+// [crispy] additional BOOM and MBF states, sprites and code pointers
+extern void A_Stop(mobj_t*);
+extern void A_Die(mobj_t*);
+extern void A_FireOldBFG(mobj_t *mobj, player_t *player, pspdef_t *psp);
+extern void A_Detonate(mobj_t *mo);
+extern void A_Mushroom(mobj_t *actor);
+extern void A_BetaSkullAttack(mobj_t *actor);
+// [crispy] more MBF code pointers
+extern void A_Spawn(mobj_t *mo);
+extern void A_Turn(mobj_t *mo);
+extern void A_Face(mobj_t *mo);
+extern void A_Scratch(mobj_t *mo);
+extern void A_PlaySound(mobj_t *mo);
+extern void A_RandomJump(mobj_t*mobj, player_t*	player, pspdef_t*	psp);
+extern void A_LineEffect(mobj_t *mo);
+
+struct bex_codeptr_t
+{
     const char *mnemonic;
     const actionf_t pointer;
-} bex_codeptr_t;
+} ;
 
 static const bex_codeptr_t bex_codeptrtable[] = {
-    {"Light0", {A_Light0}},
-    {"WeaponReady", {A_WeaponReady}},
-    {"Lower", {A_Lower}},
-    {"Raise", {A_Raise}},
-    {"Punch", {A_Punch}},
-    {"ReFire", {A_ReFire}},
-    {"FirePistol", {A_FirePistol}},
-    {"Light1", {A_Light1}},
-    {"FireShotgun", {A_FireShotgun}},
-    {"Light2", {A_Light2}},
-    {"FireShotgun2", {A_FireShotgun2}},
-    {"CheckReload", {A_CheckReload}},
-    {"OpenShotgun2", {A_OpenShotgun2}},
-    {"LoadShotgun2", {A_LoadShotgun2}},
-    {"CloseShotgun2", {A_CloseShotgun2}},
-    {"FireCGun", {A_FireCGun}},
-    {"GunFlash", {A_GunFlash}},
-    {"FireMissile", {A_FireMissile}},
-    {"Saw", {A_Saw}},
-    {"FirePlasma", {A_FirePlasma}},
-    {"BFGsound", {A_BFGsound}},
-    {"FireBFG", {A_FireBFG}},
-    {"BFGSpray", {A_BFGSpray}},
-    {"Explode", {A_Explode}},
-    {"Pain", {A_Pain}},
-    {"PlayerScream", {A_PlayerScream}},
-    {"Fall", {A_Fall}},
-    {"XScream", {A_XScream}},
-    {"Look", {A_Look}},
-    {"Chase", {A_Chase}},
-    {"FaceTarget", {A_FaceTarget}},
+    {"Light0", {.acp3 = A_Light0}},
+    {"WeaponReady", {.acp3 = A_WeaponReady}},
+    {"Lower", {.acp3 = A_Lower}},
+    {"Raise", {.acp3 = A_Raise}},
+    {"Punch", {.acp3 = A_Punch}},
+    {"ReFire", {.acp3 = A_ReFire}},
+    {"FirePistol", {.acp3 = A_FirePistol}},
+    {"Light1", {.acp3 = A_Light1}},
+    {"FireShotgun", {.acp3=A_FireShotgun}},
+    {"Light2", {.acp3=A_Light2}},
+    {"FireShotgun2", {.acp3 = A_FireShotgun2}},
+    {"CheckReload", {.acp3 = A_CheckReload}},
+    {"OpenShotgun2", {.acp3 = A_OpenShotgun2}},
+    {"LoadShotgun2", {.acp3 = A_LoadShotgun2}},
+    {"CloseShotgun2", {.acp3 = A_CloseShotgun2}},
+    {"FireCGun", {.acp3 = A_FireCGun}},
+    {"GunFlash", {.acp3 = A_GunFlash}},
+    {"FireMissile", {.acp3 = A_FireMissile}},
+    {"Saw", {.acp3 = A_Saw}},
+    {"FirePlasma", {.acp3 = A_FirePlasma}},
+    {"BFGsound", {.acp3 = A_BFGsound}},
+    {"FireBFG", {.acp3 = A_FireBFG}},
+    {"BFGSpray", {.acp1 = A_BFGSpray}},
+    {"Explode", {.acp1=A_Explode}},
+    {"Pain", {.acp1=A_Pain}},
+    {"PlayerScream", {.acp1=A_PlayerScream}},
+    {"Fall", {.acp1=A_Fall}},
+    {"XScream", {.acp1=A_XScream}},
+    {"Look", {.acp1=A_Look}},
+    {"Chase", {.acp1=A_Chase}},
+    {"FaceTarget", {.acp1=A_FaceTarget}},
     {"PosAttack", {.acp1 = A_PosAttack}},
-    {"Scream", {A_Scream}},
+    {"Scream", {.acp1=A_Scream}},
     {"SPosAttack", {.acp1 = A_SPosAttack}},
-    {"VileChase", {A_VileChase}},
-    {"VileStart", {A_VileStart}},
-    {"VileTarget", {A_VileTarget}},
-    {"VileAttack", {A_VileAttack}},
-    {"StartFire", {A_StartFire}},
-    {"Fire", {A_Fire}},
-    {"FireCrackle", {A_FireCrackle}},
-    {"Tracer", {A_Tracer}},
-    {"SkelWhoosh", {A_SkelWhoosh}},
-    {"SkelFist", {A_SkelFist}},
-    {"SkelMissile", {A_SkelMissile}},
-    {"FatRaise", {A_FatRaise}},
-    {"FatAttack1", {A_FatAttack1}},
-    {"FatAttack2", {A_FatAttack2}},
-    {"FatAttack3", {A_FatAttack3}},
-    {"BossDeath", {A_BossDeath}},
+    {"VileChase", {.acp1=A_VileChase}},
+    {"VileStart", {.acp1=A_VileStart}},
+    {"VileTarget", {.acp1 = A_VileTarget}},
+    {"VileAttack", {.acp1 = A_VileAttack}},
+    {"StartFire", {.acp1=A_StartFire}},
+    {"Fire", {.acp1=A_Fire}},
+    {"FireCrackle", {.acp1=A_FireCrackle}},
+    {"Tracer", {.acp1=A_Tracer}},
+    {"SkelWhoosh", {.acp1 = A_SkelWhoosh}},
+    {"SkelFist", {.acp1 = A_SkelFist}},
+    {"SkelMissile", {.acp1=A_SkelMissile}},
+    {"FatRaise", {.acp1=A_FatRaise}},
+    {"FatAttack1", {.acp1= A_FatAttack1}},
+    {"FatAttack2", {.acp1 = A_FatAttack2}},
+    {"FatAttack3", {.acp1 = A_FatAttack3}},
+    {"BossDeath",  {.acp1 = A_BossDeath}},
     {"CPosAttack", {.acp1 = A_CPosAttack}},
-    {"CPosRefire", {A_CPosRefire}},
-    {"TroopAttack", {A_TroopAttack}},
-    {"SargAttack", {A_SargAttack}},
-    {"HeadAttack", {A_HeadAttack}},
-    {"BruisAttack", {.acp1=A_BruisAttack}},
-    {"SkullAttack", {A_SkullAttack}},
-    {"Metal", {A_Metal}},
-    {"SpidRefire", {A_SpidRefire}},
-    {"BabyMetal", {A_BabyMetal}},
-    {"BspiAttack", {A_BspiAttack}},
-    {"Hoof", {A_Hoof}},
-    {"CyberAttack", {A_CyberAttack}},
-    {"PainAttack", {A_PainAttack}},
-    {"PainDie", {A_PainDie}},
-    {"KeenDie", {A_KeenDie}},
-    {"BrainPain", {A_BrainPain}},
-    {"BrainScream", {A_BrainScream}},
-    {"BrainDie", {A_BrainDie}},
-    {"BrainAwake", {A_BrainAwake}},
-    {"BrainSpit", {A_BrainSpit}},
-    {"SpawnSound", {A_SpawnSound}},
-    {"SpawnFly", {A_SpawnFly}},
-    {"BrainExplode", {A_BrainExplode}},
+    {"CPosRefire", {.acp1 = A_CPosRefire}},
+    {"TroopAttack", {.acp1 = A_TroopAttack}},
+    {"SargAttack", {.acp1 = A_SargAttack}},
+    {"HeadAttack", {.acp1 = A_HeadAttack}},
+    {"BruisAttack", {.acp1 = A_BruisAttack}},
+    {"SkullAttack", {.acp1 = A_SkullAttack}},
+    {"Metal", {.acp1 = A_Metal}},
+    {"SpidRefire", {.acp1=A_SpidRefire}},
+    {"BabyMetal", {.acp1=A_BabyMetal}},
+    {"BspiAttack", {.acp1 = A_BspiAttack}},
+    {"Hoof", {.acp1=A_Hoof}},
+    {"CyberAttack", {.acp1 = A_CyberAttack}},
+    {"PainAttack", {.acp1 = A_PainAttack}},
+    {"PainDie", {.acp1=A_PainDie}},
+    {"KeenDie", {.acp1=A_KeenDie}},
+    {"BrainPain", {.acp1=A_BrainPain}},
+    {"BrainScream", {.acp1=A_BrainScream}},
+    {"BrainDie", {.acp1=A_BrainDie}},
+    {"BrainAwake", {.acp1=A_BrainAwake}},
+    {"BrainSpit", {.acp1=A_BrainSpit}},
+    {"SpawnSound", {.acp1=A_SpawnSound}},
+    {"SpawnFly", {.acp1=A_SpawnFly}},
+    {"BrainExplode", {.acp1=A_BrainExplode}},
     // [crispy] additional BOOM and MBF states, sprites and code pointers
-    {"Stop", {A_Stop}},
-    {"Die", {A_Die}},
-    {"FireOldBFG", {A_FireOldBFG}},
-    {"Detonate", {A_Detonate}},
-    {"Mushroom", {A_Mushroom}},
-    {"BetaSkullAttack", {A_BetaSkullAttack}},
+    {"Stop", {.acp1 = A_Stop}},
+    {"Die", {.acp1 = A_Die}},
+    {"FireOldBFG", {.acp3=A_FireOldBFG}},
+    {"Detonate", {.acp1=A_Detonate}},
+    {"Mushroom", {.acp1=A_Mushroom}},
+    {"BetaSkullAttack", {.acp1=A_BetaSkullAttack}},
     // [crispy] more MBF code pointers
-    {"Spawn", {A_Spawn}},
-    {"Turn", {A_Turn}},
-    {"Face", {A_Face}},
-    {"Scratch", {A_Scratch}},
-    {"PlaySound", {A_PlaySound}},
+    {"Spawn", {.acp1=A_Spawn}},
+    {"Turn", {.acp1=A_Turn}},
+    {"Face", {.acp1=A_Face}},
+    {"Scratch", {.acp1=A_Scratch}},
+    {"PlaySound", {.acp1=A_PlaySound}},
     {"RandomJump", {.acp3 =  A_RandomJump}},
-    {"LineEffect", {A_LineEffect}},
+    {"LineEffect", {.acp1=A_LineEffect}},
     {"nullptr", {nullptr}},
 };
 

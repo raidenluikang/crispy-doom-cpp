@@ -80,8 +80,9 @@
 
 #include "d_main.hpp"
 
-#include "strife_icon.c"
+#include "strife_icon.cpp"
 
+#include "../../utils/memory.hpp"
 //
 // D-DoomLoop()
 // Not a globally visible function,
@@ -155,7 +156,7 @@ static boolean main_loop_started = false;
 static int comport = 0;
 
 // fraggle 06/03/11 [STRIFE]: Multiplayer nickname?
-char *nickname = nullptr;
+const char *nickname = nullptr;
 
 // [crispy] track screen wipe
 boolean screenwipe;
@@ -210,7 +211,7 @@ void D_Display (void)
     static  boolean             inhelpscreensstate = false;
     static  boolean             popupactivestate = false; // [STRIFE]
     static  boolean             fullscreen = false;
-    static  gamestate_t         oldgamestate = -1;
+    static  gamestate_t         oldgamestate = INVALID_GAMESTATE ;
     static  int                 borderdrawcount;
     int                         nowtime;
     int                         tics;
@@ -229,7 +230,7 @@ void D_Display (void)
     if (setsizeneeded)
     {
         R_ExecuteSetViewSize ();
-        oldgamestate = -1;                      // force background redraw
+        oldgamestate = INVALID_GAMESTATE;                      // force background redraw
         borderdrawcount = 3;
     }
 
@@ -731,13 +732,13 @@ void D_DoAdvanceDemo (void)
         gamestate = GS_DEMOSCREEN;
         pagename = DEH_String("PANEL0");
         S_StartSound(nullptr, sfx_rb2act);
-        wipegamestate = -1;
+        wipegamestate = INVALID_GAMESTATE;
         break;
     case 0: // Rogue logo
         pagetic = 4*TICRATE;
         gamestate = GS_DEMOSCREEN;
         pagename = DEH_String("RGELOGO");
-        wipegamestate = -1;
+        wipegamestate = INVALID_GAMESTATE;
         break;
     case 1:
         pagetic = 7*TICRATE;              // The comet struck our planet without
@@ -780,7 +781,7 @@ void D_DoAdvanceDemo (void)
         pagetic = 9*TICRATE;
         gamestate = GS_DEMOSCREEN;
         pagename = DEH_String("TITLEPIC");
-        wipegamestate = -1;
+        wipegamestate = INVALID_GAMESTATE;
         break;
     case 8: // demo
         ClearTmp();
@@ -791,13 +792,13 @@ void D_DoAdvanceDemo (void)
         pagetic = 6*TICRATE;
         gamestate = GS_DEMOSCREEN;
         pagename = DEH_String("vellogo");
-        wipegamestate = -1;
+        wipegamestate = INVALID_GAMESTATE;
         break;
     case 10: // credits
         gamestate = GS_DEMOSCREEN;
         pagetic = 12*TICRATE;
         pagename = DEH_String("CREDIT");
-        wipegamestate = -1;
+        wipegamestate = INVALID_GAMESTATE;
         break;
     default:
         break;
@@ -861,11 +862,12 @@ static const char *banners[] =
 // Otherwise, use the name given
 // 
 
-static char *GetGameName(char *gamename)
+static const char *GetGameName(const char *gamename_arg)
 {
     size_t i;
     const char *deh_sub;
     
+
     for (i=0; i<arrlen(banners); ++i)
     {
         // Has the banner been replaced?
@@ -882,7 +884,9 @@ static char *GetGameName(char *gamename)
             // We also need to cut off spaces to get the basic name
 
             gamename_size = strlen(deh_sub) + 10;
-            gamename = zmalloc<decltype(            gamename)>(gamename_size, PU_STATIC, 0);
+            
+            char* gamename;
+            gamename = zmalloc<decltype(gamename)>(gamename_size, PU_STATIC, 0);
             M_snprintf(gamename, gamename_size, deh_sub,
                        STRIFE_VERSION / 100, STRIFE_VERSION % 100);
 
@@ -898,7 +902,7 @@ static char *GetGameName(char *gamename)
         }
     }
 
-    return gamename;
+    return gamename_arg;
 }
 
 //
@@ -919,8 +923,8 @@ void D_IdentifyVersion(void)
     // * if strife0.wad is found, set isdemoversion = true
 
     // Make sure gamemode is set up correctly
-    gamemode = commercial;
-    gamemission = strife;
+    gamemode = GameMode_t::commercial;
+    gamemission = GameMission_t::strife;
     isregistered = true;
 
     // Load voices.wad 
@@ -935,7 +939,7 @@ void D_IdentifyVersion(void)
         {
             const char *iwad = myargv[p + 1];
             size_t  len      = strlen(iwad) + 1;
-            char   *iwadpath = zmalloc<decltype(            char   *iwadpath)>(len, PU_STATIC, nullptr);
+            char   *iwadpath = zmalloc<char*>(len, PU_STATIC, nullptr);
             char   *voiceswad;
 
             // extract base path of IWAD parameter
@@ -1017,13 +1021,13 @@ static void InitTitleString(void)
 {
     switch (gameversion)
     {
-    case exe_strife_1_2:
+    case GameVersion_t::exe_strife_1_2:
         DEH_snprintf(title, sizeof(title), "                      "
                                            "STRIFE:  Quest for the Sigil v1.2"
                                            "                                  "
                                            );
         break;
-    case exe_strife_1_31:
+    case GameVersion_t::exe_strife_1_31:
     default:
         DEH_snprintf(title, sizeof(title), "                      "
                                            "STRIFE:  Quest for the Sigil v1.31"
@@ -1097,9 +1101,9 @@ static struct
     const char *cmdline;
     GameVersion_t version;
 } gameversions[] = {
-    { "Strife 1.2",          "1.2",       exe_strife_1_2  },
-    { "Strife 1.31",         "1.31",      exe_strife_1_31 },
-    { nullptr,                  nullptr,        0               }
+    { "Strife 1.2",          "1.2",       GameVersion_t::exe_strife_1_2  },
+    { "Strife 1.31",         "1.31",      GameVersion_t::exe_strife_1_31 },
+    { nullptr,                  nullptr,        GameVersion_t{0}       }
 };
 
 // Initialize the game version
@@ -1150,7 +1154,7 @@ static void InitGameVersion(void)
     }
     else
     {
-        gameversion = exe_strife_1_31;
+        gameversion = GameVersion_t::exe_strife_1_31;
     }
 }
 
@@ -1247,8 +1251,8 @@ static void D_DrawText(const char *string, int bc, int fc)
     }
 
     // Set text color
-    TXT_BGColor(bc, 0);
-    TXT_FGColor(fc);
+    TXT_BGColor(txt_color_t{bc}, 0);
+    TXT_FGColor(txt_color_t{fc});
 
     // Get column position
     column = D_GetCursorColumn();
@@ -1840,7 +1844,7 @@ void D_DoomMain (void)
     if(devparm) // [STRIFE] Devparm only
         DEH_printf("W_Init: Init WADfiles.\n");
     D_AddFile(iwadfile);
-    W_CheckCorrectIWAD(strife);
+    W_CheckCorrectIWAD(GameMission_t::strife);
     D_IdentifyVersion();
 
     //!
@@ -1886,7 +1890,7 @@ void D_DoomMain (void)
 
     // [crispy] add wad files from autoload PWAD directories
 
-    if (!M_ParmExists("-noautoload") && gamemode != shareware)
+    if (!M_ParmExists("-noautoload") && gamemode != GameMode_t::shareware)
     {
         int i;
 
@@ -1976,7 +1980,7 @@ void D_DoomMain (void)
 
     // [crispy] process .deh files from PWADs autoload directories
 
-    if (!M_ParmExists("-noautoload") && gamemode != shareware)
+    if (!M_ParmExists("-noautoload") && gamemode != GameMode_t::shareware)
     {
         int i;
 
@@ -2044,14 +2048,14 @@ void D_DoomMain (void)
 
         // haleyjd 08/22/2010: [STRIFE] Changed string to match binary
         // STRIFE-FIXME: Needs to test isdemoversion variable
-        if ( gamemode == shareware)
+        if ( gamemode == GameMode_t::shareware)
             I_Error(DEH_String("\nYou cannot -file with the demo "
                                "version. You must buy the real game!"));
 
         // Check for fake IWAD with right name,
         // but w/o all the lumps of the registered version. 
         // STRIFE-FIXME: Needs to test isregistered variable
-        if (gamemode == registered)
+        if (gamemode == GameMode_t::registered)
             for (i = 0; i < 3; i++)
                 if (W_CheckNumForName(name[i])<0)
                     I_Error(DEH_String("\nThis is not the registered version."));
@@ -2062,7 +2066,7 @@ void D_DoomMain (void)
     // get skill / episode / map from parms
 
     // [crispy] set defaultskill (Strife default is SKILL_HNTR)
-    startskill = (crispy->defaultskill + SKILL_HNTR) % NUM_SKILLS;
+    startskill = skill_t{ (crispy->defaultskill + SKILL_HNTR) % NUM_SKILLS };
 
     startepisode = 1;
     startmap = 1;
@@ -2081,7 +2085,8 @@ void D_DoomMain (void)
 
     if (p)
     {
-        startskill = myargv[p+1][0]-'1';
+        int ivalue = static_cast<int>( myargv[p+1][0] ) - static_cast<int>( '1' );
+        startskill = skill_t{ivalue};
         autostart = true;
     }
 
@@ -2147,7 +2152,7 @@ void D_DoomMain (void)
 
     if (p)
     {
-        if (gamemode == commercial)
+        if (gamemode == GameMode_t::commercial)
             startmap = atoi (myargv[p+1]);
         else
         {

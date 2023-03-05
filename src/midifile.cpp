@@ -731,7 +731,7 @@ void MIDI_RestartAtLoopPoint(midi_track_iter_t *iter)
 
 #ifdef TEST
 
-static char *MIDI_EventTypeToString(midi_event_type_t event_type)
+static const char *MIDI_EventTypeToString(midi_event_type_t event_type)
 {
     switch (event_type)
     {

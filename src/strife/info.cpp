@@ -67,131 +67,132 @@ const char *sprnames[NUMSPRITES+1] =
     "TELP", "MONI", "STEL", "STLA", "STLE", "HUGE", "STLG", nullptr
 };
 
-
+struct player_t;
+struct pspdef_t;
 // Doesn't work with g++, needs actionf_p1
 // villsa [STRIFE]
-void A_Look();
-void A_RandomWalk();
-void A_FriendLook();
-void A_Listen();
-void A_Chase();
-void A_FaceTarget();
-void A_PeasantPunch();
-void A_ReaverAttack();
-void A_BulletAttack();
-void A_CheckTargetVisible();
-void A_SentinelAttack();
-void A_StalkerThink();
-void A_StalkerSetLook();
-void A_StalkerDrop();
-void A_StalkerScratch();
-void A_FloatWeave();
-void A_RobotMelee();
-void A_TemplarMauler();
-void A_CrusaderAttack();
-void A_CrusaderLeft();
-void A_CrusaderRight();
-void A_CheckTargetVisible2();
-void A_InqFlyCheck();
-void A_InqGrenade();
-void A_InqTakeOff();
-void A_InqFly();
-void A_FireSigilWeapon();
-void A_ProgrammerAttack();
-void A_Sigil_A_Action();
-void A_SpectreEAttack();
-void A_SpectreCAttack();
-void A_AlertSpectreC();
-void A_Sigil_E_Action();
-void A_SigilTrail();
-void A_SpectreDAttack();
-void A_FireSigilEOffshoot();
-void A_ShadowOff();
-void A_ModifyVisibility();
-void A_ShadowOn();
-void A_SetTLOptions();
-void A_BossMeleeAtk();
-void A_BishopAttack();
-void A_FireHookShot();
-void A_FireChainShot();
-void A_MissileSmoke();
-void A_SpawnSparkPuff();
-void A_Tracer();
-void A_ProgrammerMelee();
-void A_Scream();
-void A_XScream();
-void A_Pain();
-void A_PeasantCrash();
-void A_Fall();
-void A_HideZombie();
-void A_MerchantPain();
-void A_ProgrammerDie();
-void A_InqTossArm();
-void A_SpawnSpectreB();
-void A_SpawnSpectreD();
-void A_SpawnSpectreE();
-void A_SpawnEntity();
-void A_EntityDeath();
-void A_SpawnZombie();
-void A_ZombieInSpecialSector();
-void A_CrystalExplode();
-void A_QuestMsg();
-void A_ExtraLightOff();
-void A_CrystalRadiusAtk();
-void A_DeathExplode5();
-void A_DeathExplode1();
-void A_DeathExplode2();
-void A_DeathExplode3();
-void A_RaiseAlarm();
-void A_MissileTick();
-void A_SpawnGrenadeFire();
-void A_NodeChunk();
-void A_HeadChunk();
-void A_BurnSpread();
-void A_AcolyteSpecial();
-void A_BossDeath();
-void A_InqChase();
-void A_StalkerChase();
-void A_PlayerScream();
-void A_TeleportBeacon();
-void A_BodyParts();
-void A_ClaxonBlare();
-void A_ActiveSound();
-void A_ClearSoundTarget();
-void A_DropBurnFlesh();
-void A_FlameDeath();
-void A_ClearForceField();
-void A_WeaponReady();
-void A_ReFire();
-void A_CheckReload();
-void A_Lower();
-void A_Raise();
-void A_GunFlash();
-void A_Punch();
-void A_FireFlameThrower();
-void A_FireMissile();
-void A_FireMauler2();
-void A_FireGrenade();
-void A_FireElectricBolt();
-void A_FirePoisonBolt();
-void A_FireRifle();
-void A_FireMauler1();
-void A_SigilSound();
-void A_FireSigil();
-void A_GunFlashThinker();
-void A_Light0();
-void A_Light1();
-void A_Light2();
-void A_SigilShock();
-void A_TorpedoExplode();
-void A_MaulerSound();
+void A_Look(mobj_t* actor);
+void A_RandomWalk(mobj_t* actor);
+void A_FriendLook(mobj_t* actor);
+void A_Listen(mobj_t* actor);
+void A_Chase(mobj_t*	actor);
+void A_FaceTarget(mobj_t* actor);
+void A_PeasantPunch(mobj_t* actor);
+void A_ReaverAttack(mobj_t* actor);
+void A_BulletAttack(mobj_t* actor);
+void A_CheckTargetVisible(mobj_t* actor);
+void A_SentinelAttack(mobj_t* actor);
+void A_StalkerThink(mobj_t* actor);
+void A_StalkerSetLook(mobj_t* actor);
+void A_StalkerDrop(mobj_t* actor);
+void A_StalkerScratch(mobj_t* actor);
+void A_FloatWeave(mobj_t* actor);
+void A_RobotMelee(mobj_t* actor);
+void A_TemplarMauler(mobj_t* actor);
+void A_CrusaderAttack(mobj_t* actor);
+void A_CrusaderLeft(mobj_t* actor);
+void A_CrusaderRight(mobj_t* actor);
+void A_CheckTargetVisible2(mobj_t* actor);
+void A_InqFlyCheck(mobj_t* actor);
+void A_InqGrenade(mobj_t* actor);
+void A_InqTakeOff(mobj_t* actor);
+void A_InqFly(mobj_t* actor);
+void A_FireSigilWeapon(mobj_t* actor);
+void A_ProgrammerAttack(mobj_t* actor);
+void A_Sigil_A_Action(mobj_t* actor);
+void A_SpectreEAttack(mobj_t* actor);
+void A_SpectreCAttack(mobj_t* actor);
+void A_AlertSpectreC(mobj_t* actor);
+void A_Sigil_E_Action(mobj_t* actor);
+void A_SigilTrail(mobj_t* actor);
+void A_SpectreDAttack(mobj_t* actor);
+void A_FireSigilEOffshoot(mobj_t* actor);
+void A_ShadowOff(mobj_t* actor);
+void A_ModifyVisibility(mobj_t* actor);
+void A_ShadowOn(mobj_t* actor);
+void A_SetTLOptions(mobj_t* actor);
+void A_BossMeleeAtk(mobj_t* actor);
+void A_BishopAttack(mobj_t* actor);
+void A_FireHookShot(mobj_t* actor);
+void A_FireChainShot(mobj_t* actor);
+void A_MissileSmoke(mobj_t* actor);
+void A_SpawnSparkPuff(mobj_t* actor);
+void A_Tracer(mobj_t* actor);
+void A_ProgrammerMelee(mobj_t* actor);
+void A_Scream(mobj_t* actor);
+void A_XScream(mobj_t*);
+void A_Pain(mobj_t* actor);
+void A_PeasantCrash(mobj_t* actor);
+void A_Fall(mobj_t* actor);
+void A_HideZombie(mobj_t* actor);
+void A_MerchantPain(mobj_t* actor);
+void A_ProgrammerDie(mobj_t* actor);
+void A_InqTossArm(mobj_t* actor);
+void A_SpawnSpectreB(mobj_t* actor);
+void A_SpawnSpectreD(mobj_t* actor);
+void A_SpawnSpectreE(mobj_t* actor);
+void A_SpawnEntity(mobj_t* actor);
+void A_EntityDeath(mobj_t* actor);
+void A_SpawnZombie(mobj_t* actor);
+void A_ZombieInSpecialSector(mobj_t* actor);
+void A_CrystalExplode(mobj_t* actor);
+void A_QuestMsg(mobj_t* actor);
+void A_ExtraLightOff(mobj_t* actor);
+void A_CrystalRadiusAtk(mobj_t* actor);
+void A_DeathExplode5(mobj_t* actor);
+void A_DeathExplode1(mobj_t* actor);
+void A_DeathExplode2(mobj_t* actor);
+void A_DeathExplode3(mobj_t* actor);
+void A_RaiseAlarm(mobj_t* actor);
+void A_MissileTick(mobj_t* actor);
+void A_SpawnGrenadeFire(mobj_t* actor);
+void A_NodeChunk(mobj_t* actor);
+void A_HeadChunk(mobj_t* actor);
+void A_BurnSpread(mobj_t* actor);
+void A_AcolyteSpecial(mobj_t* actor);
+void A_BossDeath(mobj_t* actor);
+void A_InqChase(mobj_t* actor);
+void A_StalkerChase(mobj_t* actor);
+void A_PlayerScream(mobj_t* mo);
+void A_TeleportBeacon(mobj_t* actor);
+void A_BodyParts(mobj_t* actor);
+void A_ClaxonBlare(mobj_t* actor);
+void A_ActiveSound(mobj_t* actor);
+void A_ClearSoundTarget(mobj_t* actor);
+void A_DropBurnFlesh(mobj_t* actor);
+void A_FlameDeath(mobj_t* actor);
+void A_ClearForceField(mobj_t* actor);
+void A_WeaponReady(player_t* player, pspdef_t*	psp);
+void A_ReFire(player_t* player, pspdef_t*	psp);
+void A_CheckReload(player_t* player, pspdef_t* psp);
+void A_Lower(player_t* player, pspdef_t*	psp);
+void A_Raise(player_t*	player, pspdef_t*	psp);
+void A_GunFlash( player_t*	player, pspdef_t*	psp);
+void A_Punch(player_t* player, pspdef_t* psp);
+void A_FireFlameThrower(player_t* player, pspdef_t* psp);
+void A_FireMissile(player_t* player, pspdef_t* psp);
+void A_FireMauler2(player_t* player, pspdef_t* pspr);
+void A_FireGrenade(player_t* player, pspdef_t* pspr);
+void A_FireElectricBolt(player_t* player, pspdef_t* pspr);
+void A_FirePoisonBolt(player_t* player, pspdef_t* pspr);
+void A_FireRifle(player_t* player, pspdef_t* pspr);
+void A_FireMauler1(player_t* player, pspdef_t* pspr);
+void A_SigilSound(player_t* player, pspdef_t* pspr);
+void A_FireSigil(player_t* player, pspdef_t* pspr);
+void A_GunFlashThinker(player_t* player, pspdef_t* pspr);
+void A_Light0(player_t *player, pspdef_t *psp);
+void A_Light1(player_t *player, pspdef_t *psp);
+void A_Light2(player_t *player, pspdef_t *psp);
+void A_SigilShock(player_t *player, pspdef_t *psp);
+void A_TorpedoExplode(mobj_t* actor);
+void A_MaulerSound(player_t *player, pspdef_t *psp);
 
 // villsa [STRIFE]
 state_t states[NUMSTATES] =
 {
 
 /*S_NULL*/          { SPR_PLAY, 0, -1, { nullptr }, S_NULL },      //00
-/*S_PNCH_00*/       { SPR_PNCH, 0, 0, { A_Light0 }, S_NULL },       //01
+/*S_PNCH_00*/       { SPR_PNCH, 0, 0, {.acp2 = A_Light0 }, S_NULL },       //01
 /*S_WAVE_00*/       { SPR_WAVE, 32768, 3, { nullptr }, S_WAVE_01 },        //02
 /*S_WAVE_01*/       { SPR_WAVE, 32769, 3, { nullptr }, S_WAVE_02 },        //03
 /*S_WAVE_02*/       { SPR_WAVE, 32770, 3, { nullptr }, S_WAVE_03 },        //04
@@ -203,124 +204,124 @@ state_t states[NUMSTATES] =
 /*S_TRGT_00*/       { SPR_TRGT, 0, -1, { nullptr }, S_NULL },      //10
 /*S_TRGT_01*/       { SPR_TRGT, 1, -1, { nullptr }, S_NULL },      //11
 /*S_TRGT_02*/       { SPR_TRGT, 2, -1, { nullptr }, S_NULL },      //12
-/*S_PNCH_01*/       { SPR_PNCH, 0, 1, { A_WeaponReady }, S_PNCH_01 },       //13
-/*S_PNCH_02*/       { SPR_PNCH, 0, 1, { A_Lower }, S_PNCH_02 },     //14
-/*S_PNCH_03*/       { SPR_PNCH, 0, 1, { A_Raise }, S_PNCH_03 },     //15
+/*S_PNCH_01*/       { SPR_PNCH, 0, 1, {.acp2= A_WeaponReady }, S_PNCH_01 },       //13
+/*S_PNCH_02*/       { SPR_PNCH, 0, 1, {.acp2= A_Lower }, S_PNCH_02 },     //14
+/*S_PNCH_03*/       { SPR_PNCH, 0, 1, {.acp2= A_Raise }, S_PNCH_03 },     //15
 /*S_PNCH_04*/       { SPR_PNCH, 1, 4, { nullptr }, S_PNCH_05 },        //16
-/*S_PNCH_05*/       { SPR_PNCH, 2, 4, { A_Punch }, S_PNCH_06 },     //17
+/*S_PNCH_05*/       { SPR_PNCH, 2, 4, {.acp2= A_Punch }, S_PNCH_06 },     //17
 /*S_PNCH_06*/       { SPR_PNCH, 3, 5, { nullptr }, S_PNCH_07 },        //18
 /*S_PNCH_07*/       { SPR_PNCH, 2, 4, { nullptr }, S_PNCH_08 },        //19
-/*S_PNCH_08*/       { SPR_PNCH, 1, 5, { A_ReFire }, S_PNCH_01 },        //20
-/*S_XBOW_00*/       { SPR_XBOW, 0, 1, { A_WeaponReady }, S_XBOW_00 },       //21
-/*S_XBOW_01*/       { SPR_XBOW, 0, 1, { A_Lower }, S_XBOW_01 },     //22
-/*S_XBOW_02*/       { SPR_XBOW, 0, 1, { A_Raise }, S_XBOW_02 },     //23
-/*S_XBOW_03*/       { SPR_XBOW, 0, 3, { A_GunFlashThinker }, S_XBOW_04 },       //24
-/*S_XBOW_04*/       { SPR_XBOW, 1, 6, { A_FireElectricBolt }, S_XBOW_05 },      //25
+/*S_PNCH_08*/       { SPR_PNCH, 1, 5, {.acp2= A_ReFire }, S_PNCH_01 },        //20
+/*S_XBOW_00*/       { SPR_XBOW, 0, 1, {.acp2= A_WeaponReady }, S_XBOW_00 },       //21
+/*S_XBOW_01*/       { SPR_XBOW, 0, 1, {.acp2 = A_Lower }, S_XBOW_01 },     //22
+/*S_XBOW_02*/       { SPR_XBOW, 0, 1, {.acp2= A_Raise }, S_XBOW_02 },     //23
+/*S_XBOW_03*/       { SPR_XBOW, 0, 3, {.acp2=A_GunFlashThinker }, S_XBOW_04 },       //24
+/*S_XBOW_04*/       { SPR_XBOW, 1, 6, {.acp2= A_FireElectricBolt }, S_XBOW_05 },      //25
 /*S_XBOW_05*/       { SPR_XBOW, 2, 4, { nullptr }, S_XBOW_06 },        //26
 /*S_XBOW_06*/       { SPR_XBOW, 3, 6, { nullptr }, S_XBOW_07 },        //27
 /*S_XBOW_07*/       { SPR_XBOW, 4, 3, { nullptr }, S_XBOW_08 },        //28
 /*S_XBOW_08*/       { SPR_XBOW, 5, 5, { nullptr }, S_XBOW_09 },        //29
-/*S_XBOW_09*/       { SPR_XBOW, 6, 5, { A_CheckReload }, S_XBOW_00 },       //30
+/*S_XBOW_09*/       { SPR_XBOW, 6, 5, {.acp2 = A_CheckReload }, S_XBOW_00 },       //30
 /*S_XBOW_10*/       { SPR_XBOW, 10, 5, { nullptr }, S_XBOW_11 },       //31
 /*S_XBOW_11*/       { SPR_XBOW, 11, 5, { nullptr }, S_XBOW_12 },       //32
 /*S_XBOW_12*/       { SPR_XBOW, 12, 5, { nullptr }, S_XBOW_10 },       //33
-/*S_XBOW_13*/       { SPR_XBOW, 7, 1, { A_WeaponReady }, S_XBOW_13 },       //34
-/*S_XBOW_14*/       { SPR_XBOW, 7, 1, { A_Lower }, S_XBOW_14 },     //35
-/*S_XBOW_15*/       { SPR_XBOW, 7, 1, { A_Raise }, S_XBOW_15 },     //36
+/*S_XBOW_13*/       { SPR_XBOW, 7, 1, {.acp2= A_WeaponReady }, S_XBOW_13 },       //34
+/*S_XBOW_14*/       { SPR_XBOW, 7, 1, {.acp2= A_Lower }, S_XBOW_14 },     //35
+/*S_XBOW_15*/       { SPR_XBOW, 7, 1, { .acp2=A_Raise }, S_XBOW_15 },     //36
 /*S_XBOW_16*/       { SPR_XBOW, 7, 3, { nullptr }, S_XBOW_17 },        //37
-/*S_XBOW_17*/       { SPR_XBOW, 1, 6, { A_FirePoisonBolt }, S_XBOW_18 },        //38
+/*S_XBOW_17*/       { SPR_XBOW, 1, 6, {.acp2= A_FirePoisonBolt }, S_XBOW_18 },        //38
 /*S_XBOW_18*/       { SPR_XBOW, 2, 4, { nullptr }, S_XBOW_19 },        //39
 /*S_XBOW_19*/       { SPR_XBOW, 3, 6, { nullptr }, S_XBOW_20 },        //40
 /*S_XBOW_20*/       { SPR_XBOW, 4, 3, { nullptr }, S_XBOW_21 },        //41
 /*S_XBOW_21*/       { SPR_XBOW, 8, 5, { nullptr }, S_XBOW_22 },        //42
-/*S_XBOW_22*/       { SPR_XBOW, 9, 5, { A_CheckReload }, S_XBOW_13 },       //43
-/*S_MMIS_00*/       { SPR_MMIS, 0, 1, { A_WeaponReady }, S_MMIS_00 },       //44
-/*S_MMIS_01*/       { SPR_MMIS, 0, 1, { A_Lower }, S_MMIS_01 },     //45
-/*S_MMIS_02*/       { SPR_MMIS, 0, 1, { A_Raise }, S_MMIS_02 },     //46
-/*S_MMIS_03*/       { SPR_MMIS, 0, 4, { A_FireMissile }, S_MMIS_04 },       //47
-/*S_MMIS_04*/       { SPR_MMIS, 1, 4, { A_Light1 }, S_MMIS_05 },        //48
+/*S_XBOW_22*/       { SPR_XBOW, 9, 5, {.acp2= A_CheckReload }, S_XBOW_13 },       //43
+/*S_MMIS_00*/       { SPR_MMIS, 0, 1, {.acp2= A_WeaponReady }, S_MMIS_00 },       //44
+/*S_MMIS_01*/       { SPR_MMIS, 0, 1, {.acp2= A_Lower }, S_MMIS_01 },     //45
+/*S_MMIS_02*/       { SPR_MMIS, 0, 1, {.acp2= A_Raise }, S_MMIS_02 },     //46
+/*S_MMIS_03*/       { SPR_MMIS, 0, 4, {.acp2= A_FireMissile }, S_MMIS_04 },       //47
+/*S_MMIS_04*/       { SPR_MMIS, 1, 4, { .acp2 = A_Light1 }, S_MMIS_05 },        //48
 /*S_MMIS_05*/       { SPR_MMIS, 32770, 5, { nullptr }, S_MMIS_06 },        //49
-/*S_MMIS_06*/       { SPR_MMIS, 32771, 2, { A_Light2 }, S_MMIS_07 },        //50
+/*S_MMIS_06*/       { SPR_MMIS, 32771, 2, {.acp2= A_Light2 }, S_MMIS_07 },        //50
 /*S_MMIS_07*/       { SPR_MMIS, 32772, 2, { nullptr }, S_MMIS_08 },        //51
-/*S_MMIS_08*/       { SPR_MMIS, 32773, 2, { A_Light0 }, S_MMIS_09 },        //52
-/*S_MMIS_09*/       { SPR_MMIS, 5, 0, { A_ReFire }, S_MMIS_00 },        //53
-/*S_RIFG_00*/       { SPR_RIFG, 0, 1, { A_WeaponReady }, S_RIFG_00 },       //54
-/*S_RIFG_01*/       { SPR_RIFG, 1, 1, { A_Lower }, S_RIFG_01 },     //55
-/*S_RIFG_02*/       { SPR_RIFG, 0, 1, { A_Raise }, S_RIFG_02 },     //56
-/*S_RIFF_00*/       { SPR_RIFF, 0, 3, { A_FireRifle }, S_RIFF_01 },     //57
-/*S_RIFF_01*/       { SPR_RIFF, 1, 3, { A_FireRifle }, S_RIFG_03 },     //58
-/*S_RIFG_03*/       { SPR_RIFG, 3, 3, { A_FireRifle }, S_RIFG_04 },     //59
-/*S_RIFG_04*/       { SPR_RIFG, 2, 0, { A_ReFire }, S_RIFG_05 },        //60
+/*S_MMIS_08*/       { SPR_MMIS, 32773, 2, {.acp2= A_Light0 }, S_MMIS_09 },        //52
+/*S_MMIS_09*/       { SPR_MMIS, 5, 0, {.acp2= A_ReFire }, S_MMIS_00 },        //53
+/*S_RIFG_00*/       { SPR_RIFG, 0, 1, {.acp2= A_WeaponReady }, S_RIFG_00 },       //54
+/*S_RIFG_01*/       { SPR_RIFG, 1, 1, {.acp2= A_Lower }, S_RIFG_01 },     //55
+/*S_RIFG_02*/       { SPR_RIFG, 0, 1, {.acp2= A_Raise }, S_RIFG_02 },     //56
+/*S_RIFF_00*/       { SPR_RIFF, 0, 3, {.acp2= A_FireRifle }, S_RIFF_01 },     //57
+/*S_RIFF_01*/       { SPR_RIFF, 1, 3, {.acp2= A_FireRifle }, S_RIFG_03 },     //58
+/*S_RIFG_03*/       { SPR_RIFG, 3, 3, {.acp2= A_FireRifle }, S_RIFG_04 },     //59
+/*S_RIFG_04*/       { SPR_RIFG, 2, 0, {.acp2= A_ReFire }, S_RIFG_05 },        //60
 /*S_RIFG_05*/       { SPR_RIFG, 1, 2, { nullptr }, S_RIFG_00 },        //61
-/*S_FLMT_00*/       { SPR_FLMT, 0, 3, { A_WeaponReady }, S_FLMT_01 },       //62
-/*S_FLMT_01*/       { SPR_FLMT, 1, 3, { A_WeaponReady }, S_FLMT_00 },       //63
-/*S_FLMT_02*/       { SPR_FLMT, 0, 1, { A_Lower }, S_FLMT_02 },     //64
-/*S_FLMT_03*/       { SPR_FLMT, 0, 1, { A_Raise }, S_FLMT_03 },     //65
-/*S_FLMF_00*/       { SPR_FLMF, 0, 2, { A_FireFlameThrower }, S_FLMF_01 },      //66
-/*S_FLMF_01*/       { SPR_FLMF, 1, 3, { A_ReFire }, S_FLMT_00 },        //67
-/*S_BLST_00*/       { SPR_BLST, 5, 6, { A_WeaponReady }, S_BLST_01 },       //68
-/*S_BLST_01*/       { SPR_BLST, 6, 6, { A_WeaponReady }, S_BLST_02 },       //69
-/*S_BLST_02*/       { SPR_BLST, 7, 6, { A_WeaponReady }, S_BLST_03 },       //70
-/*S_BLST_03*/       { SPR_BLST, 0, 6, { A_WeaponReady }, S_BLST_00 },       //71
-/*S_BLST_04*/       { SPR_BLST, 0, 1, { A_Lower }, S_BLST_04 },     //72
-/*S_BLST_05*/       { SPR_BLST, 0, 1, { A_Raise }, S_BLST_05 },     //73
-/*S_BLSF_00*/       { SPR_BLSF, 32768, 5, { A_FireMauler1 }, S_BLST_06 },       //74
-/*S_BLST_06*/       { SPR_BLST, 32769, 3, { A_Light1 }, S_BLST_07 },        //75
-/*S_BLST_07*/       { SPR_BLST, 2, 2, { A_Light2 }, S_BLST_08 },        //76
+/*S_FLMT_00*/       { SPR_FLMT, 0, 3, {.acp2= A_WeaponReady }, S_FLMT_01 },       //62
+/*S_FLMT_01*/       { SPR_FLMT, 1, 3, {.acp2= A_WeaponReady }, S_FLMT_00 },       //63
+/*S_FLMT_02*/       { SPR_FLMT, 0, 1, {.acp2= A_Lower }, S_FLMT_02 },     //64
+/*S_FLMT_03*/       { SPR_FLMT, 0, 1, {.acp2= A_Raise }, S_FLMT_03 },     //65
+/*S_FLMF_00*/       { SPR_FLMF, 0, 2, {.acp2= A_FireFlameThrower }, S_FLMF_01 },      //66
+/*S_FLMF_01*/       { SPR_FLMF, 1, 3, {.acp2= A_ReFire }, S_FLMT_00 },        //67
+/*S_BLST_00*/       { SPR_BLST, 5, 6, {.acp2= A_WeaponReady }, S_BLST_01 },       //68
+/*S_BLST_01*/       { SPR_BLST, 6, 6, {.acp2= A_WeaponReady }, S_BLST_02 },       //69
+/*S_BLST_02*/       { SPR_BLST, 7, 6, {.acp2= A_WeaponReady }, S_BLST_03 },       //70
+/*S_BLST_03*/       { SPR_BLST, 0, 6, {.acp2= A_WeaponReady }, S_BLST_00 },       //71
+/*S_BLST_04*/       { SPR_BLST, 0, 1, {.acp2= A_Lower }, S_BLST_04 },     //72
+/*S_BLST_05*/       { SPR_BLST, 0, 1, {.acp2= A_Raise }, S_BLST_05 },     //73
+/*S_BLSF_00*/       { SPR_BLSF, 32768, 5, {.acp2= A_FireMauler1 }, S_BLST_06 },       //74
+/*S_BLST_06*/       { SPR_BLST, 32769, 3, {.acp2= A_Light1 }, S_BLST_07 },        //75
+/*S_BLST_07*/       { SPR_BLST, 2, 2, {.acp2= A_Light2 }, S_BLST_08 },        //76
 /*S_BLST_08*/       { SPR_BLST, 3, 2, { nullptr }, S_BLST_09 },        //77
 /*S_BLST_09*/       { SPR_BLST, 4, 2, { nullptr }, S_BLST_10 },        //78
-/*S_BLST_10*/       { SPR_BLST, 0, 7, { A_Light0 }, S_BLST_11 },        //79
+/*S_BLST_10*/       { SPR_BLST, 0, 7, {.acp2 =  A_Light0 }, S_BLST_11 },        //79
 /*S_BLST_11*/       { SPR_BLST, 7, 7, { nullptr }, S_BLST_12 },        //80
-/*S_BLST_12*/       { SPR_BLST, 6, 7, { A_CheckReload }, S_BLST_00 },       //81
-/*S_BLST_13*/       { SPR_BLST, 8, 7, { A_WeaponReady }, S_BLST_14 },       //82
-/*S_BLST_14*/       { SPR_BLST, 9, 7, { A_WeaponReady }, S_BLST_15 },       //83
-/*S_BLST_15*/       { SPR_BLST, 10, 7, { A_WeaponReady }, S_BLST_16 },      //84
-/*S_BLST_16*/       { SPR_BLST, 11, 7, { A_WeaponReady }, S_BLST_13 },      //85
-/*S_BLST_17*/       { SPR_BLST, 8, 1, { A_Lower }, S_BLST_17 },     //86
-/*S_BLST_18*/       { SPR_BLST, 8, 1, { A_Raise }, S_BLST_18 },     //87
-/*S_BLST_19*/       { SPR_BLST, 8, 20, { A_MaulerSound }, S_BLST_20 },      //88
-/*S_BLST_20*/       { SPR_BLST, 9, 10, { A_Light1 }, S_BLSF_01 },       //89
-/*S_BLSF_01*/       { SPR_BLSF, 32768, 10, { A_FireMauler2 }, S_BLST_21 },      //90
-/*S_BLST_21*/       { SPR_BLST, 32769, 3, { A_Light2 }, S_BLST_22 },        //91
+/*S_BLST_12*/       { SPR_BLST, 6, 7, {.acp2= A_CheckReload }, S_BLST_00 },       //81
+/*S_BLST_13*/       { SPR_BLST, 8, 7, {.acp2= A_WeaponReady }, S_BLST_14 },       //82
+/*S_BLST_14*/       { SPR_BLST, 9, 7, {.acp2= A_WeaponReady }, S_BLST_15 },       //83
+/*S_BLST_15*/       { SPR_BLST, 10, 7, {.acp2= A_WeaponReady }, S_BLST_16 },      //84
+/*S_BLST_16*/       { SPR_BLST, 11, 7, {.acp2= A_WeaponReady }, S_BLST_13 },      //85
+/*S_BLST_17*/       { SPR_BLST, 8, 1, {.acp2= A_Lower }, S_BLST_17 },     //86
+/*S_BLST_18*/       { SPR_BLST, 8, 1, {.acp2= A_Raise }, S_BLST_18 },     //87
+/*S_BLST_19*/       { SPR_BLST, 8, 20, {.acp2= A_MaulerSound }, S_BLST_20 },      //88
+/*S_BLST_20*/       { SPR_BLST, 9, 10, {.acp2= A_Light1 }, S_BLSF_01 },       //89
+/*S_BLSF_01*/       { SPR_BLSF, 32768, 10, {.acp2= A_FireMauler2 }, S_BLST_21 },      //90
+/*S_BLST_21*/       { SPR_BLST, 32769, 3, {.acp2= A_Light2 }, S_BLST_22 },        //91
 /*S_BLST_22*/       { SPR_BLST, 2, 2, { nullptr }, S_BLST_23 },        //92
-/*S_BLST_23*/       { SPR_BLST, 3, 2, { A_Light0 }, S_BLST_24 },        //93
-/*S_BLST_24*/       { SPR_BLST, 4, 2, { A_ReFire }, S_BLST_13 },        //94
-/*S_GREN_00*/       { SPR_GREN, 0, 1, { A_WeaponReady }, S_GREN_00 },       //95
-/*S_GREN_01*/       { SPR_GREN, 0, 1, { A_Lower }, S_GREN_01 },     //96
-/*S_GREN_02*/       { SPR_GREN, 0, 1, { A_Raise }, S_GREN_02 },     //97
-/*S_GREN_03*/       { SPR_GREN, 0, 5, { A_FireGrenade }, S_GREN_04 },       //98
+/*S_BLST_23*/       { SPR_BLST, 3, 2, { .acp2 = A_Light0 }, S_BLST_24 },        //93
+/*S_BLST_24*/       { SPR_BLST, 4, 2, {.acp2= A_ReFire }, S_BLST_13 },        //94
+/*S_GREN_00*/       { SPR_GREN, 0, 1, {.acp2= A_WeaponReady }, S_GREN_00 },       //95
+/*S_GREN_01*/       { SPR_GREN, 0, 1, {.acp2= A_Lower }, S_GREN_01 },     //96
+/*S_GREN_02*/       { SPR_GREN, 0, 1, {.acp2= A_Raise }, S_GREN_02 },     //97
+/*S_GREN_03*/       { SPR_GREN, 0, 5, {.acp2= A_FireGrenade }, S_GREN_04 },       //98
 /*S_GREN_04*/       { SPR_GREN, 1, 10, { nullptr }, S_GREN_05 },       //99
-/*S_GREN_05*/       { SPR_GREN, 0, 5, { A_FireGrenade }, S_GREN_06 },       //100
+/*S_GREN_05*/       { SPR_GREN, 0, 5, {.acp2= A_FireGrenade }, S_GREN_06 },       //100
 /*S_GREN_06*/       { SPR_GREN, 2, 10, { nullptr }, S_GREN_07 },       //101
-/*S_GREN_07*/       { SPR_GREN, 0, 0, { A_ReFire }, S_GREN_00 },        //102
-/*S_GREF_00*/       { SPR_GREF, 32768, 5, { A_Light1 }, S_PNCH_00 },        //103
-/*S_GREF_01*/       { SPR_GREF, 0, 10, { A_Light0 }, S_PNCH_00 },       //104
-/*S_GREF_02*/       { SPR_GREF, 32769, 5, { A_Light2 }, S_PNCH_00 },        //105
-/*S_GREN_08*/       { SPR_GREN, 3, 1, { A_WeaponReady }, S_GREN_08 },       //106
-/*S_GREN_09*/       { SPR_GREN, 3, 1, { A_Lower }, S_GREN_09 },     //107
-/*S_GREN_10*/       { SPR_GREN, 3, 1, { A_Raise }, S_GREN_10 },     //108
-/*S_GREN_11*/       { SPR_GREN, 3, 5, { A_FireGrenade }, S_GREN_12 },       //109
+/*S_GREN_07*/       { SPR_GREN, 0, 0, {.acp2= A_ReFire }, S_GREN_00 },        //102
+/*S_GREF_00*/       { SPR_GREF, 32768, 5, {.acp2= A_Light1 }, S_PNCH_00 },        //103
+/*S_GREF_01*/       { SPR_GREF, 0, 10, {.acp2= A_Light0 }, S_PNCH_00 },       //104
+/*S_GREF_02*/       { SPR_GREF, 32769, 5, {.acp2= A_Light2 }, S_PNCH_00 },        //105
+/*S_GREN_08*/       { SPR_GREN, 3, 1, {.acp2= A_WeaponReady }, S_GREN_08 },       //106
+/*S_GREN_09*/       { SPR_GREN, 3, 1, {.acp2= A_Lower }, S_GREN_09 },     //107
+/*S_GREN_10*/       { SPR_GREN, 3, 1, {.acp2= A_Raise }, S_GREN_10 },     //108
+/*S_GREN_11*/       { SPR_GREN, 3, 5, {.acp2= A_FireGrenade }, S_GREN_12 },       //109
 /*S_GREN_12*/       { SPR_GREN, 4, 10, { nullptr }, S_GREN_13 },       //110
-/*S_GREN_13*/       { SPR_GREN, 3, 5, { A_FireGrenade }, S_GREN_14 },       //111
+/*S_GREN_13*/       { SPR_GREN, 3, 5, {.acp2= A_FireGrenade }, S_GREN_14 },       //111
 /*S_GREN_14*/       { SPR_GREN, 5, 10, { nullptr }, S_GREN_15 },       //112
-/*S_GREN_15*/       { SPR_GREN, 0, 0, { A_ReFire }, S_GREN_08 },        //113
-/*S_GREF_03*/       { SPR_GREF, 32770, 5, { A_Light1 }, S_PNCH_00 },        //114
-/*S_GREF_04*/       { SPR_GREF, 2, 10, { A_Light0 }, S_PNCH_00 },       //115
-/*S_GREF_05*/       { SPR_GREF, 32771, 5, { A_Light2 }, S_PNCH_00 },        //116
-/*S_SIGH_00*/       { SPR_SIGH, 32768, 1, { A_WeaponReady }, S_SIGH_00 },       //117
+/*S_GREN_15*/       { SPR_GREN, 0, 0, {.acp2= A_ReFire }, S_GREN_08 },        //113
+/*S_GREF_03*/       { SPR_GREF, 32770, 5, {.acp2= A_Light1 }, S_PNCH_00 },        //114
+/*S_GREF_04*/       { SPR_GREF, 2, 10, {.acp2= A_Light0 }, S_PNCH_00 },       //115
+/*S_GREF_05*/       { SPR_GREF, 32771, 5, {.acp2= A_Light2 }, S_PNCH_00 },        //116
+/*S_SIGH_00*/       { SPR_SIGH, 32768, 1, {.acp2= A_WeaponReady }, S_SIGH_00 },       //117
 /*S_SIGH_01*/       { SPR_SIGH, 32769, -1, { nullptr }, S_NULL },      //118
 /*S_SIGH_02*/       { SPR_SIGH, 32770, -1, { nullptr }, S_NULL },      //119
 /*S_SIGH_03*/       { SPR_SIGH, 32771, -1, { nullptr }, S_NULL },      //120
 /*S_SIGH_04*/       { SPR_SIGH, 32772, -1, { nullptr }, S_NULL },      //121
-/*S_SIGH_05*/       { SPR_SIGH, 32768, 1, { A_Lower }, S_SIGH_05 },     //122
-/*S_SIGH_06*/       { SPR_SIGH, 32768, 1, { A_Raise }, S_SIGH_06 },     //123
-/*S_SIGH_07*/       { SPR_SIGH, 32768, 18, { A_SigilSound }, S_SIGH_08 },       //124
-/*S_SIGH_08*/       { SPR_SIGH, 32768, 3, { A_GunFlash }, S_SIGH_09 },      //125
-/*S_SIGH_09*/       { SPR_SIGH, 0, 10, { A_FireSigil }, S_SIGH_10 },        //126
-/*S_SIGH_10*/       { SPR_SIGH, 0, 5, { A_GunFlashThinker }, S_SIGH_00 },       //127
-/*S_SIGF_00*/       { SPR_SIGF, 32768, 4, { A_Light2 }, S_SIGF_01 },        //128
-/*S_SIGF_01*/       { SPR_SIGF, 32769, 6, { A_SigilShock }, S_SIGF_02 },        //129
-/*S_SIGF_02*/       { SPR_SIGF, 32770, 4, { A_Light1 }, S_PNCH_00 },        //130
+/*S_SIGH_05*/       { SPR_SIGH, 32768, 1, {.acp2= A_Lower }, S_SIGH_05 },     //122
+/*S_SIGH_06*/       { SPR_SIGH, 32768, 1, {.acp2= A_Raise }, S_SIGH_06 },     //123
+/*S_SIGH_07*/       { SPR_SIGH, 32768, 18, {.acp2= A_SigilSound }, S_SIGH_08 },       //124
+/*S_SIGH_08*/       { SPR_SIGH, 32768, 3, {.acp2= A_GunFlash }, S_SIGH_09 },      //125
+/*S_SIGH_09*/       { SPR_SIGH, 0, 10, {.acp2= A_FireSigil }, S_SIGH_10 },        //126
+/*S_SIGH_10*/       { SPR_SIGH, 0, 5, {.acp2= A_GunFlashThinker }, S_SIGH_00 },       //127
+/*S_SIGF_00*/       { SPR_SIGF, 32768, 4, {.acp2= A_Light2 }, S_SIGF_01 },        //128
+/*S_SIGF_01*/       { SPR_SIGF, 32769, 6, {.acp2= A_SigilShock }, S_SIGF_02 },        //129
+/*S_SIGF_02*/       { SPR_SIGF, 32770, 4, {.acp2= A_Light1 }, S_PNCH_00 },        //130
 /*S_POW1_00*/       { SPR_POW1, 0, 4, { nullptr }, S_POW1_01 },        //131
 /*S_POW1_01*/       { SPR_POW1, 1, 4, { nullptr }, S_POW1_02 },        //132
 /*S_POW1_02*/       { SPR_POW1, 2, 4, { nullptr }, S_POW1_03 },        //133
@@ -343,8 +344,8 @@ state_t states[NUMSTATES] =
 /*S_POW3_05*/       { SPR_POW3, 5, 3, { nullptr }, S_POW3_06 },        //150
 /*S_POW3_06*/       { SPR_POW3, 6, 3, { nullptr }, S_POW3_07 },        //151
 /*S_POW3_07*/       { SPR_POW3, 7, 3, { nullptr }, S_NULL },       //152
-/*S_ZAP1_00*/       { SPR_ZAP1, 1, 3, { A_DeathExplode3 }, S_ZAP1_02 },     //153
-/*S_ZAP1_01*/       { SPR_ZAP1, 0, 3, { A_RaiseAlarm }, S_ZAP1_02 },        //154
+/*S_ZAP1_00*/       { SPR_ZAP1, 1, 3, {.acp1= A_DeathExplode3 }, S_ZAP1_02 },     //153
+/*S_ZAP1_01*/       { SPR_ZAP1, 0, 3, {.acp1= A_RaiseAlarm }, S_ZAP1_02 },        //154
 /*S_ZAP1_02*/       { SPR_ZAP1, 1, 3, { nullptr }, S_ZAP1_03 },        //155
 /*S_ZAP1_03*/       { SPR_ZAP1, 2, 3, { nullptr }, S_ZAP1_04 },        //156
 /*S_ZAP1_04*/       { SPR_ZAP1, 3, 3, { nullptr }, S_ZAP1_05 },        //157
@@ -373,13 +374,13 @@ state_t states[NUMSTATES] =
 /*S_SHT1_01*/       { SPR_SHT1, 1, 4, { nullptr }, S_SHT1_00 },        //180
 /*S_SHT2_00*/       { SPR_SHT2, 0, 5, { nullptr }, S_SHT2_01 },        //181
 /*S_SHT2_01*/       { SPR_SHT2, 1, 5, { nullptr }, S_POW1_00 },        //182
-/*S_GRIN_00*/       { SPR_GRIN, 0, 3, { A_MissileTick }, S_GRIN_01 },       //183
-/*S_GRIN_01*/       { SPR_GRIN, 1, 3, { A_MissileTick }, S_GRIN_00 },       //184
-/*S_GRAP_00*/       { SPR_GRAP, 0, 3, { A_MissileTick }, S_GRAP_01 },       //185
-/*S_GRAP_01*/       { SPR_GRAP, 1, 3, { A_MissileTick }, S_GRAP_00 },       //186
-/*S_UBAM_00*/       { SPR_UBAM, 0, 3, { A_MissileTick }, S_UBAM_01 },       //187
-/*S_UBAM_01*/       { SPR_UBAM, 1, 3, { A_MissileTick }, S_UBAM_00 },       //188
-/*S_BNG2_00*/       { SPR_BNG2, 32768, 4, { A_DeathExplode5 }, S_BNG2_01 },     //189
+/*S_GRIN_00*/       { SPR_GRIN, 0, 3, {.acp1= A_MissileTick }, S_GRIN_01 },       //183
+/*S_GRIN_01*/       { SPR_GRIN, 1, 3, {.acp1= A_MissileTick }, S_GRIN_00 },       //184
+/*S_GRAP_00*/       { SPR_GRAP, 0, 3, {.acp1= A_MissileTick }, S_GRAP_01 },       //185
+/*S_GRAP_01*/       { SPR_GRAP, 1, 3, {.acp1= A_MissileTick }, S_GRAP_00 },       //186
+/*S_UBAM_00*/       { SPR_UBAM, 0, 3, {.acp1= A_MissileTick }, S_UBAM_01 },       //187
+/*S_UBAM_01*/       { SPR_UBAM, 1, 3, {.acp1= A_MissileTick }, S_UBAM_00 },       //188
+/*S_BNG2_00*/       { SPR_BNG2, 32768, 4, {.acp1= A_DeathExplode5 }, S_BNG2_01 },     //189
 /*S_BNG2_01*/       { SPR_BNG2, 32769, 4, { nullptr }, S_BNG2_02 },        //190
 /*S_BNG2_02*/       { SPR_BNG2, 32770, 4, { nullptr }, S_BNG2_03 },        //191
 /*S_BNG2_03*/       { SPR_BNG2, 32771, 4, { nullptr }, S_BNG2_04 },        //192
@@ -388,7 +389,7 @@ state_t states[NUMSTATES] =
 /*S_BNG2_06*/       { SPR_BNG2, 32774, 4, { nullptr }, S_BNG2_07 },        //195
 /*S_BNG2_07*/       { SPR_BNG2, 32775, 4, { nullptr }, S_BNG2_08 },        //196
 /*S_BNG2_08*/       { SPR_BNG2, 32776, 4, { nullptr }, S_NULL },       //197
-/*S_BNG4_00*/       { SPR_BNG4, 32768, 2, { A_DeathExplode5 }, S_BNG4_01 },     //198
+/*S_BNG4_00*/       { SPR_BNG4, 32768, 2, {.acp1= A_DeathExplode5 }, S_BNG4_01 },     //198
 /*S_BNG4_01*/       { SPR_BNG4, 32769, 3, { nullptr }, S_BNG4_02 },        //199
 /*S_BNG4_02*/       { SPR_BNG4, 32770, 3, { nullptr }, S_BNG4_03 },        //200
 /*S_BNG4_03*/       { SPR_BNG4, 32771, 3, { nullptr }, S_BNG4_04 },        //201
@@ -402,7 +403,7 @@ state_t states[NUMSTATES] =
 /*S_BNG4_11*/       { SPR_BNG4, 32779, 3, { nullptr }, S_BNG4_12 },        //209
 /*S_BNG4_12*/       { SPR_BNG4, 32780, 3, { nullptr }, S_BNG4_13 },        //210
 /*S_BNG4_13*/       { SPR_BNG4, 32781, 3, { nullptr }, S_NULL },       //211
-/*S_BNG3_00*/       { SPR_BNG3, 32768, 3, { A_DeathExplode5 }, S_BNG3_01 },     //212
+/*S_BNG3_00*/       { SPR_BNG3, 32768, 3, {.acp1= A_DeathExplode5 }, S_BNG3_01 },     //212
 /*S_BNG3_01*/       { SPR_BNG3, 32769, 3, { nullptr }, S_BNG3_02 },        //213
 /*S_BNG3_02*/       { SPR_BNG3, 32770, 3, { nullptr }, S_BNG3_03 },        //214
 /*S_BNG3_03*/       { SPR_BNG3, 32771, 3, { nullptr }, S_BNG3_04 },        //215
@@ -410,29 +411,29 @@ state_t states[NUMSTATES] =
 /*S_BNG3_05*/       { SPR_BNG3, 32773, 3, { nullptr }, S_BNG3_06 },        //217
 /*S_BNG3_06*/       { SPR_BNG3, 32774, 3, { nullptr }, S_BNG3_07 },        //218
 /*S_BNG3_07*/       { SPR_BNG3, 32775, 3, { nullptr }, S_NULL },       //219
-/*S_BNG3_08*/       { SPR_BNG3, 0, 1, { A_SpawnGrenadeFire }, S_NULL },     //220
-/*S_BNG3_09*/       { SPR_BNG3, 32769, 2, { A_DeathExplode1 }, S_BNG3_10 },     //221
-/*S_BNG3_10*/       { SPR_BNG3, 32770, 2, { A_MissileTick }, S_FLBE_00 },       //222
-/*S_FLBE_00*/       { SPR_FLBE, 32768, 2, { A_BurnSpread }, S_FLBE_01 },        //223
-/*S_FLBE_01*/       { SPR_FLBE, 32769, 2, { A_MissileTick }, S_FLBE_02 },       //224
-/*S_FLBE_02*/       { SPR_FLBE, 32770, 2, { A_DeathExplode1 }, S_FLBE_03 },     //225
-/*S_FLBE_03*/       { SPR_FLBE, 32771, 3, { A_MissileTick }, S_FLBE_04 },       //226
-/*S_FLBE_04*/       { SPR_FLBE, 32772, 3, { A_DeathExplode1 }, S_FLBE_05 },     //227
-/*S_FLBE_05*/       { SPR_FLBE, 32773, 3, { A_MissileTick }, S_FLBE_06 },       //228
-/*S_FLBE_06*/       { SPR_FLBE, 32774, 3, { A_BurnSpread }, S_FLBE_03 },        //229
+/*S_BNG3_08*/       { SPR_BNG3, 0, 1, {.acp1= A_SpawnGrenadeFire }, S_NULL },     //220
+/*S_BNG3_09*/       { SPR_BNG3, 32769, 2, {.acp1= A_DeathExplode1 }, S_BNG3_10 },     //221
+/*S_BNG3_10*/       { SPR_BNG3, 32770, 2, {.acp1= A_MissileTick }, S_FLBE_00 },       //222
+/*S_FLBE_00*/       { SPR_FLBE, 32768, 2, {.acp1= A_BurnSpread }, S_FLBE_01 },        //223
+/*S_FLBE_01*/       { SPR_FLBE, 32769, 2, {.acp1= A_MissileTick }, S_FLBE_02 },       //224
+/*S_FLBE_02*/       { SPR_FLBE, 32770, 2, {.acp1= A_DeathExplode1 }, S_FLBE_03 },     //225
+/*S_FLBE_03*/       { SPR_FLBE, 32771, 3, {.acp1= A_MissileTick }, S_FLBE_04 },       //226
+/*S_FLBE_04*/       { SPR_FLBE, 32772, 3, {.acp1= A_DeathExplode1 }, S_FLBE_05 },     //227
+/*S_FLBE_05*/       { SPR_FLBE, 32773, 3, { .acp1=A_MissileTick }, S_FLBE_06 },       //228
+/*S_FLBE_06*/       { SPR_FLBE, 32774, 3, {.acp1= A_BurnSpread }, S_FLBE_03 },        //229
 /*S_FLBE_07*/       { SPR_FLBE, 32775, 2, { nullptr }, S_FLBE_08 },        //230
-/*S_FLBE_08*/       { SPR_FLBE, 32776, 2, { A_BurnSpread }, S_FLBE_09 },        //231
+/*S_FLBE_08*/       { SPR_FLBE, 32776, 2, {.acp1= A_BurnSpread }, S_FLBE_09 },        //231
 /*S_FLBE_09*/       { SPR_FLBE, 32777, 2, { nullptr }, S_FLBE_10 },        //232
 /*S_FLBE_10*/       { SPR_FLBE, 32778, 2, { nullptr }, S_NULL },       //233
-/*S_XPRK_00*/       { SPR_XPRK, 0, 1, { A_ClearForceField }, S_NULL },      //234
-/*S_OCLW_00*/       { SPR_OCLW, 0, 2, { A_FireChainShot }, S_OCLW_00 },     //235
+/*S_XPRK_00*/       { SPR_XPRK, 0, 1, {.acp1 = A_ClearForceField}, S_NULL },      //234
+/*S_OCLW_00*/       { SPR_OCLW, 0, 2, {.acp1= A_FireChainShot }, S_OCLW_00 },     //235
 /*S_CCLW_00*/       { SPR_CCLW, 0, 6, { nullptr }, S_NULL },       //236
 /*S_TEND_00*/       { SPR_TEND, 0, 20, { nullptr }, S_NULL },      //237
-/*S_MICR_00*/       { SPR_MICR, 32768, 6, { A_MissileSmoke }, S_MICR_00 },      //238
-/*S_MISS_00*/       { SPR_MISS, 32768, 4, { A_MissileSmoke }, S_MISS_01 },      //239
-/*S_MISS_01*/       { SPR_MISS, 32769, 3, { A_Tracer }, S_MISS_00 },        //240
-/*S_AROW_00*/       { SPR_AROW, 0, 10, { A_ActiveSound }, S_AROW_00 },      //241
-/*S_ARWP_00*/       { SPR_ARWP, 0, 10, { A_ActiveSound }, S_ARWP_00 },      //242
+/*S_MICR_00*/       { SPR_MICR, 32768, 6, {.acp1= A_MissileSmoke }, S_MICR_00 },      //238
+/*S_MISS_00*/       { SPR_MISS, 32768, 4, {.acp1= A_MissileSmoke }, S_MISS_01 },      //239
+/*S_MISS_01*/       { SPR_MISS, 32769, 3, {.acp1=A_Tracer}, S_MISS_00 },        //240
+/*S_AROW_00*/       { SPR_AROW, 0, 10, {.acp1= A_ActiveSound }, S_AROW_00 },      //241
+/*S_ARWP_00*/       { SPR_ARWP, 0, 10, {.acp1= A_ActiveSound }, S_ARWP_00 },      //242
 /*S_AROW_01*/       { SPR_AROW, 0, 1, { nullptr }, S_NULL },       //243
 /*S_TORP_00*/       { SPR_TORP, 32768, 4, { nullptr }, S_TORP_01 },        //244
 /*S_TORP_01*/       { SPR_TORP, 32769, 4, { nullptr }, S_TORP_02 },        //245
@@ -440,14 +441,14 @@ state_t states[NUMSTATES] =
 /*S_TORP_03*/       { SPR_TORP, 32771, 4, { nullptr }, S_TORP_00 },        //247
 /*S_THIT_00*/       { SPR_THIT, 32768, 8, { nullptr }, S_THIT_01 },        //248
 /*S_THIT_01*/       { SPR_THIT, 32769, 8, { nullptr }, S_THIT_02 },        //249
-/*S_THIT_02*/       { SPR_THIT, 32770, 8, { A_TorpedoExplode }, S_THIT_03 },        //250
+/*S_THIT_02*/       { SPR_THIT, 32770, 8, {.acp1= A_TorpedoExplode }, S_THIT_03 },        //250
 /*S_THIT_03*/       { SPR_THIT, 32771, 8, { nullptr }, S_THIT_04 },        //251
 /*S_THIT_04*/       { SPR_THIT, 32772, 8, { nullptr }, S_NULL },       //252
 /*S_TWAV_00*/       { SPR_TWAV, 32768, 9, { nullptr }, S_TWAV_01 },        //253
 /*S_TWAV_01*/       { SPR_TWAV, 32769, 9, { nullptr }, S_TWAV_02 },        //254
 /*S_TWAV_02*/       { SPR_TWAV, 32770, 9, { nullptr }, S_NULL },       //255
 /*S_MISL_00*/       { SPR_MISL, 32768, 5, { nullptr }, S_MISL_02 },        //256
-/*S_MISL_01*/       { SPR_MISL, 32768, 5, { A_DeathExplode2 }, S_MISL_02 },     //257
+/*S_MISL_01*/       { SPR_MISL, 32768, 5, {.acp1= A_DeathExplode2 }, S_MISL_02 },     //257
 /*S_MISL_02*/       { SPR_MISL, 32769, 5, { nullptr }, S_MISL_03 },        //258
 /*S_MISL_03*/       { SPR_MISL, 32770, 4, { nullptr }, S_MISL_04 },        //259
 /*S_MISL_04*/       { SPR_MISL, 32771, 2, { nullptr }, S_MISL_05 },        //260
@@ -484,11 +485,11 @@ state_t states[NUMSTATES] =
 /*S_PLAY_04*/       { SPR_PLAY, 3, 4, { nullptr }, S_PLAY_01 },        //291
 /*S_PLAY_05*/       { SPR_PLAY, 4, 12, { nullptr }, S_PLAY_00 },       //292
 /*S_PLAY_06*/       { SPR_PLAY, 5, 6, { nullptr }, S_PLAY_05 },        //293
-/*S_PLAY_07*/       { SPR_PLAY, 16, 4, { A_Pain }, S_PLAY_08 },     //294
+/*S_PLAY_07*/       { SPR_PLAY, 16, 4, {.acp1= A_Pain }, S_PLAY_08 },     //294
 /*S_PLAY_08*/       { SPR_PLAY, 16, 4, { nullptr }, S_PLAY_00 },       //295
 /*S_PLAY_09*/       { SPR_PLAY, 6, 4, { nullptr }, S_PLAY_10 },        //296
-/*S_PLAY_10*/       { SPR_PLAY, 7, 3, { A_PlayerScream }, S_PLAY_11 },      //297
-/*S_PLAY_11*/       { SPR_PLAY, 8, 3, { A_Fall }, S_PLAY_12 },      //298
+/*S_PLAY_10*/       { SPR_PLAY, 7, 3, { .acp1=A_PlayerScream }, S_PLAY_11 },      //297
+/*S_PLAY_11*/       { SPR_PLAY, 8, 3, {.acp1= A_Fall }, S_PLAY_12 },      //298
 /*S_PLAY_12*/       { SPR_PLAY, 9, 4, { nullptr }, S_PLAY_13 },        //299
 /*S_PLAY_13*/       { SPR_PLAY, 10, 4, { nullptr }, S_PLAY_14 },       //300
 /*S_PLAY_14*/       { SPR_PLAY, 11, 4, { nullptr }, S_PLAY_15 },       //301
@@ -496,13 +497,13 @@ state_t states[NUMSTATES] =
 /*S_PLAY_16*/       { SPR_PLAY, 13, 4, { nullptr }, S_PLAY_17 },       //303
 /*S_PLAY_17*/       { SPR_PLAY, 14, 4, { nullptr }, S_PLAY_18 },       //304
 /*S_PLAY_18*/       { SPR_PLAY, 15, 700, { nullptr }, S_RGIB_07 },     //305
-/*S_RGIB_00*/       { SPR_RGIB, 0, 5, { A_BodyParts }, S_RGIB_01 },     //306
-/*S_RGIB_01*/       { SPR_RGIB, 1, 5, { A_XScream }, S_RGIB_02 },       //307
-/*S_RGIB_02*/       { SPR_RGIB, 2, 5, { A_Fall }, S_RGIB_03 },      //308
-/*S_RGIB_03*/       { SPR_RGIB, 3, 5, { A_BodyParts }, S_RGIB_04 },     //309
-/*S_RGIB_04*/       { SPR_RGIB, 4, 5, { A_BodyParts }, S_RGIB_05 },     //310
-/*S_RGIB_05*/       { SPR_RGIB, 5, 5, { A_BodyParts }, S_RGIB_06 },     //311
-/*S_RGIB_06*/       { SPR_RGIB, 6, 5, { A_BodyParts }, S_RGIB_07 },     //312
+/*S_RGIB_00*/       { SPR_RGIB, 0, 5, {.acp1= A_BodyParts }, S_RGIB_01 },     //306
+/*S_RGIB_01*/       { SPR_RGIB, 1, 5, {.acp1= A_XScream }, S_RGIB_02 },       //307
+/*S_RGIB_02*/       { SPR_RGIB, 2, 5, {.acp1= A_Fall }, S_RGIB_03 },      //308
+/*S_RGIB_03*/       { SPR_RGIB, 3, 5, {.acp1= A_BodyParts }, S_RGIB_04 },     //309
+/*S_RGIB_04*/       { SPR_RGIB, 4, 5, {.acp1= A_BodyParts }, S_RGIB_05 },     //310
+/*S_RGIB_05*/       { SPR_RGIB, 5, 5, {.acp1= A_BodyParts }, S_RGIB_06 },     //311
+/*S_RGIB_06*/       { SPR_RGIB, 6, 5, {.acp1= A_BodyParts }, S_RGIB_07 },     //312
 /*S_RGIB_07*/       { SPR_RGIB, 7, 1400, { nullptr }, S_NULL },        //313
 /*S_MRYS_00*/       { SPR_MRYS, 0, 30, { nullptr }, S_MRST_00 },       //314
 /*S_MRNO_00*/       { SPR_MRNO, 0, 6, { nullptr }, S_MRNO_01 },        //315
@@ -510,8 +511,8 @@ state_t states[NUMSTATES] =
 /*S_MRNO_02*/       { SPR_MRNO, 2, 10, { nullptr }, S_MRNO_03 },       //317
 /*S_MRNO_03*/       { SPR_MRNO, 1, 6, { nullptr }, S_MRNO_04 },        //318
 /*S_MRNO_04*/       { SPR_MRNO, 0, 6, { nullptr }, S_MRST_00 },        //319
-/*S_MRST_00*/       { SPR_MRST, 0, 10, { A_FriendLook }, S_MRST_00 },       //320
-/*S_MRLK_00*/       { SPR_MRLK, 0, 30, { A_ActiveSound }, S_MRST_00 },      //321
+/*S_MRST_00*/       { SPR_MRST, 0, 10, {.acp1 = A_FriendLook}, S_MRST_00 },       //320
+/*S_MRLK_00*/       { SPR_MRLK, 0, 30, {.acp1= A_ActiveSound }, S_MRST_00 },      //321
 /*S_MRLK_01*/       { SPR_MRLK, 1, 30, { nullptr }, S_MRST_00 },       //322
 /*S_MRBD_00*/       { SPR_MRBD, 0, 4, { nullptr }, S_MRBD_01 },        //323
 /*S_MRBD_01*/       { SPR_MRBD, 1, 4, { nullptr }, S_MRBD_02 },        //324
@@ -524,12 +525,12 @@ state_t states[NUMSTATES] =
 /*S_MRBD_08*/       { SPR_MRBD, 0, 5, { nullptr }, S_MRBD_09 },        //331
 /*S_MRBD_09*/       { SPR_MRBD, 5, 6, { nullptr }, S_MRST_00 },        //332
 /*S_MRPN_00*/       { SPR_MRPN, 0, 3, { nullptr }, S_MRPN_01 },        //333
-/*S_MRPN_01*/       { SPR_MRPN, 1, 3, { A_Pain }, S_MRPN_02 },      //334
+/*S_MRPN_01*/       { SPR_MRPN, 1, 3, {.acp1= A_Pain }, S_MRPN_02 },      //334
 /*S_MRPN_02*/       { SPR_MRPN, 2, 3, { nullptr }, S_MRPN_03 },        //335
-/*S_MRPN_03*/       { SPR_MRPN, 3, 9, { A_MerchantPain }, S_MRPN_04 },      //336
+/*S_MRPN_03*/       { SPR_MRPN, 3, 9, {.acp1= A_MerchantPain }, S_MRPN_04 },      //336
 /*S_MRPN_04*/       { SPR_MRPN, 2, 4, { nullptr }, S_MRPN_05 },        //337
 /*S_MRPN_05*/       { SPR_MRPN, 1, 3, { nullptr }, S_MRPN_06 },        //338
-/*S_MRPN_06*/       { SPR_MRPN, 0, 3, { A_ClearSoundTarget }, S_MRST_00 },      //339
+/*S_MRPN_06*/       { SPR_MRPN, 0, 3, {.acp1= A_ClearSoundTarget }, S_MRST_00 },      //339
 /*S_MRGT_00*/       { SPR_MRGT, 0, 5, { nullptr }, S_MRGT_01 },        //340
 /*S_MRGT_01*/       { SPR_MRGT, 1, 5, { nullptr }, S_MRGT_02 },        //341
 /*S_MRGT_02*/       { SPR_MRGT, 2, 5, { nullptr }, S_MRGT_03 },        //342
@@ -539,19 +540,19 @@ state_t states[NUMSTATES] =
 /*S_MRGT_06*/       { SPR_MRGT, 6, 5, { nullptr }, S_MRGT_07 },        //346
 /*S_MRGT_07*/       { SPR_MRGT, 7, 5, { nullptr }, S_MRGT_08 },        //347
 /*S_MRGT_08*/       { SPR_MRGT, 8, 5, { nullptr }, S_MRST_00 },        //348
-/*S_BURN_00*/       { SPR_BURN, 0, 3, { A_Scream }, S_BURN_01 },        //349
-/*S_BURN_01*/       { SPR_BURN, 1, 3, { A_DropBurnFlesh }, S_BURN_02 },     //350
-/*S_BURN_02*/       { SPR_BURN, 2, 3, { A_RandomWalk }, S_BURN_03 },        //351
-/*S_BURN_03*/       { SPR_BURN, 3, 3, { A_Fall }, S_BURN_04 },      //352
-/*S_BURN_04*/       { SPR_BURN, 4, 5, { A_DropBurnFlesh }, S_BURN_05 },     //353
-/*S_BURN_05*/       { SPR_BURN, 5, 5, { A_RandomWalk }, S_BURN_06 },        //354
-/*S_BURN_06*/       { SPR_BURN, 6, 5, { A_RandomWalk }, S_BURN_07 },        //355
-/*S_BURN_07*/       { SPR_BURN, 7, 5, { A_RandomWalk }, S_BURN_08 },        //356
-/*S_BURN_08*/       { SPR_BURN, 8, 5, { A_DropBurnFlesh }, S_BURN_09 },     //357
-/*S_BURN_09*/       { SPR_BURN, 9, 5, { A_RandomWalk }, S_BURN_10 },        //358
-/*S_BURN_10*/       { SPR_BURN, 10, 5, { A_RandomWalk }, S_BURN_11 },       //359
-/*S_BURN_11*/       { SPR_BURN, 11, 5, { A_RandomWalk }, S_BURN_12 },       //360
-/*S_BURN_12*/       { SPR_BURN, 12, 3, { A_DropBurnFlesh }, S_BURN_13 },        //361
+/*S_BURN_00*/       { SPR_BURN, 0, 3, {.acp1= A_Scream }, S_BURN_01 },        //349
+/*S_BURN_01*/       { SPR_BURN, 1, 3, {.acp1= A_DropBurnFlesh }, S_BURN_02 },     //350
+/*S_BURN_02*/       { SPR_BURN, 2, 3, {.acp1 = A_RandomWalk}, S_BURN_03 },        //351
+/*S_BURN_03*/       { SPR_BURN, 3, 3, {.acp1= A_Fall }, S_BURN_04 },      //352
+/*S_BURN_04*/       { SPR_BURN, 4, 5, {.acp1= A_DropBurnFlesh }, S_BURN_05 },     //353
+/*S_BURN_05*/       { SPR_BURN, 5, 5, {.acp1 = A_RandomWalk}, S_BURN_06 },        //354
+/*S_BURN_06*/       { SPR_BURN, 6, 5, {.acp1 = A_RandomWalk}, S_BURN_07 },        //355
+/*S_BURN_07*/       { SPR_BURN, 7, 5, {.acp1 = A_RandomWalk}, S_BURN_08 },        //356
+/*S_BURN_08*/       { SPR_BURN, 8, 5, {.acp1= A_DropBurnFlesh }, S_BURN_09 },     //357
+/*S_BURN_09*/       { SPR_BURN, 9, 5, {.acp1 = A_RandomWalk}, S_BURN_10 },        //358
+/*S_BURN_10*/       { SPR_BURN, 10, 5, {.acp1 = A_RandomWalk}, S_BURN_11 },       //359
+/*S_BURN_11*/       { SPR_BURN, 11, 5, {.acp1 = A_RandomWalk}, S_BURN_12 },       //360
+/*S_BURN_12*/       { SPR_BURN, 12, 3, {.acp1= A_DropBurnFlesh }, S_BURN_13 },        //361
 /*S_BURN_13*/       { SPR_BURN, 13, 3, { nullptr }, S_BURN_14 },       //362
 /*S_BURN_14*/       { SPR_BURN, 14, 5, { nullptr }, S_BURN_15 },       //363
 /*S_BURN_15*/       { SPR_BURN, 15, 5, { nullptr }, S_BURN_16 },       //364
@@ -562,57 +563,57 @@ state_t states[NUMSTATES] =
 /*S_BURN_20*/       { SPR_BURN, 18, 7, { nullptr }, S_BURN_21 },       //369
 /*S_BURN_21*/       { SPR_BURN, 19, 7, { nullptr }, S_BURN_22 },       //370
 /*S_BURN_22*/       { SPR_BURN, 20, 7, { nullptr }, S_BURN_23 },       //371
-/*S_BURN_23*/       { SPR_BURN, 21, 700, { A_PeasantCrash }, S_NULL },      //372
+/*S_BURN_23*/       { SPR_BURN, 21, 700, {.acp1= A_PeasantCrash }, S_NULL },      //372
 /*S_DISR_00*/       { SPR_DISR, 0, 5, { nullptr }, S_DISR_01 },        //373
 /*S_DISR_01*/       { SPR_DISR, 1, 5, { nullptr }, S_DISR_02 },        //374
 /*S_DISR_02*/       { SPR_DISR, 2, 5, { nullptr }, S_DISR_03 },        //375
-/*S_DISR_03*/       { SPR_DISR, 3, 5, { A_Fall }, S_DISR_04 },      //376
+/*S_DISR_03*/       { SPR_DISR, 3, 5, {.acp1= A_Fall }, S_DISR_04 },      //376
 /*S_DISR_04*/       { SPR_DISR, 4, 5, { nullptr }, S_DISR_05 },        //377
 /*S_DISR_05*/       { SPR_DISR, 5, 5, { nullptr }, S_DISR_06 },        //378
 /*S_DISR_06*/       { SPR_DISR, 6, 4, { nullptr }, S_DISR_07 },        //379
 /*S_DISR_07*/       { SPR_DISR, 7, 4, { nullptr }, S_DISR_08 },        //380
 /*S_DISR_08*/       { SPR_DISR, 8, 4, { nullptr }, S_DISR_09 },        //381
 /*S_DISR_09*/       { SPR_DISR, 9, 4, { nullptr }, S_MEAT_03 },        //382
-/*S_PEAS_00*/       { SPR_PEAS, 0, 10, { A_FriendLook }, S_PEAS_00 },       //383
-/*S_PEAS_01*/       { SPR_PEAS, 0, 5, { A_RandomWalk }, S_PEAS_02 },        //384
-/*S_PEAS_02*/       { SPR_PEAS, 0, 5, { A_RandomWalk }, S_PEAS_03 },        //385
-/*S_PEAS_03*/       { SPR_PEAS, 1, 5, { A_RandomWalk }, S_PEAS_04 },        //386
-/*S_PEAS_04*/       { SPR_PEAS, 1, 5, { A_RandomWalk }, S_PEAS_05 },        //387
-/*S_PEAS_05*/       { SPR_PEAS, 2, 5, { A_RandomWalk }, S_PEAS_06 },        //388
-/*S_PEAS_06*/       { SPR_PEAS, 2, 5, { A_RandomWalk }, S_PEAS_07 },        //389
-/*S_PEAS_07*/       { SPR_PEAS, 3, 5, { A_RandomWalk }, S_PEAS_08 },        //390
-/*S_PEAS_08*/       { SPR_PEAS, 3, 5, { A_RandomWalk }, S_PEAS_00 },        //391
-/*S_PEAS_09*/       { SPR_PEAS, 4, 10, { A_FaceTarget }, S_PEAS_10 },       //392
-/*S_PEAS_10*/       { SPR_PEAS, 5, 8, { A_PeasantPunch }, S_PEAS_11 },      //393
+/*S_PEAS_00*/       { SPR_PEAS, 0, 10, {.acp1 = A_FriendLook}, S_PEAS_00 },       //383
+/*S_PEAS_01*/       { SPR_PEAS, 0, 5, {.acp1 = A_RandomWalk}, S_PEAS_02 },        //384
+/*S_PEAS_02*/       { SPR_PEAS, 0, 5, {.acp1 = A_RandomWalk}, S_PEAS_03 },        //385
+/*S_PEAS_03*/       { SPR_PEAS, 1, 5, {.acp1 = A_RandomWalk}, S_PEAS_04 },        //386
+/*S_PEAS_04*/       { SPR_PEAS, 1, 5, {.acp1 = A_RandomWalk}, S_PEAS_05 },        //387
+/*S_PEAS_05*/       { SPR_PEAS, 2, 5, {.acp1 = A_RandomWalk}, S_PEAS_06 },        //388
+/*S_PEAS_06*/       { SPR_PEAS, 2, 5, {.acp1 = A_RandomWalk}, S_PEAS_07 },        //389
+/*S_PEAS_07*/       { SPR_PEAS, 3, 5, {.acp1 = A_RandomWalk}, S_PEAS_08 },        //390
+/*S_PEAS_08*/       { SPR_PEAS, 3, 5, {.acp1 = A_RandomWalk}, S_PEAS_00 },        //391
+/*S_PEAS_09*/       { SPR_PEAS, 4, 10, {.acp1 = A_FaceTarget}, S_PEAS_10 },       //392
+/*S_PEAS_10*/       { SPR_PEAS, 5, 8, {.acp1 = A_PeasantPunch}, S_PEAS_11 },      //393
 /*S_PEAS_11*/       { SPR_PEAS, 4, 8, { nullptr }, S_PEAS_01 },        //394
 /*S_PEAS_12*/       { SPR_PEAS, 14, 3, { nullptr }, S_PEAS_13 },       //395
-/*S_PEAS_13*/       { SPR_PEAS, 14, 3, { A_Pain }, S_PEAS_09 },     //396
+/*S_PEAS_13*/       { SPR_PEAS, 14, 3, {.acp1= A_Pain }, S_PEAS_09 },     //396
 /*S_PEAS_14*/       { SPR_PEAS, 6, 5, { nullptr }, S_PEAS_15 },        //397
-/*S_PEAS_15*/       { SPR_PEAS, 7, 10, { A_PeasantCrash }, S_PEAS_16 },     //398
+/*S_PEAS_15*/       { SPR_PEAS, 7, 10, {.acp1= A_PeasantCrash }, S_PEAS_16 },     //398
 /*S_PEAS_16*/       { SPR_PEAS, 8, 6, { nullptr }, S_PEAS_15 },        //399
 /*S_PEAS_17*/       { SPR_PEAS, 6, 5, { nullptr }, S_PEAS_18 },        //400
-/*S_PEAS_18*/       { SPR_PEAS, 7, 5, { A_Scream }, S_PEAS_19 },        //401
+/*S_PEAS_18*/       { SPR_PEAS, 7, 5, {.acp1= A_Scream }, S_PEAS_19 },        //401
 /*S_PEAS_19*/       { SPR_PEAS, 8, 6, { nullptr }, S_PEAS_20 },        //402
-/*S_PEAS_20*/       { SPR_PEAS, 9, 5, { A_Fall }, S_PEAS_21 },      //403
+/*S_PEAS_20*/       { SPR_PEAS, 9, 5, {.acp1= A_Fall }, S_PEAS_21 },      //403
 /*S_PEAS_21*/       { SPR_PEAS, 10, 5, { nullptr }, S_PEAS_22 },       //404
 /*S_PEAS_22*/       { SPR_PEAS, 11, 6, { nullptr }, S_PEAS_23 },       //405
 /*S_PEAS_23*/       { SPR_PEAS, 12, 8, { nullptr }, S_PEAS_24 },       //406
 /*S_PEAS_24*/       { SPR_PEAS, 13, 1400, { nullptr }, S_GIBS_08 },        //407
-/*S_GIBS_00*/       { SPR_GIBS, 12, 5, { A_BodyParts }, S_GIBS_01 },        //408
-/*S_GIBS_01*/       { SPR_GIBS, 13, 5, { A_XScream }, S_GIBS_02 },      //409
-/*S_GIBS_02*/       { SPR_GIBS, 14, 5, { A_Fall }, S_GIBS_03 },     //410
-/*S_GIBS_03*/       { SPR_GIBS, 15, 4, { A_BodyParts }, S_GIBS_04 },        //411
-/*S_GIBS_04*/       { SPR_GIBS, 16, 4, { A_BodyParts }, S_GIBS_05 },        //412
-/*S_GIBS_05*/       { SPR_GIBS, 17, 4, { A_BodyParts }, S_GIBS_06 },        //413
-/*S_GIBS_06*/       { SPR_GIBS, 18, 4, { A_BodyParts }, S_GIBS_07 },        //414
+/*S_GIBS_00*/       { SPR_GIBS, 12, 5, {.acp1= A_BodyParts }, S_GIBS_01 },        //408
+/*S_GIBS_01*/       { SPR_GIBS, 13, 5, {.acp1= A_XScream }, S_GIBS_02 },      //409
+/*S_GIBS_02*/       { SPR_GIBS, 14, 5, {.acp1= A_Fall }, S_GIBS_03 },     //410
+/*S_GIBS_03*/       { SPR_GIBS, 15, 4, {.acp1= A_BodyParts }, S_GIBS_04 },        //411
+/*S_GIBS_04*/       { SPR_GIBS, 16, 4, {.acp1= A_BodyParts }, S_GIBS_05 },        //412
+/*S_GIBS_05*/       { SPR_GIBS, 17, 4, {.acp1= A_BodyParts }, S_GIBS_06 },        //413
+/*S_GIBS_06*/       { SPR_GIBS, 18, 4, {.acp1= A_BodyParts }, S_GIBS_07 },        //414
 /*S_GIBS_07*/       { SPR_GIBS, 19, 4, { nullptr }, S_GIBS_08 },       //415
 /*S_GIBS_08*/       { SPR_GIBS, 20, 5, { nullptr }, S_GIBS_09 },       //416
 /*S_GIBS_09*/       { SPR_GIBS, 21, 1400, { nullptr }, S_NULL },       //417
-/*S_PEAS_25*/       { SPR_PEAS, 0, 5, { A_ZombieInSpecialSector }, S_PEAS_25 },     //418
-/*S_AGRD_00*/       { SPR_AGRD, 0, 5, { A_ZombieInSpecialSector }, S_AGRD_00 },     //419
+/*S_PEAS_25*/       { SPR_PEAS, 0, 5, {.acp1= A_ZombieInSpecialSector }, S_PEAS_25 },     //418
+/*S_AGRD_00*/       { SPR_AGRD, 0, 5, {.acp1= A_ZombieInSpecialSector }, S_AGRD_00 },     //419
 /*S_ARMR_00*/       { SPR_ARMR, 0, -1, { nullptr }, S_NULL },      //420
-/*S_ARMR_01*/       { SPR_ARMR, 0, -1, { A_HideZombie }, S_NULL },      //421
-/*S_PLAY_19*/       { SPR_PLAY, 0, 175, { A_SpawnZombie }, S_PLAY_19 },     //422
+/*S_ARMR_01*/       { SPR_ARMR, 0, -1, {.acp1= A_HideZombie }, S_NULL },      //421
+/*S_PLAY_19*/       { SPR_PLAY, 0, 175, {.acp1= A_SpawnZombie }, S_PLAY_19 },     //422
 /*S_SACR_00*/       { SPR_SACR, 0, -1, { nullptr }, S_NULL },      //423
 /*S_TNK1_00*/       { SPR_TNK1, 0, 15, { nullptr }, S_TNK1_01 },       //424
 /*S_TNK1_01*/       { SPR_TNK1, 1, 11, { nullptr }, S_TNK1_02 },       //425
@@ -632,112 +633,112 @@ state_t states[NUMSTATES] =
 /*S_TNK6_00*/       { SPR_TNK6, 0, 15, { nullptr }, S_TNK6_01 },       //439
 /*S_TNK6_01*/       { SPR_TNK6, 1, 11, { nullptr }, S_TNK6_02 },       //440
 /*S_TNK6_02*/       { SPR_TNK6, 2, 40, { nullptr }, S_TNK6_00 },       //441
-/*S_NEAL_00*/       { SPR_NEAL, 0, 15, { A_ActiveSound }, S_NEAL_01 },      //442
-/*S_NEAL_01*/       { SPR_NEAL, 1, 40, { A_ActiveSound }, S_NEAL_00 },      //443
-/*S_NEAL_02*/       { SPR_NEAL, 2, 5, { A_ShadowOn }, S_NEAL_03 },      //444
-/*S_NEAL_03*/       { SPR_NEAL, 1, 4, { A_Pain }, S_NEAL_04 },      //445
-/*S_NEAL_04*/       { SPR_NEAL, 2, 5, { A_ShadowOff }, S_NEAL_00 },     //446
+/*S_NEAL_00*/       { SPR_NEAL, 0, 15, {.acp1= A_ActiveSound }, S_NEAL_01 },      //442
+/*S_NEAL_01*/       { SPR_NEAL, 1, 40, {.acp1= A_ActiveSound }, S_NEAL_00 },      //443
+/*S_NEAL_02*/       { SPR_NEAL, 2, 5, {.acp1= A_ShadowOn }, S_NEAL_03 },      //444
+/*S_NEAL_03*/       { SPR_NEAL, 1, 4, {.acp1= A_Pain }, S_NEAL_04 },      //445
+/*S_NEAL_04*/       { SPR_NEAL, 2, 5, {.acp1= A_ShadowOff }, S_NEAL_00 },     //446
 /*S_NEAL_05*/       { SPR_NEAL, 1, 6, { nullptr }, S_NEAL_06 },        //447
-/*S_NEAL_06*/       { SPR_NEAL, 2, 13, { A_PeasantCrash }, S_NEAL_05 },     //448
+/*S_NEAL_06*/       { SPR_NEAL, 2, 13, {.acp1= A_PeasantCrash }, S_NEAL_05 },     //448
 /*S_NEAL_07*/       { SPR_NEAL, 3, 5, { nullptr }, S_NEAL_08 },        //449
-/*S_NEAL_08*/       { SPR_NEAL, 4, 5, { A_Scream }, S_NEAL_09 },        //450
+/*S_NEAL_08*/       { SPR_NEAL, 4, 5, {.acp1= A_Scream }, S_NEAL_09 },        //450
 /*S_NEAL_09*/       { SPR_NEAL, 5, 6, { nullptr }, S_NEAL_10 },        //451
-/*S_NEAL_10*/       { SPR_NEAL, 6, 5, { A_Fall }, S_NEAL_11 },      //452
+/*S_NEAL_10*/       { SPR_NEAL, 6, 5, {.acp1= A_Fall }, S_NEAL_11 },      //452
 /*S_NEAL_11*/       { SPR_NEAL, 7, 5, { nullptr }, S_NEAL_12 },        //453
 /*S_NEAL_12*/       { SPR_NEAL, 8, 6, { nullptr }, S_NEAL_13 },        //454
 /*S_NEAL_13*/       { SPR_NEAL, 9, -1, { nullptr }, S_NULL },      //455
-/*S_BEGR_00*/       { SPR_BEGR, 0, 10, { A_Look }, S_BEGR_00 },     //456
-/*S_BEGR_01*/       { SPR_BEGR, 0, 4, { A_RandomWalk }, S_BEGR_02 },        //457
-/*S_BEGR_02*/       { SPR_BEGR, 0, 4, { A_RandomWalk }, S_BEGR_03 },        //458
-/*S_BEGR_03*/       { SPR_BEGR, 1, 4, { A_RandomWalk }, S_BEGR_04 },        //459
-/*S_BEGR_04*/       { SPR_BEGR, 1, 4, { A_RandomWalk }, S_BEGR_05 },        //460
-/*S_BEGR_05*/       { SPR_BEGR, 2, 4, { A_RandomWalk }, S_BEGR_06 },        //461
-/*S_BEGR_06*/       { SPR_BEGR, 2, 4, { A_RandomWalk }, S_BEGR_01 },        //462
+/*S_BEGR_00*/       { SPR_BEGR, 0, 10, {.acp1 = A_Look}, S_BEGR_00 },     //456
+/*S_BEGR_01*/       { SPR_BEGR, 0, 4, {.acp1 = A_RandomWalk}, S_BEGR_02 },        //457
+/*S_BEGR_02*/       { SPR_BEGR, 0, 4, {.acp1 = A_RandomWalk}, S_BEGR_03 },        //458
+/*S_BEGR_03*/       { SPR_BEGR, 1, 4, {.acp1 = A_RandomWalk}, S_BEGR_04 },        //459
+/*S_BEGR_04*/       { SPR_BEGR, 1, 4, {.acp1 = A_RandomWalk}, S_BEGR_05 },        //460
+/*S_BEGR_05*/       { SPR_BEGR, 2, 4, {.acp1 = A_RandomWalk}, S_BEGR_06 },        //461
+/*S_BEGR_06*/       { SPR_BEGR, 2, 4, {.acp1 = A_RandomWalk}, S_BEGR_01 },        //462
 /*S_BEGR_07*/       { SPR_BEGR, 3, 8, { nullptr }, S_BEGR_08 },        //463
-/*S_BEGR_08*/       { SPR_BEGR, 4, 8, { A_PeasantPunch }, S_BEGR_09 },      //464
-/*S_BEGR_09*/       { SPR_BEGR, 4, 1, { A_Chase }, S_BEGR_10 },     //465
-/*S_BEGR_10*/       { SPR_BEGR, 3, 8, { A_CheckTargetVisible }, S_BEGR_07 },        //466
-/*S_BEGR_11*/       { SPR_BEGR, 0, 3, { A_Pain }, S_BEGR_12 },      //467
-/*S_BEGR_12*/       { SPR_BEGR, 0, 3, { A_Chase }, S_BEGR_07 },     //468
+/*S_BEGR_08*/       { SPR_BEGR, 4, 8, {.acp1 = A_PeasantPunch}, S_BEGR_09 },      //464
+/*S_BEGR_09*/       { SPR_BEGR, 4, 1, {.acp1= A_Chase }, S_BEGR_10 },     //465
+/*S_BEGR_10*/       { SPR_BEGR, 3, 8, {.acp1 = A_CheckTargetVisible}, S_BEGR_07 },        //466
+/*S_BEGR_11*/       { SPR_BEGR, 0, 3, {.acp1= A_Pain }, S_BEGR_12 },      //467
+/*S_BEGR_12*/       { SPR_BEGR, 0, 3, {.acp1= A_Chase }, S_BEGR_07 },     //468
 /*S_BEGR_13*/       { SPR_BEGR, 5, 4, { nullptr }, S_BEGR_14 },        //469
-/*S_BEGR_14*/       { SPR_BEGR, 6, 4, { A_Scream }, S_BEGR_15 },        //470
+/*S_BEGR_14*/       { SPR_BEGR, 6, 4, {.acp1= A_Scream }, S_BEGR_15 },        //470
 /*S_BEGR_15*/       { SPR_BEGR, 7, 4, { nullptr }, S_BEGR_16 },        //471
-/*S_BEGR_16*/       { SPR_BEGR, 8, 4, { A_Fall }, S_BEGR_17 },      //472
+/*S_BEGR_16*/       { SPR_BEGR, 8, 4, {.acp1= A_Fall }, S_BEGR_17 },      //472
 /*S_BEGR_17*/       { SPR_BEGR, 9, 4, { nullptr }, S_BEGR_18 },        //473
 /*S_BEGR_18*/       { SPR_BEGR, 10, 4, { nullptr }, S_BEGR_19 },       //474
 /*S_BEGR_19*/       { SPR_BEGR, 11, 4, { nullptr }, S_BEGR_20 },       //475
 /*S_BEGR_20*/       { SPR_BEGR, 12, 4, { nullptr }, S_BEGR_21 },       //476
 /*S_BEGR_21*/       { SPR_BEGR, 13, -1, { nullptr }, S_NULL },     //477
-/*S_BEGR_22*/       { SPR_BEGR, 5, 5, { A_BodyParts }, S_GIBS_01 },     //478
-/*S_HMN1_00*/       { SPR_HMN1, 15, 5, { A_FriendLook }, S_HMN1_00 },       //479
+/*S_BEGR_22*/       { SPR_BEGR, 5, 5, {.acp1= A_BodyParts }, S_GIBS_01 },     //478
+/*S_HMN1_00*/       { SPR_HMN1, 15, 5, {.acp1 = A_FriendLook}, S_HMN1_00 },       //479
 /*S_HMN1_01*/       { SPR_HMN1, 16, 8, { nullptr }, S_HMN1_00 },       //480
 /*S_HMN1_02*/       { SPR_HMN1, 17, 8, { nullptr }, S_HMN1_00 },       //481
-/*S_HMN1_03*/       { SPR_HMN1, 0, 6, { A_RandomWalk }, S_HMN1_04 },        //482
-/*S_HMN1_04*/       { SPR_HMN1, 1, 6, { A_RandomWalk }, S_HMN1_05 },        //483
-/*S_HMN1_05*/       { SPR_HMN1, 2, 6, { A_RandomWalk }, S_HMN1_06 },        //484
-/*S_HMN1_06*/       { SPR_HMN1, 3, 6, { A_RandomWalk }, S_HMN1_07 },        //485
-/*S_HMN1_07*/       { SPR_HMN1, 0, 6, { A_RandomWalk }, S_HMN1_08 },        //486
-/*S_HMN1_08*/       { SPR_HMN1, 1, 6, { A_RandomWalk }, S_HMN1_09 },        //487
-/*S_HMN1_09*/       { SPR_HMN1, 2, 6, { A_RandomWalk }, S_HMN1_10 },        //488
-/*S_HMN1_10*/       { SPR_HMN1, 3, 6, { A_RandomWalk }, S_HMN1_00 },        //489
-/*S_HMN1_11*/       { SPR_HMN1, 0, 3, { A_Chase }, S_HMN1_12 },     //490
-/*S_HMN1_12*/       { SPR_HMN1, 0, 3, { A_Chase }, S_HMN1_13 },     //491
-/*S_HMN1_13*/       { SPR_HMN1, 1, 3, { A_Chase }, S_HMN1_14 },     //492
-/*S_HMN1_14*/       { SPR_HMN1, 1, 3, { A_Chase }, S_HMN1_15 },     //493
-/*S_HMN1_15*/       { SPR_HMN1, 2, 3, { A_Chase }, S_HMN1_16 },     //494
-/*S_HMN1_16*/       { SPR_HMN1, 2, 3, { A_Chase }, S_HMN1_17 },     //495
-/*S_HMN1_17*/       { SPR_HMN1, 3, 3, { A_Chase }, S_HMN1_18 },     //496
-/*S_HMN1_18*/       { SPR_HMN1, 3, 3, { A_Chase }, S_HMN1_11 },     //497
-/*S_HMN1_19*/       { SPR_HMN1, 4, 10, { A_FaceTarget }, S_HMN1_20 },       //498
-/*S_HMN1_20*/       { SPR_HMN1, 32773, 10, { A_BulletAttack }, S_HMN1_21 },     //499
-/*S_HMN1_21*/       { SPR_HMN1, 4, 10, { A_BulletAttack }, S_HMN1_11 },     //500
+/*S_HMN1_03*/       { SPR_HMN1, 0, 6, {.acp1 = A_RandomWalk}, S_HMN1_04 },        //482
+/*S_HMN1_04*/       { SPR_HMN1, 1, 6, {.acp1 = A_RandomWalk}, S_HMN1_05 },        //483
+/*S_HMN1_05*/       { SPR_HMN1, 2, 6, {.acp1 = A_RandomWalk}, S_HMN1_06 },        //484
+/*S_HMN1_06*/       { SPR_HMN1, 3, 6, {.acp1 = A_RandomWalk}, S_HMN1_07 },        //485
+/*S_HMN1_07*/       { SPR_HMN1, 0, 6, {.acp1 = A_RandomWalk}, S_HMN1_08 },        //486
+/*S_HMN1_08*/       { SPR_HMN1, 1, 6, {.acp1 = A_RandomWalk}, S_HMN1_09 },        //487
+/*S_HMN1_09*/       { SPR_HMN1, 2, 6, {.acp1 = A_RandomWalk}, S_HMN1_10 },        //488
+/*S_HMN1_10*/       { SPR_HMN1, 3, 6, {.acp1 = A_RandomWalk}, S_HMN1_00 },        //489
+/*S_HMN1_11*/       { SPR_HMN1, 0, 3, {.acp1= A_Chase }, S_HMN1_12 },     //490
+/*S_HMN1_12*/       { SPR_HMN1, 0, 3, {.acp1= A_Chase }, S_HMN1_13 },     //491
+/*S_HMN1_13*/       { SPR_HMN1, 1, 3, {.acp1= A_Chase }, S_HMN1_14 },     //492
+/*S_HMN1_14*/       { SPR_HMN1, 1, 3, {.acp1= A_Chase }, S_HMN1_15 },     //493
+/*S_HMN1_15*/       { SPR_HMN1, 2, 3, {.acp1= A_Chase }, S_HMN1_16 },     //494
+/*S_HMN1_16*/       { SPR_HMN1, 2, 3, {.acp1= A_Chase }, S_HMN1_17 },     //495
+/*S_HMN1_17*/       { SPR_HMN1, 3, 3, {.acp1= A_Chase }, S_HMN1_18 },     //496
+/*S_HMN1_18*/       { SPR_HMN1, 3, 3, {.acp1= A_Chase }, S_HMN1_11 },     //497
+/*S_HMN1_19*/       { SPR_HMN1, 4, 10, {.acp1 = A_FaceTarget}, S_HMN1_20 },       //498
+/*S_HMN1_20*/       { SPR_HMN1, 32773, 10, {.acp1 = A_BulletAttack}, S_HMN1_21 },     //499
+/*S_HMN1_21*/       { SPR_HMN1, 4, 10, {.acp1 = A_BulletAttack}, S_HMN1_11 },     //500
 /*S_HMN1_22*/       { SPR_HMN1, 14, 3, { nullptr }, S_HMN1_23 },       //501
-/*S_HMN1_23*/       { SPR_HMN1, 14, 3, { A_Pain }, S_HMN1_11 },     //502
+/*S_HMN1_23*/       { SPR_HMN1, 14, 3, {.acp1= A_Pain }, S_HMN1_11 },     //502
 /*S_HMN1_24*/       { SPR_HMN1, 6, 5, { nullptr }, S_HMN1_25 },        //503
-/*S_HMN1_25*/       { SPR_HMN1, 7, 5, { A_Scream }, S_HMN1_26 },        //504
-/*S_HMN1_26*/       { SPR_HMN1, 8, 3, { A_Fall }, S_HMN1_27 },      //505
+/*S_HMN1_25*/       { SPR_HMN1, 7, 5, {.acp1= A_Scream }, S_HMN1_26 },        //504
+/*S_HMN1_26*/       { SPR_HMN1, 8, 3, {.acp1= A_Fall }, S_HMN1_27 },      //505
 /*S_HMN1_27*/       { SPR_HMN1, 9, 4, { nullptr }, S_HMN1_28 },        //506
 /*S_HMN1_28*/       { SPR_HMN1, 10, 3, { nullptr }, S_HMN1_29 },       //507
 /*S_HMN1_29*/       { SPR_HMN1, 11, 3, { nullptr }, S_HMN1_30 },       //508
 /*S_HMN1_30*/       { SPR_HMN1, 12, 3, { nullptr }, S_HMN1_31 },       //509
 /*S_HMN1_31*/       { SPR_HMN1, 13, -1, { nullptr }, S_NULL },     //510
-/*S_RGIB_08*/       { SPR_RGIB, 0, 4, { A_BodyParts }, S_RGIB_09 },     //511
-/*S_RGIB_09*/       { SPR_RGIB, 1, 4, { A_XScream }, S_RGIB_10 },       //512
-/*S_RGIB_10*/       { SPR_RGIB, 2, 3, { A_Fall }, S_RGIB_11 },      //513
-/*S_RGIB_11*/       { SPR_RGIB, 3, 3, { A_BodyParts }, S_RGIB_12 },     //514
-/*S_RGIB_12*/       { SPR_RGIB, 4, 3, { A_BodyParts }, S_RGIB_13 },     //515
-/*S_RGIB_13*/       { SPR_RGIB, 5, 3, { A_BodyParts }, S_RGIB_14 },     //516
+/*S_RGIB_08*/       { SPR_RGIB, 0, 4, {.acp1= A_BodyParts }, S_RGIB_09 },     //511
+/*S_RGIB_09*/       { SPR_RGIB, 1, 4, {.acp1= A_XScream }, S_RGIB_10 },       //512
+/*S_RGIB_10*/       { SPR_RGIB, 2, 3, {.acp1= A_Fall }, S_RGIB_11 },      //513
+/*S_RGIB_11*/       { SPR_RGIB, 3, 3, {.acp1= A_BodyParts }, S_RGIB_12 },     //514
+/*S_RGIB_12*/       { SPR_RGIB, 4, 3, {.acp1= A_BodyParts }, S_RGIB_13 },     //515
+/*S_RGIB_13*/       { SPR_RGIB, 5, 3, {.acp1= A_BodyParts }, S_RGIB_14 },     //516
 /*S_RGIB_14*/       { SPR_RGIB, 6, 3, { nullptr }, S_RGIB_15 },        //517
 /*S_RGIB_15*/       { SPR_RGIB, 7, 1400, { nullptr }, S_NULL },        //518
-/*S_LEDR_00*/       { SPR_LEDR, 2, 5, { A_FriendLook }, S_LEDR_00 },        //519
+/*S_LEDR_00*/       { SPR_LEDR, 2, 5, {.acp1 = A_FriendLook}, S_LEDR_00 },        //519
 /*S_LEDR_01*/       { SPR_LEDR, 0, 8, { nullptr }, S_LEDR_00 },        //520
 /*S_LEDR_02*/       { SPR_LEDR, 1, 8, { nullptr }, S_LEDR_00 },        //521
-/*S_LEAD_00*/       { SPR_LEAD, 0, 6, { A_RandomWalk }, S_LEAD_01 },        //522
-/*S_LEAD_01*/       { SPR_LEAD, 1, 6, { A_RandomWalk }, S_LEAD_02 },        //523
-/*S_LEAD_02*/       { SPR_LEAD, 2, 6, { A_RandomWalk }, S_LEAD_03 },        //524
-/*S_LEAD_03*/       { SPR_LEAD, 3, 6, { A_RandomWalk }, S_LEDR_00 },        //525
-/*S_LEAD_04*/       { SPR_LEAD, 0, 3, { A_Chase }, S_LEAD_05 },     //526
-/*S_LEAD_05*/       { SPR_LEAD, 0, 3, { A_Chase }, S_LEAD_06 },     //527
-/*S_LEAD_06*/       { SPR_LEAD, 1, 3, { A_Chase }, S_LEAD_07 },     //528
-/*S_LEAD_07*/       { SPR_LEAD, 1, 3, { A_Chase }, S_LEAD_08 },     //529
-/*S_LEAD_08*/       { SPR_LEAD, 2, 3, { A_Chase }, S_LEAD_09 },     //530
-/*S_LEAD_09*/       { SPR_LEAD, 2, 3, { A_Chase }, S_LEAD_10 },     //531
-/*S_LEAD_10*/       { SPR_LEAD, 3, 3, { A_Chase }, S_LEAD_11 },     //532
-/*S_LEAD_11*/       { SPR_LEAD, 3, 3, { A_Chase }, S_LEAD_04 },     //533
-/*S_LEAD_12*/       { SPR_LEAD, 4, 2, { A_FaceTarget }, S_LEAD_13 },        //534
-/*S_LEAD_13*/       { SPR_LEAD, 32773, 2, { A_BulletAttack }, S_LEAD_14 },      //535
-/*S_LEAD_14*/       { SPR_LEAD, 4, 1, { A_CheckTargetVisible }, S_LEAD_12 },        //536
+/*S_LEAD_00*/       { SPR_LEAD, 0, 6, {.acp1 = A_RandomWalk}, S_LEAD_01 },        //522
+/*S_LEAD_01*/       { SPR_LEAD, 1, 6, {.acp1 = A_RandomWalk}, S_LEAD_02 },        //523
+/*S_LEAD_02*/       { SPR_LEAD, 2, 6, {.acp1 = A_RandomWalk}, S_LEAD_03 },        //524
+/*S_LEAD_03*/       { SPR_LEAD, 3, 6, {.acp1 = A_RandomWalk}, S_LEDR_00 },        //525
+/*S_LEAD_04*/       { SPR_LEAD, 0, 3, {.acp1= A_Chase }, S_LEAD_05 },     //526
+/*S_LEAD_05*/       { SPR_LEAD, 0, 3, {.acp1= A_Chase }, S_LEAD_06 },     //527
+/*S_LEAD_06*/       { SPR_LEAD, 1, 3, {.acp1= A_Chase }, S_LEAD_07 },     //528
+/*S_LEAD_07*/       { SPR_LEAD, 1, 3, {.acp1= A_Chase }, S_LEAD_08 },     //529
+/*S_LEAD_08*/       { SPR_LEAD, 2, 3, {.acp1= A_Chase }, S_LEAD_09 },     //530
+/*S_LEAD_09*/       { SPR_LEAD, 2, 3, {.acp1= A_Chase }, S_LEAD_10 },     //531
+/*S_LEAD_10*/       { SPR_LEAD, 3, 3, {.acp1= A_Chase }, S_LEAD_11 },     //532
+/*S_LEAD_11*/       { SPR_LEAD, 3, 3, {.acp1= A_Chase }, S_LEAD_04 },     //533
+/*S_LEAD_12*/       { SPR_LEAD, 4, 2, {.acp1 = A_FaceTarget}, S_LEAD_13 },        //534
+/*S_LEAD_13*/       { SPR_LEAD, 32773, 2, {.acp1 = A_BulletAttack}, S_LEAD_14 },      //535
+/*S_LEAD_14*/       { SPR_LEAD, 4, 1, {.acp1 = A_CheckTargetVisible}, S_LEAD_12 },        //536
 /*S_LEAD_15*/       { SPR_LEAD, 24, 3, { nullptr }, S_LEAD_16 },       //537
-/*S_LEAD_16*/       { SPR_LEAD, 24, 3, { A_Pain }, S_LEAD_04 },     //538
-/*S_LEAD_17*/       { SPR_LEAD, 4, 4, { A_FaceTarget }, S_LEAD_18 },        //539
-/*S_LEAD_18*/       { SPR_LEAD, 32773, 4, { A_BulletAttack }, S_LEAD_19 },      //540
-/*S_LEAD_19*/       { SPR_LEAD, 4, 2, { A_CheckTargetVisible }, S_LEAD_17 },        //541
+/*S_LEAD_16*/       { SPR_LEAD, 24, 3, {.acp1= A_Pain }, S_LEAD_04 },     //538
+/*S_LEAD_17*/       { SPR_LEAD, 4, 4, {.acp1 = A_FaceTarget}, S_LEAD_18 },        //539
+/*S_LEAD_18*/       { SPR_LEAD, 32773, 4, {.acp1 = A_BulletAttack}, S_LEAD_19 },      //540
+/*S_LEAD_19*/       { SPR_LEAD, 4, 2, {.acp1 = A_CheckTargetVisible}, S_LEAD_17 },        //541
 /*S_LEAD_20*/       { SPR_LEAD, 6, 5, { nullptr }, S_LEAD_21 },        //542
-/*S_LEAD_21*/       { SPR_LEAD, 7, 5, { A_Scream }, S_LEAD_22 },        //543
+/*S_LEAD_21*/       { SPR_LEAD, 7, 5, {.acp1= A_Scream }, S_LEAD_22 },        //543
 /*S_LEAD_22*/       { SPR_LEAD, 8, 4, { nullptr }, S_LEAD_23 },        //544
 /*S_LEAD_23*/       { SPR_LEAD, 9, 4, { nullptr }, S_LEAD_24 },        //545
 /*S_LEAD_24*/       { SPR_LEAD, 10, 3, { nullptr }, S_LEAD_25 },       //546
-/*S_LEAD_25*/       { SPR_LEAD, 11, 3, { A_Fall }, S_LEAD_26 },     //547
+/*S_LEAD_25*/       { SPR_LEAD, 11, 3, {.acp1= A_Fall }, S_LEAD_26 },     //547
 /*S_LEAD_26*/       { SPR_LEAD, 12, 3, { nullptr }, S_LEAD_27 },       //548
 /*S_LEAD_27*/       { SPR_LEAD, 13, 3, { nullptr }, S_LEAD_28 },       //549
 /*S_LEAD_28*/       { SPR_LEAD, 14, 3, { nullptr }, S_LEAD_29 },       //550
@@ -748,116 +749,116 @@ state_t states[NUMSTATES] =
 /*S_LEAD_33*/       { SPR_LEAD, 19, 3, { nullptr }, S_LEAD_34 },       //555
 /*S_LEAD_34*/       { SPR_LEAD, 20, 3, { nullptr }, S_LEAD_35 },       //556
 /*S_LEAD_35*/       { SPR_LEAD, 21, 3, { nullptr }, S_LEAD_36 },       //557
-/*S_LEAD_36*/       { SPR_LEAD, 22, 3, { A_SpawnSpectreD }, S_LEAD_37 },        //558
+/*S_LEAD_36*/       { SPR_LEAD, 22, 3, {.acp1= A_SpawnSpectreD }, S_LEAD_37 },        //558
 /*S_LEAD_37*/       { SPR_LEAD, 23, -1, { nullptr }, S_NULL },     //559
 /*S_PUFY_04*/       { SPR_PUFY, 1, 4, { nullptr }, S_PUFY_05 },        //560
 /*S_PUFY_05*/       { SPR_PUFY, 2, 4, { nullptr }, S_PUFY_06 },        //561
 /*S_PUFY_06*/       { SPR_PUFY, 1, 4, { nullptr }, S_PUFY_07 },        //562
 /*S_PUFY_07*/       { SPR_PUFY, 2, 4, { nullptr }, S_PUFY_08 },        //563
 /*S_PUFY_08*/       { SPR_PUFY, 3, 4, { nullptr }, S_NULL },       //564
-/*S_MICR_01*/       { SPR_MICR, 32768, 2, { A_Tracer }, S_MICR_02 },        //565
-/*S_MICR_02*/       { SPR_MICR, 32768, 2, { A_Tracer }, S_MICR_01 },        //566
-/*S_ROB1_00*/       { SPR_ROB1, 0, 10, { A_Look }, S_ROB1_01 },     //567
-/*S_ROB1_01*/       { SPR_ROB1, 0, 10, { A_Look }, S_ROB1_00 },     //568
-/*S_ROB1_02*/       { SPR_ROB1, 1, 3, { A_Chase }, S_ROB1_03 },     //569
-/*S_ROB1_03*/       { SPR_ROB1, 1, 3, { A_Chase }, S_ROB1_04 },     //570
-/*S_ROB1_04*/       { SPR_ROB1, 2, 3, { A_Chase }, S_ROB1_05 },     //571
-/*S_ROB1_05*/       { SPR_ROB1, 2, 3, { A_Chase }, S_ROB1_06 },     //572
-/*S_ROB1_06*/       { SPR_ROB1, 3, 3, { A_Chase }, S_ROB1_07 },     //573
-/*S_ROB1_07*/       { SPR_ROB1, 3, 3, { A_Chase }, S_ROB1_08 },     //574
-/*S_ROB1_08*/       { SPR_ROB1, 4, 3, { A_Chase }, S_ROB1_09 },     //575
-/*S_ROB1_09*/       { SPR_ROB1, 4, 3, { A_Chase }, S_ROB1_02 },     //576
-/*S_ROB1_10*/       { SPR_ROB1, 7, 6, { A_FaceTarget }, S_ROB1_11 },        //577
-/*S_ROB1_11*/       { SPR_ROB1, 8, 8, { A_RobotMelee }, S_ROB1_12 },        //578
+/*S_MICR_01*/       { SPR_MICR, 32768, 2, {.acp1=A_Tracer}, S_MICR_02 },        //565
+/*S_MICR_02*/       { SPR_MICR, 32768, 2, {.acp1=A_Tracer}, S_MICR_01 },        //566
+/*S_ROB1_00*/       { SPR_ROB1, 0, 10, {.acp1 = A_Look}, S_ROB1_01 },     //567
+/*S_ROB1_01*/       { SPR_ROB1, 0, 10, {.acp1 = A_Look}, S_ROB1_00 },     //568
+/*S_ROB1_02*/       { SPR_ROB1, 1, 3, {.acp1= A_Chase }, S_ROB1_03 },     //569
+/*S_ROB1_03*/       { SPR_ROB1, 1, 3, {.acp1= A_Chase }, S_ROB1_04 },     //570
+/*S_ROB1_04*/       { SPR_ROB1, 2, 3, {.acp1= A_Chase }, S_ROB1_05 },     //571
+/*S_ROB1_05*/       { SPR_ROB1, 2, 3, {.acp1= A_Chase }, S_ROB1_06 },     //572
+/*S_ROB1_06*/       { SPR_ROB1, 3, 3, {.acp1= A_Chase }, S_ROB1_07 },     //573
+/*S_ROB1_07*/       { SPR_ROB1, 3, 3, {.acp1= A_Chase }, S_ROB1_08 },     //574
+/*S_ROB1_08*/       { SPR_ROB1, 4, 3, {.acp1= A_Chase }, S_ROB1_09 },     //575
+/*S_ROB1_09*/       { SPR_ROB1, 4, 3, {.acp1= A_Chase }, S_ROB1_02 },     //576
+/*S_ROB1_10*/       { SPR_ROB1, 7, 6, {.acp1 = A_FaceTarget}, S_ROB1_11 },        //577
+/*S_ROB1_11*/       { SPR_ROB1, 8, 8, {.acp1= A_RobotMelee }, S_ROB1_12 },        //578
 /*S_ROB1_12*/       { SPR_ROB1, 7, 6, { nullptr }, S_ROB1_02 },        //579
-/*S_ROB1_13*/       { SPR_ROB1, 5, 8, { A_FaceTarget }, S_ROB1_14 },        //580
-/*S_ROB1_14*/       { SPR_ROB1, 32774, 11, { A_ReaverAttack }, S_ROB1_02 },        //581
+/*S_ROB1_13*/       { SPR_ROB1, 5, 8, {.acp1 = A_FaceTarget}, S_ROB1_14 },        //580
+/*S_ROB1_14*/       { SPR_ROB1, 32774, 11, {.acp1 = A_ReaverAttack}, S_ROB1_02 },        //581
 /*S_ROB1_15*/       { SPR_ROB1, 0, 2, { nullptr }, S_ROB1_16 },        //582
-/*S_ROB1_16*/       { SPR_ROB1, 0, 2, { A_Pain }, S_ROB1_02 },      //583
+/*S_ROB1_16*/       { SPR_ROB1, 0, 2, {.acp1= A_Pain }, S_ROB1_02 },      //583
 /*S_ROB1_17*/       { SPR_ROB1, 32777, 6, { nullptr }, S_ROB1_18 },        //584
-/*S_ROB1_18*/       { SPR_ROB1, 32778, 6, { A_Scream }, S_ROB1_19 },        //585
+/*S_ROB1_18*/       { SPR_ROB1, 32778, 6, {.acp1= A_Scream }, S_ROB1_19 },        //585
 /*S_ROB1_19*/       { SPR_ROB1, 32779, 5, { nullptr }, S_ROB1_20 },        //586
-/*S_ROB1_20*/       { SPR_ROB1, 32780, 5, { A_Fall }, S_ROB1_21 },      //587
+/*S_ROB1_20*/       { SPR_ROB1, 32780, 5, {.acp1= A_Fall }, S_ROB1_21 },      //587
 /*S_ROB1_21*/       { SPR_ROB1, 32781, 5, { nullptr }, S_ROB1_22 },        //588
 /*S_ROB1_22*/       { SPR_ROB1, 32782, 5, { nullptr }, S_ROB1_23 },        //589
 /*S_ROB1_23*/       { SPR_ROB1, 32783, 5, { nullptr }, S_ROB1_24 },        //590
-/*S_ROB1_24*/       { SPR_ROB1, 32784, 6, { A_DeathExplode3 }, S_ROB1_25 },     //591
+/*S_ROB1_24*/       { SPR_ROB1, 32784, 6, {.acp1= A_DeathExplode3 }, S_ROB1_25 },     //591
 /*S_ROB1_25*/       { SPR_ROB1, 17, -1, { nullptr }, S_NULL },     //592
-/*S_ROB1_26*/       { SPR_ROB1, 32779, 5, { A_BodyParts }, S_ROB1_27 },     //593
-/*S_ROB1_27*/       { SPR_ROB1, 32780, 5, { A_XScream }, S_ROB1_28 },       //594
-/*S_ROB1_28*/       { SPR_ROB1, 32781, 5, { A_BodyParts }, S_ROB1_29 },     //595
-/*S_ROB1_29*/       { SPR_ROB1, 32782, 5, { A_Fall }, S_ROB1_30 },      //596
-/*S_ROB1_30*/       { SPR_ROB1, 32783, 5, { A_BodyParts }, S_ROB1_31 },     //597
-/*S_ROB1_31*/       { SPR_ROB1, 32784, 5, { A_DeathExplode3 }, S_ROB1_32 },     //598
+/*S_ROB1_26*/       { SPR_ROB1, 32779, 5, { .acp1=A_BodyParts }, S_ROB1_27 },     //593
+/*S_ROB1_27*/       { SPR_ROB1, 32780, 5, {.acp1= A_XScream }, S_ROB1_28 },       //594
+/*S_ROB1_28*/       { SPR_ROB1, 32781, 5, {.acp1= A_BodyParts }, S_ROB1_29 },     //595
+/*S_ROB1_29*/       { SPR_ROB1, 32782, 5, {.acp1= A_Fall }, S_ROB1_30 },      //596
+/*S_ROB1_30*/       { SPR_ROB1, 32783, 5, {.acp1= A_BodyParts }, S_ROB1_31 },     //597
+/*S_ROB1_31*/       { SPR_ROB1, 32784, 5, {.acp1= A_DeathExplode3 }, S_ROB1_32 },     //598
 /*S_ROB1_32*/       { SPR_ROB1, 17, -1, { nullptr }, S_NULL },     //599
-/*S_AGRD_01*/       { SPR_AGRD, 0, 5, { A_FriendLook }, S_AGRD_01 },        //600
-/*S_AGRD_02*/       { SPR_AGRD, 1, 8, { A_ShadowOff }, S_AGRD_01 },     //601
+/*S_AGRD_01*/       { SPR_AGRD, 0, 5, {.acp1 = A_FriendLook}, S_AGRD_01 },        //600
+/*S_AGRD_02*/       { SPR_AGRD, 1, 8, {.acp1= A_ShadowOff }, S_AGRD_01 },     //601
 /*S_AGRD_03*/       { SPR_AGRD, 3, 8, { nullptr }, S_AGRD_01 },        //602
-/*S_AGRD_04*/       { SPR_AGRD, 0, 5, { A_RandomWalk }, S_AGRD_05 },        //603
-/*S_AGRD_05*/       { SPR_AGRD, 1, 5, { A_RandomWalk }, S_AGRD_06 },        //604
-/*S_AGRD_06*/       { SPR_AGRD, 2, 5, { A_RandomWalk }, S_AGRD_07 },        //605
-/*S_AGRD_07*/       { SPR_AGRD, 3, 5, { A_RandomWalk }, S_AGRD_08 },        //606
-/*S_AGRD_08*/       { SPR_AGRD, 0, 5, { A_RandomWalk }, S_AGRD_09 },        //607
-/*S_AGRD_09*/       { SPR_AGRD, 1, 5, { A_RandomWalk }, S_AGRD_10 },        //608
-/*S_AGRD_10*/       { SPR_AGRD, 2, 5, { A_RandomWalk }, S_AGRD_11 },        //609
-/*S_AGRD_11*/       { SPR_AGRD, 3, 5, { A_RandomWalk }, S_AGRD_01 },        //610
-/*S_AGRD_12*/       { SPR_AGRD, 0, 6, { A_ModifyVisibility }, S_AGRD_14 },      //611
-/*S_AGRD_13*/       { SPR_AGRD, 0, 6, { A_SetTLOptions }, S_AGRD_14 },      //612
-/*S_AGRD_14*/       { SPR_AGRD, 1, 6, { A_Chase }, S_AGRD_15 },     //613
-/*S_AGRD_15*/       { SPR_AGRD, 2, 6, { A_Chase }, S_AGRD_16 },     //614
-/*S_AGRD_16*/       { SPR_AGRD, 3, 6, { A_Chase }, S_AGRD_13 },     //615
-/*S_AGRD_17*/       { SPR_AGRD, 4, 8, { A_FaceTarget }, S_AGRD_18 },        //616
-/*S_AGRD_18*/       { SPR_AGRD, 5, 4, { A_BulletAttack }, S_AGRD_19 },      //617
-/*S_AGRD_19*/       { SPR_AGRD, 4, 4, { A_BulletAttack }, S_AGRD_20 },      //618
-/*S_AGRD_20*/       { SPR_AGRD, 5, 6, { A_BulletAttack }, S_AGRD_13 },      //619
-/*S_AGRD_21*/       { SPR_AGRD, 14, 0, { A_ShadowOn }, S_AGRD_22 },     //620
-/*S_AGRD_22*/       { SPR_AGRD, 14, 8, { A_Pain }, S_AGRD_12 },     //621
-/*S_AGRD_23*/       { SPR_AGRD, 14, 8, { A_Pain }, S_AGRD_13 },     //622
+/*S_AGRD_04*/       { SPR_AGRD, 0, 5, {.acp1 = A_RandomWalk}, S_AGRD_05 },        //603
+/*S_AGRD_05*/       { SPR_AGRD, 1, 5, {.acp1 = A_RandomWalk}, S_AGRD_06 },        //604
+/*S_AGRD_06*/       { SPR_AGRD, 2, 5, {.acp1 = A_RandomWalk}, S_AGRD_07 },        //605
+/*S_AGRD_07*/       { SPR_AGRD, 3, 5, {.acp1 = A_RandomWalk}, S_AGRD_08 },        //606
+/*S_AGRD_08*/       { SPR_AGRD, 0, 5, {.acp1 = A_RandomWalk}, S_AGRD_09 },        //607
+/*S_AGRD_09*/       { SPR_AGRD, 1, 5, {.acp1 = A_RandomWalk}, S_AGRD_10 },        //608
+/*S_AGRD_10*/       { SPR_AGRD, 2, 5, {.acp1 = A_RandomWalk}, S_AGRD_11 },        //609
+/*S_AGRD_11*/       { SPR_AGRD, 3, 5, {.acp1 = A_RandomWalk}, S_AGRD_01 },        //610
+/*S_AGRD_12*/       { SPR_AGRD, 0, 6, {.acp1= A_ModifyVisibility }, S_AGRD_14 },      //611
+/*S_AGRD_13*/       { SPR_AGRD, 0, 6, {.acp1= A_SetTLOptions }, S_AGRD_14 },      //612
+/*S_AGRD_14*/       { SPR_AGRD, 1, 6, {.acp1= A_Chase }, S_AGRD_15 },     //613
+/*S_AGRD_15*/       { SPR_AGRD, 2, 6, {.acp1= A_Chase }, S_AGRD_16 },     //614
+/*S_AGRD_16*/       { SPR_AGRD, 3, 6, {.acp1= A_Chase }, S_AGRD_13 },     //615
+/*S_AGRD_17*/       { SPR_AGRD, 4, 8, {.acp1 = A_FaceTarget}, S_AGRD_18 },        //616
+/*S_AGRD_18*/       { SPR_AGRD, 5, 4, {.acp1 = A_BulletAttack}, S_AGRD_19 },      //617
+/*S_AGRD_19*/       { SPR_AGRD, 4, 4, {.acp1 = A_BulletAttack}, S_AGRD_20 },      //618
+/*S_AGRD_20*/       { SPR_AGRD, 5, 6, {.acp1 = A_BulletAttack}, S_AGRD_13 },      //619
+/*S_AGRD_21*/       { SPR_AGRD, 14, 0, {.acp1= A_ShadowOn }, S_AGRD_22 },     //620
+/*S_AGRD_22*/       { SPR_AGRD, 14, 8, {.acp1= A_Pain }, S_AGRD_12 },     //621
+/*S_AGRD_23*/       { SPR_AGRD, 14, 8, { .acp1=A_Pain }, S_AGRD_13 },     //622
 /*S_AGRD_24*/       { SPR_AGRD, 6, 4, { nullptr }, S_AGRD_25 },        //623
-/*S_AGRD_25*/       { SPR_AGRD, 7, 4, { A_Scream }, S_AGRD_26 },        //624
+/*S_AGRD_25*/       { SPR_AGRD, 7, 4, {.acp1=A_Scream }, S_AGRD_26 },        //624
 /*S_AGRD_26*/       { SPR_AGRD, 8, 4, { nullptr }, S_AGRD_27 },        //625
 /*S_AGRD_27*/       { SPR_AGRD, 9, 3, { nullptr }, S_AGRD_28 },        //626
-/*S_AGRD_28*/       { SPR_AGRD, 10, 3, { A_Fall }, S_AGRD_29 },     //627
+/*S_AGRD_28*/       { SPR_AGRD, 10, 3, {.acp1= A_Fall }, S_AGRD_29 },     //627
 /*S_AGRD_29*/       { SPR_AGRD, 11, 3, { nullptr }, S_AGRD_30 },       //628
-/*S_AGRD_30*/       { SPR_AGRD, 12, 3, { A_AcolyteSpecial }, S_AGRD_31 },       //629
+/*S_AGRD_30*/       { SPR_AGRD, 12, 3, {.acp1= A_AcolyteSpecial }, S_AGRD_31 },       //629
 /*S_AGRD_31*/       { SPR_AGRD, 13, 1400, { nullptr }, S_GIBS_20 },        //630
-/*S_GIBS_10*/       { SPR_GIBS, 0, 5, { A_Fall }, S_GIBS_11 },      //631
-/*S_GIBS_11*/       { SPR_GIBS, 1, 5, { A_BodyParts }, S_GIBS_12 },     //632
-/*S_GIBS_12*/       { SPR_GIBS, 2, 5, { A_BodyParts }, S_GIBS_13 },     //633
-/*S_GIBS_13*/       { SPR_GIBS, 3, 4, { A_BodyParts }, S_GIBS_14 },     //634
-/*S_GIBS_14*/       { SPR_GIBS, 4, 4, { A_XScream }, S_GIBS_15 },       //635
-/*S_GIBS_15*/       { SPR_GIBS, 5, 4, { A_BodyParts }, S_GIBS_16 },     //636
+/*S_GIBS_10*/       { SPR_GIBS, 0, 5, {.acp1= A_Fall }, S_GIBS_11 },      //631
+/*S_GIBS_11*/       { SPR_GIBS, 1, 5, {.acp1= A_BodyParts }, S_GIBS_12 },     //632
+/*S_GIBS_12*/       { SPR_GIBS, 2, 5, {.acp1= A_BodyParts }, S_GIBS_13 },     //633
+/*S_GIBS_13*/       { SPR_GIBS, 3, 4, {.acp1= A_BodyParts }, S_GIBS_14 },     //634
+/*S_GIBS_14*/       { SPR_GIBS, 4, 4, { .acp1=A_XScream }, S_GIBS_15 },       //635
+/*S_GIBS_15*/       { SPR_GIBS, 5, 4, {.acp1= A_BodyParts }, S_GIBS_16 },     //636
 /*S_GIBS_16*/       { SPR_GIBS, 6, 4, { nullptr }, S_GIBS_17 },        //637
 /*S_GIBS_17*/       { SPR_GIBS, 7, 4, { nullptr }, S_GIBS_18 },        //638
 /*S_GIBS_18*/       { SPR_GIBS, 8, 5, { nullptr }, S_GIBS_19 },        //639
-/*S_GIBS_19*/       { SPR_GIBS, 9, 5, { A_AcolyteSpecial }, S_GIBS_20 },        //640
+/*S_GIBS_19*/       { SPR_GIBS, 9, 5, {.acp1= A_AcolyteSpecial }, S_GIBS_20 },        //640
 /*S_GIBS_20*/       { SPR_GIBS, 10, 5, { nullptr }, S_GIBS_21 },       //641
 /*S_GIBS_21*/       { SPR_GIBS, 11, 1400, { nullptr }, S_NULL },       //642
-/*S_PGRD_00*/       { SPR_PGRD, 0, 5, { A_FriendLook }, S_PGRD_00 },        //643
+/*S_PGRD_00*/       { SPR_PGRD, 0, 5, {.acp1 = A_FriendLook}, S_PGRD_00 },        //643
 /*S_PGRD_01*/       { SPR_PGRD, 1, 10, { nullptr }, S_PGRD_00 },       //644
 /*S_PGRD_02*/       { SPR_PGRD, 2, 10, { nullptr }, S_PGRD_00 },       //645
-/*S_PGRD_03*/       { SPR_PGRD, 1, 10, { A_RandomWalk }, S_PGRD_00 },       //646
-/*S_PGRD_04*/       { SPR_PGRD, 0, 3, { A_Chase }, S_PGRD_05 },     //647
-/*S_PGRD_05*/       { SPR_PGRD, 0, 3, { A_Chase }, S_PGRD_06 },     //648
-/*S_PGRD_06*/       { SPR_PGRD, 1, 3, { A_Chase }, S_PGRD_07 },     //649
-/*S_PGRD_07*/       { SPR_PGRD, 1, 3, { A_Chase }, S_PGRD_08 },     //650
-/*S_PGRD_08*/       { SPR_PGRD, 2, 3, { A_Chase }, S_PGRD_09 },     //651
-/*S_PGRD_09*/       { SPR_PGRD, 2, 3, { A_Chase }, S_PGRD_10 },     //652
-/*S_PGRD_10*/       { SPR_PGRD, 3, 3, { A_Chase }, S_PGRD_11 },     //653
-/*S_PGRD_11*/       { SPR_PGRD, 3, 3, { A_Chase }, S_PGRD_04 },     //654
-/*S_PGRD_12*/       { SPR_PGRD, 4, 8, { A_FaceTarget }, S_PGRD_13 },        //655
-/*S_PGRD_13*/       { SPR_PGRD, 5, 8, { A_RobotMelee }, S_PGRD_04 },        //656
-/*S_PGRD_14*/       { SPR_PGRD, 32774, 8, { A_FaceTarget }, S_PGRD_15 },        //657
-/*S_PGRD_15*/       { SPR_PGRD, 32775, 8, { A_TemplarMauler }, S_PGRD_04 },     //658
+/*S_PGRD_03*/       { SPR_PGRD, 1, 10, {.acp1 = A_RandomWalk}, S_PGRD_00 },       //646
+/*S_PGRD_04*/       { SPR_PGRD, 0, 3, {.acp1= A_Chase }, S_PGRD_05 },     //647
+/*S_PGRD_05*/       { SPR_PGRD, 0, 3, {.acp1= A_Chase }, S_PGRD_06 },     //648
+/*S_PGRD_06*/       { SPR_PGRD, 1, 3, {.acp1= A_Chase }, S_PGRD_07 },     //649
+/*S_PGRD_07*/       { SPR_PGRD, 1, 3, {.acp1= A_Chase }, S_PGRD_08 },     //650
+/*S_PGRD_08*/       { SPR_PGRD, 2, 3, {.acp1= A_Chase }, S_PGRD_09 },     //651
+/*S_PGRD_09*/       { SPR_PGRD, 2, 3, {.acp1= A_Chase }, S_PGRD_10 },     //652
+/*S_PGRD_10*/       { SPR_PGRD, 3, 3, {.acp1= A_Chase }, S_PGRD_11 },     //653
+/*S_PGRD_11*/       { SPR_PGRD, 3, 3, {.acp1= A_Chase }, S_PGRD_04 },     //654
+/*S_PGRD_12*/       { SPR_PGRD, 4, 8, {.acp1 = A_FaceTarget}, S_PGRD_13 },        //655
+/*S_PGRD_13*/       { SPR_PGRD, 5, 8, {.acp1= A_RobotMelee }, S_PGRD_04 },        //656
+/*S_PGRD_14*/       { SPR_PGRD, 32774, 8, {.acp1 = A_FaceTarget}, S_PGRD_15 },        //657
+/*S_PGRD_15*/       { SPR_PGRD, 32775, 8, {.acp1= A_TemplarMauler }, S_PGRD_04 },     //658
 /*S_PGRD_16*/       { SPR_PGRD, 0, 2, { nullptr }, S_PGRD_17 },        //659
-/*S_PGRD_17*/       { SPR_PGRD, 0, 2, { A_Pain }, S_PGRD_04 },      //660
-/*S_PGRD_18*/       { SPR_PGRD, 32776, 4, { A_BodyParts }, S_PGRD_19 },     //661
-/*S_PGRD_19*/       { SPR_PGRD, 32777, 4, { A_Scream }, S_PGRD_20 },        //662
-/*S_PGRD_20*/       { SPR_PGRD, 32778, 4, { A_BodyParts }, S_PGRD_21 },     //663
-/*S_PGRD_21*/       { SPR_PGRD, 32779, 4, { A_Fall }, S_PGRD_22 },      //664
+/*S_PGRD_17*/       { SPR_PGRD, 0, 2, {.acp1= A_Pain }, S_PGRD_04 },      //660
+/*S_PGRD_18*/       { SPR_PGRD, 32776, 4, {.acp1= A_BodyParts }, S_PGRD_19 },     //661
+/*S_PGRD_19*/       { SPR_PGRD, 32777, 4, {.acp1= A_Scream }, S_PGRD_20 },        //662
+/*S_PGRD_20*/       { SPR_PGRD, 32778, 4, {.acp1= A_BodyParts }, S_PGRD_21 },     //663
+/*S_PGRD_21*/       { SPR_PGRD, 32779, 4, {.acp1= A_Fall }, S_PGRD_22 },      //664
 /*S_PGRD_22*/       { SPR_PGRD, 32780, 4, { nullptr }, S_PGRD_23 },        //665
 /*S_PGRD_23*/       { SPR_PGRD, 32781, 4, { nullptr }, S_PGRD_24 },        //666
-/*S_PGRD_24*/       { SPR_PGRD, 14, 4, { A_BodyParts }, S_PGRD_25 },        //667
+/*S_PGRD_24*/       { SPR_PGRD, 14, 4, {.acp1= A_BodyParts }, S_PGRD_25 },        //667
 /*S_PGRD_25*/       { SPR_PGRD, 15, 4, { nullptr }, S_PGRD_26 },       //668
 /*S_PGRD_26*/       { SPR_PGRD, 16, 4, { nullptr }, S_PGRD_27 },       //669
 /*S_PGRD_27*/       { SPR_PGRD, 17, 4, { nullptr }, S_PGRD_28 },       //670
@@ -871,64 +872,64 @@ state_t states[NUMSTATES] =
 /*S_PGRD_35*/       { SPR_PGRD, 25, 3, { nullptr }, S_PGRD_36 },       //678
 /*S_PGRD_36*/       { SPR_PGRD, 26, 3, { nullptr }, S_PGRD_37 },       //679
 /*S_PGRD_37*/       { SPR_PGRD, 27, -1, { nullptr }, S_NULL },     //680
-/*S_ROB2_00*/       { SPR_ROB2, 16, 10, { A_Look }, S_ROB2_00 },        //681
-/*S_ROB2_01*/       { SPR_ROB2, 0, 3, { A_Chase }, S_ROB2_02 },     //682
-/*S_ROB2_02*/       { SPR_ROB2, 0, 3, { A_Chase }, S_ROB2_03 },     //683
-/*S_ROB2_03*/       { SPR_ROB2, 1, 3, { A_Chase }, S_ROB2_04 },     //684
-/*S_ROB2_04*/       { SPR_ROB2, 1, 3, { A_Chase }, S_ROB2_05 },     //685
-/*S_ROB2_05*/       { SPR_ROB2, 2, 3, { A_Chase }, S_ROB2_06 },     //686
-/*S_ROB2_06*/       { SPR_ROB2, 2, 3, { A_Chase }, S_ROB2_07 },     //687
-/*S_ROB2_07*/       { SPR_ROB2, 3, 3, { A_Chase }, S_ROB2_08 },     //688
-/*S_ROB2_08*/       { SPR_ROB2, 3, 3, { A_Chase }, S_ROB2_01 },     //689
-/*S_ROB2_09*/       { SPR_ROB2, 4, 3, { A_FaceTarget }, S_ROB2_10 },        //690
-/*S_ROB2_10*/       { SPR_ROB2, 32773, 2, { A_CrusaderAttack }, S_ROB2_11 },        //691
-/*S_ROB2_11*/       { SPR_ROB2, 32772, 2, { A_CrusaderLeft }, S_ROB2_12 },      //692
-/*S_ROB2_12*/       { SPR_ROB2, 32773, 3, { A_CrusaderLeft }, S_ROB2_13 },      //693
-/*S_ROB2_13*/       { SPR_ROB2, 32772, 2, { A_CrusaderLeft }, S_ROB2_14 },      //694
-/*S_ROB2_14*/       { SPR_ROB2, 32773, 2, { A_CrusaderLeft }, S_ROB2_15 },      //695
-/*S_ROB2_15*/       { SPR_ROB2, 32772, 2, { A_CrusaderRight }, S_ROB2_16 },     //696
-/*S_ROB2_16*/       { SPR_ROB2, 32773, 2, { A_CrusaderRight }, S_ROB2_17 },     //697
-/*S_ROB2_17*/       { SPR_ROB2, 32772, 2, { A_CrusaderRight }, S_ROB2_18 },     //698
-/*S_ROB2_18*/       { SPR_ROB2, 5, 2, { A_CheckTargetVisible2 }, S_ROB2_09 },       //699
-/*S_ROB2_19*/       { SPR_ROB2, 3, 1, { A_Pain }, S_ROB2_01 },      //700
-/*S_ROB2_20*/       { SPR_ROB2, 6, 3, { A_Scream }, S_ROB2_21 },        //701
-/*S_ROB2_21*/       { SPR_ROB2, 7, 5, { A_BodyParts }, S_ROB2_22 },     //702
-/*S_ROB2_22*/       { SPR_ROB2, 32776, 4, { A_BodyParts }, S_ROB2_23 },     //703
-/*S_ROB2_23*/       { SPR_ROB2, 32777, 4, { A_DeathExplode2 }, S_ROB2_24 },     //704
-/*S_ROB2_24*/       { SPR_ROB2, 32778, 4, { A_Fall }, S_ROB2_25 },      //705
-/*S_ROB2_25*/       { SPR_ROB2, 11, 4, { A_DeathExplode2 }, S_ROB2_26 },        //706
-/*S_ROB2_26*/       { SPR_ROB2, 12, 4, { A_BodyParts }, S_ROB2_27 },        //707
-/*S_ROB2_27*/       { SPR_ROB2, 13, 4, { A_BodyParts }, S_ROB2_28 },        //708
-/*S_ROB2_28*/       { SPR_ROB2, 14, 4, { A_DeathExplode2 }, S_ROB2_29 },        //709
-/*S_ROB2_29*/       { SPR_ROB2, 15, -1, { A_BossDeath }, S_NULL },      //710
-/*S_MLDR_00*/       { SPR_MLDR, 0, 10, { A_Look }, S_MLDR_00 },     //711
-/*S_MLDR_01*/       { SPR_MLDR, 0, 3, { A_Chase }, S_MLDR_02 },     //712
-/*S_MLDR_02*/       { SPR_MLDR, 0, 3, { A_Chase }, S_MLDR_03 },     //713
-/*S_MLDR_03*/       { SPR_MLDR, 1, 3, { A_Chase }, S_MLDR_04 },     //714
-/*S_MLDR_04*/       { SPR_MLDR, 1, 3, { A_Chase }, S_MLDR_05 },     //715
-/*S_MLDR_05*/       { SPR_MLDR, 2, 3, { A_Chase }, S_MLDR_06 },     //716
-/*S_MLDR_06*/       { SPR_MLDR, 2, 3, { A_Chase }, S_MLDR_07 },     //717
-/*S_MLDR_07*/       { SPR_MLDR, 3, 3, { A_Chase }, S_MLDR_08 },     //718
-/*S_MLDR_08*/       { SPR_MLDR, 3, 3, { A_Chase }, S_MLDR_01 },     //719
-/*S_MLDR_09*/       { SPR_MLDR, 4, 3, { A_FaceTarget }, S_MLDR_10 },        //720
-/*S_MLDR_10*/       { SPR_MLDR, 32773, 2, { A_BishopAttack }, S_MLDR_01 },      //721
-/*S_MLDR_11*/       { SPR_MLDR, 3, 1, { A_Pain }, S_MLDR_01 },      //722
+/*S_ROB2_00*/       { SPR_ROB2, 16, 10, {.acp1 = A_Look}, S_ROB2_00 },        //681
+/*S_ROB2_01*/       { SPR_ROB2, 0, 3, {.acp1= A_Chase }, S_ROB2_02 },     //682
+/*S_ROB2_02*/       { SPR_ROB2, 0, 3, {.acp1= A_Chase }, S_ROB2_03 },     //683
+/*S_ROB2_03*/       { SPR_ROB2, 1, 3, {.acp1= A_Chase }, S_ROB2_04 },     //684
+/*S_ROB2_04*/       { SPR_ROB2, 1, 3, {.acp1= A_Chase }, S_ROB2_05 },     //685
+/*S_ROB2_05*/       { SPR_ROB2, 2, 3, {.acp1= A_Chase }, S_ROB2_06 },     //686
+/*S_ROB2_06*/       { SPR_ROB2, 2, 3, {.acp1= A_Chase }, S_ROB2_07 },     //687
+/*S_ROB2_07*/       { SPR_ROB2, 3, 3, {.acp1= A_Chase }, S_ROB2_08 },     //688
+/*S_ROB2_08*/       { SPR_ROB2, 3, 3, {.acp1= A_Chase }, S_ROB2_01 },     //689
+/*S_ROB2_09*/       { SPR_ROB2, 4, 3, {.acp1 = A_FaceTarget}, S_ROB2_10 },        //690
+/*S_ROB2_10*/       { SPR_ROB2, 32773, 2, {.acp1= A_CrusaderAttack }, S_ROB2_11 },        //691
+/*S_ROB2_11*/       { SPR_ROB2, 32772, 2, {.acp1= A_CrusaderLeft }, S_ROB2_12 },      //692
+/*S_ROB2_12*/       { SPR_ROB2, 32773, 3, {.acp1= A_CrusaderLeft }, S_ROB2_13 },      //693
+/*S_ROB2_13*/       { SPR_ROB2, 32772, 2, {.acp1= A_CrusaderLeft }, S_ROB2_14 },      //694
+/*S_ROB2_14*/       { SPR_ROB2, 32773, 2, {.acp1= A_CrusaderLeft }, S_ROB2_15 },      //695
+/*S_ROB2_15*/       { SPR_ROB2, 32772, 2, {.acp1= A_CrusaderRight }, S_ROB2_16 },     //696
+/*S_ROB2_16*/       { SPR_ROB2, 32773, 2, {.acp1= A_CrusaderRight }, S_ROB2_17 },     //697
+/*S_ROB2_17*/       { SPR_ROB2, 32772, 2, {.acp1= A_CrusaderRight }, S_ROB2_18 },     //698
+/*S_ROB2_18*/       { SPR_ROB2, 5, 2, {.acp1= A_CheckTargetVisible2 }, S_ROB2_09 },       //699
+/*S_ROB2_19*/       { SPR_ROB2, 3, 1, {.acp1= A_Pain }, S_ROB2_01 },      //700
+/*S_ROB2_20*/       { SPR_ROB2, 6, 3, {.acp1= A_Scream }, S_ROB2_21 },        //701
+/*S_ROB2_21*/       { SPR_ROB2, 7, 5, {.acp1= A_BodyParts }, S_ROB2_22 },     //702
+/*S_ROB2_22*/       { SPR_ROB2, 32776, 4, {.acp1= A_BodyParts }, S_ROB2_23 },     //703
+/*S_ROB2_23*/       { SPR_ROB2, 32777, 4, {.acp1= A_DeathExplode2 }, S_ROB2_24 },     //704
+/*S_ROB2_24*/       { SPR_ROB2, 32778, 4, {.acp1= A_Fall }, S_ROB2_25 },      //705
+/*S_ROB2_25*/       { SPR_ROB2, 11, 4, {.acp1= A_DeathExplode2 }, S_ROB2_26 },        //706
+/*S_ROB2_26*/       { SPR_ROB2, 12, 4, {.acp1= A_BodyParts }, S_ROB2_27 },        //707
+/*S_ROB2_27*/       { SPR_ROB2, 13, 4, {.acp1 = A_BodyParts }, S_ROB2_28 },        //708
+/*S_ROB2_28*/       { SPR_ROB2, 14, 4, {.acp1= A_DeathExplode2 }, S_ROB2_29 },        //709
+/*S_ROB2_29*/       { SPR_ROB2, 15, -1, {.acp1= A_BossDeath }, S_NULL },      //710
+/*S_MLDR_00*/       { SPR_MLDR, 0, 10, {.acp1 = A_Look}, S_MLDR_00 },     //711
+/*S_MLDR_01*/       { SPR_MLDR, 0, 3, {.acp1= A_Chase }, S_MLDR_02 },     //712
+/*S_MLDR_02*/       { SPR_MLDR, 0, 3, {.acp1= A_Chase }, S_MLDR_03 },     //713
+/*S_MLDR_03*/       { SPR_MLDR, 1, 3, {.acp1= A_Chase }, S_MLDR_04 },     //714
+/*S_MLDR_04*/       { SPR_MLDR, 1, 3, {.acp1= A_Chase }, S_MLDR_05 },     //715
+/*S_MLDR_05*/       { SPR_MLDR, 2, 3, {.acp1= A_Chase }, S_MLDR_06 },     //716
+/*S_MLDR_06*/       { SPR_MLDR, 2, 3, {.acp1= A_Chase }, S_MLDR_07 },     //717
+/*S_MLDR_07*/       { SPR_MLDR, 3, 3, {.acp1= A_Chase }, S_MLDR_08 },     //718
+/*S_MLDR_08*/       { SPR_MLDR, 3, 3, {.acp1= A_Chase }, S_MLDR_01 },     //719
+/*S_MLDR_09*/       { SPR_MLDR, 4, 3, {.acp1 = A_FaceTarget}, S_MLDR_10 },        //720
+/*S_MLDR_10*/       { SPR_MLDR, 32773, 2, {.acp1 = A_BishopAttack }, S_MLDR_01 },      //721
+/*S_MLDR_11*/       { SPR_MLDR, 3, 1, {.acp1 = A_Pain }, S_MLDR_01 },      //722
 /*S_MLDR_12*/       { SPR_MLDR, 32774, 3, { nullptr }, S_MLDR_13 },        //723
-/*S_MLDR_13*/       { SPR_MLDR, 32775, 5, { A_Scream }, S_MLDR_14 },        //724
-/*S_MLDR_14*/       { SPR_MLDR, 32776, 4, { A_BodyParts }, S_MLDR_15 },     //725
-/*S_MLDR_15*/       { SPR_MLDR, 32777, 4, { A_DeathExplode2 }, S_MLDR_16 },     //726
+/*S_MLDR_13*/       { SPR_MLDR, 32775, 5, {.acp1 = A_Scream }, S_MLDR_14 },        //724
+/*S_MLDR_14*/       { SPR_MLDR, 32776, 4, {.acp1 = A_BodyParts }, S_MLDR_15 },     //725
+/*S_MLDR_15*/       { SPR_MLDR, 32777, 4, {.acp1= A_DeathExplode2 }, S_MLDR_16 },     //726
 /*S_MLDR_16*/       { SPR_MLDR, 32778, 4, { nullptr }, S_MLDR_17 },        //727
 /*S_MLDR_17*/       { SPR_MLDR, 32779, 4, { nullptr }, S_MLDR_18 },        //728
-/*S_MLDR_18*/       { SPR_MLDR, 32780, 4, { A_Fall }, S_MLDR_19 },      //729
+/*S_MLDR_18*/       { SPR_MLDR, 32780, 4, {.acp1 = A_Fall }, S_MLDR_19 },      //729
 /*S_MLDR_19*/       { SPR_MLDR, 32781, 4, { nullptr }, S_MLDR_20 },        //730
-/*S_MLDR_20*/       { SPR_MLDR, 32782, 4, { A_BodyParts }, S_MLDR_21 },     //731
+/*S_MLDR_20*/       { SPR_MLDR, 32782, 4, {.acp1 = A_BodyParts }, S_MLDR_21 },     //731
 /*S_MLDR_21*/       { SPR_MLDR, 32783, 4, { nullptr }, S_MLDR_22 },        //732
-/*S_MLDR_22*/       { SPR_MLDR, 32784, 4, { A_BodyParts }, S_MLDR_23 },     //733
+/*S_MLDR_22*/       { SPR_MLDR, 32784, 4, {.acp1 = A_BodyParts }, S_MLDR_23 },     //733
 /*S_MLDR_23*/       { SPR_MLDR, 32785, 4, { nullptr }, S_MLDR_24 },        //734
-/*S_MLDR_24*/       { SPR_MLDR, 32786, 4, { A_BodyParts }, S_MLDR_25 },     //735
+/*S_MLDR_24*/       { SPR_MLDR, 32786, 4, {.acp1 = A_BodyParts }, S_MLDR_25 },     //735
 /*S_MLDR_25*/       { SPR_MLDR, 32787, 4, { nullptr }, S_MLDR_26 },        //736
-/*S_MLDR_26*/       { SPR_MLDR, 32788, 4, { A_BodyParts }, S_MLDR_27 },     //737
-/*S_MLDR_27*/       { SPR_MLDR, 21, 4, { A_SpawnSpectreB }, S_NULL },       //738
+/*S_MLDR_26*/       { SPR_MLDR, 32788, 4, {.acp1 = A_BodyParts }, S_MLDR_27 },     //737
+/*S_MLDR_27*/       { SPR_MLDR, 21, 4, {.acp1 = A_SpawnSpectreB }, S_NULL },       //738
 /*S_ORCL_00*/       { SPR_ORCL, 0, -1, { nullptr }, S_NULL },      //739
 /*S_ORCL_01*/       { SPR_ORCL, 1, 5, { nullptr }, S_ORCL_02 },        //740
 /*S_ORCL_02*/       { SPR_ORCL, 2, 5, { nullptr }, S_ORCL_03 },        //741
@@ -940,32 +941,32 @@ state_t states[NUMSTATES] =
 /*S_ORCL_08*/       { SPR_ORCL, 8, 5, { nullptr }, S_ORCL_09 },        //747
 /*S_ORCL_09*/       { SPR_ORCL, 9, 5, { nullptr }, S_ORCL_10 },        //748
 /*S_ORCL_10*/       { SPR_ORCL, 10, 5, { nullptr }, S_ORCL_11 },       //749
-/*S_ORCL_11*/       { SPR_ORCL, 11, 5, { A_Fall }, S_ORCL_12 },     //750
+/*S_ORCL_11*/       { SPR_ORCL, 11, 5, {.acp1 = A_Fall }, S_ORCL_12 },     //750
 /*S_ORCL_12*/       { SPR_ORCL, 12, 5, { nullptr }, S_ORCL_13 },       //751
-/*S_ORCL_13*/       { SPR_ORCL, 13, 5, { A_AlertSpectreC }, S_ORCL_14 },        //752
+/*S_ORCL_13*/       { SPR_ORCL, 13, 5, {.acp1 = A_AlertSpectreC }, S_ORCL_14 },        //752
 /*S_ORCL_14*/       { SPR_ORCL, 14, 5, { nullptr }, S_ORCL_15 },       //753
 /*S_ORCL_15*/       { SPR_ORCL, 15, 5, { nullptr }, S_ORCL_16 },       //754
 /*S_ORCL_16*/       { SPR_ORCL, 16, -1, { nullptr }, S_NULL },     //755
-/*S_PRST_00*/       { SPR_PRST, 0, 10, { A_Look }, S_PRST_01 },     //756
-/*S_PRST_01*/       { SPR_PRST, 1, 10, { A_FloatWeave }, S_PRST_00 },       //757
-/*S_PRST_02*/       { SPR_PRST, 0, 4, { A_Chase }, S_PRST_03 },     //758
-/*S_PRST_03*/       { SPR_PRST, 0, 4, { A_FloatWeave }, S_PRST_04 },        //759
-/*S_PRST_04*/       { SPR_PRST, 1, 4, { A_Chase }, S_PRST_05 },     //760
-/*S_PRST_05*/       { SPR_PRST, 1, 4, { A_FloatWeave }, S_PRST_06 },        //761
-/*S_PRST_06*/       { SPR_PRST, 2, 4, { A_Chase }, S_PRST_07 },     //762
-/*S_PRST_07*/       { SPR_PRST, 2, 4, { A_FloatWeave }, S_PRST_08 },        //763
-/*S_PRST_08*/       { SPR_PRST, 3, 4, { A_Chase }, S_PRST_09 },     //764
-/*S_PRST_09*/       { SPR_PRST, 3, 4, { A_FloatWeave }, S_PRST_02 },        //765
-/*S_PRST_10*/       { SPR_PRST, 4, 4, { A_FaceTarget }, S_PRST_11 },        //766
-/*S_PRST_11*/       { SPR_PRST, 5, 4, { A_BossMeleeAtk }, S_PRST_12 },      //767
-/*S_PRST_12*/       { SPR_PRST, 4, 4, { A_FloatWeave }, S_PRST_02 },        //768
-/*S_PRST_13*/       { SPR_PRST, 4, 4, { A_FaceTarget }, S_PRST_14 },        //769
-/*S_PRST_14*/       { SPR_PRST, 5, 4, { A_FireHookShot }, S_PRST_15 },      //770
-/*S_PRST_15*/       { SPR_PRST, 4, 4, { A_FloatWeave }, S_PRST_02 },        //771
+/*S_PRST_00*/       { SPR_PRST, 0, 10, {.acp1 = A_Look}, S_PRST_01 },     //756
+/*S_PRST_01*/       { SPR_PRST, 1, 10, {.acp1 = A_FloatWeave }, S_PRST_00 },       //757
+/*S_PRST_02*/       { SPR_PRST, 0, 4, {.acp1= A_Chase }, S_PRST_03 },     //758
+/*S_PRST_03*/       { SPR_PRST, 0, 4, {.acp1 = A_FloatWeave }, S_PRST_04 },        //759
+/*S_PRST_04*/       { SPR_PRST, 1, 4, {.acp1= A_Chase }, S_PRST_05 },     //760
+/*S_PRST_05*/       { SPR_PRST, 1, 4, {.acp1 = A_FloatWeave }, S_PRST_06 },        //761
+/*S_PRST_06*/       { SPR_PRST, 2, 4, {.acp1= A_Chase }, S_PRST_07 },     //762
+/*S_PRST_07*/       { SPR_PRST, 2, 4, {.acp1 = A_FloatWeave }, S_PRST_08 },        //763
+/*S_PRST_08*/       { SPR_PRST, 3, 4, {.acp1= A_Chase }, S_PRST_09 },     //764
+/*S_PRST_09*/       { SPR_PRST, 3, 4, {.acp1 = A_FloatWeave }, S_PRST_02 },        //765
+/*S_PRST_10*/       { SPR_PRST, 4, 4, {.acp1 = A_FaceTarget}, S_PRST_11 },        //766
+/*S_PRST_11*/       { SPR_PRST, 5, 4, {.acp1 = A_BossMeleeAtk }, S_PRST_12 },      //767
+/*S_PRST_12*/       { SPR_PRST, 4, 4, {.acp1 = A_FloatWeave }, S_PRST_02 },        //768
+/*S_PRST_13*/       { SPR_PRST, 4, 4, {.acp1 = A_FaceTarget}, S_PRST_14 },        //769
+/*S_PRST_14*/       { SPR_PRST, 5, 4, {.acp1 = A_FireHookShot }, S_PRST_15 },      //770
+/*S_PRST_15*/       { SPR_PRST, 4, 4, {.acp1 = A_FloatWeave }, S_PRST_02 },        //771
 /*S_PDED_00*/       { SPR_PDED, 0, 6, { nullptr }, S_PDED_01 },        //772
-/*S_PDED_01*/       { SPR_PDED, 1, 6, { A_Scream }, S_PDED_02 },        //773
+/*S_PDED_01*/       { SPR_PDED, 1, 6, {.acp1 = A_Scream }, S_PDED_02 },        //773
 /*S_PDED_02*/       { SPR_PDED, 2, 6, { nullptr }, S_PDED_03 },        //774
-/*S_PDED_03*/       { SPR_PDED, 3, 6, { A_Fall }, S_PDED_04 },      //775
+/*S_PDED_03*/       { SPR_PDED, 3, 6, {.acp1 = A_Fall }, S_PDED_04 },      //775
 /*S_PDED_04*/       { SPR_PDED, 4, 6, { nullptr }, S_PDED_05 },        //776
 /*S_PDED_05*/       { SPR_PDED, 5, 5, { nullptr }, S_PDED_06 },        //777
 /*S_PDED_06*/       { SPR_PDED, 6, 5, { nullptr }, S_PDED_07 },        //778
@@ -982,48 +983,48 @@ state_t states[NUMSTATES] =
 /*S_PDED_17*/       { SPR_PDED, 13, 4, { nullptr }, S_PDED_18 },       //789
 /*S_PDED_18*/       { SPR_PDED, 14, 4, { nullptr }, S_PDED_19 },       //790
 /*S_PDED_19*/       { SPR_PDED, 15, 4, { nullptr }, S_PDED_20 },       //791
-/*S_PDED_20*/       { SPR_PDED, 16, 4, { A_SpawnSpectreE }, S_PDED_21 },        //792
+/*S_PDED_20*/       { SPR_PDED, 16, 4, {.acp1 = A_SpawnSpectreE }, S_PDED_21 },        //792
 /*S_PDED_21*/       { SPR_PDED, 17, 4, { nullptr }, S_PDED_22 },       //793
 /*S_PDED_22*/       { SPR_PDED, 18, 4, { nullptr }, S_PDED_23 },       //794
 /*S_PDED_23*/       { SPR_PDED, 19, -1, { nullptr }, S_NULL },     //795
-/*S_ALN1_00*/       { SPR_ALN1, 0, 10, { A_Look }, S_ALN1_01 },     //796
-/*S_ALN1_01*/       { SPR_ALN1, 1, 10, { A_FloatWeave }, S_ALN1_00 },       //797
-/*S_ALN1_02*/       { SPR_ALN1, 32768, 4, { A_Chase }, S_ALN1_03 },     //798
-/*S_ALN1_03*/       { SPR_ALN1, 32769, 4, { A_Chase }, S_ALN1_04 },     //799
-/*S_ALN1_04*/       { SPR_ALN1, 32770, 4, { A_FloatWeave }, S_ALN1_05 },        //800
-/*S_ALN1_05*/       { SPR_ALN1, 32771, 4, { A_Chase }, S_ALN1_06 },     //801
-/*S_ALN1_06*/       { SPR_ALN1, 32772, 4, { A_Chase }, S_ALN1_07 },     //802
-/*S_ALN1_07*/       { SPR_ALN1, 32773, 4, { A_Chase }, S_ALN1_08 },     //803
-/*S_ALN1_08*/       { SPR_ALN1, 32774, 4, { A_FloatWeave }, S_ALN1_09 },        //804
-/*S_ALN1_09*/       { SPR_ALN1, 32775, 4, { A_Chase }, S_ALN1_10 },     //805
-/*S_ALN1_10*/       { SPR_ALN1, 32776, 4, { A_Chase }, S_ALN1_11 },     //806
-/*S_ALN1_11*/       { SPR_ALN1, 32777, 4, { A_Chase }, S_ALN1_12 },     //807
-/*S_ALN1_12*/       { SPR_ALN1, 32778, 4, { A_FloatWeave }, S_ALN1_02 },        //808
-/*S_ALN1_13*/       { SPR_ALN1, 32777, 4, { A_FaceTarget }, S_ALN1_14 },        //809
-/*S_ALN1_14*/       { SPR_ALN1, 32776, 4, { A_BossMeleeAtk }, S_ALN1_15 },      //810
+/*S_ALN1_00*/       { SPR_ALN1, 0, 10, {.acp1 = A_Look}, S_ALN1_01 },     //796
+/*S_ALN1_01*/       { SPR_ALN1, 1, 10, {.acp1 = A_FloatWeave }, S_ALN1_00 },       //797
+/*S_ALN1_02*/       { SPR_ALN1, 32768, 4, {.acp1= A_Chase }, S_ALN1_03 },     //798
+/*S_ALN1_03*/       { SPR_ALN1, 32769, 4, {.acp1= A_Chase }, S_ALN1_04 },     //799
+/*S_ALN1_04*/       { SPR_ALN1, 32770, 4, {.acp1 = A_FloatWeave }, S_ALN1_05 },        //800
+/*S_ALN1_05*/       { SPR_ALN1, 32771, 4, {.acp1= A_Chase }, S_ALN1_06 },     //801
+/*S_ALN1_06*/       { SPR_ALN1, 32772, 4, {.acp1= A_Chase }, S_ALN1_07 },     //802
+/*S_ALN1_07*/       { SPR_ALN1, 32773, 4, {.acp1= A_Chase }, S_ALN1_08 },     //803
+/*S_ALN1_08*/       { SPR_ALN1, 32774, 4, {.acp1 = A_FloatWeave }, S_ALN1_09 },        //804
+/*S_ALN1_09*/       { SPR_ALN1, 32775, 4, {.acp1= A_Chase }, S_ALN1_10 },     //805
+/*S_ALN1_10*/       { SPR_ALN1, 32776, 4, {.acp1= A_Chase }, S_ALN1_11 },     //806
+/*S_ALN1_11*/       { SPR_ALN1, 32777, 4, {.acp1= A_Chase }, S_ALN1_12 },     //807
+/*S_ALN1_12*/       { SPR_ALN1, 32778, 4, {.acp1 = A_FloatWeave }, S_ALN1_02 },        //808
+/*S_ALN1_13*/       { SPR_ALN1, 32777, 4, {.acp1 = A_FaceTarget}, S_ALN1_14 },        //809
+/*S_ALN1_14*/       { SPR_ALN1, 32776, 4, {.acp1 = A_BossMeleeAtk }, S_ALN1_15 },      //810
 /*S_ALN1_15*/       { SPR_ALN1, 32775, 4, { nullptr }, S_ALN1_04 },        //811
-/*S_ALN1_16*/       { SPR_ALN1, 32777, 4, { A_FaceTarget }, S_ALN1_17 },        //812
-/*S_ALN1_17*/       { SPR_ALN1, 32776, 4, { A_ProgrammerAttack }, S_ALN1_18 },      //813
+/*S_ALN1_16*/       { SPR_ALN1, 32777, 4, {.acp1 = A_FaceTarget}, S_ALN1_17 },        //812
+/*S_ALN1_17*/       { SPR_ALN1, 32776, 4, {.acp1 = A_ProgrammerAttack }, S_ALN1_18 },      //813
 /*S_ALN1_18*/       { SPR_ALN1, 32775, 4, { nullptr }, S_ALN1_12 },        //814
-/*S_ALN1_19*/       { SPR_ALN1, 9, 2, { A_Pain }, S_ALN1_08 },      //815
-/*S_AL1P_00*/       { SPR_AL1P, 32768, 6, { A_NodeChunk }, S_AL1P_01 },     //816
-/*S_AL1P_01*/       { SPR_AL1P, 32769, 6, { A_Scream }, S_AL1P_02 },        //817
-/*S_AL1P_02*/       { SPR_AL1P, 32770, 6, { A_NodeChunk }, S_AL1P_03 },     //818
+/*S_ALN1_19*/       { SPR_ALN1, 9, 2, {.acp1 = A_Pain }, S_ALN1_08 },      //815
+/*S_AL1P_00*/       { SPR_AL1P, 32768, 6, {.acp1 = A_NodeChunk }, S_AL1P_01 },     //816
+/*S_AL1P_01*/       { SPR_AL1P, 32769, 6, {.acp1 = A_Scream }, S_AL1P_02 },        //817
+/*S_AL1P_02*/       { SPR_AL1P, 32770, 6, {.acp1 = A_NodeChunk }, S_AL1P_03 },     //818
 /*S_AL1P_03*/       { SPR_AL1P, 32771, 6, { nullptr }, S_AL1P_04 },        //819
 /*S_AL1P_04*/       { SPR_AL1P, 32772, 6, { nullptr }, S_AL1P_05 },        //820
-/*S_AL1P_05*/       { SPR_AL1P, 32773, 6, { A_NodeChunk }, S_AL1P_06 },     //821
+/*S_AL1P_05*/       { SPR_AL1P, 32773, 6, {.acp1 = A_NodeChunk }, S_AL1P_06 },     //821
 /*S_AL1P_06*/       { SPR_AL1P, 32774, 6, { nullptr }, S_AL1P_07 },        //822
-/*S_AL1P_07*/       { SPR_AL1P, 32775, 6, { A_NodeChunk }, S_AL1P_08 },     //823
+/*S_AL1P_07*/       { SPR_AL1P, 32775, 6, {.acp1 = A_NodeChunk }, S_AL1P_08 },     //823
 /*S_AL1P_08*/       { SPR_AL1P, 32776, 6, { nullptr }, S_AL1P_09 },        //824
 /*S_AL1P_09*/       { SPR_AL1P, 32777, 6, { nullptr }, S_AL1P_10 },        //825
 /*S_AL1P_10*/       { SPR_AL1P, 32778, 6, { nullptr }, S_AL1P_11 },        //826
 /*S_AL1P_11*/       { SPR_AL1P, 32779, 5, { nullptr }, S_AL1P_12 },        //827
 /*S_AL1P_12*/       { SPR_AL1P, 32780, 5, { nullptr }, S_AL1P_13 },        //828
-/*S_AL1P_13*/       { SPR_AL1P, 32781, 5, { A_HeadChunk }, S_AL1P_14 },     //829
+/*S_AL1P_13*/       { SPR_AL1P, 32781, 5, {.acp1 = A_HeadChunk }, S_AL1P_14 },     //829
 /*S_AL1P_14*/       { SPR_AL1P, 32782, 5, { nullptr }, S_AL1P_15 },        //830
 /*S_AL1P_15*/       { SPR_AL1P, 32783, 5, { nullptr }, S_AL1P_16 },        //831
 /*S_AL1P_16*/       { SPR_AL1P, 32784, 5, { nullptr }, S_AL1P_17 },        //832
-/*S_AL1P_17*/       { SPR_AL1P, 32785, 5, { A_BossDeath }, S_NULL },        //833
+/*S_AL1P_17*/       { SPR_AL1P, 32785, 5, {.acp1= A_BossDeath }, S_NULL },        //833
 /*S_NODE_00*/       { SPR_NODE, 32768, 6, { nullptr }, S_NODE_01 },        //834
 /*S_NODE_01*/       { SPR_NODE, 32769, 6, { nullptr }, S_NODE_02 },        //835
 /*S_NODE_02*/       { SPR_NODE, 32770, 6, { nullptr }, S_NODE_03 },        //836
@@ -1042,122 +1043,122 @@ state_t states[NUMSTATES] =
 /*S_MTHD_08*/       { SPR_MTHD, 32776, 5, { nullptr }, S_MTHD_09 },        //849
 /*S_MTHD_09*/       { SPR_MTHD, 32777, 5, { nullptr }, S_MTHD_10 },        //850
 /*S_MTHD_10*/       { SPR_MTHD, 32778, 5, { nullptr }, S_NULL },       //851
-/*S_ALN1_20*/       { SPR_ALN1, 5, 4, { A_FaceTarget }, S_ALN1_21 },        //852
-/*S_ALN1_21*/       { SPR_ALN1, 8, 4, { A_FireSigilEOffshoot }, S_ALN1_22 },        //853
+/*S_ALN1_20*/       { SPR_ALN1, 5, 4, {.acp1 = A_FaceTarget}, S_ALN1_21 },        //852
+/*S_ALN1_21*/       { SPR_ALN1, 8, 4, {.acp1 = A_FireSigilEOffshoot }, S_ALN1_22 },        //853
 /*S_ALN1_22*/       { SPR_ALN1, 4, 4, { nullptr }, S_ALN1_12 },        //854
-/*S_ALN1_23*/       { SPR_ALN1, 0, 5, { A_FloatWeave }, S_ALN1_24 },        //855
-/*S_ALN1_24*/       { SPR_ALN1, 1, 5, { A_FloatWeave }, S_ALN1_25 },        //856
-/*S_ALN1_25*/       { SPR_ALN1, 2, 5, { A_FloatWeave }, S_ALN1_26 },        //857
-/*S_ALN1_26*/       { SPR_ALN1, 3, 5, { A_FloatWeave }, S_ALN1_27 },        //858
-/*S_ALN1_27*/       { SPR_ALN1, 4, 5, { A_FloatWeave }, S_ALN1_28 },        //859
-/*S_ALN1_28*/       { SPR_ALN1, 5, 5, { A_FloatWeave }, S_ALN1_29 },        //860
-/*S_ALN1_29*/       { SPR_ALN1, 6, 5, { A_FloatWeave }, S_ALN1_30 },        //861
-/*S_ALN1_30*/       { SPR_ALN1, 7, 5, { A_FloatWeave }, S_ALN1_31 },        //862
-/*S_ALN1_31*/       { SPR_ALN1, 8, 5, { A_FloatWeave }, S_ALN1_32 },        //863
-/*S_ALN1_32*/       { SPR_ALN1, 9, 5, { A_FloatWeave }, S_ALN1_33 },        //864
-/*S_ALN1_33*/       { SPR_ALN1, 10, 5, { A_FloatWeave }, S_ALN1_23 },       //865
-/*S_ALN1_34*/       { SPR_ALN1, 0, 5, { A_Chase }, S_ALN1_35 },     //866
-/*S_ALN1_35*/       { SPR_ALN1, 1, 5, { A_Chase }, S_ALN1_36 },     //867
-/*S_ALN1_36*/       { SPR_ALN1, 2, 5, { A_FloatWeave }, S_ALN1_37 },        //868
-/*S_ALN1_37*/       { SPR_ALN1, 3, 5, { A_Chase }, S_ALN1_38 },     //869
-/*S_ALN1_38*/       { SPR_ALN1, 4, 5, { A_Chase }, S_ALN1_39 },     //870
-/*S_ALN1_39*/       { SPR_ALN1, 5, 5, { A_Chase }, S_ALN1_40 },     //871
-/*S_ALN1_40*/       { SPR_ALN1, 6, 5, { A_FloatWeave }, S_ALN1_41 },        //872
-/*S_ALN1_41*/       { SPR_ALN1, 7, 5, { A_Chase }, S_ALN1_42 },     //873
-/*S_ALN1_42*/       { SPR_ALN1, 8, 5, { A_Chase }, S_ALN1_43 },     //874
-/*S_ALN1_43*/       { SPR_ALN1, 9, 5, { A_Chase }, S_ALN1_44 },     //875
-/*S_ALN1_44*/       { SPR_ALN1, 10, 5, { A_FloatWeave }, S_ALN1_34 },       //876
-/*S_ALN1_45*/       { SPR_ALN1, 9, 4, { A_FaceTarget }, S_ALN1_46 },        //877
-/*S_ALN1_46*/       { SPR_ALN1, 8, 4, { A_BossMeleeAtk }, S_ALN1_47 },      //878
+/*S_ALN1_23*/       { SPR_ALN1, 0, 5, {.acp1 = A_FloatWeave }, S_ALN1_24 },        //855
+/*S_ALN1_24*/       { SPR_ALN1, 1, 5, {.acp1 = A_FloatWeave }, S_ALN1_25 },        //856
+/*S_ALN1_25*/       { SPR_ALN1, 2, 5, {.acp1 = A_FloatWeave }, S_ALN1_26 },        //857
+/*S_ALN1_26*/       { SPR_ALN1, 3, 5, {.acp1 = A_FloatWeave }, S_ALN1_27 },        //858
+/*S_ALN1_27*/       { SPR_ALN1, 4, 5, {.acp1 = A_FloatWeave }, S_ALN1_28 },        //859
+/*S_ALN1_28*/       { SPR_ALN1, 5, 5, {.acp1 = A_FloatWeave }, S_ALN1_29 },        //860
+/*S_ALN1_29*/       { SPR_ALN1, 6, 5, {.acp1 = A_FloatWeave }, S_ALN1_30 },        //861
+/*S_ALN1_30*/       { SPR_ALN1, 7, 5, {.acp1 = A_FloatWeave }, S_ALN1_31 },        //862
+/*S_ALN1_31*/       { SPR_ALN1, 8, 5, {.acp1 = A_FloatWeave }, S_ALN1_32 },        //863
+/*S_ALN1_32*/       { SPR_ALN1, 9, 5, {.acp1 = A_FloatWeave }, S_ALN1_33 },        //864
+/*S_ALN1_33*/       { SPR_ALN1, 10, 5, {.acp1 = A_FloatWeave }, S_ALN1_23 },       //865
+/*S_ALN1_34*/       { SPR_ALN1, 0, 5, {.acp1= A_Chase }, S_ALN1_35 },     //866
+/*S_ALN1_35*/       { SPR_ALN1, 1, 5, {.acp1= A_Chase }, S_ALN1_36 },     //867
+/*S_ALN1_36*/       { SPR_ALN1, 2, 5, {.acp1 = A_FloatWeave }, S_ALN1_37 },        //868
+/*S_ALN1_37*/       { SPR_ALN1, 3, 5, {.acp1= A_Chase }, S_ALN1_38 },     //869
+/*S_ALN1_38*/       { SPR_ALN1, 4, 5, {.acp1= A_Chase }, S_ALN1_39 },     //870
+/*S_ALN1_39*/       { SPR_ALN1, 5, 5, {.acp1= A_Chase }, S_ALN1_40 },     //871
+/*S_ALN1_40*/       { SPR_ALN1, 6, 5, {.acp1 = A_FloatWeave }, S_ALN1_41 },        //872
+/*S_ALN1_41*/       { SPR_ALN1, 7, 5, {.acp1= A_Chase }, S_ALN1_42 },     //873
+/*S_ALN1_42*/       { SPR_ALN1, 8, 5, {.acp1= A_Chase }, S_ALN1_43 },     //874
+/*S_ALN1_43*/       { SPR_ALN1, 9, 5, {.acp1= A_Chase }, S_ALN1_44 },     //875
+/*S_ALN1_44*/       { SPR_ALN1, 10, 5, {.acp1 = A_FloatWeave }, S_ALN1_34 },       //876
+/*S_ALN1_45*/       { SPR_ALN1, 9, 4, {.acp1 = A_FaceTarget}, S_ALN1_46 },        //877
+/*S_ALN1_46*/       { SPR_ALN1, 8, 4, {.acp1 = A_BossMeleeAtk }, S_ALN1_47 },      //878
 /*S_ALN1_47*/       { SPR_ALN1, 2, 4, { nullptr }, S_ALN1_36 },        //879
-/*S_ALN1_48*/       { SPR_ALN1, 5, 4, { A_FaceTarget }, S_ALN1_49 },        //880
-/*S_ALN1_49*/       { SPR_ALN1, 8, 4, { A_SpectreCAttack }, S_ALN1_50 },        //881
+/*S_ALN1_48*/       { SPR_ALN1, 5, 4, {.acp1 = A_FaceTarget}, S_ALN1_49 },        //880
+/*S_ALN1_49*/       { SPR_ALN1, 8, 4, {.acp1 = A_SpectreCAttack }, S_ALN1_50 },        //881
 /*S_ALN1_50*/       { SPR_ALN1, 4, 4, { nullptr }, S_ALN1_44 },        //882
-/*S_ALN1_51*/       { SPR_ALN1, 9, 2, { A_Pain }, S_ALN1_40 },      //883
-/*S_ALN1_52*/       { SPR_ALN1, 5, 4, { A_FaceTarget }, S_ALN1_53 },        //884
-/*S_ALN1_53*/       { SPR_ALN1, 8, 4, { A_SpectreDAttack }, S_ALN1_54 },        //885
+/*S_ALN1_51*/       { SPR_ALN1, 9, 2, {.acp1 = A_Pain }, S_ALN1_40 },      //883
+/*S_ALN1_52*/       { SPR_ALN1, 5, 4, {.acp1 = A_FaceTarget}, S_ALN1_53 },        //884
+/*S_ALN1_53*/       { SPR_ALN1, 8, 4, {.acp1 = A_SpectreDAttack }, S_ALN1_54 },        //885
 /*S_ALN1_54*/       { SPR_ALN1, 4, 4, { nullptr }, S_ALN1_12 },        //886
-/*S_ALN1_55*/       { SPR_ALN1, 5, 4, { A_FaceTarget }, S_ALN1_56 },        //887
-/*S_ALN1_56*/       { SPR_ALN1, 8, 4, { A_SpectreEAttack }, S_ALN1_57 },        //888
+/*S_ALN1_55*/       { SPR_ALN1, 5, 4, {.acp1 = A_FaceTarget}, S_ALN1_56 },        //887
+/*S_ALN1_56*/       { SPR_ALN1, 8, 4, {.acp1 = A_SpectreEAttack }, S_ALN1_57 },        //888
 /*S_ALN1_57*/       { SPR_ALN1, 4, 4, { nullptr }, S_ALN1_12 },        //889
-/*S_MNAM_00*/       { SPR_MNAM, 0, 100, { A_FloatWeave }, S_MNAM_01 },      //890
-/*S_MNAM_01*/       { SPR_MNAM, 32769, 60, { A_FloatWeave }, S_MNAM_02 },       //891
-/*S_MNAM_02*/       { SPR_MNAM, 32770, 4, { A_FloatWeave }, S_MNAM_03 },        //892
-/*S_MNAM_03*/       { SPR_MNAM, 32771, 4, { A_FloatWeave }, S_MNAM_04 },        //893
-/*S_MNAM_04*/       { SPR_MNAM, 32772, 4, { A_FloatWeave }, S_MNAM_05 },        //894
-/*S_MNAM_05*/       { SPR_MNAM, 32773, 4, { A_FloatWeave }, S_MNAM_06 },        //895
-/*S_MNAM_06*/       { SPR_MNAM, 32774, 4, { A_FloatWeave }, S_MNAM_07 },        //896
-/*S_MNAM_07*/       { SPR_MNAM, 32775, 4, { A_FloatWeave }, S_MNAM_08 },        //897
-/*S_MNAM_08*/       { SPR_MNAM, 32776, 4, { A_FloatWeave }, S_MNAM_09 },        //898
-/*S_MNAM_09*/       { SPR_MNAM, 32777, 4, { A_FloatWeave }, S_MNAM_10 },        //899
-/*S_MNAM_10*/       { SPR_MNAM, 32778, 4, { A_FloatWeave }, S_MNAM_11 },        //900
-/*S_MNAM_11*/       { SPR_MNAM, 32779, 4, { A_FloatWeave }, S_MNAL_00 },        //901
-/*S_MNAL_00*/       { SPR_MNAL, 32768, 4, { A_Look }, S_MNAL_01 },      //902
-/*S_MNAL_01*/       { SPR_MNAL, 32769, 4, { A_FloatWeave }, S_MNAL_00 },        //903
-/*S_MNAL_02*/       { SPR_MNAL, 32768, 4, { A_Chase }, S_MNAL_03 },     //904
-/*S_MNAL_03*/       { SPR_MNAL, 32769, 4, { A_Chase }, S_MNAL_04 },     //905
-/*S_MNAL_04*/       { SPR_MNAL, 32770, 4, { A_FloatWeave }, S_MNAL_05 },        //906
-/*S_MNAL_05*/       { SPR_MNAL, 32771, 4, { A_Chase }, S_MNAL_06 },     //907
-/*S_MNAL_06*/       { SPR_MNAL, 32772, 4, { A_Chase }, S_MNAL_07 },     //908
-/*S_MNAL_07*/       { SPR_MNAL, 32773, 4, { A_Chase }, S_MNAL_08 },     //909
-/*S_MNAL_08*/       { SPR_MNAL, 32774, 4, { A_FloatWeave }, S_MNAL_09 },        //910
-/*S_MNAL_09*/       { SPR_MNAL, 32775, 4, { A_Chase }, S_MNAL_10 },     //911
-/*S_MNAL_10*/       { SPR_MNAL, 32776, 4, { A_Chase }, S_MNAL_11 },     //912
-/*S_MNAL_11*/       { SPR_MNAL, 32777, 4, { A_Chase }, S_MNAL_12 },     //913
-/*S_MNAL_12*/       { SPR_MNAL, 32778, 4, { A_FloatWeave }, S_MNAL_02 },        //914
-/*S_MNAL_13*/       { SPR_MNAL, 32777, 4, { A_FaceTarget }, S_MNAL_14 },        //915
-/*S_MNAL_14*/       { SPR_MNAL, 32776, 4, { A_BossMeleeAtk }, S_MNAL_15 },      //916
+/*S_MNAM_00*/       { SPR_MNAM, 0, 100, {.acp1 = A_FloatWeave }, S_MNAM_01 },      //890
+/*S_MNAM_01*/       { SPR_MNAM, 32769, 60, {.acp1 = A_FloatWeave }, S_MNAM_02 },       //891
+/*S_MNAM_02*/       { SPR_MNAM, 32770, 4, {.acp1 = A_FloatWeave }, S_MNAM_03 },        //892
+/*S_MNAM_03*/       { SPR_MNAM, 32771, 4, {.acp1 = A_FloatWeave }, S_MNAM_04 },        //893
+/*S_MNAM_04*/       { SPR_MNAM, 32772, 4, {.acp1 = A_FloatWeave }, S_MNAM_05 },        //894
+/*S_MNAM_05*/       { SPR_MNAM, 32773, 4, {.acp1 = A_FloatWeave }, S_MNAM_06 },        //895
+/*S_MNAM_06*/       { SPR_MNAM, 32774, 4, {.acp1 = A_FloatWeave }, S_MNAM_07 },        //896
+/*S_MNAM_07*/       { SPR_MNAM, 32775, 4, {.acp1 = A_FloatWeave }, S_MNAM_08 },        //897
+/*S_MNAM_08*/       { SPR_MNAM, 32776, 4, {.acp1 = A_FloatWeave }, S_MNAM_09 },        //898
+/*S_MNAM_09*/       { SPR_MNAM, 32777, 4, {.acp1 = A_FloatWeave }, S_MNAM_10 },        //899
+/*S_MNAM_10*/       { SPR_MNAM, 32778, 4, {.acp1 = A_FloatWeave }, S_MNAM_11 },        //900
+/*S_MNAM_11*/       { SPR_MNAM, 32779, 4, {.acp1 = A_FloatWeave }, S_MNAL_00 },        //901
+/*S_MNAL_00*/       { SPR_MNAL, 32768, 4, {.acp1 = A_Look}, S_MNAL_01 },      //902
+/*S_MNAL_01*/       { SPR_MNAL, 32769, 4, {.acp1 = A_FloatWeave }, S_MNAL_00 },        //903
+/*S_MNAL_02*/       { SPR_MNAL, 32768, 4, {.acp1= A_Chase }, S_MNAL_03 },     //904
+/*S_MNAL_03*/       { SPR_MNAL, 32769, 4, {.acp1= A_Chase }, S_MNAL_04 },     //905
+/*S_MNAL_04*/       { SPR_MNAL, 32770, 4, {.acp1 = A_FloatWeave }, S_MNAL_05 },        //906
+/*S_MNAL_05*/       { SPR_MNAL, 32771, 4, {.acp1= A_Chase }, S_MNAL_06 },     //907
+/*S_MNAL_06*/       { SPR_MNAL, 32772, 4, {.acp1= A_Chase }, S_MNAL_07 },     //908
+/*S_MNAL_07*/       { SPR_MNAL, 32773, 4, {.acp1= A_Chase }, S_MNAL_08 },     //909
+/*S_MNAL_08*/       { SPR_MNAL, 32774, 4, {.acp1 = A_FloatWeave }, S_MNAL_09 },        //910
+/*S_MNAL_09*/       { SPR_MNAL, 32775, 4, {.acp1= A_Chase }, S_MNAL_10 },     //911
+/*S_MNAL_10*/       { SPR_MNAL, 32776, 4, {.acp1= A_Chase }, S_MNAL_11 },     //912
+/*S_MNAL_11*/       { SPR_MNAL, 32777, 4, {.acp1= A_Chase }, S_MNAL_12 },     //913
+/*S_MNAL_12*/       { SPR_MNAL, 32778, 4, {.acp1 = A_FloatWeave }, S_MNAL_02 },        //914
+/*S_MNAL_13*/       { SPR_MNAL, 32777, 4, {.acp1 = A_FaceTarget}, S_MNAL_14 },        //915
+/*S_MNAL_14*/       { SPR_MNAL, 32776, 4, {.acp1 = A_BossMeleeAtk }, S_MNAL_15 },      //916
 /*S_MNAL_15*/       { SPR_MNAL, 32770, 4, { nullptr }, S_MNAL_04 },        //917
-/*S_MNAL_16*/       { SPR_MNAL, 32773, 4, { A_FaceTarget }, S_MNAL_17 },        //918
-/*S_MNAL_17*/       { SPR_MNAL, 32776, 4, { A_FireSigilWeapon }, S_MNAL_18 },       //919
+/*S_MNAL_16*/       { SPR_MNAL, 32773, 4, {.acp1 = A_FaceTarget}, S_MNAL_17 },        //918
+/*S_MNAL_17*/       { SPR_MNAL, 32776, 4, {.acp1 = A_FireSigilWeapon }, S_MNAL_18 },       //919
 /*S_MNAL_18*/       { SPR_MNAL, 32772, 4, { nullptr }, S_MNAL_12 },        //920
-/*S_MNAL_19*/       { SPR_MNAL, 32777, 2, { A_Pain }, S_MNAL_08 },      //921
-/*S_MNAL_20*/       { SPR_MNAL, 32779, 7, { A_NodeChunk }, S_MNAL_21 },     //922
-/*S_MNAL_21*/       { SPR_MNAL, 32780, 7, { A_Scream }, S_MNAL_22 },        //923
-/*S_MNAL_22*/       { SPR_MNAL, 32781, 7, { A_NodeChunk }, S_MNAL_23 },     //924
-/*S_MNAL_23*/       { SPR_MNAL, 32782, 7, { A_NodeChunk }, S_MNAL_24 },     //925
-/*S_MNAL_24*/       { SPR_MNAL, 32783, 7, { A_HeadChunk }, S_MNAL_25 },     //926
-/*S_MNAL_25*/       { SPR_MNAL, 32784, 64, { A_NodeChunk }, S_MNAL_26 },        //927
-/*S_MNAL_26*/       { SPR_MNAL, 32784, 6, { A_EntityDeath }, S_NULL },      //928
-/*S_MNAL_27*/       { SPR_MNAL, 32785, 10, { A_Look }, S_MNAL_27 },     //929
-/*S_MNAL_28*/       { SPR_MNAL, 32785, 5, { A_FloatWeave }, S_MNAL_29 },        //930
-/*S_MNAL_29*/       { SPR_MNAL, 32786, 5, { A_Chase }, S_MNAL_30 },     //931
-/*S_MNAL_30*/       { SPR_MNAL, 32787, 5, { A_Chase }, S_MNAL_31 },     //932
-/*S_MNAL_31*/       { SPR_MNAL, 32788, 5, { A_FloatWeave }, S_MNAL_32 },        //933
-/*S_MNAL_32*/       { SPR_MNAL, 32789, 5, { A_Chase }, S_MNAL_33 },     //934
-/*S_MNAL_33*/       { SPR_MNAL, 32790, 5, { A_FloatWeave }, S_MNAL_28 },        //935
-/*S_MNAL_34*/       { SPR_MNAL, 32786, 4, { A_FaceTarget }, S_MNAL_35 },        //936
-/*S_MNAL_35*/       { SPR_MNAL, 32785, 4, { A_BossMeleeAtk }, S_MNAL_36 },      //937
-/*S_MNAL_36*/       { SPR_MNAL, 32787, 4, { A_FloatWeave }, S_MNAL_29 },        //938
-/*S_MNAL_37*/       { SPR_MNAL, 32790, 4, { A_FaceTarget }, S_MNAL_38 },        //939
-/*S_MNAL_38*/       { SPR_MNAL, 32788, 4, { A_FireSigilEOffshoot }, S_MNAL_39 },        //940
-/*S_MNAL_39*/       { SPR_MNAL, 32789, 4, { A_FloatWeave }, S_MNAL_32 },        //941
-/*S_MNAL_40*/       { SPR_MNAL, 32785, 2, { A_Pain }, S_MNAL_28 },      //942
-/*S_MDTH_00*/       { SPR_MDTH, 32768, 3, { A_Scream }, S_MDTH_01 },        //943
-/*S_MDTH_01*/       { SPR_MDTH, 32769, 3, { A_BodyParts }, S_MDTH_02 },     //944
-/*S_MDTH_02*/       { SPR_MDTH, 32770, 3, { A_Fall }, S_MDTH_03 },      //945
-/*S_MDTH_03*/       { SPR_MDTH, 32771, 3, { A_BodyParts }, S_MDTH_04 },     //946
-/*S_MDTH_04*/       { SPR_MDTH, 32772, 3, { A_BodyParts }, S_MDTH_05 },     //947
-/*S_MDTH_05*/       { SPR_MDTH, 32773, 3, { A_BodyParts }, S_MDTH_06 },     //948
-/*S_MDTH_06*/       { SPR_MDTH, 32774, 3, { A_BodyParts }, S_MDTH_07 },     //949
-/*S_MDTH_07*/       { SPR_MDTH, 32775, 3, { A_BodyParts }, S_MDTH_08 },     //950
-/*S_MDTH_08*/       { SPR_MDTH, 32776, 3, { A_BodyParts }, S_MDTH_09 },     //951
-/*S_MDTH_09*/       { SPR_MDTH, 32777, 3, { A_BodyParts }, S_MDTH_10 },     //952
-/*S_MDTH_10*/       { SPR_MDTH, 32778, 3, { A_BodyParts }, S_MDTH_11 },     //953
-/*S_MDTH_11*/       { SPR_MDTH, 32779, 3, { A_BodyParts }, S_MDTH_12 },     //954
-/*S_MDTH_12*/       { SPR_MDTH, 32780, 3, { A_BodyParts }, S_MDTH_13 },     //955
-/*S_MDTH_13*/       { SPR_MDTH, 32781, 3, { A_BodyParts }, S_MDTH_14 },     //956
-/*S_MDTH_14*/       { SPR_MDTH, 32782, 3, { A_BossDeath }, S_NULL },        //957
+/*S_MNAL_19*/       { SPR_MNAL, 32777, 2, {.acp1 = A_Pain }, S_MNAL_08 },      //921
+/*S_MNAL_20*/       { SPR_MNAL, 32779, 7, {.acp1 = A_NodeChunk }, S_MNAL_21 },     //922
+/*S_MNAL_21*/       { SPR_MNAL, 32780, 7, {.acp1 = A_Scream }, S_MNAL_22 },        //923
+/*S_MNAL_22*/       { SPR_MNAL, 32781, 7, {.acp1 = A_NodeChunk }, S_MNAL_23 },     //924
+/*S_MNAL_23*/       { SPR_MNAL, 32782, 7, {.acp1 = A_NodeChunk }, S_MNAL_24 },     //925
+/*S_MNAL_24*/       { SPR_MNAL, 32783, 7, {.acp1 = A_HeadChunk }, S_MNAL_25 },     //926
+/*S_MNAL_25*/       { SPR_MNAL, 32784, 64, {.acp1 = A_NodeChunk }, S_MNAL_26 },        //927
+/*S_MNAL_26*/       { SPR_MNAL, 32784, 6, {.acp1 = A_EntityDeath }, S_NULL },      //928
+/*S_MNAL_27*/       { SPR_MNAL, 32785, 10, {.acp1 = A_Look}, S_MNAL_27 },     //929
+/*S_MNAL_28*/       { SPR_MNAL, 32785, 5, {.acp1 = A_FloatWeave }, S_MNAL_29 },        //930
+/*S_MNAL_29*/       { SPR_MNAL, 32786, 5, {.acp1= A_Chase }, S_MNAL_30 },     //931
+/*S_MNAL_30*/       { SPR_MNAL, 32787, 5, {.acp1= A_Chase }, S_MNAL_31 },     //932
+/*S_MNAL_31*/       { SPR_MNAL, 32788, 5, {.acp1 = A_FloatWeave }, S_MNAL_32 },        //933
+/*S_MNAL_32*/       { SPR_MNAL, 32789, 5, {.acp1= A_Chase }, S_MNAL_33 },     //934
+/*S_MNAL_33*/       { SPR_MNAL, 32790, 5, {.acp1 = A_FloatWeave }, S_MNAL_28 },        //935
+/*S_MNAL_34*/       { SPR_MNAL, 32786, 4, {.acp1 = A_FaceTarget}, S_MNAL_35 },        //936
+/*S_MNAL_35*/       { SPR_MNAL, 32785, 4, {.acp1 = A_BossMeleeAtk }, S_MNAL_36 },      //937
+/*S_MNAL_36*/       { SPR_MNAL, 32787, 4, {.acp1 = A_FloatWeave }, S_MNAL_29 },        //938
+/*S_MNAL_37*/       { SPR_MNAL, 32790, 4, {.acp1 = A_FaceTarget}, S_MNAL_38 },        //939
+/*S_MNAL_38*/       { SPR_MNAL, 32788, 4, {.acp1 = A_FireSigilEOffshoot }, S_MNAL_39 },        //940
+/*S_MNAL_39*/       { SPR_MNAL, 32789, 4, {.acp1 = A_FloatWeave }, S_MNAL_32 },        //941
+/*S_MNAL_40*/       { SPR_MNAL, 32785, 2, {.acp1 = A_Pain }, S_MNAL_28 },      //942
+/*S_MDTH_00*/       { SPR_MDTH, 32768, 3, {.acp1 = A_Scream }, S_MDTH_01 },        //943
+/*S_MDTH_01*/       { SPR_MDTH, 32769, 3, {.acp1 = A_BodyParts }, S_MDTH_02 },     //944
+/*S_MDTH_02*/       { SPR_MDTH, 32770, 3, {.acp1 = A_Fall }, S_MDTH_03 },      //945
+/*S_MDTH_03*/       { SPR_MDTH, 32771, 3, {.acp1 = A_BodyParts }, S_MDTH_04 },     //946
+/*S_MDTH_04*/       { SPR_MDTH, 32772, 3, {.acp1 = A_BodyParts }, S_MDTH_05 },     //947
+/*S_MDTH_05*/       { SPR_MDTH, 32773, 3, {.acp1 = A_BodyParts }, S_MDTH_06 },     //948
+/*S_MDTH_06*/       { SPR_MDTH, 32774, 3, {.acp1 = A_BodyParts }, S_MDTH_07 },     //949
+/*S_MDTH_07*/       { SPR_MDTH, 32775, 3, {.acp1 = A_BodyParts }, S_MDTH_08 },     //950
+/*S_MDTH_08*/       { SPR_MDTH, 32776, 3, {.acp1 = A_BodyParts }, S_MDTH_09 },     //951
+/*S_MDTH_09*/       { SPR_MDTH, 32777, 3, {.acp1 = A_BodyParts }, S_MDTH_10 },     //952
+/*S_MDTH_10*/       { SPR_MDTH, 32778, 3, {.acp1 = A_BodyParts }, S_MDTH_11 },     //953
+/*S_MDTH_11*/       { SPR_MDTH, 32779, 3, {.acp1 = A_BodyParts }, S_MDTH_12 },     //954
+/*S_MDTH_12*/       { SPR_MDTH, 32780, 3, {.acp1 = A_BodyParts }, S_MDTH_13 },     //955
+/*S_MDTH_13*/       { SPR_MDTH, 32781, 3, {.acp1 = A_BodyParts }, S_MDTH_14 },     //956
+/*S_MDTH_14*/       { SPR_MDTH, 32782, 3, {.acp1= A_BossDeath }, S_NULL },        //957
 /*S_NEST_00*/       { SPR_NEST, 0, -1, { nullptr }, S_NULL },      //958
-/*S_PODD_00*/       { SPR_PODD, 0, 60, { A_Look }, S_PODD_00 },     //959
+/*S_PODD_00*/       { SPR_PODD, 0, 60, {.acp1 = A_Look}, S_PODD_00 },     //959
 /*S_PODD_01*/       { SPR_PODD, 0, 360, { nullptr }, S_PODD_02 },      //960
-/*S_PODD_02*/       { SPR_PODD, 1, 9, { A_Fall }, S_PODD_03 },      //961
+/*S_PODD_02*/       { SPR_PODD, 1, 9, {.acp1 = A_Fall }, S_PODD_03 },      //961
 /*S_PODD_03*/       { SPR_PODD, 2, 9, { nullptr }, S_PODD_04 },        //962
-/*S_PODD_04*/       { SPR_PODD, 3, 9, { A_SpawnEntity }, S_PODD_05 },       //963
+/*S_PODD_04*/       { SPR_PODD, 3, 9, {.acp1 = A_SpawnEntity }, S_PODD_05 },       //963
 /*S_PODD_05*/       { SPR_PODD, 4, -1, { nullptr }, S_NULL },      //964
 /*S_ZAP6_00*/       { SPR_ZAP6, 32768, 4, { nullptr }, S_ZAP6_01 },        //965
-/*S_ZAP6_01*/       { SPR_ZAP6, 32769, 4, { A_SigilTrail }, S_ZAP6_02 },        //966
-/*S_ZAP6_02*/       { SPR_ZAP6, 32770, 4, { A_SigilTrail }, S_ZAP6_00 },        //967
+/*S_ZAP6_01*/       { SPR_ZAP6, 32769, 4, {.acp1 = A_SigilTrail }, S_ZAP6_02 },        //966
+/*S_ZAP6_02*/       { SPR_ZAP6, 32770, 4, {.acp1 = A_SigilTrail }, S_ZAP6_00 },        //967
 /*S_ZOT3_00*/       { SPR_ZOT3, 32768, 4, { nullptr }, S_ZOT3_01 },        //968
 /*S_ZOT3_01*/       { SPR_ZOT3, 32769, 4, { nullptr }, S_ZOT3_02 },        //969
 /*S_ZOT3_02*/       { SPR_ZOT3, 32770, 4, { nullptr }, S_ZOT3_03 },        //970
@@ -1166,149 +1167,149 @@ state_t states[NUMSTATES] =
 /*S_ZAP6_03*/       { SPR_ZAP6, 32768, 5, { nullptr }, S_ZAP6_04 },        //973
 /*S_ZAP6_04*/       { SPR_ZAP6, 32769, 5, { nullptr }, S_ZAP6_05 },        //974
 /*S_ZAP6_05*/       { SPR_ZAP6, 32770, 5, { nullptr }, S_NULL },       //975
-/*S_ZAP7_00*/       { SPR_ZAP7, 32768, 4, { A_Sigil_E_Action }, S_ZAP7_01 },        //976
-/*S_ZAP7_01*/       { SPR_ZAP7, 32769, 4, { A_Sigil_E_Action }, S_ZAP7_02 },        //977
-/*S_ZAP7_02*/       { SPR_ZAP7, 32770, 6, { A_Sigil_E_Action }, S_ZAP7_03 },        //978
-/*S_ZAP7_03*/       { SPR_ZAP7, 32771, 6, { A_Sigil_E_Action }, S_ZAP7_04 },        //979
-/*S_ZAP7_04*/       { SPR_ZAP7, 32772, 6, { A_Sigil_E_Action }, S_ZAP7_00 },        //980
+/*S_ZAP7_00*/       { SPR_ZAP7, 32768, 4, {.acp1 = A_Sigil_E_Action }, S_ZAP7_01 },        //976
+/*S_ZAP7_01*/       { SPR_ZAP7, 32769, 4, {.acp1 = A_Sigil_E_Action }, S_ZAP7_02 },        //977
+/*S_ZAP7_02*/       { SPR_ZAP7, 32770, 6, {.acp1 = A_Sigil_E_Action }, S_ZAP7_03 },        //978
+/*S_ZAP7_03*/       { SPR_ZAP7, 32771, 6, {.acp1 = A_Sigil_E_Action }, S_ZAP7_04 },        //979
+/*S_ZAP7_04*/       { SPR_ZAP7, 32772, 6, {.acp1 = A_Sigil_E_Action }, S_ZAP7_00 },        //980
 /*S_ZOT1_00*/       { SPR_ZOT1, 32768, 4, { nullptr }, S_ZOT1_01 },        //981
 /*S_ZOT1_01*/       { SPR_ZOT1, 32769, 4, { nullptr }, S_ZOT1_02 },        //982
 /*S_ZOT1_02*/       { SPR_ZOT1, 32770, 6, { nullptr }, S_ZOT1_03 },        //983
 /*S_ZOT1_03*/       { SPR_ZOT1, 32771, 6, { nullptr }, S_ZOT1_04 },        //984
 /*S_ZOT1_04*/       { SPR_ZOT1, 32771, 6, { nullptr }, S_ZOT1_00 },        //985
-/*S_ZAP5_00*/       { SPR_ZAP5, 32768, 4, { A_MissileTick }, S_ZAP5_01 },       //986
-/*S_ZAP5_01*/       { SPR_ZAP5, 32769, 4, { A_Sigil_A_Action }, S_ZAP5_02 },        //987
-/*S_ZAP5_02*/       { SPR_ZAP5, 32770, 4, { A_MissileTick }, S_ZAP5_03 },       //988
-/*S_ZAP5_03*/       { SPR_ZAP5, 32771, 4, { A_MissileTick }, S_ZAP5_00 },       //989
-/*S_ZOT2_00*/       { SPR_ZOT2, 32768, 4, { A_Tracer }, S_ZOT2_01 },        //990
-/*S_ZOT2_01*/       { SPR_ZOT2, 32769, 4, { A_Tracer }, S_ZOT2_02 },        //991
-/*S_ZOT2_02*/       { SPR_ZOT2, 32770, 6, { A_Tracer }, S_ZOT2_03 },        //992
-/*S_ZOT2_03*/       { SPR_ZOT2, 32771, 6, { A_Tracer }, S_ZOT2_04 },        //993
-/*S_ZOT2_04*/       { SPR_ZOT2, 32772, 5, { A_Tracer }, S_ZOT2_00 },        //994
-/*S_SEWR_00*/       { SPR_SEWR, 0, 10, { A_Look }, S_SEWR_00 },     //995
-/*S_SEWR_01*/       { SPR_SEWR, 0, 6, { A_FloatWeave }, S_SEWR_02 },        //996
-/*S_SEWR_02*/       { SPR_SEWR, 0, 6, { A_Chase }, S_SEWR_01 },     //997
-/*S_SEWR_03*/       { SPR_SEWR, 1, 4, { A_FaceTarget }, S_SEWR_04 },        //998
-/*S_SEWR_04*/       { SPR_SEWR, 32770, 8, { A_SentinelAttack }, S_SEWR_05 },        //999
-/*S_SEWR_05*/       { SPR_SEWR, 32770, 4, { A_CheckTargetVisible }, S_SEWR_04 },        //1000
-/*S_SEWR_06*/       { SPR_SEWR, 3, 5, { A_Pain }, S_SEWR_05 },      //1001
-/*S_SEWR_07*/       { SPR_SEWR, 3, 7, { A_Fall }, S_SEWR_08 },      //1002
-/*S_SEWR_08*/       { SPR_SEWR, 32772, 8, { A_BodyParts }, S_SEWR_09 },     //1003
-/*S_SEWR_09*/       { SPR_SEWR, 32773, 5, { A_Scream }, S_SEWR_10 },        //1004
-/*S_SEWR_10*/       { SPR_SEWR, 32774, 4, { A_BodyParts }, S_SEWR_11 },     //1005
-/*S_SEWR_11*/       { SPR_SEWR, 32775, 4, { A_BodyParts }, S_SEWR_12 },     //1006
+/*S_ZAP5_00*/       { SPR_ZAP5, 32768, 4, {.acp1 = A_MissileTick }, S_ZAP5_01 },       //986
+/*S_ZAP5_01*/       { SPR_ZAP5, 32769, 4, {.acp1 = A_Sigil_A_Action }, S_ZAP5_02 },        //987
+/*S_ZAP5_02*/       { SPR_ZAP5, 32770, 4, {.acp1 = A_MissileTick }, S_ZAP5_03 },       //988
+/*S_ZAP5_03*/       { SPR_ZAP5, 32771, 4, {.acp1 = A_MissileTick }, S_ZAP5_00 },       //989
+/*S_ZOT2_00*/       { SPR_ZOT2, 32768, 4, {.acp1=A_Tracer}, S_ZOT2_01 },        //990
+/*S_ZOT2_01*/       { SPR_ZOT2, 32769, 4, {.acp1=A_Tracer}, S_ZOT2_02 },        //991
+/*S_ZOT2_02*/       { SPR_ZOT2, 32770, 6, {.acp1=A_Tracer}, S_ZOT2_03 },        //992
+/*S_ZOT2_03*/       { SPR_ZOT2, 32771, 6, {.acp1=A_Tracer}, S_ZOT2_04 },        //993
+/*S_ZOT2_04*/       { SPR_ZOT2, 32772, 5, {.acp1=A_Tracer}, S_ZOT2_00 },        //994
+/*S_SEWR_00*/       { SPR_SEWR, 0, 10, {.acp1 = A_Look}, S_SEWR_00 },     //995
+/*S_SEWR_01*/       { SPR_SEWR, 0, 6, {.acp1 = A_FloatWeave }, S_SEWR_02 },        //996
+/*S_SEWR_02*/       { SPR_SEWR, 0, 6, {.acp1= A_Chase }, S_SEWR_01 },     //997
+/*S_SEWR_03*/       { SPR_SEWR, 1, 4, {.acp1 = A_FaceTarget}, S_SEWR_04 },        //998
+/*S_SEWR_04*/       { SPR_SEWR, 32770, 8, {.acp1 = A_SentinelAttack}, S_SEWR_05 },        //999
+/*S_SEWR_05*/       { SPR_SEWR, 32770, 4, {.acp1 = A_CheckTargetVisible}, S_SEWR_04 },        //1000
+/*S_SEWR_06*/       { SPR_SEWR, 3, 5, {.acp1 = A_Pain }, S_SEWR_05 },      //1001
+/*S_SEWR_07*/       { SPR_SEWR, 3, 7, {.acp1 = A_Fall }, S_SEWR_08 },      //1002
+/*S_SEWR_08*/       { SPR_SEWR, 32772, 8, {.acp1 = A_BodyParts }, S_SEWR_09 },     //1003
+/*S_SEWR_09*/       { SPR_SEWR, 32773, 5, {.acp1 = A_Scream }, S_SEWR_10 },        //1004
+/*S_SEWR_10*/       { SPR_SEWR, 32774, 4, {.acp1 = A_BodyParts }, S_SEWR_11 },     //1005
+/*S_SEWR_11*/       { SPR_SEWR, 32775, 4, {.acp1 = A_BodyParts }, S_SEWR_12 },     //1006
 /*S_SEWR_12*/       { SPR_SEWR, 8, 4, { nullptr }, S_SEWR_13 },        //1007
 /*S_SEWR_13*/       { SPR_SEWR, 9, 5, { nullptr }, S_NULL },       //1008
-/*S_SPID_00*/       { SPR_SPID, 0, 1, { A_StalkerSetLook }, S_SPID_00 },        //1009
-/*S_SPID_01*/       { SPR_SPID, 0, 10, { A_Look }, S_SPID_01 },     //1010
-/*S_SPID_02*/       { SPR_SPID, 9, 10, { A_Look }, S_SPID_02 },     //1011
-/*S_SPID_03*/       { SPR_SPID, 0, 1, { A_StalkerThink }, S_SPID_04 },      //1012
-/*S_SPID_04*/       { SPR_SPID, 0, 3, { A_Chase }, S_SPID_05 },     //1013
-/*S_SPID_05*/       { SPR_SPID, 1, 3, { A_Chase }, S_SPID_06 },     //1014
-/*S_SPID_06*/       { SPR_SPID, 1, 3, { A_Chase }, S_SPID_07 },     //1015
-/*S_SPID_07*/       { SPR_SPID, 2, 3, { A_StalkerChase }, S_SPID_08 },      //1016
-/*S_SPID_08*/       { SPR_SPID, 2, 3, { A_Chase }, S_SPID_03 },     //1017
-/*S_SPID_09*/       { SPR_SPID, 9, 3, { A_FaceTarget }, S_SPID_10 },        //1018
-/*S_SPID_10*/       { SPR_SPID, 10, 3, { A_StalkerScratch }, S_SPID_18 },       //1019
-/*S_SPID_11*/       { SPR_SPID, 2, 2, { A_StalkerDrop }, S_SPID_12 },       //1020
+/*S_SPID_00*/       { SPR_SPID, 0, 1, {.acp1 = A_StalkerSetLook }, S_SPID_00 },        //1009
+/*S_SPID_01*/       { SPR_SPID, 0, 10, {.acp1 = A_Look}, S_SPID_01 },     //1010
+/*S_SPID_02*/       { SPR_SPID, 9, 10, {.acp1 = A_Look}, S_SPID_02 },     //1011
+/*S_SPID_03*/       { SPR_SPID, 0, 1, {.acp1 = A_StalkerThink}, S_SPID_04 },      //1012
+/*S_SPID_04*/       { SPR_SPID, 0, 3, {.acp1= A_Chase }, S_SPID_05 },     //1013
+/*S_SPID_05*/       { SPR_SPID, 1, 3, {.acp1= A_Chase }, S_SPID_06 },     //1014
+/*S_SPID_06*/       { SPR_SPID, 1, 3, {.acp1= A_Chase }, S_SPID_07 },     //1015
+/*S_SPID_07*/       { SPR_SPID, 2, 3, {.acp1 = A_StalkerChase }, S_SPID_08 },      //1016
+/*S_SPID_08*/       { SPR_SPID, 2, 3, {.acp1= A_Chase }, S_SPID_03 },     //1017
+/*S_SPID_09*/       { SPR_SPID, 9, 3, {.acp1 = A_FaceTarget}, S_SPID_10 },        //1018
+/*S_SPID_10*/       { SPR_SPID, 10, 3, {.acp1 = A_StalkerScratch }, S_SPID_18 },       //1019
+/*S_SPID_11*/       { SPR_SPID, 2, 2, {.acp1 = A_StalkerDrop }, S_SPID_12 },       //1020
 /*S_SPID_12*/       { SPR_SPID, 8, 3, { nullptr }, S_SPID_13 },        //1021
 /*S_SPID_13*/       { SPR_SPID, 7, 3, { nullptr }, S_SPID_14 },        //1022
 /*S_SPID_14*/       { SPR_SPID, 6, 3, { nullptr }, S_SPID_15 },        //1023
 /*S_SPID_15*/       { SPR_SPID, 5, 3, { nullptr }, S_SPID_16 },        //1024
 /*S_SPID_16*/       { SPR_SPID, 4, 3, { nullptr }, S_SPID_17 },        //1025
 /*S_SPID_17*/       { SPR_SPID, 3, 3, { nullptr }, S_SPID_09 },        //1026
-/*S_SPID_18*/       { SPR_SPID, 9, 3, { A_StalkerChase }, S_SPID_19 },      //1027
-/*S_SPID_19*/       { SPR_SPID, 9, 3, { A_Chase }, S_SPID_20 },     //1028
-/*S_SPID_20*/       { SPR_SPID, 10, 3, { A_Chase }, S_SPID_21 },        //1029
-/*S_SPID_21*/       { SPR_SPID, 10, 3, { A_Chase }, S_SPID_22 },        //1030
-/*S_SPID_22*/       { SPR_SPID, 11, 3, { A_StalkerChase }, S_SPID_23 },     //1031
-/*S_SPID_23*/       { SPR_SPID, 11, 3, { A_Chase }, S_SPID_18 },        //1032
-/*S_SPID_24*/       { SPR_SPID, 11, 1, { A_Pain }, S_SPID_03 },     //1033
+/*S_SPID_18*/       { SPR_SPID, 9, 3, {.acp1 = A_StalkerChase }, S_SPID_19 },      //1027
+/*S_SPID_19*/       { SPR_SPID, 9, 3, {.acp1= A_Chase }, S_SPID_20 },     //1028
+/*S_SPID_20*/       { SPR_SPID, 10, 3, {.acp1= A_Chase }, S_SPID_21 },        //1029
+/*S_SPID_21*/       { SPR_SPID, 10, 3, {.acp1= A_Chase }, S_SPID_22 },        //1030
+/*S_SPID_22*/       { SPR_SPID, 11, 3, {.acp1 = A_StalkerChase }, S_SPID_23 },     //1031
+/*S_SPID_23*/       { SPR_SPID, 11, 3, {.acp1= A_Chase }, S_SPID_18 },        //1032
+/*S_SPID_24*/       { SPR_SPID, 11, 1, {.acp1 = A_Pain }, S_SPID_03 },     //1033
 /*S_SPID_25*/       { SPR_SPID, 14, 4, { nullptr }, S_SPID_26 },       //1034
-/*S_SPID_26*/       { SPR_SPID, 15, 4, { A_Scream }, S_SPID_27 },       //1035
+/*S_SPID_26*/       { SPR_SPID, 15, 4, {.acp1 = A_Scream }, S_SPID_27 },       //1035
 /*S_SPID_27*/       { SPR_SPID, 16, 4, { nullptr }, S_SPID_28 },       //1036
 /*S_SPID_28*/       { SPR_SPID, 17, 4, { nullptr }, S_SPID_29 },       //1037
 /*S_SPID_29*/       { SPR_SPID, 18, 4, { nullptr }, S_SPID_30 },       //1038
 /*S_SPID_30*/       { SPR_SPID, 19, 4, { nullptr }, S_SPID_31 },       //1039
-/*S_SPID_31*/       { SPR_SPID, 20, 4, { A_Fall }, S_SPID_32 },     //1040
+/*S_SPID_31*/       { SPR_SPID, 20, 4, {.acp1 = A_Fall }, S_SPID_32 },     //1040
 /*S_SPID_32*/       { SPR_SPID, 21, 4, { nullptr }, S_SPID_33 },       //1041
 /*S_SPID_33*/       { SPR_SPID, 22, 4, { nullptr }, S_SPID_34 },       //1042
 /*S_SPID_34*/       { SPR_SPID, 32791, 4, { nullptr }, S_SPID_35 },        //1043
 /*S_SPID_35*/       { SPR_SPID, 32792, 4, { nullptr }, S_SPID_36 },        //1044
 /*S_SPID_36*/       { SPR_SPID, 32793, 4, { nullptr }, S_SPID_37 },        //1045
 /*S_SPID_37*/       { SPR_SPID, 32794, 4, { nullptr }, S_NULL },       //1046
-/*S_ROB3_00*/       { SPR_ROB3, 0, 10, { A_Look }, S_ROB3_01 },     //1047
-/*S_ROB3_01*/       { SPR_ROB3, 1, 10, { A_Look }, S_ROB3_00 },     //1048
-/*S_ROB3_02*/       { SPR_ROB3, 1, 3, { A_InqChase }, S_ROB3_03 },      //1049
-/*S_ROB3_03*/       { SPR_ROB3, 1, 3, { A_Chase }, S_ROB3_04 },     //1050
-/*S_ROB3_04*/       { SPR_ROB3, 2, 4, { A_Chase }, S_ROB3_05 },     //1051
-/*S_ROB3_05*/       { SPR_ROB3, 2, 4, { A_Chase }, S_ROB3_06 },     //1052
-/*S_ROB3_06*/       { SPR_ROB3, 3, 4, { A_Chase }, S_ROB3_07 },     //1053
-/*S_ROB3_07*/       { SPR_ROB3, 3, 4, { A_Chase }, S_ROB3_08 },     //1054
-/*S_ROB3_08*/       { SPR_ROB3, 4, 3, { A_InqChase }, S_ROB3_09 },      //1055
-/*S_ROB3_09*/       { SPR_ROB3, 4, 3, { A_InqFlyCheck }, S_ROB3_02 },       //1056
-/*S_ROB3_10*/       { SPR_ROB3, 0, 2, { A_InqFlyCheck }, S_ROB3_11 },       //1057
-/*S_ROB3_11*/       { SPR_ROB3, 5, 6, { A_FaceTarget }, S_ROB3_12 },        //1058
-/*S_ROB3_12*/       { SPR_ROB3, 32774, 8, { A_ReaverAttack }, S_ROB3_13 },     //1059
-/*S_ROB3_13*/       { SPR_ROB3, 6, 8, { A_ReaverAttack }, S_ROB3_02 },     //1060
-/*S_ROB3_14*/       { SPR_ROB3, 10, 12, { A_FaceTarget }, S_ROB3_15 },      //1061
-/*S_ROB3_15*/       { SPR_ROB3, 32777, 6, { A_InqGrenade }, S_ROB3_16 },        //1062
+/*S_ROB3_00*/       { SPR_ROB3, 0, 10, {.acp1 = A_Look}, S_ROB3_01 },     //1047
+/*S_ROB3_01*/       { SPR_ROB3, 1, 10, {.acp1 = A_Look}, S_ROB3_00 },     //1048
+/*S_ROB3_02*/       { SPR_ROB3, 1, 3, {.acp1 = A_InqChase }, S_ROB3_03 },      //1049
+/*S_ROB3_03*/       { SPR_ROB3, 1, 3, {.acp1= A_Chase }, S_ROB3_04 },     //1050
+/*S_ROB3_04*/       { SPR_ROB3, 2, 4, {.acp1= A_Chase }, S_ROB3_05 },     //1051
+/*S_ROB3_05*/       { SPR_ROB3, 2, 4, {.acp1= A_Chase }, S_ROB3_06 },     //1052
+/*S_ROB3_06*/       { SPR_ROB3, 3, 4, {.acp1= A_Chase }, S_ROB3_07 },     //1053
+/*S_ROB3_07*/       { SPR_ROB3, 3, 4, {.acp1= A_Chase }, S_ROB3_08 },     //1054
+/*S_ROB3_08*/       { SPR_ROB3, 4, 3, {.acp1 = A_InqChase }, S_ROB3_09 },      //1055
+/*S_ROB3_09*/       { SPR_ROB3, 4, 3, {.acp1 = A_InqFlyCheck }, S_ROB3_02 },       //1056
+/*S_ROB3_10*/       { SPR_ROB3, 0, 2, {.acp1 = A_InqFlyCheck }, S_ROB3_11 },       //1057
+/*S_ROB3_11*/       { SPR_ROB3, 5, 6, {.acp1 = A_FaceTarget}, S_ROB3_12 },        //1058
+/*S_ROB3_12*/       { SPR_ROB3, 32774, 8, {.acp1 = A_ReaverAttack}, S_ROB3_13 },     //1059
+/*S_ROB3_13*/       { SPR_ROB3, 6, 8, {.acp1 = A_ReaverAttack}, S_ROB3_02 },     //1060
+/*S_ROB3_14*/       { SPR_ROB3, 10, 12, {.acp1 = A_FaceTarget}, S_ROB3_15 },      //1061
+/*S_ROB3_15*/       { SPR_ROB3, 32777, 6, {.acp1 = A_InqGrenade }, S_ROB3_16 },        //1062
 /*S_ROB3_16*/       { SPR_ROB3, 10, 12, { nullptr }, S_ROB3_02 },      //1063
-/*S_ROB3_17*/       { SPR_ROB3, 32775, 8, { A_InqTakeOff }, S_ROB3_18 },        //1064
-/*S_ROB3_18*/       { SPR_ROB3, 32776, 4, { A_InqFly }, S_ROB3_19 },        //1065
-/*S_ROB3_19*/       { SPR_ROB3, 32775, 4, { A_InqFly }, S_ROB3_18 },        //1066
-/*S_ROB3_20*/       { SPR_ROB3, 11, 4, { A_BodyParts }, S_ROB3_21 },        //1067
-/*S_ROB3_21*/       { SPR_ROB3, 12, 4, { A_Scream }, S_ROB3_22 },       //1068
-/*S_ROB3_22*/       { SPR_ROB3, 13, 4, { A_BodyParts }, S_ROB3_23 },        //1069
-/*S_ROB3_23*/       { SPR_ROB3, 32782, 4, { A_DeathExplode1 }, S_ROB3_24 },     //1070
-/*S_ROB3_24*/       { SPR_ROB3, 32783, 4, { A_BodyParts }, S_ROB3_25 },     //1071
-/*S_ROB3_25*/       { SPR_ROB3, 32784, 4, { A_Fall }, S_ROB3_26 },      //1072
-/*S_ROB3_26*/       { SPR_ROB3, 17, 4, { A_BodyParts }, S_ROB3_27 },        //1073
-/*S_ROB3_27*/       { SPR_ROB3, 18, 4, { A_BodyParts }, S_ROB3_28 },        //1074
-/*S_ROB3_28*/       { SPR_ROB3, 19, 4, { A_BodyParts }, S_ROB3_29 },        //1075
-/*S_ROB3_29*/       { SPR_ROB3, 20, 4, { A_BodyParts }, S_ROB3_30 },        //1076
-/*S_ROB3_30*/       { SPR_ROB3, 21, 4, { A_BodyParts }, S_ROB3_31 },        //1077
-/*S_ROB3_31*/       { SPR_ROB3, 32790, 4, { A_DeathExplode1 }, S_ROB3_32 },     //1078
-/*S_ROB3_32*/       { SPR_ROB3, 32791, 4, { A_BodyParts }, S_ROB3_33 },     //1079
-/*S_ROB3_33*/       { SPR_ROB3, 32792, 4, { A_BodyParts }, S_ROB3_34 },     //1080
-/*S_ROB3_34*/       { SPR_ROB3, 25, 4, { A_BodyParts }, S_ROB3_35 },        //1081
-/*S_ROB3_35*/       { SPR_ROB3, 26, 4, { A_BodyParts }, S_ROB3_36 },        //1082
-/*S_ROB3_36*/       { SPR_ROB3, 27, 3, { A_BodyParts }, S_ROB3_37 },        //1083
-/*S_ROB3_37*/       { SPR_ROB3, 32796, 3, { A_DeathExplode1 }, S_RBB3_00 },     //1084
-/*S_RBB3_00*/       { SPR_RBB3, 32768, 3, { A_InqTossArm }, S_RBB3_01 },        //1085
-/*S_RBB3_01*/       { SPR_RBB3, 32769, 3, { A_BodyParts }, S_RBB3_02 },     //1086
-/*S_RBB3_02*/       { SPR_RBB3, 2, 3, { A_BodyParts }, S_RBB3_03 },     //1087
-/*S_RBB3_03*/       { SPR_RBB3, 3, 3, { A_BodyParts }, S_RBB3_04 },     //1088
-/*S_RBB3_04*/       { SPR_RBB3, 4, -1, { A_BossDeath }, S_NULL },       //1089
+/*S_ROB3_17*/       { SPR_ROB3, 32775, 8, {.acp1 = A_InqTakeOff }, S_ROB3_18 },        //1064
+/*S_ROB3_18*/       { SPR_ROB3, 32776, 4, {.acp1 = A_InqFly}, S_ROB3_19 },        //1065
+/*S_ROB3_19*/       { SPR_ROB3, 32775, 4, {.acp1 = A_InqFly}, S_ROB3_18 },        //1066
+/*S_ROB3_20*/       { SPR_ROB3, 11, 4, {.acp1 = A_BodyParts }, S_ROB3_21 },        //1067
+/*S_ROB3_21*/       { SPR_ROB3, 12, 4, {.acp1 = A_Scream }, S_ROB3_22 },       //1068
+/*S_ROB3_22*/       { SPR_ROB3, 13, 4, {.acp1 = A_BodyParts }, S_ROB3_23 },        //1069
+/*S_ROB3_23*/       { SPR_ROB3, 32782, 4, {.acp1 = A_DeathExplode1 }, S_ROB3_24 },     //1070
+/*S_ROB3_24*/       { SPR_ROB3, 32783, 4, {.acp1 = A_BodyParts }, S_ROB3_25 },     //1071
+/*S_ROB3_25*/       { SPR_ROB3, 32784, 4, {.acp1 = A_Fall }, S_ROB3_26 },      //1072
+/*S_ROB3_26*/       { SPR_ROB3, 17, 4, {.acp1 = A_BodyParts }, S_ROB3_27 },        //1073
+/*S_ROB3_27*/       { SPR_ROB3, 18, 4, {.acp1 = A_BodyParts }, S_ROB3_28 },        //1074
+/*S_ROB3_28*/       { SPR_ROB3, 19, 4, {.acp1 = A_BodyParts }, S_ROB3_29 },        //1075
+/*S_ROB3_29*/       { SPR_ROB3, 20, 4, {.acp1 = A_BodyParts }, S_ROB3_30 },        //1076
+/*S_ROB3_30*/       { SPR_ROB3, 21, 4, {.acp1 = A_BodyParts }, S_ROB3_31 },        //1077
+/*S_ROB3_31*/       { SPR_ROB3, 32790, 4, {.acp1 = A_DeathExplode1 }, S_ROB3_32 },     //1078
+/*S_ROB3_32*/       { SPR_ROB3, 32791, 4, {.acp1 = A_BodyParts }, S_ROB3_33 },     //1079
+/*S_ROB3_33*/       { SPR_ROB3, 32792, 4, {.acp1 = A_BodyParts }, S_ROB3_34 },     //1080
+/*S_ROB3_34*/       { SPR_ROB3, 25, 4, {.acp1 = A_BodyParts }, S_ROB3_35 },        //1081
+/*S_ROB3_35*/       { SPR_ROB3, 26, 4, {.acp1 = A_BodyParts }, S_ROB3_36 },        //1082
+/*S_ROB3_36*/       { SPR_ROB3, 27, 3, {.acp1 = A_BodyParts }, S_ROB3_37 },        //1083
+/*S_ROB3_37*/       { SPR_ROB3, 32796, 3, {.acp1 = A_DeathExplode1 }, S_RBB3_00 },     //1084
+/*S_RBB3_00*/       { SPR_RBB3, 32768, 3, {.acp1 = A_InqTossArm }, S_RBB3_01 },        //1085
+/*S_RBB3_01*/       { SPR_RBB3, 32769, 3, {.acp1 = A_BodyParts }, S_RBB3_02 },     //1086
+/*S_RBB3_02*/       { SPR_RBB3, 2, 3, {.acp1 = A_BodyParts }, S_RBB3_03 },     //1087
+/*S_RBB3_03*/       { SPR_RBB3, 3, 3, {.acp1 = A_BodyParts }, S_RBB3_04 },     //1088
+/*S_RBB3_04*/       { SPR_RBB3, 4, -1, {.acp1= A_BossDeath }, S_NULL },       //1089
 /*S_RBB3_05*/       { SPR_RBB3, 32773, 5, { nullptr }, S_RBB3_06 },        //1090
 /*S_RBB3_06*/       { SPR_RBB3, 32774, 5, { nullptr }, S_RBB3_07 },        //1091
 /*S_RBB3_07*/       { SPR_RBB3, 7, -1, { nullptr }, S_NULL },      //1092
-/*S_PRGR_00*/       { SPR_PRGR, 0, 5, { A_Look }, S_PRGR_01 },      //1093
-/*S_PRGR_01*/       { SPR_PRGR, 0, 1, { A_FloatWeave }, S_PRGR_00 },        //1094
-/*S_PRGR_02*/       { SPR_PRGR, 0, 160, { A_FloatWeave }, S_PRGR_03 },      //1095
-/*S_PRGR_03*/       { SPR_PRGR, 1, 5, { A_FloatWeave }, S_PRGR_04 },        //1096
-/*S_PRGR_04*/       { SPR_PRGR, 2, 5, { A_FloatWeave }, S_PRGR_05 },        //1097
-/*S_PRGR_05*/       { SPR_PRGR, 3, 5, { A_FloatWeave }, S_PRGR_06 },        //1098
-/*S_PRGR_06*/       { SPR_PRGR, 4, 2, { A_FloatWeave }, S_PRGR_07 },        //1099
-/*S_PRGR_07*/       { SPR_PRGR, 5, 2, { A_FloatWeave }, S_PRGR_08 },        //1100
-/*S_PRGR_08*/       { SPR_PRGR, 4, 3, { A_Chase }, S_PRGR_09 },     //1101
-/*S_PRGR_09*/       { SPR_PRGR, 5, 3, { A_Chase }, S_PRGR_06 },     //1102
-/*S_PRGR_10*/       { SPR_PRGR, 4, 2, { A_FloatWeave }, S_PRGR_11 },        //1103
-/*S_PRGR_11*/       { SPR_PRGR, 5, 3, { A_FloatWeave }, S_PRGR_12 },        //1104
-/*S_PRGR_12*/       { SPR_PRGR, 4, 3, { A_FaceTarget }, S_PRGR_13 },        //1105
-/*S_PRGR_13*/       { SPR_PRGR, 5, 4, { A_ProgrammerMelee }, S_PRGR_06 },       //1106
-/*S_PRGR_14*/       { SPR_PRGR, 6, 5, { A_FaceTarget }, S_PRGR_15 },        //1107
-/*S_PRGR_15*/       { SPR_PRGR, 7, 5, { A_FloatWeave }, S_PRGR_16 },        //1108
-/*S_PRGR_16*/       { SPR_PRGR, 32776, 5, { A_FaceTarget }, S_PRGR_17 },        //1109
-/*S_PRGR_17*/       { SPR_PRGR, 32777, 5, { A_ProgrammerAttack }, S_PRGR_06 },      //1110
-/*S_PRGR_18*/       { SPR_PRGR, 10, 5, { A_Pain }, S_PRGR_19 },     //1111
-/*S_PRGR_19*/       { SPR_PRGR, 11, 5, { A_FloatWeave }, S_PRGR_06 },       //1112
-/*S_PRGR_20*/       { SPR_PRGR, 32779, 7, { A_BodyParts }, S_PRGR_21 },     //1113
-/*S_PRGR_21*/       { SPR_PRGR, 32780, 7, { A_Scream }, S_PRGR_22 },        //1114
-/*S_PRGR_22*/       { SPR_PRGR, 32781, 7, { A_BodyParts }, S_PRGR_23 },     //1115
-/*S_PRGR_23*/       { SPR_PRGR, 32782, 7, { A_Fall }, S_PRGR_24 },      //1116
-/*S_PRGR_24*/       { SPR_PRGR, 32783, 7, { A_BodyParts }, S_PRGR_25 },     //1117
-/*S_PRGR_25*/       { SPR_PRGR, 32784, 7, { A_ProgrammerDie }, S_PRGR_26 },     //1118
+/*S_PRGR_00*/       { SPR_PRGR, 0, 5, {.acp1 = A_Look}, S_PRGR_01 },      //1093
+/*S_PRGR_01*/       { SPR_PRGR, 0, 1, {.acp1 = A_FloatWeave }, S_PRGR_00 },        //1094
+/*S_PRGR_02*/       { SPR_PRGR, 0, 160, {.acp1 = A_FloatWeave }, S_PRGR_03 },      //1095
+/*S_PRGR_03*/       { SPR_PRGR, 1, 5, {.acp1 = A_FloatWeave }, S_PRGR_04 },        //1096
+/*S_PRGR_04*/       { SPR_PRGR, 2, 5, {.acp1 = A_FloatWeave }, S_PRGR_05 },        //1097
+/*S_PRGR_05*/       { SPR_PRGR, 3, 5, {.acp1 = A_FloatWeave }, S_PRGR_06 },        //1098
+/*S_PRGR_06*/       { SPR_PRGR, 4, 2, {.acp1 = A_FloatWeave }, S_PRGR_07 },        //1099
+/*S_PRGR_07*/       { SPR_PRGR, 5, 2, {.acp1 = A_FloatWeave }, S_PRGR_08 },        //1100
+/*S_PRGR_08*/       { SPR_PRGR, 4, 3, {.acp1= A_Chase }, S_PRGR_09 },     //1101
+/*S_PRGR_09*/       { SPR_PRGR, 5, 3, {.acp1= A_Chase }, S_PRGR_06 },     //1102
+/*S_PRGR_10*/       { SPR_PRGR, 4, 2, {.acp1 = A_FloatWeave }, S_PRGR_11 },        //1103
+/*S_PRGR_11*/       { SPR_PRGR, 5, 3, {.acp1 = A_FloatWeave }, S_PRGR_12 },        //1104
+/*S_PRGR_12*/       { SPR_PRGR, 4, 3, {.acp1 = A_FaceTarget}, S_PRGR_13 },        //1105
+/*S_PRGR_13*/       { SPR_PRGR, 5, 4, {.acp1 = A_ProgrammerMelee }, S_PRGR_06 },       //1106
+/*S_PRGR_14*/       { SPR_PRGR, 6, 5, {.acp1 = A_FaceTarget}, S_PRGR_15 },        //1107
+/*S_PRGR_15*/       { SPR_PRGR, 7, 5, {.acp1 = A_FloatWeave }, S_PRGR_16 },        //1108
+/*S_PRGR_16*/       { SPR_PRGR, 32776, 5, {.acp1 = A_FaceTarget}, S_PRGR_17 },        //1109
+/*S_PRGR_17*/       { SPR_PRGR, 32777, 5, {.acp1 = A_ProgrammerAttack }, S_PRGR_06 },      //1110
+/*S_PRGR_18*/       { SPR_PRGR, 10, 5, {.acp1 = A_Pain }, S_PRGR_19 },     //1111
+/*S_PRGR_19*/       { SPR_PRGR, 11, 5, {.acp1 = A_FloatWeave }, S_PRGR_06 },       //1112
+/*S_PRGR_20*/       { SPR_PRGR, 32779, 7, {.acp1 = A_BodyParts }, S_PRGR_21 },     //1113
+/*S_PRGR_21*/       { SPR_PRGR, 32780, 7, {.acp1 = A_Scream }, S_PRGR_22 },        //1114
+/*S_PRGR_22*/       { SPR_PRGR, 32781, 7, {.acp1 = A_BodyParts }, S_PRGR_23 },     //1115
+/*S_PRGR_23*/       { SPR_PRGR, 32782, 7, {.acp1 = A_Fall }, S_PRGR_24 },      //1116
+/*S_PRGR_24*/       { SPR_PRGR, 32783, 7, {.acp1 = A_BodyParts }, S_PRGR_25 },     //1117
+/*S_PRGR_25*/       { SPR_PRGR, 32784, 7, {.acp1 = A_ProgrammerDie }, S_PRGR_26 },     //1118
 /*S_PRGR_26*/       { SPR_PRGR, 32785, 7, { nullptr }, S_PRGR_27 },        //1119
 /*S_PRGR_27*/       { SPR_PRGR, 32786, 6, { nullptr }, S_PRGR_28 },        //1120
 /*S_PRGR_28*/       { SPR_PRGR, 32787, 5, { nullptr }, S_PRGR_29 },        //1121
@@ -1316,8 +1317,8 @@ state_t states[NUMSTATES] =
 /*S_PRGR_30*/       { SPR_PRGR, 32789, 5, { nullptr }, S_PRGR_31 },        //1123
 /*S_PRGR_31*/       { SPR_PRGR, 32790, 5, { nullptr }, S_PRGR_32 },        //1124
 /*S_PRGR_32*/       { SPR_PRGR, 32791, 32, { nullptr }, S_PRGR_33 },       //1125
-/*S_PRGR_33*/       { SPR_PRGR, 32791, -1, { A_BossDeath }, S_NULL },       //1126
-/*S_BASE_00*/       { SPR_BASE, 32768, 5, { A_DeathExplode3 }, S_BASE_01 },     //1127
+/*S_PRGR_33*/       { SPR_PRGR, 32791, -1, {.acp1= A_BossDeath }, S_NULL },       //1126
+/*S_BASE_00*/       { SPR_BASE, 32768, 5, {.acp1 = A_DeathExplode3 }, S_BASE_01 },     //1127
 /*S_BASE_01*/       { SPR_BASE, 32769, 5, { nullptr }, S_BASE_02 },        //1128
 /*S_BASE_02*/       { SPR_BASE, 32770, 5, { nullptr }, S_BASE_03 },        //1129
 /*S_BASE_03*/       { SPR_BASE, 32771, 5, { nullptr }, S_BASE_04 },        //1130
@@ -1327,21 +1328,21 @@ state_t states[NUMSTATES] =
 /*S_BASE_07*/       { SPR_BASE, 7, -1, { nullptr }, S_NULL },      //1134
 /*S_FRBL_00*/       { SPR_FRBL, 32768, 3, { nullptr }, S_FRBL_01 },        //1135
 /*S_FRBL_01*/       { SPR_FRBL, 32769, 3, { nullptr }, S_FRBL_02 },        //1136
-/*S_FRBL_02*/       { SPR_FRBL, 32770, 3, { A_MissileTick }, S_FRBL_00 },       //1137
-/*S_FRBL_03*/       { SPR_FRBL, 32771, 5, { A_FlameDeath }, S_FRBL_04 },        //1138
+/*S_FRBL_02*/       { SPR_FRBL, 32770, 3, {.acp1 = A_MissileTick }, S_FRBL_00 },       //1137
+/*S_FRBL_03*/       { SPR_FRBL, 32771, 5, {.acp1 = A_FlameDeath}, S_FRBL_04 },        //1138
 /*S_FRBL_04*/       { SPR_FRBL, 32772, 5, { nullptr }, S_FRBL_05 },        //1139
 /*S_FRBL_05*/       { SPR_FRBL, 32773, 5, { nullptr }, S_FRBL_06 },        //1140
 /*S_FRBL_06*/       { SPR_FRBL, 32774, 5, { nullptr }, S_FRBL_07 },        //1141
 /*S_FRBL_07*/       { SPR_FRBL, 32775, 5, { nullptr }, S_FRBL_08 },        //1142
 /*S_FRBL_08*/       { SPR_FRBL, 32776, 5, { nullptr }, S_NULL },       //1143
-/*S_KLAX_00*/       { SPR_KLAX, 0, 5, { A_Listen }, S_KLAX_00 },        //1144
-/*S_KLAX_01*/       { SPR_KLAX, 1, 6, { A_ClaxonBlare }, S_KLAX_02 },       //1145
+/*S_KLAX_00*/       { SPR_KLAX, 0, 5, {.acp1 = A_Listen}, S_KLAX_00 },        //1144
+/*S_KLAX_01*/       { SPR_KLAX, 1, 6, {.acp1 = A_ClaxonBlare }, S_KLAX_02 },       //1145
 /*S_KLAX_02*/       { SPR_KLAX, 2, 60, { nullptr }, S_KLAX_01 },       //1146
-/*S_TURT_00*/       { SPR_TURT, 0, 5, { A_Listen }, S_TURT_00 },        //1147
-/*S_TURT_01*/       { SPR_TURT, 0, 2, { A_Chase }, S_TURT_01 },     //1148
-/*S_TURT_02*/       { SPR_TURT, 1, 4, { A_BulletAttack }, S_TURT_03 },      //1149
-/*S_TURT_03*/       { SPR_TURT, 3, 3, { A_CheckTargetVisible }, S_TURT_04 },        //1150
-/*S_TURT_04*/       { SPR_TURT, 0, 4, { A_CheckTargetVisible }, S_TURT_02 },        //1151
+/*S_TURT_00*/       { SPR_TURT, 0, 5, {.acp1 = A_Listen}, S_TURT_00 },        //1147
+/*S_TURT_01*/       { SPR_TURT, 0, 2, {.acp1= A_Chase }, S_TURT_01 },     //1148
+/*S_TURT_02*/       { SPR_TURT, 1, 4, {.acp1 = A_BulletAttack}, S_TURT_03 },      //1149
+/*S_TURT_03*/       { SPR_TURT, 3, 3, {.acp1 = A_CheckTargetVisible}, S_TURT_04 },        //1150
+/*S_TURT_04*/       { SPR_TURT, 0, 4, {.acp1 = A_CheckTargetVisible}, S_TURT_02 },        //1151
 /*S_BALL_00*/       { SPR_BALL, 32768, 6, { nullptr }, S_BALL_01 },        //1152
 /*S_BALL_01*/       { SPR_BALL, 32769, 6, { nullptr }, S_BALL_02 },        //1153
 /*S_BALL_02*/       { SPR_BALL, 32770, 6, { nullptr }, S_BALL_03 },        //1154
@@ -1350,72 +1351,72 @@ state_t states[NUMSTATES] =
 /*S_TURT_05*/       { SPR_TURT, 2, -1, { nullptr }, S_NULL },      //1157
 /*S_PSTN_00*/       { SPR_PSTN, 0, 8, { nullptr }, S_PSTN_01 },        //1158
 /*S_PSTN_01*/       { SPR_PSTN, 1, 8, { nullptr }, S_PSTN_00 },        //1159
-/*S_PSTN_02*/       { SPR_PSTN, 32768, 4, { A_Scream }, S_PSTN_03 },        //1160
-/*S_PSTN_03*/       { SPR_PSTN, 32769, 4, { A_Fall }, S_PSTN_04 },      //1161
-/*S_PSTN_04*/       { SPR_PSTN, 32770, 4, { A_QuestMsg }, S_PSTN_05 },      //1162
-/*S_PSTN_05*/       { SPR_PSTN, 32771, 4, { A_SpawnSparkPuff }, S_PSTN_06 },        //1163
-/*S_PSTN_06*/       { SPR_PSTN, 32772, 4, { A_BodyParts }, S_PSTN_07 },     //1164
+/*S_PSTN_02*/       { SPR_PSTN, 32768, 4, {.acp1 = A_Scream }, S_PSTN_03 },        //1160
+/*S_PSTN_03*/       { SPR_PSTN, 32769, 4, {.acp1 = A_Fall }, S_PSTN_04 },      //1161
+/*S_PSTN_04*/       { SPR_PSTN, 32770, 4, {.acp1 = A_QuestMsg }, S_PSTN_05 },      //1162
+/*S_PSTN_05*/       { SPR_PSTN, 32771, 4, {.acp1 = A_SpawnSparkPuff }, S_PSTN_06 },        //1163
+/*S_PSTN_06*/       { SPR_PSTN, 32772, 4, {.acp1 = A_BodyParts }, S_PSTN_07 },     //1164
 /*S_PSTN_07*/       { SPR_PSTN, 32773, 4, { nullptr }, S_PSTN_08 },        //1165
-/*S_PSTN_08*/       { SPR_PSTN, 32774, 4, { A_SpawnSparkPuff }, S_PSTN_09 },        //1166
+/*S_PSTN_08*/       { SPR_PSTN, 32774, 4, {.acp1 = A_SpawnSparkPuff }, S_PSTN_09 },        //1166
 /*S_PSTN_09*/       { SPR_PSTN, 7, 4, { nullptr }, S_PSTN_10 },        //1167
 /*S_PSTN_10*/       { SPR_PSTN, 8, -1, { nullptr }, S_NULL },      //1168
 /*S_SECR_00*/       { SPR_SECR, 32768, 4, { nullptr }, S_SECR_01 },        //1169
 /*S_SECR_01*/       { SPR_SECR, 32769, 4, { nullptr }, S_SECR_02 },        //1170
 /*S_SECR_02*/       { SPR_SECR, 32770, 4, { nullptr }, S_SECR_03 },        //1171
 /*S_SECR_03*/       { SPR_SECR, 32771, 4, { nullptr }, S_SECR_00 },        //1172
-/*S_SECR_04*/       { SPR_SECR, 32772, 5, { A_SpawnSparkPuff }, S_SECR_05 },        //1173
-/*S_SECR_05*/       { SPR_SECR, 32773, 5, { A_Fall }, S_SECR_06 },      //1174
-/*S_SECR_06*/       { SPR_SECR, 32774, 5, { A_QuestMsg }, S_SECR_07 },      //1175
-/*S_SECR_07*/       { SPR_SECR, 32775, 5, { A_BodyParts }, S_SECR_08 },     //1176
-/*S_SECR_08*/       { SPR_SECR, 32776, 5, { A_SpawnSparkPuff }, S_SECR_09 },        //1177
+/*S_SECR_04*/       { SPR_SECR, 32772, 5, {.acp1 = A_SpawnSparkPuff }, S_SECR_05 },        //1173
+/*S_SECR_05*/       { SPR_SECR, 32773, 5, {.acp1 = A_Fall }, S_SECR_06 },      //1174
+/*S_SECR_06*/       { SPR_SECR, 32774, 5, {.acp1 = A_QuestMsg }, S_SECR_07 },      //1175
+/*S_SECR_07*/       { SPR_SECR, 32775, 5, {.acp1 = A_BodyParts }, S_SECR_08 },     //1176
+/*S_SECR_08*/       { SPR_SECR, 32776, 5, {.acp1 = A_SpawnSparkPuff }, S_SECR_09 },        //1177
 /*S_SECR_09*/       { SPR_SECR, 9, 5, { nullptr }, S_SECR_10 },        //1178
-/*S_SECR_10*/       { SPR_SECR, 10, 5, { A_SpawnSparkPuff }, S_SECR_11 },       //1179
+/*S_SECR_10*/       { SPR_SECR, 10, 5, {.acp1 = A_SpawnSparkPuff }, S_SECR_11 },       //1179
 /*S_SECR_11*/       { SPR_SECR, 11, 5, { nullptr }, S_SECR_12 },       //1180
-/*S_SECR_12*/       { SPR_SECR, 12, 5, { A_SpawnSparkPuff }, S_SECR_13 },       //1181
+/*S_SECR_12*/       { SPR_SECR, 12, 5, {.acp1 = A_SpawnSparkPuff }, S_SECR_13 },       //1181
 /*S_SECR_13*/       { SPR_SECR, 13, 5, { nullptr }, S_SECR_14 },       //1182
-/*S_SECR_14*/       { SPR_SECR, 14, 5, { A_SpawnSparkPuff }, S_SECR_15 },       //1183
+/*S_SECR_14*/       { SPR_SECR, 14, 5, {.acp1 = A_SpawnSparkPuff }, S_SECR_15 },       //1183
 /*S_SECR_15*/       { SPR_SECR, 15, -1, { nullptr }, S_NULL },     //1184
 /*S_XPRK_01*/       { SPR_XPRK, 0, -1, { nullptr }, S_NULL },      //1185
-/*S_XPRK_02*/       { SPR_XPRK, 0, 1, { A_ClearForceField }, S_BNG3_00 },       //1186
+/*S_XPRK_02*/       { SPR_XPRK, 0, 1, {.acp1 = A_ClearForceField}, S_BNG3_00 },       //1186
 /*S_TARG_00*/       { SPR_TARG, 0, -1, { nullptr }, S_NULL },      //1187
 /*S_RING_00*/       { SPR_RING, 0, -1, { nullptr }, S_NULL },      //1188
 /*S_EARS_00*/       { SPR_EARS, 0, -1, { nullptr }, S_NULL },      //1189
 /*S_COMM_00*/       { SPR_COMM, 0, -1, { nullptr }, S_NULL },      //1190
-/*S_BOOM_00*/       { SPR_BOOM, 32768, 1, { A_CrystalRadiusAtk }, S_BOOM_01 },     //1191
-/*S_BOOM_01*/       { SPR_BOOM, 32769, 3, { A_QuestMsg }, S_BOOM_02 },      //1192
-/*S_BOOM_02*/       { SPR_BOOM, 32770, 2, { A_CrystalExplode }, S_BOOM_03 },        //1193
-/*S_BOOM_03*/       { SPR_BOOM, 32771, 3, { A_SpawnSparkPuff }, S_BOOM_04 },        //1194
+/*S_BOOM_00*/       { SPR_BOOM, 32768, 1, {.acp1 = A_CrystalRadiusAtk }, S_BOOM_01 },     //1191
+/*S_BOOM_01*/       { SPR_BOOM, 32769, 3, {.acp1 = A_QuestMsg }, S_BOOM_02 },      //1192
+/*S_BOOM_02*/       { SPR_BOOM, 32770, 2, {.acp1 = A_CrystalExplode }, S_BOOM_03 },        //1193
+/*S_BOOM_03*/       { SPR_BOOM, 32771, 3, {.acp1 = A_SpawnSparkPuff }, S_BOOM_04 },        //1194
 /*S_BOOM_04*/       { SPR_BOOM, 32772, 3, { nullptr }, S_BOOM_05 },        //1195
 /*S_BOOM_05*/       { SPR_BOOM, 32773, 3, { nullptr }, S_BOOM_06 },        //1196
-/*S_BOOM_06*/       { SPR_BOOM, 32774, 3, { A_SpawnSparkPuff }, S_BOOM_07 },        //1197
-/*S_BOOM_07*/       { SPR_BOOM, 32775, 1, { A_CrystalRadiusAtk }, S_BOOM_08 },     //1198
+/*S_BOOM_06*/       { SPR_BOOM, 32774, 3, {.acp1 = A_SpawnSparkPuff }, S_BOOM_07 },        //1197
+/*S_BOOM_07*/       { SPR_BOOM, 32775, 1, {.acp1 = A_CrystalRadiusAtk }, S_BOOM_08 },     //1198
 /*S_BOOM_08*/       { SPR_BOOM, 32776, 3, { nullptr }, S_BOOM_09 },        //1199
-/*S_BOOM_09*/       { SPR_BOOM, 32777, 3, { A_SpawnSparkPuff }, S_BOOM_10 },        //1200
-/*S_BOOM_10*/       { SPR_BOOM, 32778, 3, { A_SpawnSparkPuff }, S_BOOM_11 },        //1201
-/*S_BOOM_11*/       { SPR_BOOM, 32779, 3, { A_SpawnSparkPuff }, S_BOOM_12 },        //1202
+/*S_BOOM_09*/       { SPR_BOOM, 32777, 3, {.acp1 = A_SpawnSparkPuff }, S_BOOM_10 },        //1200
+/*S_BOOM_10*/       { SPR_BOOM, 32778, 3, {.acp1 = A_SpawnSparkPuff }, S_BOOM_11 },        //1201
+/*S_BOOM_11*/       { SPR_BOOM, 32779, 3, {.acp1 = A_SpawnSparkPuff }, S_BOOM_12 },        //1202
 /*S_BOOM_12*/       { SPR_BOOM, 32780, 3, { nullptr }, S_BOOM_13 },        //1203
 /*S_BOOM_13*/       { SPR_BOOM, 32781, 3, { nullptr }, S_BOOM_14 },        //1204
-/*S_BOOM_14*/       { SPR_BOOM, 32782, 3, { A_SpawnSparkPuff }, S_BOOM_15 },        //1205
+/*S_BOOM_14*/       { SPR_BOOM, 32782, 3, {.acp1 = A_SpawnSparkPuff }, S_BOOM_15 },        //1205
 /*S_BOOM_15*/       { SPR_BOOM, 32783, 3, { nullptr }, S_BOOM_16 },        //1206
 /*S_BOOM_16*/       { SPR_BOOM, 32784, 3, { nullptr }, S_BOOM_17 },        //1207
 /*S_BOOM_17*/       { SPR_BOOM, 32785, 3, { nullptr }, S_BOOM_18 },        //1208
 /*S_BOOM_18*/       { SPR_BOOM, 32786, 3, { nullptr }, S_BOOM_19 },        //1209
 /*S_BOOM_19*/       { SPR_BOOM, 32787, 3, { nullptr }, S_BOOM_20 },        //1210
-/*S_BOOM_20*/       { SPR_BOOM, 32788, 3, { A_ExtraLightOff }, S_BOOM_21 },     //1211
+/*S_BOOM_20*/       { SPR_BOOM, 32788, 3, {.acp1 = A_ExtraLightOff }, S_BOOM_21 },     //1211
 /*S_BOOM_21*/       { SPR_BOOM, 32789, 3, { nullptr }, S_BOOM_22 },        //1212
 /*S_BOOM_22*/       { SPR_BOOM, 32790, 3, { nullptr }, S_BOOM_23 },        //1213
 /*S_BOOM_23*/       { SPR_BOOM, 32791, 3, { nullptr }, S_BOOM_24 },        //1214
 /*S_BOOM_24*/       { SPR_BOOM, 32792, 3, { nullptr }, S_NULL },       //1215
-/*S_RATT_00*/       { SPR_RATT, 0, 10, { A_Look }, S_RATT_00 },     //1216
-/*S_RATT_01*/       { SPR_RATT, 0, 4, { A_Chase }, S_RATT_02 },     //1217
-/*S_RATT_02*/       { SPR_RATT, 0, 4, { A_Chase }, S_RATT_03 },     //1218
-/*S_RATT_03*/       { SPR_RATT, 1, 4, { A_Chase }, S_RATT_04 },     //1219
-/*S_RATT_04*/       { SPR_RATT, 1, 4, { A_Chase }, S_RATT_01 },     //1220
-/*S_RATT_05*/       { SPR_RATT, 0, 8, { A_RandomWalk }, S_RATT_06 },        //1221
-/*S_RATT_06*/       { SPR_RATT, 1, 4, { A_RandomWalk }, S_RATT_01 },        //1222
-/*S_HOGN_00*/       { SPR_HOGN, 0, 2, { A_ZombieInSpecialSector }, S_HOGN_00 },     //1223
-/*S_HOGN_01*/       { SPR_HOGN, 1, 1, { A_ZombieInSpecialSector }, S_HOGN_02 },     //1224
-/*S_HOGN_02*/       { SPR_HOGN, 2, 1, { A_Pain }, S_HOGN_00 },      //1225
+/*S_RATT_00*/       { SPR_RATT, 0, 10, {.acp1 = A_Look}, S_RATT_00 },     //1216
+/*S_RATT_01*/       { SPR_RATT, 0, 4, {.acp1= A_Chase }, S_RATT_02 },     //1217
+/*S_RATT_02*/       { SPR_RATT, 0, 4, {.acp1= A_Chase }, S_RATT_03 },     //1218
+/*S_RATT_03*/       { SPR_RATT, 1, 4, {.acp1= A_Chase }, S_RATT_04 },     //1219
+/*S_RATT_04*/       { SPR_RATT, 1, 4, {.acp1= A_Chase }, S_RATT_01 },     //1220
+/*S_RATT_05*/       { SPR_RATT, 0, 8, {.acp1 = A_RandomWalk}, S_RATT_06 },        //1221
+/*S_RATT_06*/       { SPR_RATT, 1, 4, {.acp1 = A_RandomWalk}, S_RATT_01 },        //1222
+/*S_HOGN_00*/       { SPR_HOGN, 0, 2, {.acp1 = A_ZombieInSpecialSector }, S_HOGN_00 },     //1223
+/*S_HOGN_01*/       { SPR_HOGN, 1, 1, {.acp1 = A_ZombieInSpecialSector }, S_HOGN_02 },     //1224
+/*S_HOGN_02*/       { SPR_HOGN, 2, 1, {.acp1 = A_Pain }, S_HOGN_00 },      //1225
 /*S_DEAD_00*/       { SPR_DEAD, 0, -1, { nullptr }, S_NULL },      //1226
 /*S_SBAN_00*/       { SPR_SBAN, 0, -1, { nullptr }, S_NULL },      //1227
 /*S_BOTR_00*/       { SPR_BOTR, 0, -1, { nullptr }, S_NULL },      //1228
@@ -1424,13 +1425,13 @@ state_t states[NUMSTATES] =
 /*S_COUP_00*/       { SPR_COUP, 0, 5, { nullptr }, S_COUP_01 },        //1231
 /*S_COUP_01*/       { SPR_COUP, 1, 5, { nullptr }, S_COUP_00 },        //1232
 /*S_COUP_02*/       { SPR_COUP, 2, -1, { nullptr }, S_COUP_01 },       //1233
-/*S_BUBB_00*/       { SPR_BUBB, 0, 4, { A_ActiveSound }, S_BUBB_00 },       //1234
-/*S_BUBF_00*/       { SPR_BUBF, 0, 4, { A_ActiveSound }, S_BUBF_00 },       //1235
-/*S_BUBC_00*/       { SPR_BUBC, 0, 4, { A_ActiveSound }, S_BUBC_00 },       //1236
-/*S_ASPR_00*/       { SPR_ASPR, 0, 4, { A_ActiveSound }, S_ASPR_00 },       //1237
-/*S_SPDL_00*/       { SPR_SPDL, 0, 5, { A_ActiveSound }, S_SPDL_01 },       //1238
-/*S_SPDL_01*/       { SPR_SPDL, 1, 5, { A_ActiveSound }, S_SPDL_02 },       //1239
-/*S_SPDL_02*/       { SPR_SPDL, 2, 5, { A_ActiveSound }, S_SPDL_00 },       //1240
+/*S_BUBB_00*/       { SPR_BUBB, 0, 4, {.acp1= A_ActiveSound }, S_BUBB_00 },       //1234
+/*S_BUBF_00*/       { SPR_BUBF, 0, 4, {.acp1= A_ActiveSound }, S_BUBF_00 },       //1235
+/*S_BUBC_00*/       { SPR_BUBC, 0, 4, {.acp1= A_ActiveSound }, S_BUBC_00 },       //1236
+/*S_ASPR_00*/       { SPR_ASPR, 0, 4, {.acp1= A_ActiveSound }, S_ASPR_00 },       //1237
+/*S_SPDL_00*/       { SPR_SPDL, 0, 5, {.acp1= A_ActiveSound }, S_SPDL_01 },       //1238
+/*S_SPDL_01*/       { SPR_SPDL, 1, 5, {.acp1= A_ActiveSound }, S_SPDL_02 },       //1239
+/*S_SPDL_02*/       { SPR_SPDL, 2, 5, {.acp1= A_ActiveSound }, S_SPDL_00 },       //1240
 /*S_TOKN_00*/       { SPR_TOKN, 0, -1, { nullptr }, S_NULL },      //1241
 /*S_OTOK_00*/       { SPR_OTOK, 0, -1, { nullptr }, S_NULL },      //1242
 /*S_HELT_00*/       { SPR_HELT, 0, -1, { nullptr }, S_NULL },      //1243
@@ -1484,23 +1485,23 @@ state_t states[NUMSTATES] =
 /*S_DIE1_00*/       { SPR_DIE1, 0, -1, { nullptr }, S_NULL },      //1291
 /*S_BEAC_00*/       { SPR_BEAC, 0, -1, { nullptr }, S_NULL },      //1292
 /*S_BEAC_01*/       { SPR_BEAC, 0, 30, { nullptr }, S_BEAC_02 },       //1293
-/*S_BEAC_02*/       { SPR_BEAC, 0, 160, { A_TeleportBeacon }, S_BEAC_01 },      //1294
+/*S_BEAC_02*/       { SPR_BEAC, 0, 160, {.acp1 = A_TeleportBeacon }, S_BEAC_01 },      //1294
 /*S_ARM1_00*/       { SPR_ARM1, 0, -1, { nullptr }, S_NULL },      //1295
 /*S_ARM2_00*/       { SPR_ARM2, 0, -1, { nullptr }, S_NULL },      //1296
 /*S_BARW_00*/       { SPR_BARW, 0, -1, { nullptr }, S_NULL },      //1297
-/*S_BARW_01*/       { SPR_BARW, 1, 2, { A_Scream }, S_BARW_02 },        //1298
+/*S_BARW_01*/       { SPR_BARW, 1, 2, {.acp1 = A_Scream }, S_BARW_02 },        //1298
 /*S_BARW_02*/       { SPR_BARW, 2, 2, { nullptr }, S_BARW_03 },        //1299
-/*S_BARW_03*/       { SPR_BARW, 3, 2, { A_Fall }, S_BARW_04 },      //1300
+/*S_BARW_03*/       { SPR_BARW, 3, 2, {.acp1 = A_Fall }, S_BARW_04 },      //1300
 /*S_BARW_04*/       { SPR_BARW, 4, 2, { nullptr }, S_BARW_05 },        //1301
 /*S_BARW_05*/       { SPR_BARW, 5, 2, { nullptr }, S_BARW_06 },        //1302
 /*S_BARW_06*/       { SPR_BARW, 6, 2, { nullptr }, S_BARW_07 },        //1303
 /*S_BARW_07*/       { SPR_BARW, 7, -1, { nullptr }, S_NULL },      //1304
 /*S_BART_00*/       { SPR_BART, 0, -1, { nullptr }, S_NULL },      //1305
-/*S_BART_01*/       { SPR_BART, 32769, 2, { A_Scream }, S_BART_02 },        //1306
+/*S_BART_01*/       { SPR_BART, 32769, 2, {.acp1 = A_Scream }, S_BART_02 },        //1306
 /*S_BART_02*/       { SPR_BART, 32770, 2, { nullptr }, S_BART_03 },        //1307
 /*S_BART_03*/       { SPR_BART, 32771, 2, { nullptr }, S_BART_04 },        //1308
-/*S_BART_04*/       { SPR_BART, 32772, 2, { A_Fall }, S_BART_05 },      //1309
-/*S_BART_05*/       { SPR_BART, 32773, 2, { A_DeathExplode2 }, S_BART_06 },     //1310
+/*S_BART_04*/       { SPR_BART, 32772, 2, {.acp1 = A_Fall }, S_BART_05 },      //1309
+/*S_BART_05*/       { SPR_BART, 32773, 2, {.acp1= A_DeathExplode2 }, S_BART_06 },     //1310
 /*S_BART_06*/       { SPR_BART, 32774, 2, { nullptr }, S_BART_07 },        //1311
 /*S_BART_07*/       { SPR_BART, 32775, 2, { nullptr }, S_BART_08 },        //1312
 /*S_BART_08*/       { SPR_BART, 32776, 2, { nullptr }, S_BART_09 },        //1313
@@ -1513,15 +1514,15 @@ state_t states[NUMSTATES] =
 /*S_BARL_01*/       { SPR_BARL, 32769, 4, { nullptr }, S_BARL_02 },        //1320
 /*S_BARL_02*/       { SPR_BARL, 32770, 4, { nullptr }, S_BARL_03 },        //1321
 /*S_BARL_03*/       { SPR_BARL, 32771, 4, { nullptr }, S_BARL_00 },        //1322
-/*S_BOWL_00*/       { SPR_BOWL, 32768, 4, { A_ActiveSound }, S_BOWL_01 },       //1323
+/*S_BOWL_00*/       { SPR_BOWL, 32768, 4, {.acp1= A_ActiveSound }, S_BOWL_01 },       //1323
 /*S_BOWL_01*/       { SPR_BOWL, 32769, 4, { nullptr }, S_BOWL_02 },        //1324
 /*S_BOWL_02*/       { SPR_BOWL, 32770, 4, { nullptr }, S_BOWL_03 },        //1325
 /*S_BOWL_03*/       { SPR_BOWL, 32771, 4, { nullptr }, S_BOWL_00 },        //1326
-/*S_BRAZ_00*/       { SPR_BRAZ, 32768, 4, { A_ActiveSound }, S_BRAZ_01 },       //1327
+/*S_BRAZ_00*/       { SPR_BRAZ, 32768, 4, {.acp1= A_ActiveSound }, S_BRAZ_01 },       //1327
 /*S_BRAZ_01*/       { SPR_BRAZ, 32769, 4, { nullptr }, S_BRAZ_02 },        //1328
 /*S_BRAZ_02*/       { SPR_BRAZ, 32770, 4, { nullptr }, S_BRAZ_03 },        //1329
 /*S_BRAZ_03*/       { SPR_BRAZ, 32771, 4, { nullptr }, S_BRAZ_00 },        //1330
-/*S_TRCH_00*/       { SPR_TRCH, 32768, 4, { A_ActiveSound }, S_TRCH_01 },       //1331
+/*S_TRCH_00*/       { SPR_TRCH, 32768, 4, {.acp1= A_ActiveSound }, S_TRCH_01 },       //1331
 /*S_TRCH_01*/       { SPR_TRCH, 32769, 4, { nullptr }, S_TRCH_02 },        //1332
 /*S_TRCH_02*/       { SPR_TRCH, 32770, 4, { nullptr }, S_TRCH_03 },        //1333
 /*S_TRCH_03*/       { SPR_TRCH, 32771, 4, { nullptr }, S_TRCH_00 },        //1334
@@ -1529,11 +1530,11 @@ state_t states[NUMSTATES] =
 /*S_LTRH_01*/       { SPR_LTRH, 32769, 4, { nullptr }, S_LTRH_02 },        //1336
 /*S_LTRH_02*/       { SPR_LTRH, 32770, 4, { nullptr }, S_LTRH_03 },        //1337
 /*S_LTRH_03*/       { SPR_LTRH, 32771, 4, { nullptr }, S_LTRH_00 },        //1338
-/*S_LMPC_00*/       { SPR_LMPC, 32768, 4, { A_ActiveSound }, S_LMPC_01 },       //1339
+/*S_LMPC_00*/       { SPR_LMPC, 32768, 4, {.acp1= A_ActiveSound }, S_LMPC_01 },       //1339
 /*S_LMPC_01*/       { SPR_LMPC, 32769, 4, { nullptr }, S_LMPC_02 },        //1340
 /*S_LMPC_02*/       { SPR_LMPC, 32770, 4, { nullptr }, S_LMPC_03 },        //1341
 /*S_LMPC_03*/       { SPR_LMPC, 32771, 4, { nullptr }, S_LMPC_00 },        //1342
-/*S_LOGS_00*/       { SPR_LOGS, 32768, 4, { A_ActiveSound }, S_LOGS_01 },       //1343
+/*S_LOGS_00*/       { SPR_LOGS, 32768, 4, {.acp1= A_ActiveSound }, S_LOGS_01 },       //1343
 /*S_LOGS_01*/       { SPR_LOGS, 32769, 4, { nullptr }, S_LOGS_02 },        //1344
 /*S_LOGS_02*/       { SPR_LOGS, 32770, 4, { nullptr }, S_LOGS_03 },        //1345
 /*S_LOGS_03*/       { SPR_LOGS, 32771, 4, { nullptr }, S_LOGS_00 },        //1346
@@ -1548,12 +1549,12 @@ state_t states[NUMSTATES] =
 /*S_KY2S_00*/       { SPR_KY2S, 0, -1, { nullptr }, S_NULL },      //1355
 /*S_KY3B_00*/       { SPR_KY3B, 0, -1, { nullptr }, S_NULL },      //1356
 /*S_HAND_00*/       { SPR_HAND, 0, -1, { nullptr }, S_NULL },      //1357
-/*S_CRYS_00*/       { SPR_CRYS, 0, 16, { A_ActiveSound }, S_CRYS_01 },      //1358
-/*S_CRYS_01*/       { SPR_CRYS, 1, 5, { A_ActiveSound }, S_CRYS_02 },       //1359
-/*S_CRYS_02*/       { SPR_CRYS, 2, 4, { A_ActiveSound }, S_CRYS_03 },       //1360
-/*S_CRYS_03*/       { SPR_CRYS, 3, 4, { A_ActiveSound }, S_CRYS_04 },       //1361
-/*S_CRYS_04*/       { SPR_CRYS, 4, 4, { A_ActiveSound }, S_CRYS_05 },       //1362
-/*S_CRYS_05*/       { SPR_CRYS, 5, 4, { A_ActiveSound }, S_CRYS_00 },       //1363
+/*S_CRYS_00*/       { SPR_CRYS, 0, 16, {.acp1= A_ActiveSound }, S_CRYS_01 },      //1358
+/*S_CRYS_01*/       { SPR_CRYS, 1, 5, {.acp1= A_ActiveSound }, S_CRYS_02 },       //1359
+/*S_CRYS_02*/       { SPR_CRYS, 2, 4, {.acp1= A_ActiveSound }, S_CRYS_03 },       //1360
+/*S_CRYS_03*/       { SPR_CRYS, 3, 4, {.acp1= A_ActiveSound }, S_CRYS_04 },       //1361
+/*S_CRYS_04*/       { SPR_CRYS, 4, 4, {.acp1= A_ActiveSound }, S_CRYS_05 },       //1362
+/*S_CRYS_05*/       { SPR_CRYS, 5, 4, {.acp1= A_ActiveSound }, S_CRYS_00 },       //1363
 /*S_PRIS_00*/       { SPR_PRIS, 0, -1, { nullptr }, S_NULL },      //1364
 /*S_PWR1_00*/       { SPR_PWR1, 0, -1, { nullptr }, S_NULL },      //1365
 /*S_PWR2_00*/       { SPR_PWR2, 0, -1, { nullptr }, S_NULL },      //1366
@@ -1579,10 +1580,10 @@ state_t states[NUMSTATES] =
 /*S_CRED_00*/       { SPR_CRED, 0, -1, { nullptr }, S_NULL },      //1386
 /*S_SACK_00*/       { SPR_SACK, 0, -1, { nullptr }, S_NULL },      //1387
 /*S_CHST_00*/       { SPR_CHST, 0, -1, { nullptr }, S_NULL },      //1388
-/*S_SHD1_00*/       { SPR_SHD1, 0, 17, { A_ShadowOff }, S_SHD1_01 },        //1389
-/*S_SHD1_01*/       { SPR_SHD1, 0, 17, { A_ModifyVisibility }, S_SHD1_02 },     //1390
-/*S_SHD1_02*/       { SPR_SHD1, 0, 17, { A_ShadowOn }, S_SHD1_03 },     //1391
-/*S_SHD1_03*/       { SPR_SHD1, 0, 17, { A_ModifyVisibility }, S_SHD1_00 },     //1392
+/*S_SHD1_00*/       { SPR_SHD1, 0, 17, {.acp1 = A_ShadowOff }, S_SHD1_01 },        //1389
+/*S_SHD1_01*/       { SPR_SHD1, 0, 17, {.acp1 = A_ModifyVisibility }, S_SHD1_02 },     //1390
+/*S_SHD1_02*/       { SPR_SHD1, 0, 17, {.acp1 = A_ShadowOn }, S_SHD1_03 },     //1391
+/*S_SHD1_03*/       { SPR_SHD1, 0, 17, {.acp1 = A_ModifyVisibility }, S_SHD1_00 },     //1392
 /*S_MASK_00*/       { SPR_MASK, 0, -1, { nullptr }, S_NULL },      //1393
 /*S_UNIF_00*/       { SPR_UNIF, 0, -1, { nullptr }, S_NULL },      //1394
 /*S_OFIC_00*/       { SPR_OFIC, 0, -1, { nullptr }, S_NULL },      //1395
@@ -1627,10 +1628,10 @@ state_t states[NUMSTATES] =
 /*S_ROK2_00*/       { SPR_ROK2, 0, -1, { nullptr }, S_NULL },      //1434
 /*S_ROK3_00*/       { SPR_ROK3, 0, -1, { nullptr }, S_NULL },      //1435
 /*S_ROK4_00*/       { SPR_ROK4, 0, -1, { nullptr }, S_NULL },      //1436
-/*S_LOGG_00*/       { SPR_LOGG, 0, 5, { A_ActiveSound }, S_LOGG_01 },       //1437
-/*S_LOGG_01*/       { SPR_LOGG, 1, 5, { A_ActiveSound }, S_LOGG_02 },       //1438
-/*S_LOGG_02*/       { SPR_LOGG, 2, 5, { A_ActiveSound }, S_LOGG_03 },       //1439
-/*S_LOGG_03*/       { SPR_LOGG, 3, 5, { A_ActiveSound }, S_LOGG_00 },       //1440
+/*S_LOGG_00*/       { SPR_LOGG, 0, 5, {.acp1= A_ActiveSound }, S_LOGG_01 },       //1437
+/*S_LOGG_01*/       { SPR_LOGG, 1, 5, {.acp1= A_ActiveSound }, S_LOGG_02 },       //1438
+/*S_LOGG_02*/       { SPR_LOGG, 2, 5, {.acp1= A_ActiveSound }, S_LOGG_03 },       //1439
+/*S_LOGG_03*/       { SPR_LOGG, 3, 5, {.acp1= A_ActiveSound }, S_LOGG_00 },       //1440
 /*S_RUB1_00*/       { SPR_RUB1, 0, -1, { nullptr }, S_NULL },      //1441
 /*S_RUB2_00*/       { SPR_RUB2, 0, -1, { nullptr }, S_NULL },      //1442
 /*S_RUB3_00*/       { SPR_RUB3, 0, -1, { nullptr }, S_NULL },      //1443
@@ -1661,15 +1662,15 @@ state_t states[NUMSTATES] =
 /*S_TLMP_00*/       { SPR_TLMP, 0, -1, { nullptr }, S_NULL },      //1468
 /*S_TLMP_01*/       { SPR_TLMP, 1, -1, { nullptr }, S_NULL },      //1469
 /*S_TRAY_00*/       { SPR_TRAY, 0, -1, { nullptr }, S_NULL },      //1470
-/*S_APOW_00*/       { SPR_APOW, 0, 4, { A_ActiveSound }, S_APOW_00 },       //1471
+/*S_APOW_00*/       { SPR_APOW, 0, 4, {.acp1= A_ActiveSound }, S_APOW_00 },       //1471
 /*S_AFED_00*/       { SPR_AFED, 0, -1, { nullptr }, S_NULL },      //1472
-/*S_DRIP_00*/       { SPR_DRIP, 0, 6, { A_ActiveSound }, S_DRIP_01 },       //1473
+/*S_DRIP_00*/       { SPR_DRIP, 0, 6, {.acp1= A_ActiveSound }, S_DRIP_01 },       //1473
 /*S_DRIP_01*/       { SPR_DRIP, 1, 4, { nullptr }, S_DRIP_02 },        //1474
 /*S_DRIP_02*/       { SPR_DRIP, 2, 4, { nullptr }, S_DRIP_03 },        //1475
-/*S_DRIP_03*/       { SPR_DRIP, 3, 4, { A_ActiveSound }, S_DRIP_04 },       //1476
+/*S_DRIP_03*/       { SPR_DRIP, 3, 4, {.acp1= A_ActiveSound }, S_DRIP_04 },       //1476
 /*S_DRIP_04*/       { SPR_DRIP, 4, 4, { nullptr }, S_DRIP_05 },        //1477
 /*S_DRIP_05*/       { SPR_DRIP, 5, 4, { nullptr }, S_DRIP_06 },        //1478
-/*S_DRIP_06*/       { SPR_DRIP, 6, 4, { A_ActiveSound }, S_DRIP_07 },       //1479
+/*S_DRIP_06*/       { SPR_DRIP, 6, 4, {.acp1= A_ActiveSound }, S_DRIP_07 },       //1479
 /*S_DRIP_07*/       { SPR_DRIP, 7, 4, { nullptr }, S_DRIP_00 },        //1480
 /*S_CDRP_00*/       { SPR_CDRP, 0, 10, { nullptr }, S_CDRP_01 },       //1481
 /*S_CDRP_01*/       { SPR_CDRP, 1, 8, { nullptr }, S_CDRP_02 },        //1482
@@ -1682,11 +1683,11 @@ state_t states[NUMSTATES] =
 /*S_SPLH_04*/       { SPR_SPLH, 4, 4, { nullptr }, S_SPLH_05 },        //1489
 /*S_SPLH_05*/       { SPR_SPLH, 5, 4, { nullptr }, S_SPLH_06 },        //1490
 /*S_SPLH_06*/       { SPR_SPLH, 6, 4, { nullptr }, S_SPLH_07 },        //1491
-/*S_SPLH_07*/       { SPR_SPLH, 7, 4, { A_ActiveSound }, S_SPLH_00 },       //1492
+/*S_SPLH_07*/       { SPR_SPLH, 7, 4, {.acp1= A_ActiveSound }, S_SPLH_00 },       //1492
 /*S_WTFT_00*/       { SPR_WTFT, 0, 4, { nullptr }, S_WTFT_01 },        //1493
 /*S_WTFT_01*/       { SPR_WTFT, 1, 4, { nullptr }, S_WTFT_02 },        //1494
 /*S_WTFT_02*/       { SPR_WTFT, 2, 4, { nullptr }, S_WTFT_03 },        //1495
-/*S_WTFT_03*/       { SPR_WTFT, 3, 4, { A_ActiveSound }, S_WTFT_00 },       //1496
+/*S_WTFT_03*/       { SPR_WTFT, 3, 4, {.acp1= A_ActiveSound }, S_WTFT_00 },       //1496
 /*S_HERT_00*/       { SPR_HERT, 32768, 4, { nullptr }, S_HERT_01 },        //1497
 /*S_HERT_01*/       { SPR_HERT, 32769, 4, { nullptr }, S_HERT_02 },        //1498
 /*S_HERT_02*/       { SPR_HERT, 32770, 4, { nullptr }, S_HERT_00 },        //1499

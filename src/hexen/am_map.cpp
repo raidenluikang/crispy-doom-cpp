@@ -417,7 +417,7 @@ void AM_initVariables(void)
     // load in the location of keys, if in baby mode
 
 //      memset(KeyPoints, 0, sizeof(vertex_t)*3);
-    if (gameskill == sk_baby)
+    if (gameskill == skill_t::sk_baby)
     {
         for (think = thinkercap.next; think != &thinkercap;
              think = think->next)
@@ -575,7 +575,7 @@ boolean AM_Responder(event_t * ev)
 
     key = ev->data1;
 
-    if (ev->type == ev_joystick && joybautomap >= 0
+    if (ev->type == evtype_t::ev_joystick && joybautomap >= 0
         && (ev->data1 & (1 << joybautomap)) != 0 && joywait < I_GetTime())
     {
         joywait = I_GetTime() + 5;
@@ -601,7 +601,7 @@ boolean AM_Responder(event_t * ev)
     rc = false;
     if (!automapactive)
     {
-        if (ev->type == ev_keydown && key == key_map_toggle
+        if (ev->type == evtype_t::ev_keydown && key == key_map_toggle
             && gamestate == GS_LEVEL)
         {
             AM_Start();
@@ -611,7 +611,7 @@ boolean AM_Responder(event_t * ev)
         }
     }
     // [crispy] automap mouse controls
-    else if (ev->type == ev_mouse && !crispy->automapoverlay)
+    else if (ev->type == evtype_t::ev_mouse && !crispy->automapoverlay)
     {
         if (mousebmapzoomout >= 0 && ev->data1 & (1 << mousebmapzoomout))
         {
@@ -653,7 +653,7 @@ boolean AM_Responder(event_t * ev)
             rc = true;
         }
     }
-    else if (ev->type == ev_keydown)
+    else if (ev->type == evtype_t::ev_keydown)
     {
         rc = true;
 
@@ -774,7 +774,7 @@ boolean AM_Responder(event_t * ev)
             ShowKillsCount = 0;
         }
     }
-    else if (ev->type == ev_keyup)
+    else if (ev->type == evtype_t::ev_keyup)
     {
         rc = false;
 
@@ -1128,7 +1128,7 @@ boolean AM_clipMline(mline_t * ml, fline_t * fl)
 
 void AM_drawFline(fline_t * fl, int color)
 {
-    register int x, y, dx, dy, sx, sy, ax, ay, d;
+    int x, y, dx, dy, sx, sy, ax, ay, d;
     //static fuck = 0;
 
     switch (color)

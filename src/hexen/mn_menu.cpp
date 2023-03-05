@@ -173,7 +173,7 @@ static int FontBBaseLump;
 static int MauloBaseLump;
 static Menu_t *CurrentMenu;
 static int CurrentItPos;
-static int MenuPClass;
+static pclass_t MenuPClass;
 static int MenuTime;
 static boolean soundchanged;
 
@@ -274,11 +274,11 @@ static Menu_t SaveMenu = {
 };
 
 static MenuItem_t SkillItems[] = {
-    {ITT_EFUNC, nullptr, SCSkill, sk_baby, MENU_NONE},
-    {ITT_EFUNC, nullptr, SCSkill, sk_easy, MENU_NONE},
-    {ITT_EFUNC, nullptr, SCSkill, sk_medium, MENU_NONE},
-    {ITT_EFUNC, nullptr, SCSkill, sk_hard, MENU_NONE},
-    {ITT_EFUNC, nullptr, SCSkill, sk_nightmare, MENU_NONE}
+    {ITT_EFUNC, nullptr, SCSkill, (int)skill_t::sk_baby, MENU_NONE},
+    {ITT_EFUNC, nullptr, SCSkill, (int)skill_t::sk_easy, MENU_NONE},
+    {ITT_EFUNC, nullptr, SCSkill, (int)skill_t::sk_medium, MENU_NONE},
+    {ITT_EFUNC, nullptr, SCSkill, (int)skill_t::sk_hard, MENU_NONE},
+    {ITT_EFUNC, nullptr, SCSkill, (int)skill_t::sk_nightmare, MENU_NONE}
 };
 
 static Menu_t SkillMenu = {
@@ -739,9 +739,9 @@ static void DrawMainMenu(void)
     frame = (MenuTime / 5) % 7;
     V_DrawPatch(88, 0, W_CacheLumpName_patch("M_HTIC", PU_CACHE));
 // Old Gold skull positions: (40, 10) and (232, 10)
-    V_DrawPatch(37, 80, W_CacheLumpNum(MauloBaseLump + (frame + 2) % 7,
+    V_DrawPatch(37, 80, (patch_t*)W_CacheLumpNum(MauloBaseLump + (frame + 2) % 7,
                                        PU_CACHE));
-    V_DrawPatch(278, 80, W_CacheLumpNum(MauloBaseLump + frame, PU_CACHE));
+    V_DrawPatch(278, 80, (patch_t*)W_CacheLumpNum(MauloBaseLump + frame, PU_CACHE));
 }
 
 //==========================================================================
@@ -752,7 +752,7 @@ static void DrawMainMenu(void)
 
 static void DrawClassMenu(void)
 {
-    pclass_t class;
+    int mclass;
     static const char *boxLumpName[3] = {
         "m_fbox",
         "m_cbox",
@@ -765,10 +765,10 @@ static void DrawClassMenu(void)
     };
 
     MN_DrTextB("CHOOSE CLASS:", 34, 24);
-    class = (pclass_t) CurrentMenu->items[CurrentItPos].option;
-    V_DrawPatch(174, 8, W_CacheLumpName_patch(boxLumpName[class], PU_CACHE));
+    mclass = CurrentMenu->items[CurrentItPos].option;
+    V_DrawPatch(174, 8, W_CacheLumpName_patch(boxLumpName[mclass], PU_CACHE));
     V_DrawPatch(174 + 24, 8 + 12,
-                W_CacheLumpNum(W_GetNumForName(walkLumpName[class])
+                (patch_t*)W_CacheLumpNum(W_GetNumForName(walkLumpName[mclass])
                                + ((MenuTime >> 3) & 3), PU_CACHE));
 }
 
@@ -1192,7 +1192,7 @@ static void SCClass(int option)
                      true);
         return;
     }
-    MenuPClass = option;
+    MenuPClass = pclass_t{ option };
     switch (MenuPClass)
     {
         case PCLASS_FIGHTER:
@@ -1219,6 +1219,9 @@ static void SCClass(int option)
             SkillItems[3].text = "WARLOCK";
             SkillItems[4].text = "ARCHIMAGE";
             break;
+        case PCLASS_PIG:
+        case NUMCLASSES:
+            break;
     }
     SetMenu(MENU_SKILL);
 }
@@ -1238,7 +1241,7 @@ static void SCSkill(int option)
     }
 
     PlayerClass[consoleplayer] = MenuPClass;
-    G_DeferredNewGame(option);
+    G_DeferredNewGame(skill_t{option});
     SB_SetClassData();
     SB_state = -1;
     MN_DeactivateMenu();
@@ -1578,8 +1581,8 @@ boolean MN_Responder(event_t * event)
 
     if (testcontrols)
     {
-        if (event->type == ev_quit
-         || (event->type == ev_keydown
+        if (event->type == evtype_t::ev_quit
+         || (event->type == evtype_t::ev_keydown
           && (event->data1 == key_menu_activate
            || event->data1 == key_menu_quit)))
         {
@@ -1591,7 +1594,7 @@ boolean MN_Responder(event_t * event)
     }
 
     // "close" button pressed on window?
-    if (event->type == ev_quit)
+    if (event->type == evtype_t::ev_quit)
     {
         // First click on close = bring up quit confirm message.
         // Second click = confirm quit.
@@ -1612,7 +1615,7 @@ boolean MN_Responder(event_t * event)
 
     // Allow the menu to be activated from a joystick button if a button
     // is bound for joybmenu.
-    if (event->type == ev_joystick)
+    if (event->type == evtype_t::ev_joystick)
     {
         if (joybmenu >= 0 && (event->data1 & (1 << joybmenu)) != 0)
         {
@@ -1623,7 +1626,7 @@ boolean MN_Responder(event_t * event)
 
     // Only care about keypresses beyond this point.
 
-    if (event->type != ev_keydown)
+    if (event->type != evtype_t::ev_keydown)
     {
         return false;
     }

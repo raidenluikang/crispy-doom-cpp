@@ -49,7 +49,7 @@
 // The current state of the game: whether we are
 // playing, gazing at the intermission screen,
 // the game final animation, or a demo. 
-enum gamestate_t
+enum gamestate_t : int
 {
     GS_LEVEL,
     GS_UNKNOWN,
@@ -57,7 +57,12 @@ enum gamestate_t
     GS_DEMOSCREEN,
 } ;
 
-enum gameaction_t
+#if __cplusplus >= 201703L
+inline
+#endif
+constexpr gamestate_t INVALID_GAMESTATE = static_cast<gamestate_t>(-1);
+
+enum gameaction_t : int
 {
     ga_nothing,
     ga_loadlevel,
@@ -102,7 +107,7 @@ enum gameaction_t
 // Key cards.
 //
 // villsa [STRIFE]
-enum card_t
+enum card_t: int
 {
     key_BaseKey,        // 0
     key_GovsKey,        // 1
@@ -141,7 +146,7 @@ enum card_t
 //  including a marker indicating
 //  user has not changed weapon.
 // villsa [STRIFE]
-enum weapontype_t
+enum weapontype_t : int
 {
     wp_fist,
     wp_elecbow,
@@ -164,7 +169,7 @@ enum weapontype_t
 
 
 // Ammunition types defined.
-enum ammotype_t
+enum ammotype_t : int
 {
     am_bullets,
     am_elecbolts,
@@ -183,7 +188,7 @@ enum ammotype_t
 
 // Power up artifacts.
 // villsa [STRIFE]
-enum powertype_t
+enum powertype_t: int
 {
     pw_strength,
     pw_invisibility,
@@ -198,7 +203,7 @@ enum powertype_t
 
 // villsa [STRIFE]
 // quest numbers
-enum questtype_t
+enum questtype_t : int
 {               // Hex          Watcom Name               player_t offset
     tk_quest1,  // 0x00000001   questflags & 1            0x4D
     tk_quest2,  // 0x00000002   questflags & 2

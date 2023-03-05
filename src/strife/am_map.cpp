@@ -486,7 +486,7 @@ void AM_changeWindowLoc(void)
 //
 void AM_initVariables(void)
 {
-    static event_t st_notify = { ev_keyup, AM_MSGENTERED, 0, 0 };
+    static event_t st_notify = { evtype_t::ev_keyup, AM_MSGENTERED, 0, 0 };
 
     automapactive = true;
 //  fb = I_VideoBuffer; // [crispy] simplify
@@ -632,7 +632,7 @@ void AM_LevelInit(boolean reinit)
 //
 void AM_Stop (void)
 {
-    static event_t st_notify = { 0, ev_keyup, AM_MSGEXITED, 0 };
+    static event_t st_notify = { evtype_t{0}, (int)evtype_t::ev_keyup, AM_MSGEXITED, 0 };
 
     AM_unloadPics();
     automapactive = false;
@@ -715,7 +715,7 @@ AM_Responder
 
     rc = false;
 
-    if (ev->type == ev_joystick && joybautomap >= 0
+    if (ev->type == evtype_t::ev_joystick && joybautomap >= 0
         && (ev->data1 & (1 << joybautomap)) != 0 && joywait < I_GetTime())
     {
         joywait = I_GetTime() + 5;
@@ -738,7 +738,7 @@ AM_Responder
 
     if (!automapactive)
     {
-	if (ev->type == ev_keydown && ev->data1 == key_map_toggle)
+	if (ev->type == evtype_t::ev_keydown && ev->data1 == key_map_toggle)
 	{
 	    AM_Start ();
 	    viewactive = false;
@@ -746,7 +746,7 @@ AM_Responder
 	}
     }
     // [crispy] zoom and move Automap with the mouse (wheel)
-    else if (ev->type == ev_mouse && !crispy->automapoverlay && !menuactive && !inhelpscreens)
+    else if (ev->type == evtype_t::ev_mouse && !crispy->automapoverlay && !menuactive && !inhelpscreens)
     {
         if (mousebmapzoomout >= 0 && ev->data1 & (1 << mousebmapzoomout))
         {
@@ -795,7 +795,7 @@ AM_Responder
             rc = true;
         }
     }
-    else if (ev->type == ev_keydown)
+    else if (ev->type == evtype_t::ev_keydown)
     {
 	rc = true;
         key = ev->data1;
@@ -912,7 +912,7 @@ AM_Responder
 	    cheating = (cheating+1) % 3;
 	}
     }
-    else if (ev->type == ev_keyup)
+    else if (ev->type == evtype_t::ev_keyup)
     {
         rc = false;
         key = ev->data1;
@@ -1088,9 +1088,9 @@ AM_clipMline
 	TOP	=8
     };
     
-    register int	outcode1 = 0;
-    register int	outcode2 = 0;
-    register int	outside;
+    int	outcode1 = 0;
+    int	outcode2 = 0;
+    int	outside;
     
     fpoint_t	tmp;
     int		dx;
@@ -1212,20 +1212,17 @@ AM_clipMline
 //
 // Classic Bresenham w/ whatever optimizations needed for speed
 //
-static void
-AM_drawFline_Vanilla
-( fline_t*	fl,
-  int		color )
+static void AM_drawFline_Vanilla( fline_t*	fl, int		color )
 {
-    register int x;
-    register int y;
-    register int dx;
-    register int dy;
-    register int sx;
-    register int sy;
-    register int ax;
-    register int ay;
-    register int d;
+    int x;
+    int y;
+    int dx;
+    int dy;
+    int sx;
+    int sy;
+    int ax;
+    int ay;
+    int d;
     
     static int fuck = 0;
 
@@ -1707,7 +1704,7 @@ void AM_drawPlayers(void)
 	p = &players[i];
 
         // villsa [STRIFE] check for gameskill??
-	if((gameskill && deathmatch && !singledemo) && p != plr)
+	if((gameskill != skill_t{0} && deathmatch && !singledemo) && p != plr)
 	    continue;
 
 	if(!playeringame[i])

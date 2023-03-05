@@ -21,6 +21,7 @@
 #include "r_local.hpp"
 #include "v_video.hpp"
 
+#include "../../utils/memory.hpp"
 /*
 
 All drawing to the view buffer is accomplished in this file.  The other refresh
@@ -423,7 +424,7 @@ void R_InitTranslationTables(void)
     V_LoadTintTable();
 
     // Allocate translation tables
-    translationtables = zmalloc<decltype(    translationtables)>(256 * 3 * (maxplayers - 1), PU_STATIC, 0);
+    translationtables = zmalloc<decltype(translationtables)>(256 * 3 * (maxplayers - 1), PU_STATIC, 0);
 
     for (i = 0; i < 3 * (maxplayers - 1); i++)
     {
@@ -620,7 +621,7 @@ void R_DrawTopBorder(void)
     if (scaledviewwidth == SCREENWIDTH)
         return;
 
-/*	if(gamemode == shareware)
+/*	if(gamemode == GameMode_t::shareware)
 	{
 		src = W_CacheLumpName_byte("FLOOR04", PU_CACHE);
 	}

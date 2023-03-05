@@ -37,7 +37,7 @@
 #include "p_dialog.hpp"
 #include "i_system.hpp"
 
-
+#include "../../utils/memory.hpp"
 //
 // VERTICAL DOORS
 //
@@ -396,11 +396,11 @@ int EV_DoDoor(line_t* line, vldoor_e type)
 
         // new door thinker
         rtn = 1;
-        door = zmalloc<decltype(        door)>(sizeof(*door), PU_LEVSPEC, 0);
+        door = zmalloc<decltype(door)>(sizeof(*door), PU_LEVSPEC, 0);
         P_AddThinker (&door->thinker);
         sec->specialdata = door;
 
-        door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
+        door->thinker.function.acp1 = (thinkf_p1)T_VerticalDoor;
         door->sector = sec;
         door->type = type;
         door->topwait = VDOORWAIT;
@@ -726,7 +726,7 @@ void EV_VerticalDoor(line_t* line, mobj_t* thing)
 
     if (sec->specialdata)
     {
-        door = sec->specialdata;
+        door = static_cast<decltype(door)>( sec->specialdata );
         // [STRIFE] Adjusted to handle linetypes handled here by Strife.
         // BUG: Not all door types are checked here. This means that certain 
         // door lines are allowed to fall through and start a new thinker on the
@@ -755,7 +755,7 @@ void EV_VerticalDoor(line_t* line, mobj_t* thing)
                 door->direction = 1;    // go back up
                 // [crispy] play sound effect when the door is opened again while going down
                 if (crispy->soundfix &&
-                    door->thinker.function.acp1 == (actionf_p1) T_VerticalDoor)
+                    door->thinker.function.acp1 == (thinkf_p1) T_VerticalDoor)
                 {
                     S_StartSound(&door->sector->soundorg,
                                  line->special == 117 ? sfx_bdopn : door->opensound);
@@ -770,7 +770,7 @@ void EV_VerticalDoor(line_t* line, mobj_t* thing)
                 // In Vanilla, door->direction is set, even though
                 // "specialdata" might not actually point at a door.
 
-                if (door->thinker.function.acp1 == (actionf_p1) T_VerticalDoor)
+                if (door->thinker.function.acp1 == (thinkf_p1) T_VerticalDoor)
                 {
                     door->direction = -1;   // start going down immediately
                     // [crispy] play sound effect when the door is closed manually
@@ -780,7 +780,7 @@ void EV_VerticalDoor(line_t* line, mobj_t* thing)
                                      line->special == 117 ? sfx_bdcls : door->closesound);
                     }
                 }
-                else if (door->thinker.function.acp1 == (actionf_p1) T_PlatRaise)
+                else if (door->thinker.function.acp1 == (thinkf_p1) T_PlatRaise)
                 {
                     // Erm, this is a plat, not a door.
                     // This notably causes a problem in ep1-0500.lmp where
@@ -819,7 +819,7 @@ void EV_VerticalDoor(line_t* line, mobj_t* thing)
     door = zmalloc<decltype(    door)>(sizeof(*door), PU_LEVSPEC, 0);
     P_AddThinker (&door->thinker);
     sec->specialdata = door;
-    door->thinker.function.acp1 = (actionf_p1) T_VerticalDoor;
+    door->thinker.function.acp1 = (thinkf_p1) T_VerticalDoor;
     door->sector = sec;
     door->direction = 1;
     door->speed = VDOORSPEED;
@@ -897,7 +897,7 @@ void P_SpawnDoorCloseIn30 (sector_t* sec)
     sec->specialdata = door;
     sec->special = 0;
 
-    door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
+    door->thinker.function.acp1 = (thinkf_p1)T_VerticalDoor;
     door->sector = sec;
     door->direction = 0;
     door->type = vld_normal;
@@ -922,7 +922,7 @@ P_SpawnDoorRaiseIn5Mins
     sec->specialdata = door;
     sec->special = 0;
 
-    door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
+    door->thinker.function.acp1 = (thinkf_p1)T_VerticalDoor;
     door->sector = sec;
     door->direction = 2;
     door->type = vld_raiseIn5Mins;
@@ -1312,7 +1312,7 @@ void EV_SlidingDoor(line_t* line, mobj_t* thing)
         if (!thing->player)
             return;
 
-        door = sec->specialdata;
+        door = static_cast<decltype(door)>( sec->specialdata );
         if(door->type == sdt_openAndClose)
         {
             if(door->status == sd_waiting)
@@ -1337,7 +1337,7 @@ void EV_SlidingDoor(line_t* line, mobj_t* thing)
         // [crispy] Don't interpolate sliding doors.
         sec->interpolate = false;
 
-        door = zmalloc<decltype(        door)>(sizeof(*door), PU_LEVSPEC, 0);
+        door = zmalloc<decltype( door)>(sizeof(*door), PU_LEVSPEC, 0);
         P_AddThinker (&door->thinker);
 
         sec->specialdata = door;
@@ -1374,7 +1374,7 @@ void EV_SlidingDoor(line_t* line, mobj_t* thing)
             }
         }
 
-        door->thinker.function.acp1 = (actionf_p1)T_SlidingDoor;
+        door->thinker.function.acp1 = (thinkf_p1)T_SlidingDoor;
         door->timer = SWAITTICS;
         door->frontsector = sec;
         door->frame = 0;

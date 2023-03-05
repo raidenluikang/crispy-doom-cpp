@@ -23,14 +23,16 @@
 #include "r_bmaps.hpp"
 #include "r_local.hpp"
 
-typedef struct
+#include "../../utils/memory.hpp"
+
+struct maskdraw_t
 {
     int x1, x2;
 
     int column;
     int topclip;
     int bottomclip;
-} maskdraw_t;
+} ;
 
 /*
 
@@ -161,7 +163,7 @@ void R_InitSpriteDefs(const char **namelist)
     if (!numsprites)
         return;
 
-    sprites = zmalloc<decltype(    sprites)>(numsprites * sizeof(*sprites), PU_STATIC, nullptr);
+    sprites = zmalloc<decltype(sprites)>(numsprites * sizeof(*sprites), PU_STATIC, nullptr);
 
     start = firstspritelump - 1;
     end = lastspritelump + 1;
@@ -200,7 +202,7 @@ void R_InitSpriteDefs(const char **namelist)
         {
             //continue;
             sprites[i].numframes = 0;
-            if (gamemode == shareware)
+            if (gamemode == GameMode_t::shareware)
                 continue;
             I_Error("R_InitSprites: No lumps found for sprite %s",
                     spritename);
@@ -230,10 +232,8 @@ void R_InitSpriteDefs(const char **namelist)
         // allocate space for the frames present and copy sprtemp to it
         //
         sprites[i].numframes = maxframe;
-        sprites[i].spriteframes =
-            Z_Malloc(maxframe * sizeof(spriteframe_t), PU_STATIC, nullptr);
-        memcpy(sprites[i].spriteframes, sprtemp,
-               maxframe * sizeof(spriteframe_t));
+        sprites[i].spriteframes = zmalloc<spriteframe_t*>(maxframe * sizeof(spriteframe_t), PU_STATIC, nullptr);
+        memcpy(sprites[i].spriteframes, sprtemp,  maxframe * sizeof(spriteframe_t));
     }
 
 }
@@ -489,7 +489,7 @@ void R_DrawVisSprite(vissprite_t * vis, int x1, int x2)
 
 void R_ProjectSprite(mobj_t * thing)
 {
-    fixed_t trx, try;
+    fixed_t trx, try_;
     fixed_t gxt, gyt;
     fixed_t tx, tz;
     fixed_t xscale;
@@ -541,10 +541,10 @@ void R_ProjectSprite(mobj_t * thing)
 // transform the origin point
 //
     trx = interpx - viewx;
-    try = interpy - viewy;
+    try_ = interpy - viewy;
 
     gxt = FixedMul(trx, viewcos);
-    gyt = -FixedMul(try, viewsin);
+    gyt = -FixedMul(try_, viewsin);
     tz = gxt - gyt;
 
     if (tz < MINZ)
@@ -552,7 +552,7 @@ void R_ProjectSprite(mobj_t * thing)
     xscale = FixedDiv(projection, tz);
 
     gxt = -FixedMul(trx, viewsin);
-    gyt = FixedMul(try, viewcos);
+    gyt = FixedMul(try_, viewcos);
     tx = -(gyt + gxt);
 
     if (abs(tx) > (tz << 2))

@@ -168,7 +168,7 @@ const char *cursorName[8] = {"M_CURS1", "M_CURS2", "M_CURS3", "M_CURS4",
                              "M_CURS5", "M_CURS6", "M_CURS7", "M_CURS8" };
 
 // haleyjd 20110210 [STRIFE]: skill level for menus
-int menuskill;
+skill_t menuskill;
 
 // current menudef
 menu_t*	currentMenu;                          
@@ -247,7 +247,7 @@ static void M_DrawCrispness3(void);
 //
 // DOOM MENU
 //
-enum
+enum main_e: int
 {
     newgame = 0,
     options,
@@ -256,7 +256,7 @@ enum
     readthis,
     quitdoom,
     main_end
-} main_e;
+} ;
 
 menuitem_t MainMenu[]=
 {
@@ -315,7 +315,7 @@ menu_t  EpiDef =
 //
 // NEW GAME
 //
-enum
+enum newgame_e: int
 {
     killthings,
     toorough,
@@ -323,7 +323,7 @@ enum
     violence,
     nightmare,
     newg_end
-} newgame_e;
+} ;
 
 menuitem_t NewGameMenu[]=
 {
@@ -348,7 +348,7 @@ menu_t  NewDef =
 //
 // OPTIONS MENU
 //
-enum
+enum options_e: int
 {
     // haleyjd 08/28/10: [STRIFE] Removed messages, mouse sens., detail.
     endgame,
@@ -358,7 +358,7 @@ enum
     soundvol,
     crispness, // [crispy] Crispness menu
     opt_end
-} options_e;
+} ;
 
 menuitem_t OptionsMenu[] =
 {
@@ -382,7 +382,7 @@ menu_t  OptionsDef =
 };
 
 // [crispy] mouse sensitivity menu
-enum
+enum mouse_e: int
 {
     mouse_horiz,
     mouse_empty1,
@@ -392,7 +392,7 @@ enum
     mouse_empty3,
     mouse_invert,
     mouse_end
-} mouse_e;
+} ;
 
 static menuitem_t MouseMenu[] =
 {
@@ -416,7 +416,7 @@ static menu_t MouseDef =
 };
 
 // [crispy] Crispness menu
-enum
+enum crispness1_e: int
 {
     crispness_sep_rendering,
     crispness_hires,
@@ -434,7 +434,7 @@ enum
     crispness1_next,
     crispness1_prev,
     crispness1_end
-} crispness1_e;
+} ;
 
 static menuitem_t Crispness1Menu[] =
 {
@@ -463,7 +463,7 @@ static menu_t Crispness1Def =
     1
 };
 
-enum
+enum crispness2_e: int
 {
     crispness_sep_audible,
     crispness_soundfull,
@@ -481,7 +481,7 @@ enum
     crispness2_next,
     crispness2_prev,
     crispness2_end
-} crispness2_e;
+} ;
 
 static menuitem_t Crispness2Menu[] =
 {
@@ -510,7 +510,7 @@ static menu_t Crispness2Def =
     1
 };
 
-enum
+enum crispness3_e: int
 {
     crispness_sep_tactical,
     crispness_runcentering,
@@ -529,7 +529,7 @@ enum
     crispness3_next,
     crispness3_prev,
     crispness3_end
-} crispness3_e;
+} ;
 
 static menuitem_t Crispness3Menu[] =
 {
@@ -571,11 +571,11 @@ static int crispness_cur;
 //
 // Read This! MENU 1 & 2 & [STRIFE] 3
 //
-enum
+enum read_e: int
 {
     rdthsempty1,
     read1_end
-} read_e;
+} ;
 
 menuitem_t ReadMenu1[] =
 {
@@ -592,11 +592,11 @@ menu_t  ReadDef1 =
     0
 };
 
-enum
+enum read_e2: int
 {
     rdthsempty2,
     read2_end
-} read_e2;
+} ;
 
 menuitem_t ReadMenu2[]=
 {
@@ -614,11 +614,11 @@ menu_t  ReadDef2 =
 };
 
 // haleyjd 08/28/10: Added Read This! menu 3
-enum
+enum read_e3: int
 {
     rdthsempty3,
     read3_end
-} read_e3;
+} ;
 
 menuitem_t ReadMenu3[]=
 {
@@ -638,7 +638,7 @@ menu_t  ReadDef3 =
 //
 // SOUND VOLUME MENU
 //
-enum
+enum sound_e: int
 {
     sfx_vol,
     sfx_empty1,
@@ -647,7 +647,7 @@ enum
     voice_vol,
     sfx_empty3,
     sound_end
-} sound_e;
+} ;
 
 // haleyjd 08/29/10:
 // [STRIFE] 
@@ -676,7 +676,7 @@ menu_t  SoundDef =
 //
 // LOAD GAME MENU
 //
-enum
+enum load_e: int
 {
     load1,
     load2,
@@ -685,7 +685,7 @@ enum
     load5,
     load6,
     load_end
-} load_e;
+} ;
 
 menuitem_t LoadMenu[]=
 {
@@ -822,7 +822,7 @@ void M_DoNameChar(int choice)
     int map;
 
     // 20130301: clear naming character flag for 1.31 save logic
-    if(gameversion == exe_strife_1_31)
+    if(gameversion == GameVersion_t::exe_strife_1_31)
         namingCharacter = false;
     sendsave = 1;
     ClearTmp();
@@ -1013,7 +1013,7 @@ void M_SaveGame (int choice)
         return;
 
     // [STRIFE]
-    if(gameversion == exe_strife_1_31)
+    if(gameversion == GameVersion_t::exe_strife_1_31)
     {
         // haleyjd 20130301: in 1.31, we can choose a slot again.
         M_SetupNextMenu(&SaveDef);
@@ -1266,7 +1266,7 @@ void M_NewGame(int choice)
         return;
     }
     // haleyjd 09/07/10: [STRIFE] Removed Chex Quest and DOOM gamemodes
-    if(gameversion == exe_strife_1_31)
+    if(gameversion == GameVersion_t::exe_strife_1_31)
        namingCharacter = true; // for 1.31 save logic
     M_SetupNextMenu(&NewDef);
 }
@@ -1299,7 +1299,7 @@ void M_ChooseSkill(int choice)
 {
     // haleyjd 09/07/10: Removed nightmare confirmation
     // [STRIFE]: start "Name Your Character" menu
-    menuskill = choice;
+    menuskill = skill_t{ choice } ;
     currentMenu = &NameCharDef;
     itemOn = NameCharDef.lastOn;
     M_ReadSaveStrings();
@@ -1309,7 +1309,7 @@ void M_ChooseSkill(int choice)
 // haleyjd [STRIFE] Unused
 void M_Episode(int choice)
 {
-    if ( (gamemode == shareware)
+    if ( (gamemode == GameMission_t::shareware)
 	 && choice)
     {
 	M_StartMessage(DEH_String(SWSTRING),nullptr,false);
@@ -1318,7 +1318,7 @@ void M_Episode(int choice)
     }
 
     // Yet another hack...
-    if ( (gamemode == registered)
+    if ( (gamemode == GameMission_t::registered)
 	 && (choice > 2))
     {
       fprintf( stderr,
@@ -2225,8 +2225,8 @@ boolean M_Responder (event_t* ev)
 
     if (testcontrols)
     {
-        if (ev->type == ev_quit
-         || (ev->type == ev_keydown
+        if (ev->type == evtype_t::ev_quit
+         || (ev->type ==  evtype_t::ev_keydown
           && (ev->data1 == key_menu_activate || ev->data1 == key_menu_quit)))
         {
             I_Quit();
@@ -2237,7 +2237,7 @@ boolean M_Responder (event_t* ev)
     }
 
     // "close" button pressed on window?
-    if (ev->type == ev_quit)
+    if (ev->type ==  evtype_t::ev_quit)
     {
         // First click on close button = bring up quit confirm message.
         // Second click on close button = confirm quit
@@ -2260,7 +2260,7 @@ boolean M_Responder (event_t* ev)
     ch = 0;
     key = -1;
 
-    if (ev->type == ev_joystick && joywait < I_GetTime())
+    if (ev->type ==  evtype_t::ev_joystick && joywait < I_GetTime())
     {
         if (ev->data3 < 0)
         {
@@ -2302,7 +2302,7 @@ boolean M_Responder (event_t* ev)
     }
     else
     {
-        if (ev->type == ev_mouse && mousewait < I_GetTime())
+        if (ev->type ==  evtype_t::ev_mouse && mousewait < I_GetTime())
         {
             // [crispy] Don't control Crispness menu with y-axis mouse movement.
             if (!inhelpscreens)
@@ -2356,7 +2356,7 @@ boolean M_Responder (event_t* ev)
         }
         else
         {
-            if (ev->type == ev_keydown)
+            if (ev->type ==  evtype_t::ev_keydown)
             {
                 key = ev->data1;
                 ch = ev->data2;
@@ -2391,7 +2391,7 @@ boolean M_Responder (event_t* ev)
             // [STRIFE]
             saveStringEnter = 0;
             I_StopTextInput();
-            if(gameversion == exe_strife_1_31 && !namingCharacter)
+            if(gameversion == GameVersion_t::exe_strife_1_31 && !namingCharacter)
             {
                // In 1.31, we can be here as a result of normal saving again,
                // whereas in 1.2 this only ever happens when naming your
@@ -2412,7 +2412,7 @@ boolean M_Responder (event_t* ev)
             // instead, use ev->data3 which gives the fully-translated and
             // modified key input.
 
-            if (ev->type != ev_keydown)
+            if (ev->type !=  evtype_t::ev_keydown)
             {
                 break;
             }
@@ -2476,7 +2476,7 @@ boolean M_Responder (event_t* ev)
                 }
                 break;
             default:
-                if (ev->type != ev_keydown)
+                if (ev->type !=  evtype_t::ev_keydown)
                 {
                     break;
                 }
@@ -2579,7 +2579,7 @@ boolean M_Responder (event_t* ev)
         else if (key == key_menu_save)     // Save
         {
             // [STRIFE]: Hub saves
-            if(gameversion == exe_strife_1_31)
+            if(gameversion == GameVersion_t::exe_strife_1_31)
                 namingCharacter = false; // just saving normally, in 1.31
 
             if(netgame || players[consoleplayer].health <= 0 ||
@@ -2598,7 +2598,7 @@ boolean M_Responder (event_t* ev)
         else if (key == key_menu_load)     // Load
         {
             // [STRIFE]: Hub saves
-            if(gameversion == exe_strife_1_31)
+            if(gameversion == GameVersion_t::exe_strife_1_31)
             {
                 // 1.31: normal save loading
                 namingCharacter = false;
@@ -2632,7 +2632,7 @@ boolean M_Responder (event_t* ev)
         else if (key == key_menu_qsave)    // Quicksave
         {
             // [STRIFE]: Hub saves
-            if(gameversion == exe_strife_1_31)
+            if(gameversion == GameVersion_t::exe_strife_1_31)
                 namingCharacter = false; // for 1.31 save changes
 
             if(netgame || players[consoleplayer].health <= 0 ||
@@ -2665,7 +2665,7 @@ boolean M_Responder (event_t* ev)
             // [STRIFE]
             // * v1.2: takes a screenshot
             // * v1.31: does quickload again
-            if(gameversion == exe_strife_1_31)
+            if(gameversion == GameVersion_t::exe_strife_1_31)
             {
                 namingCharacter = false;
                 S_StartSound(nullptr, sfx_swtchn);
@@ -2690,7 +2690,7 @@ boolean M_Responder (event_t* ev)
             I_SetPalette (W_CacheLumpName_byte (DEH_String("PLAYPAL"),PU_CACHE));
             return true;
         }
-        else if(gameversion == exe_strife_1_31 && key == key_spy)
+        else if(gameversion == GameVersion_t::exe_strife_1_31 && key == key_spy)
         {
             // haleyjd 20130301: 1.31 moved screenshots to F12.
             G_ScreenShot();
@@ -2800,7 +2800,7 @@ boolean M_Responder (event_t* ev)
     else if (key == key_menu_activate)
     {
         // Deactivate menu
-        if(gameversion == exe_strife_1_31) // [STRIFE]: 1.31 saving
+        if(gameversion == GameVersion_t::exe_strife_1_31) // [STRIFE]: 1.31 saving
             namingCharacter = false;
 
         if(menuindialog) // [STRIFE] - Get out of dialog engine semi-gracefully

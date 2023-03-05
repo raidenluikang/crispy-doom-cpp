@@ -36,6 +36,8 @@
 #include "deh_main.hpp" // [crispy] for demo footer
 #include "memio.hpp"
 
+#include "../../utils/memory.hpp"
+
 // Macros
 
 #define AM_STARTKEY     9
@@ -510,7 +512,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
             {
                 gamekeydown[key_useartifact] = false;
                 mousebuttons[mousebuseartifact] = false;
-                cmd->arti = 0xff;       // skip artifact code
+                cmd->arti = artitype_t{ 0xff };       // skip artifact code
             }
         }
         else
@@ -520,7 +522,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
                 players[consoleplayer].readyArtifact =
                     players[consoleplayer].inventory[inv_ptr].type;
                 inventory = false;
-                cmd->arti = 0;
+                cmd->arti = artitype_t{ 0 };
                 usearti = false;
             }
             else if (usearti)
@@ -1045,7 +1047,7 @@ boolean G_Responder(event_t * ev)
     player_t *plr;
 
     plr = &players[consoleplayer];
-    if (ev->type == ev_keyup && ev->data1 == key_useartifact)
+    if (ev->type == evtype_t::ev_keyup && ev->data1 == key_useartifact)
     {                           // flag to denote that it's okay to use an artifact
         if (!inventory)
         {
@@ -1055,7 +1057,7 @@ boolean G_Responder(event_t * ev)
     }
 
     // Check for spy mode player cycle
-    if (gamestate == GS_LEVEL && ev->type == ev_keydown
+    if (gamestate == GS_LEVEL && ev->type == evtype_t::ev_keydown
         && ev->data1 == KEY_F12 && !deathmatch)
     {                           // Cycle the display player
         do
@@ -1087,23 +1089,23 @@ boolean G_Responder(event_t * ev)
         }
     }
 
-    if (ev->type == ev_mouse)
+    if (ev->type == evtype_t::ev_mouse)
     {
         testcontrols_mousespeed = abs(ev->data2);
     }
 
-    if (ev->type == ev_keydown && ev->data1 == key_prevweapon)
+    if (ev->type == evtype_t::ev_keydown && ev->data1 == key_prevweapon)
     {
         next_weapon = -1;
     }
-    else if (ev->type == ev_keydown && ev->data1 == key_nextweapon)
+    else if (ev->type == evtype_t::ev_keydown && ev->data1 == key_nextweapon)
     {
         next_weapon = 1;
     }
 
     switch (ev->type)
     {
-        case ev_keydown:
+        case evtype_t::ev_keydown:
             if (ev->data1 == key_invleft)
             {
                 if (InventoryMoveLeft())
@@ -1131,14 +1133,14 @@ boolean G_Responder(event_t * ev)
             }
             return (true);      // eat key down events
 
-        case ev_keyup:
+        case evtype_t::ev_keyup:
             if (ev->data1 < NUMKEYS)
             {
                 gamekeydown[ev->data1] = false;
             }
             return (false);     // always let key up events filter down
 
-        case ev_mouse:
+        case evtype_t::ev_mouse:
             SetMouseButtons(ev->data1);
             if (mouseSensitivity)
             mousex = ev->data2 * (mouseSensitivity + 5) / 10;
@@ -1154,7 +1156,7 @@ boolean G_Responder(event_t * ev)
                 mousey = 0; // [crispy] disable entirely
             return (true);      // eat events
 
-        case ev_joystick:
+        case evtype_t::ev_joystick:
             SetJoyButtons(ev->data1);
             joyxmove = ev->data2;
             joyymove = ev->data3;
@@ -1316,7 +1318,7 @@ void G_Ticker(void)
         players[consoleplayer].readyArtifact =
             players[consoleplayer].inventory[inv_ptr].type;
         inventory = false;
-        cmd->arti = 0;
+        cmd->arti = artitype_t{ 0 };
     }
 
     oldleveltime = leveltime; // [crispy] Track if game is running
@@ -1413,7 +1415,7 @@ void G_PlayerFinishLevel(int player)
 //      memset(p->inventory, 0, sizeof(p->inventory));
     if (p->chickenTics)
     {
-        p->readyweapon = p->mo->special1.i;       // Restore weapon
+        p->readyweapon = static_cast<weapontype_t>( p->mo->special1.i ) ;       // Restore weapon
         p->chickenTics = 0;
     }
     p->messageTics = 0;
@@ -1852,7 +1854,7 @@ void G_DoLoadGame(void)
     {                           // Bad version
         return;
     }
-    gameskill = SV_ReadByte();
+    gameskill = static_cast<skill_t>( SV_ReadByte() );
     gameepisode = SV_ReadByte();
     gamemap = SV_ReadByte();
     for (i = 0; i < MAXPLAYERS; i++)
@@ -1931,10 +1933,11 @@ void G_InitNew(skill_t skill, int episode, int map)
         paused = false;
         S_ResumeSound();
     }
-    if (skill < sk_baby)
-        skill = sk_baby;
-    if (skill > sk_nightmare)
-        skill = sk_nightmare;
+    if (skill < skill_t::sk_baby)
+        skill = skill_t::sk_baby;
+    if (skill > skill_t::sk_nightmare)
+        skill = skill_t::sk_nightmare;
+
     if (episode < 1)
         episode = 1;
     // Up to 9 episodes for testing
@@ -1954,7 +1957,7 @@ void G_InitNew(skill_t skill, int episode, int map)
         respawnmonsters = false;
     }
     // Set monster missile speeds
-    speed = skill == sk_nightmare || critical->fast;
+    speed = skill == skill_t::sk_nightmare || critical->fast;
     for (i = 0; MonsterMissileInfo[i].type != -1; i++)
     {
         mobjinfo[MonsterMissileInfo[i].type].speed
@@ -2046,7 +2049,7 @@ void G_ReadDemoTiccmd(ticcmd_t * cmd)
 
     cmd->buttons = (unsigned char) *demo_p++;
     cmd->lookfly = (unsigned char) *demo_p++;
-    cmd->arti = (unsigned char) *demo_p++;
+    cmd->arti = (artitype_t) *demo_p++;
 }
 
 // Increase the size of the demo buffer to allow unlimited demos
@@ -2065,7 +2068,7 @@ static void IncreaseDemoBuffer(void)
     // Generate a new buffer twice the size
     new_length = current_length * 2;
 
-    new_demobuffer = zmalloc<decltype(    new_demobuffer)>(new_length, PU_STATIC, 0);
+    new_demobuffer = zmalloc<decltype(new_demobuffer)>(new_length, PU_STATIC, 0);
     new_demop = new_demobuffer + (demo_p - demobuffer);
 
     // Copy over the old data
@@ -2213,7 +2216,7 @@ void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
     demoend = demobuffer + maxsize;
 
     demo_p = demobuffer;
-    *demo_p++ = skill;
+    *demo_p++ = (byte)skill;
     *demo_p++ = episode;
     *demo_p++ = map;
 
@@ -2277,7 +2280,7 @@ void G_DoPlayDemo(void)
     lumpnum = W_GetNumForName(defdemoname);
     demobuffer = W_CacheLumpNum_cast<decltype(    demobuffer)>(lumpnum, PU_STATIC);
     demo_p = demobuffer;
-    skill = *demo_p++;
+    skill = (skill_t)*demo_p++;
     episode = *demo_p++;
     map = *demo_p++;
 
@@ -2335,7 +2338,7 @@ void G_TimeDemo(char *name)
     int episode, map, i;
 
     demobuffer = demo_p = W_CacheLumpName_byte(name, PU_STATIC);
-    skill = *demo_p++;
+    skill = (skill_t)*demo_p++;
     episode = *demo_p++;
     map = *demo_p++;
 
@@ -2543,7 +2546,7 @@ void G_DoSaveGame(void)
     memset(verString, 0, sizeof(verString));
     DEH_snprintf(verString, VERSIONSIZE, "version %i", HERETIC_VERSION);
     SV_Write(verString, VERSIONSIZE);
-    SV_WriteByte(gameskill);
+    SV_WriteByte((byte)gameskill);
     SV_WriteByte(gameepisode);
     SV_WriteByte(gamemap);
     for (i = 0; i < MAXPLAYERS; i++)

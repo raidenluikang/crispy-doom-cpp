@@ -27,6 +27,8 @@
 #include "i_swap.hpp"
 #include "am_map.hpp"
 
+#include "../../utils/memory.hpp"
+
 
 // MACROS ------------------------------------------------------------------
 
@@ -178,7 +180,7 @@ static void TextWrite(void)
         }
         else if (PlayerClass[consoleplayer])
         {
-            V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc")
+            V_DrawPatch(60, 0, (patch_t*)W_CacheLumpNum(W_GetNumForName("chessc")
                                               + PlayerClass[consoleplayer] -
                                               1, PU_CACHE));
         }
@@ -242,9 +244,9 @@ static void InitializeFade(boolean fadeIn)
 {
     unsigned i;
 
-    Palette = zmalloc<decltype(    Palette)>(768 * sizeof(fixed_t), PU_STATIC, 0);
-    PaletteDelta = zmalloc<decltype(    PaletteDelta)>(768 * sizeof(fixed_t), PU_STATIC, 0);
-    RealPalette = zmalloc<decltype(    RealPalette)>(768 * sizeof(byte), PU_STATIC, 0);
+    Palette = zmalloc<decltype(Palette)>(768 * sizeof(fixed_t), PU_STATIC, 0);
+    PaletteDelta = zmalloc<decltype(PaletteDelta)>(768 * sizeof(fixed_t), PU_STATIC, 0);
+    RealPalette = zmalloc<decltype(RealPalette)>(768 * sizeof(byte), PU_STATIC, 0);
 
     if (fadeIn)
     {
@@ -318,7 +320,7 @@ static void DrawPic(void)
         }
         else if (PlayerClass[consoleplayer])
         {
-            V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc")
+            V_DrawPatch(60, 0, (patch_t*)W_CacheLumpNum(W_GetNumForName("chessc")
                                               + PlayerClass[consoleplayer] -
                                               1, PU_CACHE));
         }

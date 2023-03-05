@@ -118,7 +118,7 @@ static boolean local_playeringame[NET_MAXPLAYERS];
 // If we are only doing a single player game then this needs to be remembered
 // and saved in the game settings.
 
-static int player_class;
+static pclass_t player_class;
 
 
 // 35 fps clock adjusted by offsetms milliseconds

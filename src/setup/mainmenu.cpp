@@ -27,7 +27,7 @@
 #include "m_misc.hpp"
 #include "z_zone.hpp"
 
-#include "setup_icon.c"
+#include "setup_icon.cpp"
 #include "mode.hpp"
 
 #include "accessibility.hpp"
@@ -84,7 +84,7 @@ static void SensibleDefaults(void)
     key_multi_msgplayer[7] = 'm';
     mousebprevweapon = 4;           // Scroll wheel = weapon cycle
     mousebnextweapon = 3;
-    snd_musicdevice = 3;
+    snd_musicdevice = snddevice_t{ 3 };
     joybspeed = 29;                 // Always run
     vanilla_savegame_limit = 0;
     vanilla_keyboard_mapping = 0;
@@ -146,7 +146,7 @@ static void QuitConfirm(void *unused1, void *unused2)
     TXT_AddWidgets(window, 
                    label = TXT_NewLabel("Exiting setup.\nSave settings?"),
                    TXT_NewStrut(24, 0),
-                   yes_button = TXT_NewButton2("  Yes  ", DoQuit, DoQuit),
+                   yes_button = TXT_NewButton2("  Yes  ", DoQuit, (void*)DoQuit),
                    no_button = TXT_NewButton2("  No   ", DoQuit, nullptr),
                    nullptr);
 
@@ -188,16 +188,16 @@ static txt_button_t *GetLaunchButton(void)
 
     switch (gamemission)
     {
-        case doom:
+        case GameMission_t::doom:
             label = "Save parameters and launch DOOM";
             break;
-        case heretic:
+        case GameMission_t::heretic:
             label = "Save parameters and launch Heretic";
             break;
-        case hexen:
+        case GameMission_t::hexen:
             label = "Save parameters and launch Hexen";
             break;
-        case strife:
+        case GameMission_t::strife:
             label = "Save parameters and launch STRIFE!";
             break;
         default:

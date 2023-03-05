@@ -31,6 +31,7 @@
 #include "sounds.hpp"
 
 
+#include "../../utils/memory.hpp"
 //
 // FLOORS
 //
@@ -291,10 +292,10 @@ EV_DoFloor
 
         // new floor thinker
         rtn = 1;
-        floor = zmalloc<decltype(        floor)>(sizeof(*floor), PU_LEVSPEC, 0);
+        floor = zmalloc<decltype(floor)>(sizeof(*floor), PU_LEVSPEC, 0);
         P_AddThinker (&floor->thinker);
         sec->specialdata = floor;
-        floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
+        floor->thinker.function.acp1 = (thinkf_p1) T_MoveFloor;
         floor->type = floortype;
         floor->crush = false;
 
@@ -529,7 +530,7 @@ EV_BuildStairs
         P_AddThinker (&floor->thinker);
         sec->tag = 0; // haleyjd 20140919: [STRIFE] clears tag of first stair sector
         sec->specialdata = floor;
-        floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
+        floor->thinker.function.acp1 = (thinkf_p1) T_MoveFloor;
         floor->direction = direction; // haleyjd 20140919: bug fix: direction, not "1"
         floor->sector = sec;
         floor->speed = speed;
@@ -573,7 +574,7 @@ EV_BuildStairs
                 P_AddThinker (&floor->thinker);
 
                 sec->specialdata = floor;
-                floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
+                floor->thinker.function.acp1 = (thinkf_p1) T_MoveFloor;
                 floor->direction = direction; // [STRIFE]: for buildDown16
                 floor->sector = sec;
                 floor->speed = speed;

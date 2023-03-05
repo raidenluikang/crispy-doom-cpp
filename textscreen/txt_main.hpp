@@ -75,7 +75,7 @@
 
 #define TXT_COLOR_BLINKING (1 << 3)
 
-enum txt_color_t
+enum txt_color_t: int
 {
     TXT_COLOR_BLACK,
     TXT_COLOR_BLUE,
@@ -97,17 +97,17 @@ enum txt_color_t
 
 // Modifier keys.
 
-typedef enum
+enum txt_modifier_t: int
 {
     TXT_MOD_SHIFT,
     TXT_MOD_CTRL,
     TXT_MOD_ALT,
     TXT_NUM_MODIFIERS
-} txt_modifier_t;
+} ;
 
 // Due to the way the SDL API works, we provide different ways of configuring
 // how we read input events, each of which is useful in different scenarios.
-typedef enum
+enum txt_input_mode_t: int
 {
     // "Localized" output that takes software keyboard layout into account,
     // but key shifting has no effect.
@@ -122,7 +122,7 @@ typedef enum
     // Setting this mode may activate the on-screen keyboard, depending on
     // device and OS.
     TXT_INPUT_TEXT,
-} txt_input_mode_t;
+} ;
 
 
 #ifdef __GNUC__

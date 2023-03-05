@@ -247,7 +247,7 @@ void P_DropWeapon (player_t* player)
 // Follows after getting weapon up,
 // or after previous attack/fire sequence.
 //
-void A_WeaponReady( player_t* player, pspdef_t* psp)
+void A_WeaponReady(player_t* player, pspdef_t* psp )
 {
     statenum_t  newstate;
     int         angle;
@@ -308,9 +308,7 @@ void A_WeaponReady( player_t* player, pspdef_t* psp)
 // The player can re-fire the weapon
 // without lowering it entirely.
 //
-void A_ReFire
-( player_t*	player,
-  pspdef_t*	psp )
+void A_ReFire ( player_t* player, pspdef_t*	psp )
 {
     
     // check for fire
@@ -348,11 +346,9 @@ void A_CheckReload(player_t* player, pspdef_t* psp)
 // Lowers current weapon,
 //  and changes weapon at bottom.
 //
-void
-A_Lower
-( player_t*	player,
-  pspdef_t*	psp )
+void A_Lower ( player_t* player, pspdef_t* psp )
 {	
+    
     psp->sy += LOWERSPEED;
 
     // Is already down.
@@ -386,10 +382,7 @@ A_Lower
 //
 // A_Raise
 //
-void
-A_Raise
-( player_t*	player,
-  pspdef_t*	psp )
+void A_Raise ( player_t*	player, pspdef_t*	psp )
 {
     statenum_t  newstate;
 
@@ -412,13 +405,10 @@ A_Raise
 //
 // A_GunFlash
 //
-void
-A_GunFlash
-( player_t*	player,
-  pspdef_t*	psp ) 
+void A_GunFlash ( player_t*	player, pspdef_t*	psp ) 
 {
-    P_SetMobjState (player->mo, S_PLAY_06);
-    P_SetPsprite (player,ps_flash,weaponinfo[player->readyweapon].flashstate);
+    P_SetMobjState(player->mo, S_PLAY_06);
+    P_SetPsprite(player, ps_flash, weaponinfo[player->readyweapon].flashstate);
 }
 
 
@@ -569,7 +559,7 @@ void A_FireGrenade(player_t* player, pspdef_t* pspr)
     // set flash frame
     st1 = &states[(pspr->state - states) + weaponinfo[player->readyweapon].flashstate];
     st2 = &states[weaponinfo[player->readyweapon].atkstate];
-    P_SetPsprite(player, ps_flash, st1 - st2);
+    P_SetPsprite(player, ps_flash, statenum_t{ (int)(st1 - st2) });
 
     player->mo->z += 32*FRACUNIT; // ugh
     mo = P_SpawnMortar(player->mo, type);

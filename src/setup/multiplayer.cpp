@@ -52,10 +52,10 @@ typedef enum
 // Fallback IWADs to use if no IWADs are detected.
 
 static const iwad_t fallback_iwads[] = {
-    { "doom.wad",     doom,     registered,  "Doom" },
-    { "heretic.wad",  heretic,  retail,      "Heretic" },
-    { "hexen.wad",    hexen,    commercial,  "Hexen" },
-    { "strife1.wad",  strife,   commercial,  "Strife" },
+    { "doom.wad",     GameMission_t::doom,     GameMode_t::registered,  "Doom" },
+    { "heretic.wad",  GameMission_t::heretic,  GameMode_t::retail,      "Heretic" },
+    { "hexen.wad",    GameMission_t::hexen,    GameMode_t::commercial,  "Hexen" },
+    { "strife1.wad",  GameMission_t::strife,   GameMode_t::commercial,  "Strife" },
 };
 
 // Array of IWADs found to be installed
@@ -121,8 +121,8 @@ static const char *strife_gamemodes[] =
     "Items respawn", // (altdeath)
 };
 
-static char *net_player_name;
-static char *chat_macros[10];
+static const char *net_player_name;
+static const char *chat_macros[10];
 
 static char *wads[NUM_WADS];
 static char *extra_params[NUM_EXTRA_PARAMS];
@@ -223,7 +223,7 @@ static void StartGame(int multiplayer)
     AddIWADParameter(exec);
     AddCmdLineParameter(exec, "-skill %i", skill + 1);
 
-    if (gamemission == hexen)
+    if (gamemission == GameMission_t::hexen)
     {
         AddCmdLineParameter(exec, "-class %i", character_class);
     }
@@ -333,15 +333,15 @@ static void UpdateSkillButton(void)
     else switch(gamemission)
     {
         default:
-        case doom:
+        case GameMission_t::doom:
             skillbutton->values = doom_skills;
             break;
 
-        case heretic:
+        case GameMission_t::heretic:
             skillbutton->values = heretic_skills;
             break;
 
-        case hexen:
+        case GameMission_t::hexen:
             if (character_class == 0)
             {
                 skillbutton->values = hexen_fighter_skills;
@@ -356,7 +356,7 @@ static void UpdateSkillButton(void)
             }
             break;
 
-        case strife:
+        case GameMission_t::strife:
             skillbutton->values = strife_skills;
             break;
     }
@@ -689,21 +689,21 @@ static txt_dropdown_list_t *GameTypeDropdown(void)
 {
     switch (gamemission)
     {
-        case doom:
+        case GameMission_t::doom:
         default:
             return TXT_NewDropdownList(&deathmatch, gamemodes, 4);
 
         // Heretic and Hexen don't support Deathmatch II:
 
-        case heretic:
-        case hexen:
+        case GameMission_t::heretic:
+        case GameMission_t::hexen:
             return TXT_NewDropdownList(&deathmatch, gamemodes, 2);
 
         // Strife supports both deathmatch modes, but doesn't support
         // multiplayer co-op. Use a different variable to indicate whether
         // to use altdeath or not.
 
-        case strife:
+        case GameMission_t::strife:
             return TXT_NewDropdownList(&strife_altdeath, strife_gamemodes, 2);
     }
 }
@@ -738,7 +738,7 @@ static void StartGameMenu(const char *window_title, int multiplayer)
                    iwad_selector = IWADSelector(),
                    nullptr);
 
-    if (gamemission == hexen)
+    if (gamemission == GameMission_t::hexen)
     {
         txt_dropdown_list_t *cc_dropdown;
         TXT_AddWidgets(window,
@@ -830,7 +830,7 @@ static void DoJoinGame(void *unused1, void *unused2)
 
     AddCmdLineParameter(exec, "-connect %s", connect_address);
 
-    if (gamemission == hexen)
+    if (gamemission == GameMission_t::hexen)
     {
         AddCmdLineParameter(exec, "-class %i", character_class);
     }
@@ -1039,7 +1039,7 @@ void JoinMultiGame(TXT_UNCAST_ARG(widget), void *user_data)
                    IWADSelector(),
                    nullptr);
 
-    if (gamemission == hexen)
+    if (gamemission == GameMission_t::hexen)
     {
         TXT_AddWidgets(window,
                        TXT_NewLabel("Character class "),
@@ -1121,7 +1121,7 @@ void MultiplayerConfig(TXT_UNCAST_ARG(widget), void *user_data)
     TXT_AddWidgets(window,
                    TXT_NewStrut(0, 1),
                    TXT_NewHorizBox(TXT_NewLabel("Player name:  "),
-                                   TXT_NewInputBox(&net_player_name, 25),
+                                   TXT_NewInputBox((char**)(&net_player_name), 25),
                                    nullptr),
                    TXT_NewStrut(0, 1),
                    TXT_NewSeparator("Chat macros"),
@@ -1138,7 +1138,7 @@ void MultiplayerConfig(TXT_UNCAST_ARG(widget), void *user_data)
 
         TXT_AddWidgets(table,
                        label,
-                       TXT_NewInputBox(&chat_macros[(i + 1) % 10], 40),
+                       TXT_NewInputBox((char**)( &chat_macros[(i + 1) % 10] ), 40),
                        nullptr);
     }
 
@@ -1160,7 +1160,7 @@ void BindMultiplayerVariables(void)
 
     switch (gamemission)
     {
-        case doom:
+        case GameMission_t::doom:
             M_BindChatControls(4);
             key_multi_msgplayer[0] = 'g';
             key_multi_msgplayer[1] = 'i';
@@ -1168,7 +1168,7 @@ void BindMultiplayerVariables(void)
             key_multi_msgplayer[3] = 'r';
             break;
 
-        case heretic:
+        case GameMission_t::heretic:
             M_BindChatControls(4);
             key_multi_msgplayer[0] = 'g';
             key_multi_msgplayer[1] = 'y';
@@ -1176,7 +1176,7 @@ void BindMultiplayerVariables(void)
             key_multi_msgplayer[3] = 'b';
             break;
 
-        case hexen:
+        case GameMission_t::hexen:
             M_BindChatControls(8);
             key_multi_msgplayer[0] = 'b';
             key_multi_msgplayer[1] = 'r';

@@ -374,7 +374,7 @@ static void LoadLumpCallback(const char *lumpname, int lumpnum, patch_t **ptr)
 
     // Cache the lump
 
-    *ptr = W_CacheLumpNum_cast<decltype(    *ptr)>(lumpnum, PU_STATIC);
+    *ptr = W_CacheLumpNum_cast<decltype(*ptr)>(lumpnum, PU_STATIC);
 }
 
 void IN_LoadPics(void)
@@ -742,7 +742,7 @@ void IN_DrawSingleStats(void)
 
     // [crispy] offset the stats for Ep.4 and up, to make room for level time
     int yoffset = 0;
-    if (gamemode == retail && gameepisode > 3)
+    if (gamemode == GameMode_t::retail && gameepisode > 3)
     {
         yoffset = 20;
     }
@@ -804,7 +804,7 @@ void IN_DrawSingleStats(void)
     }
 
     // [crispy] ignore "now entering" if it's the final intermission
-    if (gamemode != retail || gameepisode <= 3 || finalintermission)
+    if (gamemode != GameMode_t::retail || gameepisode <= 3 || finalintermission)
     {
         IN_DrTextB(DEH_String("TIME"), 85, 150);
         IN_DrawTime(155, 150, hours, minutes, seconds);
@@ -860,7 +860,7 @@ void IN_DrawCoopStats(void)
         if (playeringame[i])
         {
             V_DrawShadowedPatch(25, ypos,
-                                W_CacheLumpNum(patchFaceOkayBase + i,
+                                W_CacheLumpNum_cast<patch_t*>(patchFaceOkayBase + i,
                                                PU_CACHE));
             if (intertime < 40)
             {
@@ -918,11 +918,11 @@ void IN_DrawDMStats(void)
                 V_DrawShadowedPatch(40,
                                     ((ypos << FRACBITS) +
                                      dSlideY[i] * intertime) >> FRACBITS,
-                                    W_CacheLumpNum(patchFaceOkayBase + i,
+                                    W_CacheLumpNum_cast<patch_t*>(patchFaceOkayBase + i,
                                                    PU_CACHE));
                 V_DrawShadowedPatch(((xpos << FRACBITS) +
                                      dSlideX[i] * intertime) >> FRACBITS, 18,
-                                    W_CacheLumpNum(patchFaceDeadBase + i,
+                                    W_CacheLumpNum_cast<patch_t*>(patchFaceDeadBase + i,
                                                    PU_CACHE));
             }
         }
@@ -946,19 +946,19 @@ void IN_DrawDMStats(void)
             if (intertime < 100 || i == consoleplayer)
             {
                 V_DrawShadowedPatch(40, ypos,
-                                    W_CacheLumpNum(patchFaceOkayBase + i,
+                                    W_CacheLumpNum_cast<patch_t*>(patchFaceOkayBase + i,
                                                    PU_CACHE));
                 V_DrawShadowedPatch(xpos, 18,
-                                    W_CacheLumpNum(patchFaceDeadBase + i,
+                                    W_CacheLumpNum_cast<patch_t*>(patchFaceDeadBase + i,
                                                    PU_CACHE));
             }
             else
             {
                 V_DrawAltTLPatch(40, ypos,
-                              W_CacheLumpNum(patchFaceOkayBase + i,
+                              (patch_t*)W_CacheLumpNum(patchFaceOkayBase + i,
                                              PU_CACHE));
                 V_DrawAltTLPatch(xpos, 18,
-                              W_CacheLumpNum(patchFaceDeadBase + i,
+                              (patch_t*)W_CacheLumpNum(patchFaceDeadBase + i,
                                              PU_CACHE));
             }
             kpos = 86;

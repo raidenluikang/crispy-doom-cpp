@@ -19,6 +19,7 @@
 #include "i_system.hpp"
 #include "p_local.hpp"
 
+#include "../../utils/memory.hpp"
 
 //==================================================================
 //==================================================================
@@ -299,7 +300,7 @@ int EV_DoFloor(line_t * line, byte * args, floor_e floortype)
         //      new floor thinker
         //
         rtn = 1;
-        floor = zmalloc<decltype(        floor)>(sizeof(*floor), PU_LEVSPEC, 0);
+        floor = zmalloc<decltype(floor)>(sizeof(*floor), PU_LEVSPEC, 0);
         memset(floor, 0, sizeof(*floor));
         P_AddThinker(&floor->thinker);
         sec->specialdata = floor;

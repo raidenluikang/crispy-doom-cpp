@@ -32,6 +32,9 @@
 #include "doomstat.hpp"
 #include "r_state.hpp"
 
+
+#include "../../utils/memory.hpp"
+
 #define SAVEGAME_EOF 0x1d
 
 // haleyjd 09/28/10: [STRIFE] VERSIONSIZE == 8
@@ -248,17 +251,17 @@ static void saveg_write_mapthing_t(mapthing_t *str)
 // actionf_t
 // 
 
-static void saveg_read_actionf_t(actionf_t *str)
-{
-    // actionf_p1 acp1;
-    str->acp1 = static_cast< decltype(     str->acp1 ) >( saveg_readp() ) ;
-}
+// static void saveg_read_actionf_t(actionf_t *str)
+// {
+//     // actionf_p1 acp1;
+//     str->acp1 = (actionf_p1)( saveg_readp() ) ;
+// }
 
-static void saveg_write_actionf_t(actionf_t *str)
-{
-    // actionf_p1 acp1;
-    saveg_writep(str->acp1);
-}
+// static void saveg_write_actionf_t(actionf_t *str)
+// {
+//     // actionf_p1 acp1;
+//     saveg_writep((void*)(str->acp1));
+// }
 
 //
 // think_t
@@ -266,9 +269,19 @@ static void saveg_write_actionf_t(actionf_t *str)
 // This is just an actionf_t.
 //
 
-#define saveg_read_think_t saveg_read_actionf_t
-#define saveg_write_think_t saveg_write_actionf_t
 
+static void saveg_read_think_t(think_t* th)
+{
+    static_assert(sizeof(thinkf_p1) == sizeof(void*), "!");
+
+    th->acp1 = (thinkf_p1)saveg_readp();
+}
+
+static void saveg_write_think_t(think_t* th)
+{
+    static_assert(sizeof(thinkf_p1) == sizeof(void*), "!");
+    saveg_writep((void*)(th->acp1) );
+}
 //
 // thinker_t
 //
@@ -319,10 +332,10 @@ static void saveg_read_mobj_t(mobj_t *str)
     // fixed_t z;
     str->z = saveg_read32();
 
-    // struct mobj_s* snext;
+    // struct mobj_t* snext;
     str->snext = static_cast< decltype(     str->snext ) >( saveg_readp() ) ;
 
-    // struct mobj_s* sprev;
+    // struct mobj_t* sprev;
     str->sprev = static_cast< decltype(     str->sprev ) >( saveg_readp() ) ;
 
     // angle_t angle;
@@ -334,10 +347,10 @@ static void saveg_read_mobj_t(mobj_t *str)
     // int frame;
     str->frame = saveg_read32();
 
-    // struct mobj_s* bnext;
+    // struct mobj_t* bnext;
     str->bnext = static_cast< decltype(     str->bnext ) >( saveg_readp() ) ;
 
-    // struct mobj_s* bprev;
+    // struct mobj_t* bprev;
     str->bprev = static_cast< decltype(     str->bprev ) >( saveg_readp() ) ;
 
     // struct subsector_s* subsector;
@@ -386,12 +399,12 @@ static void saveg_read_mobj_t(mobj_t *str)
     str->health = saveg_read32();
 
     // int movedir;
-    str->movedir = saveg_read32();
+    str->movedir = (dirtype_t)saveg_read32();
 
     // int movecount;
     str->movecount = saveg_read32();
 
-    // struct mobj_s* target;
+    // struct mobj_t* target;
     str->target = static_cast< decltype(     str->target ) >( saveg_readp() ) ;
 
     // int reactiontime;
@@ -420,7 +433,7 @@ static void saveg_read_mobj_t(mobj_t *str)
     // mapthing_t spawnpoint;
     saveg_read_mapthing_t(&str->spawnpoint);
 
-    // struct mobj_s* tracer;
+    // struct mobj_t* tracer;
     str->tracer = static_cast< decltype(     str->tracer ) >( saveg_readp() ) ;
 
     // byte miscdata;
@@ -445,7 +458,7 @@ uint32_t P_ThinkerToIndex(thinker_t *thinker)
 
     for (th = thinkercap.next, i = 0; th != &thinkercap; th = th->next)
     {
-        if (th->function.acp1 == (actionf_p1) P_MobjThinker)
+        if (th->function.acp1 == (thinkf_p1) P_MobjThinker)
         {
             i++;
             if (th == thinker)
@@ -467,7 +480,7 @@ thinker_t *P_IndexToThinker(uint32_t index)
 
     for (th = thinkercap.next, i = 0; th != &thinkercap; th = th->next)
     {
-        if (th->function.acp1 == (actionf_p1) P_MobjThinker)
+        if (th->function.acp1 == (thinkf_p1) P_MobjThinker)
         {
             i++;
             if (i == index)
@@ -494,10 +507,10 @@ static void saveg_write_mobj_t(mobj_t *str)
     // fixed_t z;
     saveg_write32(str->z);
 
-    // struct mobj_s* snext;
+    // struct mobj_t* snext;
     saveg_writep(str->snext);
 
-    // struct mobj_s* sprev;
+    // struct mobj_t* sprev;
     saveg_writep(str->sprev);
 
     // angle_t angle;
@@ -509,10 +522,10 @@ static void saveg_write_mobj_t(mobj_t *str)
     // int frame;
     saveg_write32(str->frame);
 
-    // struct mobj_s* bnext;
+    // struct mobj_t* bnext;
     saveg_writep(str->bnext);
 
-    // struct mobj_s* bprev;
+    // struct mobj_t* bprev;
     saveg_writep(str->bprev);
 
     // struct subsector_s* subsector;
@@ -566,7 +579,7 @@ static void saveg_write_mobj_t(mobj_t *str)
     // int movecount;
     saveg_write32(str->movecount);
 
-    // struct mobj_s* target;
+    // struct mobj_t* target;
     // [crispy] instead of the actual pointer, store the
     // corresponding index in the mobj->target field
     saveg_writep((void *)(uintptr_t) P_ThinkerToIndex((thinker_t *) str->target));
@@ -593,7 +606,7 @@ static void saveg_write_mobj_t(mobj_t *str)
     // mapthing_t spawnpoint;
     saveg_write_mapthing_t(&str->spawnpoint);
 
-    // struct mobj_s* tracer;
+    // struct mobj_t* tracer;
     // [crispy] instead of the actual pointer, store the
     // corresponding index in the mobj->tracers field
     saveg_writep((void *)(uintptr_t) P_ThinkerToIndex((thinker_t *) str->tracer));
@@ -1673,7 +1686,7 @@ void P_WriteSaveGameHeader(char *description)
     for (i=0; i<VERSIONSIZE; ++i)
         saveg_write8(name[i]);
 
-    saveg_write8(gameskill);
+    saveg_write8((byte)gameskill);
     
     // [STRIFE] This information is implicit in the file being loaded.
     //saveg_write8(gameepisode);
@@ -1712,7 +1725,7 @@ boolean P_ReadSaveGameHeader(void)
     if (strcmp(read_vcheck, vcheck) != 0)
         return false;                       // bad version 
 
-    gameskill = saveg_read8();
+    gameskill = (skill_t)saveg_read8();
 
     // [STRIFE] This info is implicit in the file being read.
     //gameepisode = saveg_read8();
@@ -1935,7 +1948,7 @@ void P_ArchiveThinkers (void)
     // save off the current thinkers
     for (th = thinkercap.next ; th != &thinkercap ; th=th->next)
     {
-        if (th->function.acp1 == (actionf_p1)P_MobjThinker)
+        if (th->function.acp1 == (thinkf_p1)P_MobjThinker)
         {
             saveg_write8(tc_mobj);
             saveg_write_pad();
@@ -1976,7 +1989,7 @@ void P_UnArchiveThinkers (void)
     {
         next = currentthinker->next;
 
-        if (currentthinker->function.acp1 == (actionf_p1)P_MobjThinker)
+        if (currentthinker->function.acp1 == (thinkf_p1)P_MobjThinker)
             P_RemoveMobj ((mobj_t *)currentthinker);
         else
             Z_Free (currentthinker);
@@ -2030,7 +2043,7 @@ void P_UnArchiveThinkers (void)
             // [STRIFE]: doesn't set these
             //mobj->floorz = mobj->subsector->sector->floorheight;
             //mobj->ceilingz = mobj->subsector->sector->ceilingheight;
-            mobj->thinker.function.acp1 = (actionf_p1)P_MobjThinker;
+            mobj->thinker.function.acp1 = (thinkf_p1)P_MobjThinker;
             P_AddThinker (&mobj->thinker);
             break;
 
@@ -2049,7 +2062,7 @@ void P_RestoreTargets(void)
 
     for (th = thinkercap.next; th != &thinkercap; th = th->next)
     {
-        if (th->function.acp1 == (actionf_p1) P_MobjThinker)
+        if (th->function.acp1 == (thinkf_p1) P_MobjThinker)
         {
             mo = (mobj_t *) th;
             mo->target = (mobj_t *) P_IndexToThinker((uintptr_t) mo->target);
@@ -2069,7 +2082,7 @@ void P_RestoreTargets(void)
 //
 // P_ArchiveSpecials
 //
-enum
+enum specials_e: int
 {
     tc_ceiling,
     tc_door,
@@ -2081,7 +2094,7 @@ enum
     tc_slidingdoor, // [STRIFE]
     tc_endspecials
 
-} specials_e;
+} ;
 
 
 
@@ -2120,7 +2133,7 @@ void P_ArchiveSpecials (void)
             continue;
         }
 
-        if (th->function.acp1 == (actionf_p1)T_MoveCeiling)
+        if (th->function.acp1 == (thinkf_p1)T_MoveCeiling)
         {
             saveg_write8(tc_ceiling);
             saveg_write_pad();
@@ -2128,7 +2141,7 @@ void P_ArchiveSpecials (void)
             continue;
         }
 
-        if (th->function.acp1 == (actionf_p1)T_VerticalDoor)
+        if (th->function.acp1 == (thinkf_p1)T_VerticalDoor)
         {
             saveg_write8(tc_door);
             saveg_write_pad();
@@ -2136,7 +2149,7 @@ void P_ArchiveSpecials (void)
             continue;
         }
 
-        if (th->function.acp1 == (actionf_p1)T_SlidingDoor)
+        if (th->function.acp1 == (thinkf_p1)T_SlidingDoor)
         {
             saveg_write8(tc_slidingdoor);
             saveg_write_pad();
@@ -2144,7 +2157,7 @@ void P_ArchiveSpecials (void)
             continue;
         }
 
-        if (th->function.acp1 == (actionf_p1)T_MoveFloor)
+        if (th->function.acp1 == (thinkf_p1)T_MoveFloor)
         {
             saveg_write8(tc_floor);
             saveg_write_pad();
@@ -2152,7 +2165,7 @@ void P_ArchiveSpecials (void)
             continue;
         }
 
-        if (th->function.acp1 == (actionf_p1)T_PlatRaise)
+        if (th->function.acp1 == (thinkf_p1)T_PlatRaise)
         {
             saveg_write8(tc_plat);
             saveg_write_pad();
@@ -2160,7 +2173,7 @@ void P_ArchiveSpecials (void)
             continue;
         }
 
-        if (th->function.acp1 == (actionf_p1)T_LightFlash)
+        if (th->function.acp1 == (thinkf_p1)T_LightFlash)
         {
             saveg_write8(tc_flash);
             saveg_write_pad();
@@ -2168,7 +2181,7 @@ void P_ArchiveSpecials (void)
             continue;
         }
 
-        if (th->function.acp1 == (actionf_p1)T_StrobeFlash)
+        if (th->function.acp1 == (thinkf_p1)T_StrobeFlash)
         {
             saveg_write8(tc_strobe);
             saveg_write_pad();
@@ -2176,7 +2189,7 @@ void P_ArchiveSpecials (void)
             continue;
         }
 
-        if (th->function.acp1 == (actionf_p1)T_Glow)
+        if (th->function.acp1 == (thinkf_p1)T_Glow)
         {
             saveg_write8(tc_glow);
             saveg_write_pad();
@@ -2223,7 +2236,7 @@ void P_UnArchiveSpecials (void)
             ceiling->sector->specialdata = ceiling;
 
             if (ceiling->thinker.function.acp1)
-                ceiling->thinker.function.acp1 = (actionf_p1)T_MoveCeiling;
+                ceiling->thinker.function.acp1 = (thinkf_p1)T_MoveCeiling;
 
             P_AddThinker (&ceiling->thinker);
             P_AddActiveCeiling(ceiling);
@@ -2234,7 +2247,7 @@ void P_UnArchiveSpecials (void)
             door = zmalloc<decltype(            door)>(sizeof(*door), PU_LEVEL, nullptr);
             saveg_read_vldoor_t(door);
             door->sector->specialdata = door;
-            door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
+            door->thinker.function.acp1 = (thinkf_p1)T_VerticalDoor;
             P_AddThinker (&door->thinker);
             break;
 
@@ -2244,7 +2257,7 @@ void P_UnArchiveSpecials (void)
             slidedoor = zmalloc<decltype(            slidedoor)>(sizeof(*slidedoor), PU_LEVEL, nullptr);
             saveg_read_slidedoor_t(slidedoor);
             slidedoor->frontsector->specialdata = slidedoor;
-            slidedoor->thinker.function.acp1 = (actionf_p1)T_SlidingDoor;
+            slidedoor->thinker.function.acp1 = (thinkf_p1)T_SlidingDoor;
             P_AddThinker(&slidedoor->thinker);
             break;
 
@@ -2253,7 +2266,7 @@ void P_UnArchiveSpecials (void)
             floor = zmalloc<decltype(            floor)>(sizeof(*floor), PU_LEVEL, nullptr);
             saveg_read_floormove_t(floor);
             floor->sector->specialdata = floor;
-            floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
+            floor->thinker.function.acp1 = (thinkf_p1)T_MoveFloor;
             P_AddThinker (&floor->thinker);
             break;
 
@@ -2264,7 +2277,7 @@ void P_UnArchiveSpecials (void)
             plat->sector->specialdata = plat;
 
             if (plat->thinker.function.acp1)
-                plat->thinker.function.acp1 = (actionf_p1)T_PlatRaise;
+                plat->thinker.function.acp1 = (thinkf_p1)T_PlatRaise;
 
             P_AddThinker (&plat->thinker);
             P_AddActivePlat(plat);
@@ -2274,7 +2287,7 @@ void P_UnArchiveSpecials (void)
             saveg_read_pad();
             flash = zmalloc<decltype(            flash)>(sizeof(*flash), PU_LEVEL, nullptr);
             saveg_read_lightflash_t(flash);
-            flash->thinker.function.acp1 = (actionf_p1)T_LightFlash;
+            flash->thinker.function.acp1 = (thinkf_p1)T_LightFlash;
             P_AddThinker (&flash->thinker);
             break;
 
@@ -2282,7 +2295,7 @@ void P_UnArchiveSpecials (void)
             saveg_read_pad();
             strobe = zmalloc<decltype(            strobe)>(sizeof(*strobe), PU_LEVEL, nullptr);
             saveg_read_strobe_t(strobe);
-            strobe->thinker.function.acp1 = (actionf_p1)T_StrobeFlash;
+            strobe->thinker.function.acp1 = (thinkf_p1)T_StrobeFlash;
             P_AddThinker (&strobe->thinker);
             break;
 
@@ -2290,7 +2303,7 @@ void P_UnArchiveSpecials (void)
             saveg_read_pad();
             glow = zmalloc<decltype(            glow)>(sizeof(*glow), PU_LEVEL, nullptr);
             saveg_read_glow_t(glow);
-            glow->thinker.function.acp1 = (actionf_p1)T_Glow;
+            glow->thinker.function.acp1 = (thinkf_p1)T_Glow;
             P_AddThinker (&glow->thinker);
             break;
 

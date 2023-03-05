@@ -22,6 +22,9 @@
 #include "s_sound.hpp"
 #include "v_video.hpp"
 
+#include "../../utils/memory.hpp"
+
+
 //==================================================================
 //==================================================================
 //
@@ -159,7 +162,7 @@ int EV_DoDoor(line_t * line, vldoor_e type, fixed_t speed)
         }
         // Add new door thinker
         retcode = 1;
-        door = zmalloc<decltype(        door)>(sizeof(*door), PU_LEVSPEC, 0);
+        door = zmalloc<decltype( door)>(sizeof(*door), PU_LEVSPEC, 0);
         P_AddThinker(&door->thinker);
         sec->specialdata = door;
         door->thinker.function = T_VerticalDoor;
@@ -262,7 +265,7 @@ void EV_VerticalDoor(line_t * line, mobj_t * thing)
     sec = sides[line->sidenum[side ^ 1]].sector;
     if (sec->specialdata)
     {
-        door = sec->specialdata;
+        door = (vldoor_t*)sec->specialdata;
         switch (line->special)
         {
             case 1:            // ONLY FOR "RAISE" DOORS, NOT "OPEN"s

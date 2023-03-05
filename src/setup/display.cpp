@@ -67,8 +67,8 @@ static window_size_t window_sizes_scaled[] =
     { 0, 0},
 };
 
-static char *video_driver = "";
-static char *window_position = "";
+static const char *video_driver = "";
+static const char *window_position = "";
 static int aspect_ratio_correct = 1;
 static int integer_scaling = 0;
 static int vga_porch_flash = 0;
@@ -200,11 +200,11 @@ static void AdvancedDisplayConfig(TXT_UNCAST_ARG(widget),
     TXT_AddWidgets(window,
         ar_checkbox = TXT_NewCheckBox("Force correct aspect ratio",
                                       &aspect_ratio_correct),
-        TXT_If(gamemission == heretic || gamemission == hexen
-            || gamemission == strife,
+        TXT_If(gamemission == GameMission_t::heretic || gamemission ==GameMission_t:: hexen
+            || gamemission == GameMission_t::strife,
             TXT_NewCheckBox("Graphical startup", &graphical_startup)),
-        TXT_If(gamemission == doom || gamemission == heretic
-            || gamemission == strife,
+        TXT_If(gamemission == GameMission_t::doom || gamemission == GameMission_t::heretic
+            || gamemission == GameMission_t::strife,
             TXT_NewCheckBox("Show ENDOOM screen on exit",
                             &show_endoom)),
 #ifdef HAVE_LIBPNG
@@ -271,18 +271,18 @@ void BindDisplayVariables(void)
     M_BindIntVariable("force_software_renderer",   &force_software_renderer);
     M_BindIntVariable("max_scaling_buffer_pixels", &max_scaling_buffer_pixels);
 
-    if (gamemission == doom || gamemission == heretic
-     || gamemission == strife)
+    if (gamemission == GameMission_t::doom || gamemission == GameMission_t::heretic
+     || gamemission == GameMission_t::strife)
     {
         M_BindIntVariable("show_endoom",               &show_endoom);
     }
 
-    if (gamemission == doom || gamemission == strife)
+    if (gamemission ==GameMission_t:: doom || gamemission == GameMission_t::strife)
     {
         M_BindIntVariable("show_diskicon",             &show_diskicon);
     }
 
-    if (gamemission == heretic || gamemission == hexen || gamemission == strife)
+    if (gamemission ==GameMission_t:: heretic || gamemission ==GameMission_t:: hexen || gamemission ==GameMission_t:: strife)
     {
         M_BindIntVariable("graphical_startup",        &graphical_startup);
     }

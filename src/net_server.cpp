@@ -45,7 +45,7 @@
 // How often to re-resolve the address of the master server?
 #define MASTER_RESOLVE_PERIOD 8 * 60 * 60 /* 8 hours */
 
-typedef enum
+enum net_server_state_t
 {
     // waiting for the game to be "launched" (key player to press the start
     // button)
@@ -60,9 +60,11 @@ typedef enum
     // in a game
 
     SERVER_IN_GAME,
-} net_server_state_t;
+} ;
 
-typedef struct
+enum pclass_t: int;
+
+struct net_client_t
 {
     boolean active;
     int player_number;
@@ -118,9 +120,9 @@ typedef struct
 
     // Player class (for Hexen)
 
-    int player_class;
+    pclass_t player_class;
 
-} net_client_t;
+} ;
 
 // structure used for the recv window
 
@@ -872,7 +874,7 @@ static void StartGame(void)
         }
         else
         {
-            sv_settings.player_classes[i] = 0;
+            sv_settings.player_classes[i] = pclass_t{0};
         }
     }
 

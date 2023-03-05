@@ -97,7 +97,12 @@ enum class skill_t
     sk_medium,
     sk_hard,
     sk_nightmare
-} ;
+};
+
+constexpr enum skill_t operator +(enum skill_t lhs, int rhs) noexcept 
+{
+    return static_cast<skill_t>( static_cast<int>(lhs) + rhs );
+}
 
 boolean D_ValidGameMode(GameMission_t mission, GameMode_t mode);
 boolean D_ValidGameVersion(GameMission_t mission, GameVersion_t version);

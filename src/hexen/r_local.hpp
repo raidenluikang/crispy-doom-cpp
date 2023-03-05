@@ -59,11 +59,13 @@
 */
 
 //================ used by play and refresh
+typedef int fixed_t;
 
-typedef struct
+
+struct vertex_t
 {
     fixed_t x, y;
-} vertex_t;
+} ;
 
 struct line_s;
 
@@ -283,7 +285,7 @@ typedef struct vissprite_s
     const byte *brightmap;
     int mobjflags;              // for color translation and shadow draw
     boolean psprite;            // true if psprite
-    int class;                  // player class (used in translation)
+    int mclass;                  // player class (used in translation)
     fixed_t floorclip;
 } vissprite_t;
 

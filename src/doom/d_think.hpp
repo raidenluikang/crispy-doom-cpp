@@ -32,10 +32,14 @@
 //  we will need to handle the various
 //  action functions cleanly.
 //
+struct mobj_t;
+struct player_t;
+struct pspdef_t;
+
 typedef  void (*actionf_v)();
-typedef  void (*actionf_p1)( void* );
-typedef  void (*actionf_p2)( void*, void* );
-typedef  void (*actionf_p3)( void*, void*, void* ); // [crispy] let pspr action pointers get called from mobj states
+typedef  void (*actionf_p1)( mobj_t* );
+typedef  void (*actionf_p2)( mobj_t*, pspdef_t* );
+typedef  void (*actionf_p3)( mobj_t*, player_t*, pspdef_t* ); // [crispy] let pspr action pointers get called from mobj states
 
 union actionf_t
 {
@@ -53,7 +57,18 @@ union actionf_t
 // Historically, "think_t" is yet another
 //  function pointer to a routine to handle
 //  an actor.
-typedef actionf_t  think_t;
+typedef  void (*thinkf_v)();
+typedef  void (*thinkf_p1)( void* );
+typedef  void (*thinkf_p2)( void*, void* );
+typedef  void (*thinkf_p3)( void*, void*, void* ); // [crispy] let pspr action pointers get called from mobj states
+
+union think_t
+{
+    thinkf_v acv;
+    thinkf_p1 acp1;
+    thinkf_p2 acp2;
+    thinkf_p3 acp3;
+};
 
 
 // Doubly linked list of actors.

@@ -25,6 +25,8 @@
 #include "i_system.hpp"
 #include "p_local.hpp"
 
+#include "../../utils/memory.hpp"
+
 // MACROS ------------------------------------------------------------------
 
 #define MAX_SCRIPT_ARGS 3
@@ -468,7 +470,7 @@ void P_LoadACScripts(int lump)
         return;
     }
 
-    ACSInfo = zmalloc<decltype(    ACSInfo)>(ACScriptCount * sizeof(acsInfo_t), PU_LEVEL, 0);
+    ACSInfo = zmalloc<decltype(ACSInfo)>(ACScriptCount * sizeof(acsInfo_t), PU_LEVEL, 0);
     memset(ACSInfo, 0, ACScriptCount * sizeof(acsInfo_t));
     for (i = 0, info = ACSInfo; i < ACScriptCount; i++, info++)
     {
@@ -500,7 +502,7 @@ void P_LoadACScripts(int lump)
 
     ACStringCount = ReadCodeInt();
     ACSAssert(ACStringCount >= 0, "negative string count %d", ACStringCount);
-    ACStrings = zmalloc<decltype(    ACStrings)>(ACStringCount * sizeof(char *), PU_LEVEL, nullptr);
+    ACStrings = zmalloc<decltype(ACStrings)>(ACStringCount * sizeof(char *), PU_LEVEL, nullptr);
 
     for (i=0; i<ACStringCount; ++i)
     {
@@ -1853,7 +1855,7 @@ static int CmdGameType(void)
 
 static int CmdGameSkill(void)
 {
-    Push(gameskill);
+    Push((int)gameskill);
     return SCRIPT_CONTINUE;
 }
 

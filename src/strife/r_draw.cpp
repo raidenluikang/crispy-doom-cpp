@@ -79,7 +79,7 @@ static byte *background_buffer = nullptr;
 
 // haleyjd 08/29/10: [STRIFE] Rogue added the ability to customize the view
 // border flat by storing it in the configuration file.
-char *back_flat = "F_PAVE01";
+const char *back_flat = "F_PAVE01";
 
 //
 // R_DrawColumn
@@ -865,7 +865,7 @@ void R_FillBackScreen (void)
     int		y; 
     patch_t*	patch;
 
-    char *name;
+    const char *name;
 
     // If we are running full screen, there is no need to do any of this,
     // and the background buffer can be freed if it was previously in use.

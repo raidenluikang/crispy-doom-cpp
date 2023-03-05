@@ -69,7 +69,7 @@ void P_InitSwitchList(void)
 
     if (!alphSwitchList)
     {
-        if (gamemode == shareware)
+        if (gamemode == GameMode_t::shareware)
         {
             alphSwitchList = alphSwitchListDemo;
         }

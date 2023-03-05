@@ -371,9 +371,7 @@ void P_NewChaseDir(mobj_t * actor)
 // try other directions
     if (P_Random() > 200 || abs(deltay) > abs(deltax))
     {
-        tdir = d[1];
-        d[1] = d[2];
-        d[2] = tdir;
+        std::swap(d[1], d[2]);
     }
 
     if (d[1] == turnaround)
@@ -406,7 +404,7 @@ void P_NewChaseDir(mobj_t * actor)
 
     if (P_Random() & 1)         /*randomly determine direction of search */
     {
-        for (tdir = DI_EAST; tdir <= DI_SOUTHEAST; tdir++)
+        for (tdir = DI_EAST; tdir <= DI_SOUTHEAST; tdir = dirtype_t{ (int)tdir + 1 })
         {
             if (tdir != turnaround)
             {
@@ -434,7 +432,7 @@ void P_NewChaseDir(mobj_t * actor)
                 break;
             }
 
-            --tdir;
+            tdir = dirtype_t{ (int)tdir - 1 };
         }
     }
 
@@ -683,7 +681,7 @@ void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp)
         actor->threshold--;
     }
 
-    if (gameskill == sk_nightmare || critical->fast)
+    if (gameskill == skill_t::sk_nightmare || critical->fast)
     {                           // Monsters move faster in nightmare mode
         actor->tics -= actor->tics / 2;
         if (actor->tics < 3)
@@ -725,7 +723,7 @@ void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp)
     if (actor->flags & MF_JUSTATTACKED)
     {
         actor->flags &= ~MF_JUSTATTACKED;
-        if (gameskill != sk_nightmare && !critical->fast)
+        if (gameskill != skill_t::sk_nightmare && !critical->fast)
             P_NewChaseDir(actor);
         return;
     }
@@ -748,7 +746,7 @@ void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp)
 //
     if (actor->info->missilestate)
     {
-        if (gameskill < sk_nightmare && actor->movecount && !critical->fast)
+        if (gameskill < skill_t::sk_nightmare && actor->movecount && !critical->fast)
             goto nomissile;
         if (!P_CheckMissileRange(actor))
             goto nomissile;
@@ -912,7 +910,7 @@ boolean P_UpdateMorphedMonster(mobj_t * actor, int tics)
     {
         return (false);
     }
-    moType = actor->special2.i;
+    moType = (mobjtype_t)(actor->special2.i);
     switch (moType)
     {
         case MT_WRAITHB:       // These must remain morphed
@@ -1057,6 +1055,9 @@ void FaceMovementDirection(mobj_t * actor)
         case DI_SOUTHEAST:
             actor->angle = 224u << 24;
             break;
+        case DI_NODIR:
+        case NUMDIRS:
+            break;
     }
 }
 
@@ -1139,16 +1140,16 @@ void A_MinotaurRoam(mobj_t *actor, player_t *player, pspdef_t *psp)
     if (P_Random() < 6)
     {
         //Choose new direction
-        actor->movedir = P_Random() % 8;
+        actor->movedir = dirtype_t{ P_Random() % 8 };
         FaceMovementDirection(actor);
     }
     if (!P_Move(actor))
     {
         // Turn
         if (P_Random() & 1)
-            actor->movedir = (actor->movedir + 1) % 8;
+            actor->movedir = dirtype_t{ ( (int)actor->movedir + 1) % 8 };
         else
-            actor->movedir = (actor->movedir + 7) % 8;
+            actor->movedir = dirtype_t{ ( (int)actor->movedir + 7) % 8 };
         FaceMovementDirection(actor);
     }
 }
@@ -1517,7 +1518,7 @@ void A_Scream(mobj_t *actor, player_t *player, pspdef_t *psp)
             }
             else if (actor->health > -50)
             {                   // Normal death sound
-                switch (actor->player->class)
+                switch (actor->player->mclass)
                 {
                     case PCLASS_FIGHTER:
                         sound = SFX_PLAYER_FIGHTER_NORMAL_DEATH;
@@ -1535,7 +1536,7 @@ void A_Scream(mobj_t *actor, player_t *player, pspdef_t *psp)
             }
             else if (actor->health > -100)
             {                   // Crazy death sound
-                switch (actor->player->class)
+                switch (actor->player->mclass)
                 {
                     case PCLASS_FIGHTER:
                         sound = SFX_PLAYER_FIGHTER_CRAZY_DEATH;
@@ -1553,7 +1554,7 @@ void A_Scream(mobj_t *actor, player_t *player, pspdef_t *psp)
             }
             else
             {                   // Extreme death sound
-                switch (actor->player->class)
+                switch (actor->player->mclass)
                 {
                     case PCLASS_FIGHTER:
                         sound = SFX_PLAYER_FIGHTER_EXTREME1_DEATH;
@@ -1778,7 +1779,7 @@ void A_SkullPop(mobj_t *actor, player_t *player_, pspdef_t *psp)
     // Attach player mobj to bloody skull
     player = actor->player;
     actor->player = nullptr;
-    actor->special1.i = player->class;
+    actor->special1.i = player->mclass;
     mo->player = player;
     mo->health = actor->health;
     mo->angle = actor->angle;
@@ -2014,7 +2015,7 @@ void A_SerpentChase(mobj_t *actor, player_t *player, pspdef_t *psp)
         actor->threshold--;
     }
 
-    if (gameskill == sk_nightmare || critical->fast)
+    if (gameskill == skill_t::sk_nightmare || critical->fast)
     {                           // Monsters move faster in nightmare mode
         actor->tics -= actor->tics / 2;
         if (actor->tics < 3)
@@ -2056,7 +2057,7 @@ void A_SerpentChase(mobj_t *actor, player_t *player, pspdef_t *psp)
     if (actor->flags & MF_JUSTATTACKED)
     {
         actor->flags &= ~MF_JUSTATTACKED;
-        if (gameskill != sk_nightmare && !critical->fast)
+        if (gameskill != skill_t::sk_nightmare && !critical->fast)
             P_NewChaseDir(actor);
         return;
     }
@@ -2215,7 +2216,7 @@ void A_SerpentWalk(mobj_t *actor, player_t *player, pspdef_t *psp)
         actor->threshold--;
     }
 
-    if (gameskill == sk_nightmare || critical->fast)
+    if (gameskill == skill_t::sk_nightmare || critical->fast)
     {                           // Monsters move faster in nightmare mode
         actor->tics -= actor->tics / 2;
         if (actor->tics < 3)
@@ -2257,7 +2258,7 @@ void A_SerpentWalk(mobj_t *actor, player_t *player, pspdef_t *psp)
     if (actor->flags & MF_JUSTATTACKED)
     {
         actor->flags &= ~MF_JUSTATTACKED;
-        if (gameskill != sk_nightmare && !critical->fast)
+        if (gameskill != skill_t::sk_nightmare && !critical->fast)
             P_NewChaseDir(actor);
         return;
     }
@@ -3111,7 +3112,7 @@ void A_DemonAttack1(mobj_t *actor, player_t *player, pspdef_t *psp)
 void A_DemonAttack2(mobj_t *actor, player_t *player, pspdef_t *psp)
 {
     mobj_t *mo;
-    int fireBall;
+    mobjtype_t fireBall;
 
     if (actor->type == MT_DEMON)
     {
@@ -3571,7 +3572,7 @@ void A_FiredSpawnRock(mobj_t *actor, player_t *player, pspdef_t *psp)
 {
     mobj_t *mo;
     int x, y, z;
-    int rtype = 0;
+    mobjtype_t rtype {};
 
     switch (P_Random() % 5)
     {
@@ -3769,7 +3770,7 @@ void A_IceGuyLook(mobj_t *actor, player_t *player, pspdef_t *psp)
         P_SpawnMobj(actor->x + FixedMul(dist, finecosine[an]),
                     actor->y + FixedMul(dist, finesine[an]),
                     actor->z + 60 * FRACUNIT,
-                    MT_ICEGUY_WISP1 + (P_Random() & 1));
+                    mobjtype_t{ MT_ICEGUY_WISP1 + (P_Random() & 1) } );
     }
 }
 
@@ -4582,7 +4583,7 @@ void A_FastChase(mobj_t *actor, player_t *player, pspdef_t *psp)
         actor->threshold--;
     }
 
-    if (gameskill == sk_nightmare || critical->fast)
+    if (gameskill == skill_t::sk_nightmare || critical->fast)
     {                           // Monsters move faster in nightmare mode
         actor->tics -= actor->tics / 2;
         if (actor->tics < 3)
@@ -4624,7 +4625,7 @@ void A_FastChase(mobj_t *actor, player_t *player, pspdef_t *psp)
     if (actor->flags & MF_JUSTATTACKED)
     {
         actor->flags &= ~MF_JUSTATTACKED;
-        if (gameskill != sk_nightmare && !critical->fast)
+        if (gameskill != skill_t::sk_nightmare && !critical->fast)
             P_NewChaseDir(actor);
         return;
     }
@@ -4663,7 +4664,7 @@ void A_FastChase(mobj_t *actor, player_t *player, pspdef_t *psp)
 //
     if (actor->info->missilestate)
     {
-        if (gameskill < sk_nightmare && actor->movecount && !critical->fast)
+        if (gameskill < skill_t::sk_nightmare && actor->movecount && !critical->fast)
             goto nomissile;
         if (!P_CheckMissileRange(actor))
             goto nomissile;
@@ -5191,7 +5192,7 @@ void KoraxFire1(mobj_t * actor, int type)
     x = actor->x + FixedMul(KORAX_ARM_EXTENSION_SHORT, finecosine[ang]);
     y = actor->y + FixedMul(KORAX_ARM_EXTENSION_SHORT, finesine[ang]);
     z = actor->z - actor->floorclip + KORAX_ARM1_HEIGHT;
-    P_SpawnKoraxMissile(x, y, z, actor, actor->target, type);
+    P_SpawnKoraxMissile(x, y, z, actor, actor->target, mobjtype_t{type});
 }
 
 
@@ -5205,7 +5206,7 @@ void KoraxFire2(mobj_t * actor, int type)
     x = actor->x + FixedMul(KORAX_ARM_EXTENSION_LONG, finecosine[ang]);
     y = actor->y + FixedMul(KORAX_ARM_EXTENSION_LONG, finesine[ang]);
     z = actor->z - actor->floorclip + KORAX_ARM2_HEIGHT;
-    P_SpawnKoraxMissile(x, y, z, actor, actor->target, type);
+    P_SpawnKoraxMissile(x, y, z, actor, actor->target, mobjtype_t{type});
 }
 
 // Arm 3 projectile
@@ -5218,7 +5219,7 @@ void KoraxFire3(mobj_t * actor, int type)
     x = actor->x + FixedMul(KORAX_ARM_EXTENSION_LONG, finecosine[ang]);
     y = actor->y + FixedMul(KORAX_ARM_EXTENSION_LONG, finesine[ang]);
     z = actor->z - actor->floorclip + KORAX_ARM3_HEIGHT;
-    P_SpawnKoraxMissile(x, y, z, actor, actor->target, type);
+    P_SpawnKoraxMissile(x, y, z, actor, actor->target, mobjtype_t{type});
 }
 
 // Arm 4 projectile
@@ -5231,7 +5232,7 @@ void KoraxFire4(mobj_t * actor, int type)
     x = actor->x + FixedMul(KORAX_ARM_EXTENSION_SHORT, finecosine[ang]);
     y = actor->y + FixedMul(KORAX_ARM_EXTENSION_SHORT, finesine[ang]);
     z = actor->z - actor->floorclip + KORAX_ARM4_HEIGHT;
-    P_SpawnKoraxMissile(x, y, z, actor, actor->target, type);
+    P_SpawnKoraxMissile(x, y, z, actor, actor->target, mobjtype_t{type});
 }
 
 // Arm 5 projectile
@@ -5244,7 +5245,7 @@ void KoraxFire5(mobj_t * actor, int type)
     x = actor->x + FixedMul(KORAX_ARM_EXTENSION_LONG, finecosine[ang]);
     y = actor->y + FixedMul(KORAX_ARM_EXTENSION_LONG, finesine[ang]);
     z = actor->z - actor->floorclip + KORAX_ARM5_HEIGHT;
-    P_SpawnKoraxMissile(x, y, z, actor, actor->target, type);
+    P_SpawnKoraxMissile(x, y, z, actor, actor->target, mobjtype_t{type});
 }
 
 // Arm 6 projectile
@@ -5257,7 +5258,7 @@ void KoraxFire6(mobj_t * actor, int type)
     x = actor->x + FixedMul(KORAX_ARM_EXTENSION_LONG, finecosine[ang]);
     y = actor->y + FixedMul(KORAX_ARM_EXTENSION_LONG, finesine[ang]);
     z = actor->z - actor->floorclip + KORAX_ARM6_HEIGHT;
-    P_SpawnKoraxMissile(x, y, z, actor, actor->target, type);
+    P_SpawnKoraxMissile(x, y, z, actor, actor->target, mobjtype_t{type});
 }
 
 

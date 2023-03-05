@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <utility>
 
 #include "m_random.hpp"
 #include "i_system.hpp"
@@ -44,6 +45,8 @@
 #include "f_finale.hpp"
 #include "p_inter.hpp"
 
+#include "../../utils/enumforeach.hpp"
+
 // Forward Declarations:
 void A_RandomWalk(mobj_t *);
 void A_ProgrammerAttack(mobj_t* actor);
@@ -54,7 +57,7 @@ void A_SpectreEAttack(mobj_t *actor);
 
 void P_ThrustMobj(mobj_t *actor, angle_t angle, fixed_t force);
 
-typedef enum
+enum dirtype_t: int
 {
     DI_EAST,
     DI_NORTHEAST,
@@ -67,7 +70,7 @@ typedef enum
     DI_NODIR,
     NUMDIRS
     
-} dirtype_t;
+} ;
 
 
 //
@@ -543,12 +546,9 @@ void P_NewChaseDir(mobj_t* actor)
     }
 
     // try other directions
-    if (P_Random() > 200
-        ||  abs(deltay)>abs(deltax))
+    if (P_Random() > 200  ||  abs(deltay)>abs(deltax))
     {
-        tdir=d[1];
-        d[1]=d[2];
-        d[2]=tdir;
+        std::swap(d[1], d[2]);
     }
 
     if (d[1]==turnaround)
@@ -587,13 +587,14 @@ void P_NewChaseDir(mobj_t* actor)
     // randomly determine direction of search
     if (P_Random()&1) 	
     {
-        for ( tdir=DI_EAST;
-              tdir<=DI_SOUTHEAST;
+        
+        for ( tdir= (int)DI_EAST;
+              tdir<=(int)DI_SOUTHEAST;
               tdir++ )
         {
             if (tdir != (int) turnaround)
             {
-                actor->movedir =tdir;
+                actor->movedir = (dirtype_t)tdir;
 
                 if ( P_TryWalk(actor) )
                     return;
@@ -608,7 +609,7 @@ void P_NewChaseDir(mobj_t* actor)
         {
             if (tdir != (int) turnaround)
             {
-                actor->movedir = tdir;
+                actor->movedir = (dirtype_t)tdir;
 
                 if ( P_TryWalk(actor) )
                     return;
@@ -650,7 +651,7 @@ void P_NewRandomDir(mobj_t* actor)
         {
             if(dir != omovedir)
             {
-                actor->movedir = dir;
+                actor->movedir = (dirtype_t)dir;
                 if(P_Random() & 1)
                 {
                     if(P_TryWalk(actor))
@@ -668,7 +669,7 @@ void P_NewRandomDir(mobj_t* actor)
                 actor->movedir = DI_NODIR;
                 return;
             }
-            actor->movedir = omovedir;
+            actor->movedir = (dirtype_t)omovedir;
             if(P_TryWalk(actor))
                 return;
             else
@@ -687,7 +688,7 @@ void P_NewRandomDir(mobj_t* actor)
             // haleyjd 09/05/10: missing random code.
             if(dir != omovedir)
             {
-                actor->movedir = dir;
+                actor->movedir = (dirtype_t)dir;
 
                 // villsa 09/06/10: un-inlined code
                 if(P_TryWalk(actor))
@@ -702,7 +703,7 @@ void P_NewRandomDir(mobj_t* actor)
                     actor->movedir = DI_NODIR;
                     return;
                 }
-                actor->movedir = omovedir;
+                actor->movedir = (dirtype_t)omovedir;
                 // villsa 09/06/10: un-inlined code
                 if(P_TryWalk(actor))
                     return;
@@ -1007,12 +1008,12 @@ void A_FriendLook(mobj_t* actor)
     if(P_Random() < 30)
     {
         int t = P_Random();
-        P_SetMobjState(actor, (t & 1) + actor->info->spawnstate + 1);
+        P_SetMobjState(actor, statenum_t{ (t & 1) + (int)(actor->info->spawnstate) + 1 } );
     }
 
     // wander around a bit
     if(!(actor->flags & MF_STAND) && P_Random() < 40)
-        P_SetMobjState(actor, actor->info->spawnstate + 3);
+        P_SetMobjState(actor, statenum_t{ (int)(actor->info->spawnstate) + 3 } );
 }
 
 //
@@ -1812,7 +1813,7 @@ void A_Sigil_A_Action(mobj_t* actor)
     else
         type = MT_SIGIL_A_ZAP_RIGHT;
 
-    mo = P_SpawnMobj(x, y, ONCEILINGZ, type);
+    mo = P_SpawnMobj(x, y, ONCEILINGZ, mobjtype_t{ type } );
     mo->momz = -18 * FRACUNIT;
     mo->target = actor->target;
     mo->health = actor->health;
@@ -1886,7 +1887,7 @@ void A_AlertSpectreC(mobj_t* actor)
 
     for(th = thinkercap.next; th != &thinkercap; th = th->next)
     {
-        if(th->function.acp1 == (actionf_p1)P_MobjThinker)
+        if(th->function.acp1 == (thinkf_p1)P_MobjThinker)
         {
             mobj_t *mo = (mobj_t *)th;
 
@@ -2959,7 +2960,7 @@ void A_BossDeath (mobj_t* actor)
     // check for a still living boss
     for(th = thinkercap.next; th != &thinkercap; th = th->next)
     {
-        if(th->function.acp1 == (actionf_p1) P_MobjThinker)
+        if(th->function.acp1 == (thinkf_p1) P_MobjThinker)
         {
             mobj_t *mo = (mobj_t *)th;
 
@@ -2999,7 +3000,7 @@ void A_BossDeath (mobj_t* actor)
         // it becomes an undead ghost monster. Then it's a REAL spectre ;)
         for(th = thinkercap.next; th != &thinkercap; th = th->next)
         {
-            if(th->function.acp1 == (actionf_p1) P_MobjThinker)
+            if(th->function.acp1 == (thinkf_p1) P_MobjThinker)
             {
                 mobj_t *mo = (mobj_t *)th;
 
@@ -3098,7 +3099,7 @@ void A_AcolyteSpecial(mobj_t* actor)
 
     for(th = thinkercap.next; th != &thinkercap; th = th->next)
     {
-        if(th->function.acp1 == (actionf_p1) P_MobjThinker)
+        if(th->function.acp1 == (thinkf_p1) P_MobjThinker)
         {
             mobj_t *mo = (mobj_t *)th;
 

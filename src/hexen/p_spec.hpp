@@ -249,15 +249,15 @@ void P_InitSwitchList(void);
 ===============================================================================
 */
 
-typedef enum
+enum plat_e: int
 {
     PLAT_UP,
     PLAT_DOWN,
     PLAT_WAITING,
 //      PLAT_IN_STASIS
-} plat_e;
+} ;
 
-typedef enum
+enum plattype_e: int
 {
     PLAT_PERPETUALRAISE,
     PLAT_DOWNWAITUPSTAY,
@@ -266,9 +266,9 @@ typedef enum
     PLAT_UPBYVALUEWAITDOWNSTAY,
     //PLAT_RAISEANDCHANGE,
     //PLAT_RAISETONEARESTANDCHANGE
-} plattype_e;
+} ;
 
-typedef struct
+struct plat_t
 {
     thinker_t thinker;
     sector_t *sector;
@@ -282,7 +282,7 @@ typedef struct
     int crush;
     int tag;
     plattype_e type;
-} plat_t;
+} ;
 
 #define PLATWAIT 3
 #define PLATSPEED FRACUNIT
@@ -303,16 +303,16 @@ void EV_StopPlat(line_t * line, byte * args);
 
 ===============================================================================
 */
-typedef enum
+enum vldoor_e: int
 {
     DREV_NORMAL,
     DREV_CLOSE30THENOPEN,
     DREV_CLOSE,
     DREV_OPEN,
     DREV_RAISEIN5MINS,
-} vldoor_e;
+} ;
 
-typedef struct
+struct vldoor_t
 {
     thinker_t thinker;
     sector_t *sector;
@@ -322,7 +322,7 @@ typedef struct
     int direction;              // 1 = up, 0 = waiting at top, -1 = down
     int topwait;                // tics to wait at the top (keep in case a door going down is reset)
     int topcountdown;           // when it reaches 0, start going down
-} vldoor_t;
+} ;
 
 #define VDOORSPEED FRACUNIT*2
 #define VDOORWAIT 150
@@ -340,7 +340,7 @@ void T_VerticalDoor(thinker_t *thinker);
 
 ===============================================================================
 */
-typedef enum
+enum ceiling_e: int
 {
     CLEV_LOWERTOFLOOR,
     CLEV_RAISETOHIGHEST,
@@ -350,9 +350,9 @@ typedef enum
     CLEV_RAISEBYVALUE,
     CLEV_CRUSHRAISEANDSTAY,
     CLEV_MOVETOVALUETIMES8
-} ceiling_e;
+} ;
 
-typedef struct
+struct ceiling_t
 {
     thinker_t thinker;
     sector_t *sector;
@@ -363,7 +363,7 @@ typedef struct
     int direction;              // 1 = up, 0 = waiting, -1 = down
     int tag;                    // ID
     int olddirection;
-} ceiling_t;
+} ;
 
 #define CEILSPEED FRACUNIT
 #define CEILWAIT 150
@@ -384,7 +384,7 @@ int EV_CeilingCrushStop(line_t * line, byte * args);
 
 ===============================================================================
 */
-typedef enum
+enum floor_e: int
 {
     FLEV_LOWERFLOOR,            // lower floor to highest surrounding floor
     FLEV_LOWERFLOORTOLOWEST,    // lower floor to lowest surrounding floor
@@ -399,9 +399,9 @@ typedef enum
     FLEV_LOWERTIMES8INSTANT,
     FLEV_RAISETIMES8INSTANT,
     FLEV_MOVETOVALUETIMES8
-} floor_e;
+} ;
 
-typedef struct
+struct floormove_t
 {
     thinker_t thinker;
     sector_t *sector;
@@ -420,9 +420,9 @@ typedef struct
     short resetDelay;
     short resetDelayCount;
     byte textureChange;
-} floormove_t;
+} ;
 
-typedef struct
+struct pillar_t
 {
     thinker_t thinker;
     sector_t *sector;
@@ -432,9 +432,9 @@ typedef struct
     int ceilingdest;
     int direction;
     int crush;
-} pillar_t;
+} ;
 
-typedef struct
+struct floorWaggle_t
 {
     thinker_t thinker;
     sector_t *sector;
@@ -446,23 +446,23 @@ typedef struct
     fixed_t scaleDelta;
     int ticker;
     int state;
-} floorWaggle_t;
+} ;
 
 #define FLOORSPEED FRACUNIT
 
-typedef enum
+enum result_e: int
 {
     RES_OK,
     RES_CRUSHED,
     RES_PASTDEST
-} result_e;
+} ;
 
-typedef enum
+enum stairs_e: int
 {
     STAIRS_NORMAL,
     STAIRS_SYNC,
     STAIRS_PHASED
-} stairs_e;
+} ;
 
 result_e T_MovePlane(sector_t * sector, fixed_t speed,
                      fixed_t dest, int crush, int floorOrCeiling,
@@ -502,7 +502,7 @@ boolean EV_Teleport(int tid, mobj_t * thing, boolean fog);
 #define ACS_STACK_DEPTH 32
 #define MAX_ACS_STORE 20
 
-typedef enum
+enum aste_t: int
 {
     ASTE_INACTIVE,
     ASTE_RUNNING,
@@ -511,7 +511,7 @@ typedef enum
     ASTE_WAITINGFORPOLY,
     ASTE_WAITINGFORSCRIPT,
     ASTE_TERMINATING
-} aste_t;
+} ;
 
 typedef struct acs_s acs_t;
 typedef struct acsInfo_s acsInfo_t;
@@ -540,12 +540,12 @@ struct acs_s
     int ip;
 };
 
-typedef struct
+struct acsstore_t
 {
     int map;                    // Target map
     int script;                 // Script number on target map
     byte args[4];               // Padded to 4 for alignment
-} acsstore_t;
+} ;
 
 void P_LoadACScripts(int lump);
 boolean P_StartACS(int number, int map, byte * args, mobj_t * activator,

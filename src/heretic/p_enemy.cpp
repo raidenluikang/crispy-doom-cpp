@@ -17,6 +17,8 @@
 // P_enemy.c
 
 #include <stdlib.h>
+#include <utility> //std::swap since C++11
+
 #include "doomdef.hpp"
 #include "i_system.hpp"
 #include "i_timer.hpp"
@@ -348,7 +350,8 @@ void P_NewChaseDir(mobj_t * actor)
 {
     fixed_t deltax, deltay;
     dirtype_t d[3];
-    dirtype_t tdir, olddir, turnaround;
+    dirtype_t olddir, turnaround;
+    int tdir;
 
     if (!actor->target)
         I_Error("P_NewChaseDir: called with no target");
@@ -382,9 +385,7 @@ void P_NewChaseDir(mobj_t * actor)
 // try other directions
     if (P_Random() > 200 || abs(deltay) > abs(deltax))
     {
-        tdir = d[1];
-        d[1] = d[2];
-        d[2] = tdir;
+        std::swap(d[1], d[2]);
     }
 
     if (d[1] == turnaround)
@@ -421,7 +422,7 @@ void P_NewChaseDir(mobj_t * actor)
         {
             if (tdir != turnaround)
             {
-                actor->movedir = tdir;
+                actor->movedir = static_cast<dirtype_t>( tdir ) ;
                 if (P_TryWalk(actor))
                     return;
             }
@@ -436,7 +437,7 @@ void P_NewChaseDir(mobj_t * actor)
         {
             if (tdir != turnaround)
             {
-                actor->movedir = tdir;
+                actor->movedir = static_cast<dirtype_t>( tdir ) ;
                 if (P_TryWalk(actor))
                     return;
             }
@@ -664,7 +665,7 @@ void A_Look(mobj_t *actor, player_t *player, pspdef_t *psp)
             S_StartSound(actor, sound);
         }
     }
-    P_SetMobjState(actor, actor->info->seestate);
+    P_SetMobjState(actor, statenum_t{actor->info->seestate});
 }
 
 
@@ -693,7 +694,7 @@ void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp)
         actor->threshold--;
     }
 
-    if (gameskill == sk_nightmare || critical->fast)
+    if (gameskill == skill_t::sk_nightmare || critical->fast)
     {                           // Monsters move faster in nightmare mode
         actor->tics -= actor->tics / 2;
         if (actor->tics < 3)
@@ -725,7 +726,7 @@ void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp)
         {                       // got a new target
             return;
         }
-        P_SetMobjState(actor, actor->info->spawnstate);
+        P_SetMobjState(actor, statenum_t{actor->info->spawnstate});
         return;
     }
 
@@ -735,7 +736,7 @@ void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp)
     if (actor->flags & MF_JUSTATTACKED)
     {
         actor->flags &= ~MF_JUSTATTACKED;
-        if (gameskill != sk_nightmare && !critical->fast)
+        if (gameskill != skill_t::sk_nightmare && !critical->fast)
             P_NewChaseDir(actor);
         return;
     }
@@ -747,7 +748,7 @@ void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp)
     {
         if (actor->info->attacksound)
             S_StartSound(actor, actor->info->attacksound);
-        P_SetMobjState(actor, actor->info->meleestate);
+        P_SetMobjState(actor, statenum_t{actor->info->meleestate});
         return;
     }
 
@@ -756,11 +757,11 @@ void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp)
 //
     if (actor->info->missilestate)
     {
-        if (gameskill < sk_nightmare && actor->movecount && !critical->fast)
+        if (gameskill < skill_t::sk_nightmare && actor->movecount && !critical->fast)
             goto nomissile;
         if (!P_CheckMissileRange(actor))
             goto nomissile;
-        P_SetMobjState(actor, actor->info->missilestate);
+        P_SetMobjState(actor, statenum_t{actor->info->missilestate});
         actor->flags |= MF_JUSTATTACKED;
         return;
     }
@@ -966,7 +967,7 @@ void A_ImpMsAttack(mobj_t *actor, player_t *player, pspdef_t *psp)
 
     if (!actor->target || P_Random() > 64)
     {
-        P_SetMobjState(actor, actor->info->seestate);
+        P_SetMobjState(actor, statenum_t{actor->info->seestate});
         return;
     }
     dest = actor->target;
@@ -1076,7 +1077,7 @@ boolean P_UpdateChicken(mobj_t * actor, int tics)
     {
         return (false);
     }
-    moType = actor->special2.i;
+    moType = mobjtype_t{actor->special2.i};
     x = actor->x;
     y = actor->y;
     z = actor->z;
@@ -1197,7 +1198,7 @@ void A_Feathers(mobj_t *actor, player_t *player, pspdef_t *psp)
         mo->momx = P_SubRandom() << 8;
         mo->momy = P_SubRandom() << 8;
         mo->momz = FRACUNIT + (P_Random() << 9);
-        P_SetMobjState(mo, S_FEATHER1 + (P_Random() & 7));
+        P_SetMobjState(mo, statenum_t{ S_FEATHER1 + (P_Random() & 7)} );
     }
 }
 
@@ -1515,7 +1516,7 @@ void A_GenWizard(mobj_t *actor, player_t *player, pspdef_t *psp)
         return;
     }
     actor->momx = actor->momy = actor->momz = 0;
-    P_SetMobjState(actor, mobjinfo[actor->type].deathstate);
+    P_SetMobjState(actor, statenum_t{mobjinfo[actor->type].deathstate});
     actor->flags &= ~MF_MISSILE;
     fog = P_SpawnMobj(actor->x, actor->y, actor->z, MT_TFOG);
     S_StartSound(fog, sfx_telept);
@@ -1680,7 +1681,7 @@ void A_MinotaurCharge(mobj_t *actor, player_t *player, pspdef_t *psp)
     else
     {
         actor->flags &= ~MF_SKULLFLY;
-        P_SetMobjState(actor, actor->info->seestate);
+        P_SetMobjState(actor, statenum_t{actor->info->seestate});
     }
 }
 
@@ -1898,7 +1899,7 @@ void A_WhirlwindSeek(mobj_t *actor, player_t *player, pspdef_t *psp)
     if (actor->health < 0)
     {
         actor->momx = actor->momy = actor->momz = 0;
-        P_SetMobjState(actor, mobjinfo[actor->type].deathstate);
+        P_SetMobjState(actor, statenum_t{mobjinfo[actor->type].deathstate});
         actor->flags &= ~MF_MISSILE;
         return;
     }
@@ -2358,7 +2359,7 @@ void A_BossDeath(mobj_t *actor, player_t *player, pspdef_t *psp)
         MT_SORCERER2,
         MT_HEAD,
         MT_MINOTAUR,
-        -1
+        mobjtype_t{-1}
     };
 
     if (gamemap != 8)

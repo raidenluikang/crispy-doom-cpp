@@ -17,6 +17,7 @@
 #include "p_local.hpp"
 #include "s_sound.hpp"
 #include "v_video.hpp"
+#include "../../utils/memory.hpp"
 
 //==================================================================
 //==================================================================
@@ -254,7 +255,7 @@ int EV_DoFloor(line_t * line, floor_e floortype)
         //      new floor thinker
         //
         rtn = 1;
-        floor = zmalloc<decltype(        floor)>(sizeof(*floor), PU_LEVSPEC, 0);
+        floor = zmalloc<decltype(floor)>(sizeof(*floor), PU_LEVSPEC, 0);
         P_AddThinker(&floor->thinker);
         sec->specialdata = floor;
         floor->thinker.function = T_MoveFloor;

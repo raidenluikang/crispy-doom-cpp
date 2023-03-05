@@ -51,7 +51,7 @@
 #include "hu_stuff.hpp"
 #include "p_dialog.hpp"
 
-
+#include "../../utils/memory.hpp"
 //
 // Animating textures and planes
 // There is another anim_t used in wi_stuff, unrelated.
@@ -239,7 +239,7 @@ terraintype_e P_GetTerrainType(mobj_t* mobj)
             i++;
         }
 
-        return terraintypes[i].type;
+        return terraintype_e{ terraintypes[i].type };
     }
 
     return FLOOR_SOLID;
@@ -1870,7 +1870,7 @@ int EV_DoDonut(line_t*	line)
 	    floor = zmalloc<decltype(	    floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	    P_AddThinker (&floor->thinker);
 	    s2->specialdata = floor;
-	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
+	    floor->thinker.function.acp1 = (thinkf_p1) T_MoveFloor;
 	    floor->type = donutRaise;
 	    floor->crush = false;
 	    floor->direction = 1;
@@ -1884,7 +1884,7 @@ int EV_DoDonut(line_t*	line)
 	    floor = zmalloc<decltype(	    floor)>(sizeof(*floor), PU_LEVSPEC, 0);
 	    P_AddThinker (&floor->thinker);
 	    s1->specialdata = floor;
-	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
+	    floor->thinker.function.acp1 = (thinkf_p1) T_MoveFloor;
 	    floor->type = lowerFloor;
 	    floor->crush = false;
 	    floor->direction = -1;

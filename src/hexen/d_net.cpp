@@ -148,7 +148,7 @@ static void SaveGameSettings(net_gamesettings_t *settings)
     settings->map = startmap;
     settings->skill = startskill;
     // TODO settings->loadgame = startloadgame;
-    settings->gameversion = exe_hexen_1_1;
+    settings->gameversion = GameVersion_t::exe_hexen_1_1;
     settings->nomonsters = nomonsters;
     settings->respawn_monsters = respawnparm;
     settings->timelimit = 0;
@@ -168,7 +168,7 @@ static void InitConnectData(net_connect_data_t *connect_data)
     // Game type fields:
 
     connect_data->gamemode = gamemode;
-    connect_data->gamemission = hexen;
+    connect_data->gamemission = GameMission_t::hexen;
 
     // Are we recording a demo? Possibly set lowres turn mode
 
@@ -189,7 +189,8 @@ static void InitConnectData(net_connect_data_t *connect_data)
 
     if (i > 0)
     {
-        connect_data->player_class = atoi(myargv[i + 1]);
+        int ivalue = atoi(myargv[i + 1]);
+        connect_data->player_class = pclass_t{ivalue};
     }
     else
     {

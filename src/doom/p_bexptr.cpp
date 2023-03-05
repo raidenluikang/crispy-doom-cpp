@@ -22,18 +22,16 @@
 #include "m_random.hpp"
 #include "s_sound.hpp"
 
-extern void A_Explode();
-extern void A_FaceTarget();
-
-void A_FaceTarget (mobj_t* actor); // defined in p_enemy.cpp:799
+extern void A_Explode(mobj_t* thingy);
+extern void A_FaceTarget(mobj_t* actor);
 
 extern boolean P_CheckMeleeRange (mobj_t *actor);
 extern void P_Thrust (player_t* player, angle_t angle, fixed_t move);
 
 // killough 11/98: kill an object
-void A_Die(mobj_t *actor)
+void A_Die(mobj_t* actor)
 {
-  P_DamageMobj(actor, nullptr, nullptr, actor->health);
+  	P_DamageMobj(actor, nullptr, nullptr, actor->health);
 }
 
 //
@@ -95,7 +93,7 @@ void A_BetaSkullAttack(mobj_t *actor)
 
 void A_Stop(mobj_t *actor)
 {
-  actor->momx = actor->momy = actor->momz = 0;
+  	actor->momx = actor->momy = actor->momz = 0;
 }
 
 //
@@ -141,12 +139,8 @@ void A_PlaySound(mobj_t *mo)
 }
 
 // [crispy] this is pretty much the only action pointer that makes sense for both mobj and pspr states
-void A_RandomJump(void* la, void* lb, void* lc)
+void A_RandomJump(mobj_t* mo, player_t* player, pspdef_t* psp)
 {
-	mobj_t *mo = (mobj_t*)la;
-	player_t *player = (player_t*)lb;
-	pspdef_t *psp = (pspdef_t*)lc;
-	
 	// [crispy] first, try to apply to pspr states
 	if (player && psp)
 	{

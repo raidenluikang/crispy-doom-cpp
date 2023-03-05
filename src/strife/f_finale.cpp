@@ -42,12 +42,12 @@
 
 #include "p_dialog.hpp" // [STRIFE]
 
-typedef enum
+enum finalestage_t: int
 {
     F_STAGE_TEXT,
     F_STAGE_ARTSCREEN,
     F_STAGE_CAST,
-} finalestage_t;
+} ;
 
 // ?
 //#include "doomstat.hpp"
@@ -178,7 +178,7 @@ void F_StartFinale (void)
     gamestate = GS_FINALE;
     viewactive = false;
     automapactive = false;
-    wipegamestate = -1; // [STRIFE]
+    wipegamestate = INVALID_GAMESTATE; // [STRIFE]
 
     // [STRIFE] Setup the slide show
     slideshow_panel = DEH_String("PANEL0");
@@ -235,7 +235,7 @@ void F_StartFinale (void)
         // and no released version thereof actually works with the 1.31 EXE
         // due to differing dialog formats... was there to be an updated demo
         // that never got released?!
-        if(gameversion == exe_strife_1_31 && isdemoversion)
+        if(gameversion == GameVersion_t::exe_strife_1_31 && isdemoversion)
             slideshow_state = SLIDE_DEMOEND1;
         break;
     }
@@ -271,7 +271,7 @@ void F_WaitTicker(void)
     if(++finalecount >= 250)
     {
         gamestate   = GS_FINALE;
-        finalestage = 0;
+        finalestage = finalestage_t{0};
         finalecount = 0;
     }
 }
@@ -432,11 +432,11 @@ static void F_DoSlideShow(void)
     case SLIDE_EXIT: // state -1: proceed to next finale stage
         finalecount = 0;
         finalestage = F_STAGE_ARTSCREEN;
-        wipegamestate = -1;
+        wipegamestate = INVALID_GAMESTATE;
         S_StartMusic(mus_fast);
         // haleyjd 20130301: The ONLY glitch fixed in 1.31 of Strife
         // *would* be something this insignificant, of course!
-        if(gameversion != exe_strife_1_31)
+        if(gameversion != GameVersion_t::exe_strife_1_31)
             slideshow_state = SLIDE_CHOCO; // haleyjd: see below...
         break;
     case SLIDE_CHOCO: 
@@ -452,7 +452,7 @@ static void F_DoSlideShow(void)
         finalecount = 0;
         finalestage = F_STAGE_ARTSCREEN;
         if(menuactive)
-            wipegamestate = -1;
+            wipegamestate = INVALID_GAMESTATE;
         S_StartMusic(mus_fast);
         slideshow_state = SLIDE_CHOCO; // remain here.
         break;
@@ -461,7 +461,7 @@ static void F_DoSlideShow(void)
     }
 
     finalecount = 0;
-    if(gameversion != exe_strife_1_31) // See above. This was removed in 1.31.
+    if(gameversion != GameVersion_t::exe_strife_1_31) // See above. This was removed in 1.31.
     {
        patch = W_CacheLumpName_patch(DEH_String("PANEL0"), PU_CACHE);
        V_DrawPatchFullScreen(patch, false); // [crispy]
@@ -500,7 +500,7 @@ void F_Ticker (void)
 
     // [STRIFE]: Rest is unused
     /*
-    if ( gamemode == commercial)
+    if ( gamemode == GameMission_t::commercial)
         return;
 
     if (finalestage == F_STAGE_TEXT
@@ -653,7 +653,7 @@ void F_StartCast (void)
     casttics = caststate->tics;
     if(casttics > 50)
         casttics = 50;
-    wipegamestate = -1;             // force a screen wipe
+    wipegamestate = INVALID_GAMESTATE;             // force a screen wipe
     castdeath = false;
     finalestage = F_STAGE_CAST;
     castframes = 0;
@@ -770,7 +770,7 @@ stopattack:
 //
 boolean F_CastResponder (event_t* ev)
 {
-    if (ev->type != ev_keydown)
+    if (ev->type != evtype_t::ev_keydown)
         return false;
 
     if (castdeath)
@@ -982,7 +982,7 @@ static void F_ArtScreenDrawer(void)
         switch (gameepisode)
         {
             case 1:
-                if (gamemode == retail)
+                if (gamemode == GameMission_t::retail)
                 {
                     lumpname = "CREDIT";
                 }

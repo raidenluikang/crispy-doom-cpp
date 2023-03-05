@@ -67,9 +67,10 @@ void W_ReadLump(lumpindex_t lump, void *dest);
 void *W_CacheLumpNum(lumpindex_t lump, int tag);
 
 template <typename T>
-std::enable_if_t<std::is_pointer<T>::value, T> W_CacheLumpNum_cast(lumpindex_t lump, int tag)
+std::enable_if_t<std::is_pointer<std::remove_reference_t<T>>::value, 
+std::remove_reference_t<T> > W_CacheLumpNum_cast(lumpindex_t lump, int tag)
 {
-    return static_cast<T>(W_CacheLumpNum(lump, tag));
+    return static_cast<std::remove_reference_t<T>>(W_CacheLumpNum(lump, tag));
 }
 
 void *W_CacheLumpName(const char *name, int tag);

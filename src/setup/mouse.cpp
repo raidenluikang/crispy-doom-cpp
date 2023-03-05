@@ -158,7 +158,7 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
     AddMouseControl(buttons_table, "Next weapon", &mousebnextweapon);
     AddMouseControl(buttons_table, "Run", &mousebspeed);
     
-    if (gamemission == heretic || gamemission == hexen)
+    if (gamemission ==GameMission_t:: heretic || gamemission ==GameMission_t:: hexen)
     {
       AddMouseControl(buttons_table, "Mouselook", &mousebmouselook);
       AddMouseControl(buttons_table, "Inventory left", &mousebinvleft);
@@ -166,7 +166,7 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
       AddMouseControl(buttons_table, "Use artifact", &mousebuseartifact);
     }
 
-    if (gamemission == strife) // [crispy]
+    if (gamemission == GameMission_t::strife) // [crispy]
     {
         AddMouseControl(buttons_table, "Mouselook", &mousebmouselook);
         AddMouseControl(buttons_table, "Inventory left", &mousebinvleft);
@@ -174,12 +174,12 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
         AddMouseControl(buttons_table, "Use inventory", &mousebinvuse);
     }
 
-    if (gamemission == hexen || gamemission == strife)
+    if (gamemission == GameMission_t::hexen || gamemission == GameMission_t::strife)
     {
         AddMouseControl(buttons_table, "Jump", &mousebjump);
     }
 
-    if (gamemission == doom) // [crispy]
+    if (gamemission == GameMission_t::doom) // [crispy]
     {
         AddMouseControl(buttons_table, "Quick Reverse", &mousebreverse);
         AddMouseControl(buttons_table, "Mouse Look [*]", &mousebmouselook);

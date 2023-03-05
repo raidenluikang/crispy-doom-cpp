@@ -181,7 +181,7 @@ boolean P_GiveAmmo(player_t * player, ammotype_t ammo, int count)
     {
         return (false);
     }
-    if (gameskill == sk_baby || gameskill == sk_nightmare
+    if (gameskill == skill_t::sk_baby || gameskill == skill_t::sk_nightmare
                              || critical->moreammo)
     {                           // extra ammo in baby mode and nightmare mode
         count += count >> 1;
@@ -236,6 +236,7 @@ boolean P_GiveAmmo(player_t * player, ammotype_t ammo, int count)
 //--------------------------------------------------------------------------
 
 // [crispy] show weapon pickup messages in multiplayer games
+extern
 const char *const WeaponPickupMessages[NUMWEAPONS] =
 {
     nullptr, // wp_staff
@@ -526,7 +527,7 @@ void P_SetDormantArtifact(mobj_t * arti)
 void A_RestoreArtifact(mobj_t * arti, player_t *player, pspdef_t *psp)
 {
     arti->flags |= MF_SPECIAL;
-    P_SetMobjState(arti, arti->info->spawnstate);
+    P_SetMobjState(arti, statenum_t{arti->info->spawnstate});
     S_StartSound(arti, sfx_respawn);
 }
 
@@ -570,7 +571,7 @@ void A_RestoreSpecialThing1(mobj_t * thing, player_t *player, pspdef_t *psp)
 void A_RestoreSpecialThing2(mobj_t * thing, player_t *player, pspdef_t *psp)
 {
     thing->flags |= MF_SPECIAL;
-    P_SetMobjState(thing, thing->info->spawnstate);
+    P_SetMobjState(thing, statenum_t{thing->info->spawnstate});
 }
 
 //---------------------------------------------------------------------------
@@ -979,11 +980,11 @@ void P_KillMobj(mobj_t * source, mobj_t * target)
     if (target->health < -(target->info->spawnhealth >> 1)
         && target->info->xdeathstate)
     {                           // Extreme death
-        P_SetMobjState(target, target->info->xdeathstate);
+        P_SetMobjState(target, statenum_t{target->info->xdeathstate});
     }
     else
     {                           // Normal death
-        P_SetMobjState(target, target->info->deathstate);
+        P_SetMobjState(target, statenum_t{target->info->deathstate});
     }
     target->tics -= P_Random() & 3;
 //      I_StartSound(&actor->r, actor->info->deathsound);
@@ -1211,7 +1212,7 @@ void P_AutoUseHealth(player_t * player, int saveHealth)
             superCount = player->inventory[i].count;
         }
     }
-    if ((gameskill == sk_baby || critical->autohealth) && (normalCount * 25 >= saveHealth))
+    if ((gameskill == skill_t::sk_baby || critical->autohealth) && (normalCount * 25 >= saveHealth))
     {                           // Use quartz flasks
         count = (saveHealth + 24) / 25;
         for (i = 0; i < count; i++)
@@ -1229,7 +1230,7 @@ void P_AutoUseHealth(player_t * player, int saveHealth)
             P_PlayerRemoveArtifact(player, superSlot);
         }
     }
-    else if ((gameskill == sk_baby || critical->autohealth)
+    else if ((gameskill == skill_t::sk_baby || critical->autohealth)
              && (superCount * 100 + normalCount * 25 >= saveHealth))
     {                           // Use mystic urns and quartz flasks
         count = (saveHealth + 24) / 25;
@@ -1291,7 +1292,7 @@ void P_DamageMobj
         target->momx = target->momy = target->momz = 0;
     }
     player = target->player;
-    if (player && gameskill == sk_baby)
+    if (player && gameskill == skill_t::sk_baby)
     {
         // Take half damage in trainer mode
         damage >>= 1;
@@ -1455,7 +1456,7 @@ void P_DamageMobj
             damage -= saved;
         }
         if (damage >= player->health
-            && ((gameskill == sk_baby) || deathmatch || critical->autohealth)
+            && ((gameskill == skill_t::sk_baby) || deathmatch || critical->autohealth)
             && !player->chickenTics)
         {                       // Try to use some inventory health
             P_AutoUseHealth(player, damage - player->health + 1);
@@ -1506,7 +1507,7 @@ void P_DamageMobj
         && !(target->flags & MF_SKULLFLY))
     {
         target->flags |= MF_JUSTHIT;    // fight back!
-        P_SetMobjState(target, target->info->painstate);
+        P_SetMobjState(target, statenum_t{target->info->painstate});
     }
     target->reactiontime = 0;   // we're awake now...
     if (!target->threshold && source && !(source->flags2 & MF2_BOSS)
@@ -1519,7 +1520,7 @@ void P_DamageMobj
         if (target->state == &states[target->info->spawnstate]
             && target->info->seestate != S_NULL)
         {
-            P_SetMobjState(target, target->info->seestate);
+            P_SetMobjState(target, statenum_t{target->info->seestate});
         }
     }
 }

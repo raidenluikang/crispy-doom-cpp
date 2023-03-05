@@ -23,6 +23,7 @@
 #include "r_bmaps.hpp"
 #include "r_local.hpp"
 
+#include "../../utils/memory.hpp"
 //void R_DrawTranslatedAltTLColumn(void);
 
 typedef struct
@@ -203,7 +204,7 @@ void R_InitSpriteDefs(const char **namelist)
         {
             //continue;
             sprites[i].numframes = 0;
-            if (gamemode == shareware)
+            if (gamemode == GameMode_t::shareware)
                 continue;
             I_Error("R_InitSprites: No lumps found for sprite %s",
                     namelist[i]);
@@ -233,8 +234,7 @@ void R_InitSpriteDefs(const char **namelist)
         // allocate space for the frames present and copy sprtemp to it
         //
         sprites[i].numframes = maxframe;
-        sprites[i].spriteframes =
-            Z_Malloc(maxframe * sizeof(spriteframe_t), PU_STATIC, nullptr);
+        sprites[i].spriteframes = zmalloc<decltype(sprites[i].spriteframes)>(maxframe * sizeof(spriteframe_t), PU_STATIC, nullptr);
         memcpy(sprites[i].spriteframes, sprtemp,
                maxframe * sizeof(spriteframe_t));
     }
@@ -408,7 +408,7 @@ void R_DrawVisSprite(vissprite_t * vis, int x1, int x2)
         {
             colfunc = R_DrawTranslatedTLColumn;
             dc_translation = translationtables - 256
-                + vis->class * ((maxplayers - 1) * 256) +
+                + vis->mclass * ((maxplayers - 1) * 256) +
                 ((vis->mobjflags & MF_TRANSLATION) >> (MF_TRANSSHIFT - 8));
         }
         else if (vis->mobjflags & MF_SHADOW)
@@ -425,7 +425,7 @@ void R_DrawVisSprite(vissprite_t * vis, int x1, int x2)
         // Draw using translated column function
         colfunc = R_DrawTranslatedColumn;
         dc_translation = translationtables - 256
-            + vis->class * ((maxplayers - 1) * 256) +
+            + vis->mclass * ((maxplayers - 1) * 256) +
             ((vis->mobjflags & MF_TRANSLATION) >> (MF_TRANSSHIFT - 8));
     }
 
@@ -485,7 +485,7 @@ void R_DrawVisSprite(vissprite_t * vis, int x1, int x2)
 
 void R_ProjectSprite(mobj_t * thing)
 {
-    fixed_t trx, try;
+    fixed_t trx, try_;
     fixed_t gxt, gyt;
     fixed_t tx, tz;
     fixed_t xscale;
@@ -537,10 +537,10 @@ void R_ProjectSprite(mobj_t * thing)
 // transform the origin point
 //
     trx = interpx - viewx;
-    try = interpy - viewy;
+    try_ = interpy - viewy;
 
     gxt = FixedMul(trx, viewcos);
-    gyt = -FixedMul(try, viewsin);
+    gyt = -FixedMul(try_, viewsin);
     tz = gxt - gyt;
 
     if (tz < MINZ)
@@ -548,7 +548,7 @@ void R_ProjectSprite(mobj_t * thing)
     xscale = FixedDiv(projection, tz);
 
     gxt = -FixedMul(trx, viewsin);
-    gyt = FixedMul(try, viewcos);
+    gyt = FixedMul(try_, viewcos);
     tx = -(gyt + gxt);
 
     if (abs(tx) > (tz << 2))
@@ -610,15 +610,15 @@ void R_ProjectSprite(mobj_t * thing)
     {
         if (thing->player)
         {
-            vis->class = thing->player->class;
+            vis->mclass = thing->player->mclass;
         }
         else
         {
-            vis->class = thing->special1.i;
+            vis->mclass = thing->special1.i;
         }
-        if (vis->class > 2)
+        if (vis->mclass > 2)
         {
-            vis->class = 0;
+            vis->mclass = 0;
         }
     }
     // foot clipping
@@ -779,14 +779,14 @@ void R_DrawPSprite(pspdef_t * psp)
 //
     vis = &avis;
     vis->mobjflags = 0;
-    vis->class = 0;
+    vis->mclass = 0;
     vis->psprite = true;
     vis->floorclip = 0;
     vis->texturemid = (BASEYCENTER << FRACBITS) /* + FRACUNIT / 2 */
         - (psp->sy - spritetopoffset[lump]);
     if (viewheight == SCREENHEIGHT)
     {
-        vis->texturemid -= PSpriteSY[viewplayer->class]
+        vis->texturemid -= PSpriteSY[viewplayer->mclass]
             [players[consoleplayer].readyweapon];
     }
     vis->x1 = x1 < 0 ? 0 : x1;
@@ -806,7 +806,7 @@ void R_DrawPSprite(pspdef_t * psp)
         vis->startfrac += vis->xiscale * (vis->x1 - x1);
     vis->patch = lump;
 
-    if (viewplayer->powers[pw_invulnerability] && viewplayer->class
+    if (viewplayer->powers[pw_invulnerability] && viewplayer->mclass
         == PCLASS_CLERIC)
     {
         vis->colormap[0] = vis->colormap[1] = spritelights[MAXLIGHTSCALE - 1];

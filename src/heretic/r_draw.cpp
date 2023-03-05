@@ -21,6 +21,8 @@
 #include "i_video.hpp"
 #include "v_video.hpp"
 
+#include "../../utils/memory.hpp"
+
 /*
 
 All drawing to the view buffer is accomplished in this file.  The other refresh
@@ -317,7 +319,7 @@ void R_InitTranslationTables(void)
     V_LoadTintTable();
 
     // Allocate translation tables
-    translationtables = zmalloc<decltype(    translationtables)>(256 * 3, PU_STATIC, 0);
+    translationtables = zmalloc<decltype(translationtables)>(256 * 3, PU_STATIC, 0);
 
     // Fill out the translation tables
     for (i = 0; i < 256; i++)

@@ -61,7 +61,7 @@
 #define MELEERANGE (64*FRACUNIT)
 #define MISSILERANGE (32*64*FRACUNIT)
 
-typedef enum
+enum dirtype_t: int
 {
     DI_EAST,
     DI_NORTHEAST,
@@ -73,7 +73,7 @@ typedef enum
     DI_SOUTHEAST,
     DI_NODIR,
     NUMDIRS
-} dirtype_t;
+} ;
 
 #define BASETHRESHOLD 100       // follow a player exlusively for 3 seconds
 
@@ -101,12 +101,13 @@ void P_PostMorphWeapon(player_t * player, weapontype_t weapon);
 
 // ***** P_USER *****
 
+enum statenum_t: int;
 
 extern int ArmorMax[NUMCLASSES];
-extern int PStateNormal[NUMCLASSES];
-extern int PStateRun[NUMCLASSES];
-extern int PStateAttack[NUMCLASSES];
-extern int PStateAttackEnd[NUMCLASSES];
+extern statenum_t PStateNormal[NUMCLASSES];
+extern statenum_t PStateRun[NUMCLASSES];
+extern statenum_t PStateAttack[NUMCLASSES];
+extern statenum_t PStateAttackEnd[NUMCLASSES];
 
 void P_PlayerThink(player_t * player);
 void P_Thrust(player_t * player, angle_t angle, fixed_t move);

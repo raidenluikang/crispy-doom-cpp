@@ -3965,7 +3965,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      200,                       // painchance
      sfx_chicpai,               // painsound
      S_CHICKEN_ATK1,            // meleestate
-     0,                         // missilestate
+     statenum_t{0},             // missilestate
      S_NULL,                    // crashstate
      S_CHICKEN_DIE1,            // deathstate
      S_NULL,                    // xdeathstate
@@ -4019,7 +4019,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      128,                       // painchance
      sfx_mumpai,                // painsound
      S_MUMMY_ATK1,              // meleestate
-     0,                         // missilestate
+     statenum_t{0},             // missilestate
      S_NULL,                    // crashstate
      S_MUMMY_DIE1,              // deathstate
      S_NULL,                    // xdeathstate
@@ -4073,7 +4073,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      128,                       // painchance
      sfx_mumpai,                // painsound
      S_MUMMY_ATK1,              // meleestate
-     0,                         // missilestate
+     statenum_t{0},             // missilestate
      S_NULL,                    // crashstate
      S_MUMMY_DIE1,              // deathstate
      S_NULL,                    // xdeathstate
@@ -4180,7 +4180,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      S_BEAST_PAIN1,             // painstate
      100,                       // painchance
      sfx_bstpai,                // painsound
-     0,                         // meleestate
+     statenum_t{0},             // meleestate
      S_BEAST_ATK1,              // missilestate
      S_NULL,                    // crashstate
      S_BEAST_DIE1,              // deathstate
@@ -4315,7 +4315,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      S_SNAKE_PAIN1,             // painstate
      48,                        // painchance
      sfx_snkpai,                // painsound
-     0,                         // meleestate
+     statenum_t{0},             // meleestate
      S_SNAKE_ATK1,              // missilestate
      S_NULL,                    // crashstate
      S_SNAKE_DIE1,              // deathstate
@@ -4396,7 +4396,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      S_HEAD_PAIN1,              // painstate
      32,                        // painchance
      sfx_hedpai,                // painsound
-     0,                         // meleestate
+     statenum_t{0},             // meleestate
      S_HEAD_ATK1,               // missilestate
      S_NULL,                    // crashstate
      S_HEAD_DIE1,               // deathstate
@@ -4532,7 +4532,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      32,                        // painchance
      sfx_clkpai,                // painsound
      S_CLINK_ATK1,              // meleestate
-     0,                         // missilestate
+     statenum_t{0},             // missilestate
      S_NULL,                    // crashstate
      S_CLINK_DIE1,              // deathstate
      S_NULL,                    // xdeathstate
@@ -4558,7 +4558,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      S_WIZARD_PAIN1,            // painstate
      64,                        // painchance
      sfx_wizpai,                // painsound
-     0,                         // meleestate
+     statenum_t{0},             // meleestate
      S_WIZARD_ATK1,             // missilestate
      S_NULL,                    // crashstate
      S_WIZARD_DIE1,             // deathstate
@@ -4639,7 +4639,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      S_IMP_PAIN1,               // painstate
      200,                       // painchance
      sfx_imppai,                // painsound
-     0,                         // meleestate
+     statenum_t{0},             // meleestate
      S_IMP_MSATK2_1,            // missilestate
      S_IMP_CRASH1,              // crashstate
      S_IMP_DIE1,                // deathstate
@@ -4855,7 +4855,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      S_SRCR1_PAIN1,             // painstate
      56,                        // painchance
      sfx_sbtpai,                // painsound
-     0,                         // meleestate
+     statenum_t{0},             // meleestate
      S_SRCR1_ATK1,              // missilestate
      S_NULL,                    // crashstate
      S_SRCR1_DIE1,              // deathstate
@@ -4909,7 +4909,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
      S_SOR2_PAIN1,              // painstate
      32,                        // painchance
      sfx_sorpai,                // painsound
-     0,                         // meleestate
+     statenum_t{0},             // meleestate
      S_SOR2_ATK1,               // missilestate
      S_NULL,                    // crashstate
      S_SOR2_DIE1,               // deathstate

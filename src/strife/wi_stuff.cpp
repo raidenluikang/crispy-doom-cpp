@@ -417,7 +417,7 @@ void WI_drawLF(void)
 {
     int y = WI_TITLEY;
 
-    if (gamemode != commercial || wbs->last < NUMCMAPS)
+    if (gamemode != GameMission_t::commercial || wbs->last < NUMCMAPS)
     {
         // draw <LevelName> 
         V_DrawPatch((SCREENWIDTH - SHORT(lnames[wbs->last]->width))/2,

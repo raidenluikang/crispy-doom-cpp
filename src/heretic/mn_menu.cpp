@@ -49,7 +49,7 @@
 
 // Types
 
-typedef enum
+enum ItemType_t
 {
     ITT_EMPTY,
     ITT_EFUNC,
@@ -58,9 +58,9 @@ typedef enum
     ITT_LRFUNC2, // [crispy] LR non-slider item
     ITT_NUMFUNC, // [crispy] numeric entry
     ITT_INERT
-} ItemType_t;
+} ;
 
-typedef enum
+enum MenuType_t
 {
     MENU_MAIN,
     MENU_EPISODE,
@@ -74,18 +74,18 @@ typedef enum
     MENU_CRISPNESS1,
     MENU_CRISPNESS2,
     MENU_NONE
-} MenuType_t;
+} ;
 
-typedef struct
+struct MenuItem_t
 {
     ItemType_t type;
     const char *text;
     boolean(*func) (int option);
     int option;
     MenuType_t menu;
-} MenuItem_t;
+} ;
 
-typedef struct
+struct Menu_t
 {
     int x;
     int y;
@@ -94,14 +94,14 @@ typedef struct
     MenuItem_t *items;
     int oldItPos;
     MenuType_t prevMenu;
-} Menu_t;
+} ;
 
 // [crispy]
-typedef struct
+struct multiitem_t
 {
     int value;
     const char *name;
-} multiitem_t;
+} ;
 
 // Private Functions
 
@@ -278,12 +278,11 @@ static Menu_t SaveMenu = {
 };
 
 static MenuItem_t SkillItems[] = {
-    {ITT_EFUNC, "THOU NEEDETH A WET-NURSE", SCSkill, sk_baby, MENU_NONE},
-    {ITT_EFUNC, "YELLOWBELLIES-R-US", SCSkill, sk_easy, MENU_NONE},
-    {ITT_EFUNC, "BRINGEST THEM ONETH", SCSkill, sk_medium, MENU_NONE},
-    {ITT_EFUNC, "THOU ART A SMITE-MEISTER", SCSkill, sk_hard, MENU_NONE},
-    {ITT_EFUNC, "BLACK PLAGUE POSSESSES THEE",
-     SCSkill, sk_nightmare, MENU_NONE}
+    {ITT_EFUNC, "THOU NEEDETH A WET-NURSE", SCSkill, (int)skill_t::sk_baby, MENU_NONE},
+    {ITT_EFUNC, "YELLOWBELLIES-R-US", SCSkill, (int)skill_t::sk_easy, MENU_NONE},
+    {ITT_EFUNC, "BRINGEST THEM ONETH", SCSkill, (int)skill_t::sk_medium, MENU_NONE},
+    {ITT_EFUNC, "THOU ART A SMITE-MEISTER", SCSkill, (int)skill_t::sk_hard, MENU_NONE},
+    {ITT_EFUNC, "BLACK PLAGUE POSSESSES THEE", SCSkill, (int)skill_t::sk_nightmare, MENU_NONE}
 };
 
 static Menu_t SkillMenu = {
@@ -501,10 +500,10 @@ static int G_GotoNextLevel(void)
 
   int changed = false;
 
-  if (gamemode == shareware)
+  if (gamemode == GameMode_t::shareware)
     heretic_next[0][7] = 11;
 
-  if (gamemode == registered)
+  if (gamemode == GameMode_t::registered)
     heretic_next[2][7] = 11;
 
   if (gamestate == GS_LEVEL)
@@ -534,7 +533,7 @@ void MN_Init(void)
     messageson = true;
     SkullBaseLump = W_GetNumForName(DEH_String("M_SKL00"));
 
-    if (gamemode == retail)
+    if (gamemode == GameMode_t::retail)
     {                           // Add episodes 4 and 5 to the menu
         EpisodeMenu.itemCount = 5;
         EpisodeMenu.y -= ITEM_HEIGHT;
@@ -817,9 +816,9 @@ static void DrawMainMenu(void)
 
     frame = (MenuTime / 3) % 18;
     V_DrawPatch(88, 0, W_CacheLumpName_patch(DEH_String("M_HTIC"), PU_CACHE));
-    V_DrawPatch(40, 10, W_CacheLumpNum(SkullBaseLump + (17 - frame),
+    V_DrawPatch(40, 10, (patch_t*)W_CacheLumpNum(SkullBaseLump + (17 - frame),
                                        PU_CACHE));
-    V_DrawPatch(232, 10, W_CacheLumpNum(SkullBaseLump + frame, PU_CACHE));
+    V_DrawPatch(232, 10, (patch_t*)W_CacheLumpNum(SkullBaseLump + frame, PU_CACHE));
 }
 
 //---------------------------------------------------------------------------
@@ -1226,7 +1225,7 @@ static boolean SCSaveGame(int option)
 
 static boolean SCEpisode(int option)
 {
-    if (gamemode == shareware && option > 1)
+    if (gamemode == GameMode_t::shareware && option > 1)
     {
         P_SetMessage(&players[consoleplayer],
                      "ONLY AVAILABLE IN THE REGISTERED VERSION", true);
@@ -1247,7 +1246,7 @@ static boolean SCEpisode(int option)
 
 static boolean SCSkill(int option)
 {
-    G_DeferedInitNew(option, MenuEpisode, 1);
+    G_DeferedInitNew((skill_t)option, MenuEpisode, 1);
     MN_DeactivateMenu();
     return true;
 }
@@ -1633,8 +1632,8 @@ boolean MN_Responder(event_t * event)
 
     if (testcontrols)
     {
-        if (event->type == ev_quit
-         || (event->type == ev_keydown
+        if (event->type == evtype_t::ev_quit
+         || (event->type == evtype_t::ev_keydown
           && (event->data1 == key_menu_activate
            || event->data1 == key_menu_quit)))
         {
@@ -1646,7 +1645,7 @@ boolean MN_Responder(event_t * event)
     }
 
     // "close" button pressed on window?
-    if (event->type == ev_quit)
+    if (event->type == evtype_t::ev_quit)
     {
         // First click on close = bring up quit confirm message.
         // Second click = confirm quit.
@@ -1666,7 +1665,7 @@ boolean MN_Responder(event_t * event)
 
     // Allow the menu to be activated from a joystick button if a button
     // is bound for joybmenu.
-    if (event->type == ev_joystick)
+    if (event->type == evtype_t::ev_joystick)
     {
         if (joybmenu >= 0 && (event->data1 & (1 << joybmenu)) != 0)
         {
@@ -1675,7 +1674,7 @@ boolean MN_Responder(event_t * event)
         }
     }
 
-    if (event->type != ev_keydown)
+    if (event->type != evtype_t::ev_keydown)
     {
         return false;
     }
@@ -1685,7 +1684,7 @@ boolean MN_Responder(event_t * event)
 
     if (InfoType)
     {
-        if (gamemode == shareware)
+        if (gamemode == GameMode_t::shareware)
         {
             InfoType = (InfoType + 1) % 5;
         }
@@ -2482,7 +2481,7 @@ static void M_DrawCrispnessBackground(void)
     byte *src, *dest;
     int x, y;
 
-    if (gamemode == shareware)
+    if (gamemode == GameMode_t::shareware)
     {
         src = W_CacheLumpName_byte(DEH_String("FLOOR04"), PU_CACHE);
     }

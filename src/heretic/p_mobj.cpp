@@ -23,6 +23,9 @@
 #include "sounds.hpp"
 #include "s_sound.hpp"
 
+#include "../../utils/memory.hpp"
+
+
 void G_PlayerReborn(int player);
 void P_SpawnMapThing(mapthing_t * mthing);
 
@@ -120,7 +123,7 @@ void P_ExplodeMissile(mobj_t * mo)
         }
     }
     mo->momx = mo->momy = mo->momz = 0;
-    P_SetMobjState(mo, mobjinfo[mo->type].deathstate);
+    P_SetMobjState(mo, statenum_t{mobjinfo[mo->type].deathstate});
     //mo->tics -= P_Random()&3;
     mo->flags &= ~MF_MISSILE;
     if (mo->info->deathsound)
@@ -138,7 +141,7 @@ void P_ExplodeMissile(mobj_t * mo)
 void P_FloorBounceMissile(mobj_t * mo)
 {
     mo->momz = -mo->momz;
-    P_SetMobjState(mo, mobjinfo[mo->type].deathstate);
+    P_SetMobjState(mo, statenum_t{mobjinfo[mo->type].deathstate});
 }
 
 //----------------------------------------------------------------------------
@@ -288,7 +291,7 @@ void P_XYMovement(mobj_t * mo)
         {                       // A flying mobj slammed into something
             mo->flags &= ~MF_SKULLFLY;
             mo->momx = mo->momy = mo->momz = 0;
-            P_SetMobjState(mo, mo->info->seestate);
+            P_SetMobjState(mo, statenum_t{mo->info->seestate});
         }
         return;
     }
@@ -556,7 +559,7 @@ void P_ZMovement(mobj_t * mo)
         }
         if (mo->info->crashstate && (mo->flags & MF_CORPSE))
         {
-            P_SetMobjState(mo, mo->info->crashstate);
+            P_SetMobjState(mo, statenum_t{mo->info->crashstate});
             return;
         }
     }
@@ -879,7 +882,7 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
     mobjinfo_t *info;
     fixed_t space;
 
-    mobj = zmalloc<decltype(    mobj)>(sizeof(*mobj), PU_LEVEL, nullptr);
+    mobj = zmalloc<decltype(mobj)>(sizeof(*mobj), PU_LEVEL, nullptr);
     memset(mobj, 0, sizeof(*mobj));
     info = &mobjinfo[type];
     mobj->type = type;
@@ -892,7 +895,7 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
     mobj->flags2 = info->flags2;
     mobj->damage = info->damage;
     mobj->health = info->spawnhealth;
-    if (gameskill != sk_nightmare && !critical->fast)
+    if (gameskill != skill_t::sk_nightmare && !critical->fast)
     {
         mobj->reactiontime = info->reactiontime;
     }
@@ -1113,12 +1116,12 @@ void P_SpawnMapThing(mapthing_t * mthing)
     if (!netgame && (mthing->options & 16))
         return;
 
-    if (gameskill == sk_baby)
+    if (gameskill == skill_t::sk_baby)
         bit = 1;
-    else if (gameskill == sk_nightmare)
+    else if (gameskill == skill_t::sk_nightmare)
         bit = 4;
     else
-        bit = 1 << (gameskill - 1);
+        bit = 1 << (int(gameskill) - 1);
     if (!(mthing->options & bit))
         return;
 
@@ -1153,13 +1156,13 @@ void P_SpawnMapThing(mapthing_t * mthing)
         case MT_ARTISUPERHEAL:
         case MT_ARTITELEPORT:
         case MT_ITEMSHIELD2:
-            if (gamemode == shareware)
+            if (gamemode == GameMode_t::shareware)
             {                   // Don't place on map in shareware version
                 return;
             }
             break;
         case MT_WMACE:
-            if (gamemode != shareware)
+            if (gamemode != GameMode_t::shareware)
             {                   // Put in the mace spot list
                 P_AddMaceSpot(mthing);
                 return;
@@ -1182,7 +1185,7 @@ void P_SpawnMapThing(mapthing_t * mthing)
     {
         z = ONFLOORZ;
     }
-    mobj = P_SpawnMobj(x, y, z, i);
+    mobj = P_SpawnMobj(x, y, z, mobjtype_t{i});
     if (mobj->flags2 & MF2_FLOATBOB)
     {                           // Seed random starting index for bobbing motion
         mobj->health = P_Random();

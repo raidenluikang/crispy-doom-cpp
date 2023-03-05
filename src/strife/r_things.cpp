@@ -38,7 +38,7 @@
 // haleyjd
 #include "p_local.hpp"
 
-
+#include "../../utils/memory.hpp"
 
 #define MINZ				(FRACUNIT*4)
 #define BASEYCENTER			(ORIGHEIGHT/2)
@@ -268,8 +268,7 @@ void R_InitSpriteDefs (const char** namelist)
 	
 	// allocate space for the frames present and copy sprtemp to it
 	sprites[i].numframes = maxframe;
-	sprites[i].spriteframes = 
-	    Z_Malloc (maxframe * sizeof(spriteframe_t), PU_STATIC, nullptr);
+	sprites[i].spriteframes = zmalloc<spriteframe_t*> (maxframe * sizeof(spriteframe_t), PU_STATIC, nullptr);
 	memcpy (sprites[i].spriteframes, sprtemp, maxframe*sizeof(spriteframe_t));
     }
 
@@ -912,7 +911,7 @@ void R_DrawPlayerSprites (void)
 	 i++,psp++)
     {
 	if (psp->state)
-	    R_DrawPSprite (psp, i); // [crispy] pass psprnum
+	    R_DrawPSprite (psp, psprnum_t{i}); // [crispy] pass psprnum
     }
 }
 

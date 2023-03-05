@@ -48,7 +48,7 @@
 #include "am_map.hpp"
 #include "v_trans.hpp" // [crispy] dp_translation
 
-#include "heretic_icon.c"
+#include "heretic_icon.cpp"
 
 #define CT_KEY_GREEN    'g'
 #define CT_KEY_YELLOW   'y'
@@ -58,7 +58,7 @@
 #define STARTUP_WINDOW_X 17
 #define STARTUP_WINDOW_Y 7
 
-GameMode_t gamemode = indetermined;
+GameMode_t gamemode = GameMode_t::indetermined;
 const char *gamedescription = "unknown";
 
 boolean nomonsters;             // checkparm of -nomonsters
@@ -176,7 +176,7 @@ static void CrispyDrawStats (void)
     if (!height || !coord_x || !coord_w)
     {
         const int FontABaseLump = W_GetNumForName(DEH_String("FONTA_S")) + 1;
-        const patch_t *const p = W_CacheLumpNum_cast<decltype(        const patch_t *const p)>(FontABaseLump + 'A' - 33, PU_CACHE);
+        const patch_t *const p = W_CacheLumpNum_cast<const patch_t *>(FontABaseLump + 'A' - 33, PU_CACHE);
 
         height = SHORT(p->height) + 1;
         coord_w = 7 * SHORT(p->width);
@@ -517,7 +517,7 @@ void D_DoAdvanceDemo(void)
         case 5:
             pagetic = 200;
             gamestate = GS_DEMOSCREEN;
-            if (gamemode == shareware)
+            if (gamemode == GameMode_t::shareware)
             {
                 pagename = DEH_String("ORDER");
             }
@@ -1047,7 +1047,7 @@ void D_DoomMain(void)
     I_AtExit(M_SaveDefaults, false);
 
     // [crispy] Set startskill after loading config to account for defaultskill
-    startskill = (crispy->defaultskill + SKILL_HMP) % NUM_SKILLS; // [crispy]
+    startskill = static_cast< skill_t > (  (crispy->defaultskill + SKILL_HMP) % NUM_SKILLS ) ; // [crispy]
 
     //!
     // @category game
@@ -1061,7 +1061,7 @@ void D_DoomMain(void)
     p = M_CheckParmWithArgs("-skill", 1);
     if (p)
     {
-        startskill = myargv[p + 1][0] - '1';
+        startskill = static_cast< skill_t > ( myargv[p + 1][0] - static_cast<int>( '1' ) );
         autostart = true;
     }
 
@@ -1079,7 +1079,7 @@ void D_DoomMain(void)
     }
 
     D_AddFile(iwadfile);
-    W_CheckCorrectIWAD(heretic);
+    W_CheckCorrectIWAD(GameMission_t::heretic);
 
     //!
     // @category game
@@ -1137,7 +1137,7 @@ void D_DoomMain(void)
     //
     // Disable auto-loading of .wad files.
     //
-    if (!M_ParmExists("-noautoload") && gamemode != shareware)
+    if (!M_ParmExists("-noautoload") && gamemode != GameMode_t::shareware)
     {
         char *autoload_dir;
         autoload_dir = M_GetAutoloadDir("heretic.wad", true);
@@ -1157,7 +1157,7 @@ void D_DoomMain(void)
 
     // [crispy] add wad files from autoload PWAD directories
 
-    if (!M_ParmExists("-noautoload") && gamemode != shareware)
+    if (!M_ParmExists("-noautoload") && gamemode != GameMode_t::shareware)
     {
         int i;
 
@@ -1241,7 +1241,7 @@ void D_DoomMain(void)
 
     // [crispy] process .deh files from PWADs autoload directories
 
-    if (!M_ParmExists("-noautoload") && gamemode != shareware)
+    if (!M_ParmExists("-noautoload") && gamemode != GameMode_t::shareware)
     {
         int i;
 
@@ -1276,19 +1276,19 @@ void D_DoomMain(void)
 
     if (W_CheckNumForName(DEH_String("E2M1")) == -1)
     {
-        gamemode = shareware;
+        gamemode = GameMode_t::shareware;
         gamedescription = "Heretic (shareware)";
     }
     else if (W_CheckNumForName("EXTENDED") != -1)
     {
         // Presence of the EXTENDED lump indicates the retail version
 
-        gamemode = retail;
+        gamemode = GameMode_t::retail;
         gamedescription = "Heretic: Shadow of the Serpent Riders";
     }
     else
     {
-        gamemode = registered;
+        gamemode = GameMode_t::registered;
         gamedescription = "Heretic (registered)";
     }
 
@@ -1333,7 +1333,7 @@ void D_DoomMain(void)
         char temp[64];
         DEH_snprintf(temp, sizeof(temp),
                      "Warp to Episode %d, Map %d, Skill %d ",
-                     startepisode, startmap, startskill + 1);
+                     startepisode, startmap, static_cast<int>( startskill ) + 1);
         status(temp);
     }
     wadprintf();                // print the added wadfiles
@@ -1434,7 +1434,7 @@ void D_DoomMain(void)
     // Check valid episode and map
     if (autostart || netgame)
     {
-        if (!D_ValidEpisodeMap(heretic, gamemode, startepisode, startmap))
+        if (!D_ValidEpisodeMap(GameMission_t::heretic, gamemode, startepisode, startmap))
         {
             startepisode = 1;
             startmap = 1;

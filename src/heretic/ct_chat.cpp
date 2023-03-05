@@ -75,7 +75,7 @@ const char *CT_FromPlrText[MAXPLAYERS] = {
     "BLUE:  "
 };
 
-char *chat_macros[10];
+const char *chat_macros[10];
 
 boolean altdown;
 boolean shiftdown;
@@ -141,7 +141,7 @@ static boolean ValidChatChar(char c)
 
 boolean CT_Responder(event_t * ev)
 {
-    char *macro;
+    const char *macro;
 
     int sendto;
 
@@ -151,15 +151,15 @@ boolean CT_Responder(event_t * ev)
     }
     if (ev->data1 == KEY_LALT || ev->data2 == KEY_RALT)
     {
-        altdown = (ev->type == ev_keydown);
+        altdown = (ev->type == evtype_t::ev_keydown);
         return false;
     }
     if (ev->data1 == KEY_RSHIFT)
     {
-        shiftdown = (ev->type == ev_keydown);
+        shiftdown = (ev->type == evtype_t::ev_keydown);
         return false;
     }
-    if (ev->type != ev_keydown)
+    if (ev->type != evtype_t::ev_keydown)
     {
         return false;
     }

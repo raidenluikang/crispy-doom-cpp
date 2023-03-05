@@ -23,6 +23,8 @@
 #include "p_local.hpp"
 #include "s_sound.hpp"
 
+#include "../../utils/memory.hpp"
+
 // MACROS ------------------------------------------------------------------
 
 #define MAX_TAGGED_LINES 64
@@ -99,7 +101,7 @@ void P_InitTerrainTypes(void)
     int size;
 
     size = (numflats + 1) * sizeof(int);
-    TerrainTypes = zmalloc<decltype(    TerrainTypes)>(size, PU_STATIC, 0);
+    TerrainTypes = zmalloc<decltype(TerrainTypes)>(size, PU_STATIC, 0);
     memset(TerrainTypes, 0, size);
     for (i = 0; TerrainTypeDefs[i].type != -1; i++)
     {
@@ -394,7 +396,8 @@ boolean EV_SectorSoundChange(byte * args)
     rtn = false;
     while ((secNum = P_FindSectorFromTag(args[0], secNum)) >= 0)
     {
-        sectors[secNum].seqType = args[1];
+        int ivalue = args[1];
+        sectors[secNum].seqType = seqtype_t{ ivalue };
         rtn = true;
     }
     return rtn;

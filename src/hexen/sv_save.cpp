@@ -23,6 +23,9 @@
 #include "i_swap.hpp"
 #include "p_local.hpp"
 
+#include "../../utils/enumforeach.hpp"
+#include "../../utils/memory.hpp"
+
 // MACROS ------------------------------------------------------------------
 
 #define MAX_TARGET_PLAYERS 512
@@ -137,9 +140,9 @@ static void SV_WritePtr(void *ptr);
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
-#define DEFAULT_SAVEPATH                "hexndata/"
+#define DEFAULT_SAVEPATH    "hexndata/"
 
-char *SavePath = DEFAULT_SAVEPATH;
+const char *SavePath = DEFAULT_SAVEPATH;
 
 int vanilla_savegame_limit = 1;
 
@@ -226,7 +229,7 @@ static void StreamIn_ticcmd_t(ticcmd_t *str)
     str->lookfly = SV_ReadByte();
 
     // byte arti;
-    str->arti = SV_ReadByte();
+    str->arti = (artitype_t)SV_ReadByte();
 }
 
 static void StreamOut_ticcmd_t(ticcmd_t *str)
@@ -265,7 +268,7 @@ static void StreamOut_ticcmd_t(ticcmd_t *str)
 static void StreamIn_inventory_t(inventory_t *str)
 {
     // int type;
-    str->type = SV_ReadLong();
+    str->type = (artitype_t)SV_ReadLong();
 
     // int count;
     str->count = SV_ReadLong();
@@ -345,17 +348,17 @@ static void StreamIn_player_t(player_t *str)
 
     // mobj_t *mo;
     // Pointer value is reset on load.
-    str->mo = SV_ReadPtr();
+    str->mo = (mobj_t*)SV_ReadPtr();
     str->mo = nullptr;
 
     // playerstate_t playerstate;
-    str->playerstate = SV_ReadLong();
+    str->playerstate = (playerstate_t)SV_ReadLong();
 
     // ticcmd_t cmd;
     StreamIn_ticcmd_t(&str->cmd);
 
     // pclass_t class;
-    str->class = SV_ReadLong();
+    str->mclass = (pclass_t)SV_ReadLong();
 
     // fixed_t viewz;
     str->viewz = SV_ReadLong();
@@ -394,7 +397,7 @@ static void StreamIn_player_t(player_t *str)
     }
 
     // artitype_t readyArtifact;
-    str->readyArtifact = SV_ReadLong();
+    str->readyArtifact = (artitype_t)SV_ReadLong();
 
     // int artifactCount;
     str->artifactCount = SV_ReadLong();
@@ -421,10 +424,10 @@ static void StreamIn_player_t(player_t *str)
     }
 
     // weapontype_t readyweapon;
-    str->readyweapon = SV_ReadLong();
+    str->readyweapon = (weapontype_t)SV_ReadLong();
 
     // weapontype_t pendingweapon;
-    str->pendingweapon = SV_ReadLong();
+    str->pendingweapon = (weapontype_t)SV_ReadLong();
 
     // boolean weaponowned[NUMWEAPONS];
     for (i=0; i<NUMWEAPONS; ++i)
@@ -477,12 +480,12 @@ static void StreamIn_player_t(player_t *str)
 
     // mobj_t *poisoner;
     // Pointer value is reset.
-    str->poisoner = SV_ReadPtr();
+    str->poisoner = (mobj_t*)SV_ReadPtr();
     str->poisoner = nullptr;
 
     // mobj_t *attacker;
     // Pointer value is reset.
-    str->attacker = SV_ReadPtr();
+    str->attacker = (mobj_t*)SV_ReadPtr();
     str->attacker = nullptr;
 
     // int extralight;
@@ -524,7 +527,7 @@ static void StreamOut_player_t(player_t *str)
     StreamOut_ticcmd_t(&str->cmd);
 
     // pclass_t class;
-    SV_WriteLong(str->class);
+    SV_WriteLong(str->mclass);
 
     // fixed_t viewz;
     SV_WriteLong(str->viewz);
@@ -682,16 +685,16 @@ static void StreamOut_player_t(player_t *str)
 
 static void StreamIn_thinker_t(thinker_t *str)
 {
-    // struct thinker_s *prev, *next;
+    // struct thinker_t *prev, *next;
     // Pointers are discarded:
-    str->prev = SV_ReadPtr();
+    str->prev = (thinker_t*)SV_ReadPtr();
     str->prev = nullptr;
-    str->next = SV_ReadPtr();
+    str->next = (thinker_t*)SV_ReadPtr();
     str->next = nullptr;
 
     // think_t function;
     // Function pointer is discarded:
-    str->function = SV_ReadPtr();
+    str->function = (think_t)SV_ReadPtr();
     str->function = nullptr;
 }
 
@@ -763,33 +766,33 @@ static void StreamIn_mobj_t(mobj_t *str)
     str->y = SV_ReadLong();
     str->z = SV_ReadLong();
 
-    // struct mobj_s *snext, *sprev;
+    // struct mobj_t *snext, *sprev;
     // Pointer values are discarded:
-    str->snext = SV_ReadPtr();
+    str->snext = (mobj_t*)SV_ReadPtr();
     str->snext = nullptr;
-    str->sprev = SV_ReadPtr();
+    str->sprev = (mobj_t*)SV_ReadPtr();
     str->sprev = nullptr;
 
     // angle_t angle;
     str->angle = SV_ReadLong();
 
     // spritenum_t sprite;
-    str->sprite = SV_ReadLong();
+    str->sprite = (spritenum_t)SV_ReadLong();
 
     // int frame;
     str->frame = SV_ReadLong();
 
-    // struct mobj_s *bnext, *bprev;
+    // struct mobj_t *bnext, *bprev;
     // Values are read but discarded; this will be restored when the thing's
     // position is set.
-    str->bnext = SV_ReadPtr();
+    str->bnext = (mobj_t*)SV_ReadPtr();
     str->bnext = nullptr;
-    str->bprev = SV_ReadPtr();
+    str->bprev = (mobj_t*)SV_ReadPtr();
     str->bprev = nullptr;
 
     // struct subsector_s *subsector;
     // Read but discard: pointer will be restored when thing position is set.
-    str->subsector = SV_ReadPtr();
+    str->subsector = (subsector_s*)SV_ReadPtr();
     str->subsector = nullptr;
 
     // fixed_t floorz, ceilingz;
@@ -812,11 +815,11 @@ static void StreamIn_mobj_t(mobj_t *str)
     str->validcount = SV_ReadLong();
 
     // mobjtype_t type;
-    str->type = SV_ReadLong();
+    str->type = (mobjtype_t)SV_ReadLong();
 
     // mobjinfo_t *info;
     // Pointer value is read but discarded.
-    str->info = SV_ReadPtr();
+    str->info = (mobjinfo_t*)SV_ReadPtr();
     str->info = nullptr;
 
     // int tics;
@@ -846,12 +849,12 @@ static void StreamIn_mobj_t(mobj_t *str)
     str->health = SV_ReadLong();
 
     // int movedir;
-    str->movedir = SV_ReadLong();
+    str->movedir = (dirtype_t)SV_ReadLong();
 
     // int movecount;
     str->movecount = SV_ReadLong();
 
-    // struct mobj_s *target;
+    // struct mobj_t *target;
     i = SV_ReadLong();
     SetMobjPtr(&str->target, i);
 
@@ -981,7 +984,7 @@ static void StreamOut_mobj_t(mobj_t *str)
     SV_WriteLong(str->y);
     SV_WriteLong(str->z);
 
-    // struct mobj_s *snext, *sprev;
+    // struct mobj_t *snext, *sprev;
     SV_WritePtr(str->snext);
     SV_WritePtr(str->sprev);
 
@@ -994,7 +997,7 @@ static void StreamOut_mobj_t(mobj_t *str)
     // int frame;
     SV_WriteLong(str->frame);
 
-    // struct mobj_s *bnext, *bprev;
+    // struct mobj_t *bnext, *bprev;
     SV_WritePtr(str->bnext);
     SV_WritePtr(str->bprev);
 
@@ -1056,7 +1059,7 @@ static void StreamOut_mobj_t(mobj_t *str)
     // int movecount;
     SV_WriteLong(str->movecount);
 
-    // struct mobj_s *target;
+    // struct mobj_t *target;
     if ((str->flags & MF_CORPSE) != 0)
     {
         SV_WriteLong(MOBJ_NULL);
@@ -1124,7 +1127,7 @@ static void StreamIn_floormove_t(thinker_t *thinker)
     str->sector = sectors + i;
 
     // floor_e type;
-    str->type = SV_ReadLong();
+    str->type = (floor_e)SV_ReadLong();
 
     // int crush;
     str->crush = SV_ReadLong();
@@ -1259,10 +1262,10 @@ static void StreamIn_plat_t(thinker_t *thinker)
     str->count = SV_ReadLong();
 
     // plat_e status;
-    str->status = SV_ReadLong();
+    str->status = (plat_e)SV_ReadLong();
 
     // plat_e oldstatus;
-    str->oldstatus = SV_ReadLong();
+    str->oldstatus = (plat_e)SV_ReadLong();
 
     // int crush;
     str->crush = SV_ReadLong();
@@ -1271,7 +1274,7 @@ static void StreamIn_plat_t(thinker_t *thinker)
     str->tag = SV_ReadLong();
 
     // plattype_e type;
-    str->type = SV_ReadLong();
+    str->type = (plattype_e)SV_ReadLong();
 }
 
 static void StreamOut_plat_t(thinker_t *thinker)
@@ -1334,7 +1337,7 @@ static void StreamIn_ceiling_t(thinker_t *thinker)
     str->sector = sectors + i;
 
     // ceiling_e type;
-    str->type = SV_ReadLong();
+    str->type = (ceiling_e)SV_ReadLong();
 
     // fixed_t bottomheight, topheight;
     str->bottomheight = SV_ReadLong();
@@ -1408,7 +1411,7 @@ static void StreamIn_light_t(thinker_t *thinker)
     str->sector = sectors + i;
 
     // lighttype_t type;
-    str->type = SV_ReadLong();
+    str->type = (lighttype_t)SV_ReadLong();
 
     // int value1;
     str->value1 = SV_ReadLong();
@@ -1474,7 +1477,7 @@ static void StreamIn_vldoor_t(thinker_t *thinker)
     str->sector = &sectors[i];
 
     // vldoor_e type;
-    str->type = SV_ReadLong();
+    str->type = (vldoor_e)SV_ReadLong();
 
     // fixed_t topheight;
     str->topheight = SV_ReadLong();
@@ -1837,7 +1840,7 @@ static void StreamIn_polydoor_t(thinker_t *thinker)
     str->waitTics = SV_ReadLong();
 
     // podoortype_t type;
-    str->type = SV_ReadLong();
+    str->type = (podoortype_t)SV_ReadLong();
 
     // boolean close;
     str->close = SV_ReadLong();
@@ -1996,7 +1999,7 @@ void SV_SaveGame(int slot, const char *description)
 
     // Write current map and difficulty
     SV_WriteByte(gamemap);
-    SV_WriteByte(gameskill);
+    SV_WriteByte((byte)gameskill);
 
     // Write global script info
     for (i = 0; i < MAX_ACS_WORLD_VARS; ++i)
@@ -2119,7 +2122,7 @@ void SV_LoadGame(int slot)
 
     gameepisode = 1;
     gamemap = SV_ReadByte();
-    gameskill = SV_ReadByte();
+    gameskill = (skill_t)SV_ReadByte();
 
     // Read global script info
 
@@ -2213,7 +2216,7 @@ void SV_MapTeleport(int map, int position)
     boolean oldWeaponowned[NUMWEAPONS];
     int oldKeys = 0;
     int oldPieces = 0;
-    int bestWeapon;
+    weapontype_t bestWeapon;
 
     if (!deathmatch)
     {
@@ -2313,14 +2316,16 @@ void SV_MapTeleport(int map, int position)
         {                       // Restore keys and weapons when reborn in co-op
             players[i].keys = oldKeys;
             players[i].pieces = oldPieces;
-            for (bestWeapon = 0, j = 0; j < NUMWEAPONS; j++)
+
+            enum_foreach(weapontype_t{0}, NUMWEAPONS, [&](weapontype_t index)
             {
-                if (oldWeaponowned[j])
+                if (oldWeaponowned[(int)index])
                 {
-                    bestWeapon = j;
-                    players[i].weaponowned[j] = true;
+                    bestWeapon = index;
+                    players[i].weaponowned[(int)index] = true;
                 }
-            }
+            });
+
             players[i].mana[MANA_1] = 25;
             players[i].mana[MANA_2] = 25;
             if (bestWeapon)
@@ -2500,7 +2505,7 @@ static void UnarchivePlayers(void)
         {
             continue;
         }
-        PlayerClass[i] = SV_ReadByte();
+        PlayerClass[i] = (pclass_t)SV_ReadByte();
         StreamIn_player_t(&players[i]);
         P_ClearMessage(&players[i]);
     }
@@ -2581,7 +2586,7 @@ static void UnarchiveWorld(void)
         sec->lightlevel = SV_ReadWord();
         sec->special = SV_ReadWord();
         sec->tag = SV_ReadWord();
-        sec->seqType = SV_ReadWord();
+        sec->seqType = (seqtype_t)SV_ReadWord();
         sec->specialdata = 0;
         sec->soundtarget = 0;
     }
@@ -2924,7 +2929,7 @@ static void UnarchiveThinkers(void)
         {
             if (tClass == info->tClass)
             {
-                thinker = zmalloc<decltype(                thinker)>(info->size, PU_LEVEL, nullptr);
+                thinker = zmalloc<decltype(thinker)>(info->size, PU_LEVEL, nullptr);
                 info->readFunc(thinker);
                 thinker->function = info->thinkerFunc;
                 if (info->restoreFunc)
@@ -2952,7 +2957,7 @@ static void UnarchiveThinkers(void)
 static void RestoreSSThinker(thinker_t *thinker)
 {
     ssthinker_t *sst = (ssthinker_t *) thinker;
-    sst->sector->specialdata = sst->thinker.function;
+    sst->sector->specialdata = (void*)(sst->thinker.function);
 }
 
 //==========================================================================
@@ -2964,7 +2969,7 @@ static void RestoreSSThinker(thinker_t *thinker)
 static void RestorePlatRaise(thinker_t *thinker)
 {
     plat_t *plat = (plat_t *) thinker;
-    plat->sector->specialdata = T_PlatRaise;
+    plat->sector->specialdata = (void*)T_PlatRaise;
     P_AddActivePlat(plat);
 }
 
@@ -2977,7 +2982,7 @@ static void RestorePlatRaise(thinker_t *thinker)
 static void RestoreMoveCeiling(thinker_t *thinker)
 {
     ceiling_t *ceiling = (ceiling_t *) thinker;
-    ceiling->sector->specialdata = T_MoveCeiling;
+    ceiling->sector->specialdata = (void*)T_MoveCeiling;
     P_AddActiveCeiling(ceiling);
 }
 
@@ -3017,7 +3022,7 @@ static void UnarchiveScripts(void)
     AssertSegment(ASEG_SCRIPTS);
     for (i = 0; i < ACScriptCount; i++)
     {
-        ACSInfo[i].state = SV_ReadWord();
+        ACSInfo[i].state = (aste_t)SV_ReadWord();
         ACSInfo[i].waitValue = SV_ReadWord();
     }
 

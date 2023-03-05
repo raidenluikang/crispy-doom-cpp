@@ -33,18 +33,20 @@
 
 #include "p_extnodes.hpp"
 
+#include "../../utils/memory.hpp"
+
 fixed_t GetOffset(vertex_t *v1, vertex_t *v2);
 
 // [crispy] support maps with NODES in compressed or uncompressed ZDBSP
 // format or DeePBSP format and/or LINEDEFS and THINGS lumps in Hexen format
 mapformat_t P_CheckMapFormat(int lumpnum)
 {
-    mapformat_t format = 0;
+    mapformat_t format{};
     byte *nodes = nullptr;
     int b;
 
     if (!((b = lumpnum + ML_NODES) < numlumps &&
-          (nodes = W_CacheLumpNum_cast<decltype(          (nodes)>(b, PU_CACHE)) &&
+          (nodes = W_CacheLumpNum_cast<byte*>(b, PU_CACHE)) &&
           W_LumpLength(b) > 0))
     {
         fprintf(stderr, "no nodes");
@@ -52,17 +54,17 @@ mapformat_t P_CheckMapFormat(int lumpnum)
     else if (!memcmp(nodes, "xNd4\0\0\0\0", 8))
     {
         fprintf(stderr, "DeePBSP nodes");
-        format |= MFMT_DEEPBSP;
+        format = format | MFMT_DEEPBSP;
     }
     else if (!memcmp(nodes, "XNOD", 4))
     {
         fprintf(stderr, "ZDBSP nodes");
-        format |= MFMT_ZDBSPX;
+        format = format | MFMT_ZDBSPX;
     }
     else if (!memcmp(nodes, "ZNOD", 4))
     {
         fprintf(stderr, "compressed ZDBSP nodes");
-        format |= MFMT_ZDBSPZ;
+        format = format | MFMT_ZDBSPZ;
     }
     else
     {
@@ -87,7 +89,7 @@ void P_LoadSegs_DeePBSP(int lump)
     mapseg_deepbsp_t *data;
 
     numsegs = W_LumpLength(lump) / sizeof(mapseg_deepbsp_t);
-    segs = zmalloc<decltype(    segs)>(numsegs * sizeof(seg_t), PU_LEVEL, 0);
+    segs = zmalloc<decltype(segs)>(numsegs * sizeof(seg_t), PU_LEVEL, 0);
     data = (mapseg_deepbsp_t *)W_CacheLumpNum(lump, PU_STATIC);
 
     for (i = 0; i < numsegs; i++)

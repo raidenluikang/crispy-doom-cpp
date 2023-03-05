@@ -47,7 +47,7 @@ void CompatibilitySettings(TXT_UNCAST_ARG(widget), void *user_data)
 void BindCompatibilityVariables(void)
 {
     // [crispy]
-    if (gamemission == doom)
+    if (gamemission == GameMission_t::doom)
     {
         M_BindIntVariable("crispy_automapoverlay",  &crispy->automapoverlay);
         M_BindIntVariable("crispy_automaprotate",   &crispy->automaprotate);
@@ -95,7 +95,7 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_vsync",           &crispy->vsync);
         M_BindIntVariable("crispy_widescreen",      &crispy->widescreen);
     }
-    else if (gamemission == heretic)
+    else if (gamemission == GameMission_t::heretic)
     {
         M_BindIntVariable("vanilla_savegame_limit", &vanilla_savegame_limit);
         M_BindIntVariable("vanilla_demo_limit",     &vanilla_demo_limit);
@@ -113,7 +113,7 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_vsync",           &crispy->vsync);
         M_BindIntVariable("crispy_widescreen",      &crispy->widescreen);
     }
-    else if (gamemission == hexen)
+    else if (gamemission == GameMission_t::hexen)
     {
         M_BindIntVariable("vanilla_savegame_limit", &vanilla_savegame_limit);
         M_BindIntVariable("vanilla_demo_limit",     &vanilla_demo_limit);
@@ -127,7 +127,7 @@ void BindCompatibilityVariables(void)
         M_BindIntVariable("crispy_widescreen",      &crispy->widescreen);
         M_BindIntVariable("crispy_brightmaps",      &crispy->brightmaps);
     }
-    else if (gamemission == strife)
+    else if (gamemission == GameMission_t::strife)
     {
         M_BindIntVariable("vanilla_savegame_limit", &vanilla_savegame_limit);
         M_BindIntVariable("vanilla_demo_limit",     &vanilla_demo_limit);

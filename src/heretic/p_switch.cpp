@@ -106,7 +106,7 @@ void P_InitSwitchList(void)
     // Note that this is called "episode" here but it's actually something
     // quite different. As we progress from Shareware->Registered->Doom II
     // we support more switch textures.
-    if (gamemode == shareware)
+    if (gamemode == GameMode_t::shareware)
     {
         episode = 1;
     }

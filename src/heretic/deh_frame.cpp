@@ -29,11 +29,11 @@
 
 #include "p_action.hpp"
 
-typedef struct
+struct hhe_action_pointer_t
 {
     int offsets[deh_hhe_num_versions];
-    void (*func)(struct mobj_s *, struct player_t *, struct pspdef_s *);
-} hhe_action_pointer_t;
+    void (*func)(struct mobj_t *, struct player_t *, struct pspdef_t *);
+} ;
 
 // Offsets of action pointers within the Heretic executables.
 // Different versions have different offsets.
@@ -216,7 +216,7 @@ static void *DEH_FrameStart(deh_context_t *context, char *line)
     return state;
 }
 
-static boolean GetActionPointerForOffset(int offset, void (**result)(struct mobj_s *, struct player_t *, struct pspdef_s *))
+static boolean GetActionPointerForOffset(int offset, void (**result)(struct mobj_t *, struct player_t *, struct pspdef_t *))
 {
     int i;
 
@@ -254,7 +254,8 @@ static void SuggestOtherVersions(unsigned int offset)
         {
             if (action_pointers[i].offsets[v] == offset)
             {
-                DEH_SuggestHereticVersion(v);
+                deh_hhe_version_t hhv = static_cast<deh_hhe_version_t>(v);
+                DEH_SuggestHereticVersion(hhv);
             }
         }
     }
@@ -289,7 +290,7 @@ static void DEH_FrameParseLine(deh_context_t *context, char *line, void *tag)
 
     if (!strcasecmp(variable_name, "Action pointer"))
     {
-        void (*func)(struct mobj_s *, struct player_t *, struct pspdef_s *);
+        void (*func)(struct mobj_t *, struct player_t *, struct pspdef_t *);
 
         if (!GetActionPointerForOffset(ivalue, &func))
         {

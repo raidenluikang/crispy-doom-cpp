@@ -27,6 +27,8 @@
 #include "p_local.hpp"
 #include "v_trans.hpp" // [crispy] color translation and color string tables
 
+#include "../../utils/memory.hpp"
+
 
 typedef struct
 {
@@ -144,7 +146,7 @@ void R_GenerateComposite(int texnum)
     unsigned short *colofs;
 
     texture = textures[texnum];
-    block = zmalloc<decltype(    block)>(texturecompositesize[texnum], PU_STATIC,
+    block = zmalloc<decltype(block)>(texturecompositesize[texnum], PU_STATIC,
                      &texturecomposite[texnum]);
     collump = texturecolumnlump[texnum];
     colofs = texturecolumnofs[texnum];
@@ -389,7 +391,7 @@ void R_InitTextures(void)
         if (offset > maxoff)
             I_Error("R_InitTextures: bad texture directory");
         mtexture = (maptexture_t *) ((byte *) maptex + offset);
-        texture = textures[i] = zmalloc<decltype(        texture = textures[i])>(sizeof(texture_t)
+        texture = textures[i] = zmalloc<decltype(texture)>(sizeof(texture_t)
                                          +
                                          sizeof(texpatch_t) *
                                          (SHORT(mtexture->patchcount) - 1),

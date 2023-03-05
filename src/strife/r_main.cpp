@@ -744,23 +744,23 @@ void R_InitLightTables (void)
     //  for each level / distance combination.
     for (i=0 ; i< LIGHTLEVELS ; i++)
     {
-	zlight[i] = (decltype(	zlight[i])) malloc(MAXLIGHTZ * sizeof(**zlight));
+        zlight[i] = (lighttable_t**) malloc(MAXLIGHTZ * sizeof(**zlight));
 
-	startmap = ((LIGHTLEVELS-LIGHTBRIGHT-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
-	for (j=0 ; j<MAXLIGHTZ ; j++)
-	{
-	    scale = FixedDiv ((ORIGWIDTH/2*FRACUNIT), (j+1)<<LIGHTZSHIFT);
-	    scale >>= LIGHTSCALESHIFT;
-	    level = startmap - scale/DISTMAP;
-	    
-	    if (level < 0)
-		level = 0;
+        startmap = ((LIGHTLEVELS-LIGHTBRIGHT-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
+        for (j=0 ; j<MAXLIGHTZ ; j++)
+        {
+            scale = FixedDiv ((ORIGWIDTH/2*FRACUNIT), (j+1)<<LIGHTZSHIFT);
+            scale >>= LIGHTSCALESHIFT;
+            level = startmap - scale/DISTMAP;
+            
+            if (level < 0)
+            level = 0;
 
-	    if (level >= NUMCOLORMAPS)
-		level = NUMCOLORMAPS-1;
+            if (level >= NUMCOLORMAPS)
+            level = NUMCOLORMAPS-1;
 
-	    zlight[i][j] = colormaps + level*256;
-	}
+            zlight[i][j] = colormaps + level*256;
+        }
     }
 }
 
@@ -899,21 +899,21 @@ void R_ExecuteSetViewSize (void)
     //  for each level / scale combination.
     for (i=0 ; i< LIGHTLEVELS ; i++)
     {
-	scalelight[i] = (decltype(	scalelight[i])) malloc(MAXLIGHTSCALE * sizeof(**scalelight));
+        scalelight[i] = (lighttable_t**) malloc(MAXLIGHTSCALE * sizeof(**scalelight));
 
-	startmap = ((LIGHTLEVELS-LIGHTBRIGHT-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
-	for (j=0 ; j<MAXLIGHTSCALE ; j++)
-	{
-	    level = startmap - j*NONWIDEWIDTH/(viewwidth_nonwide<<detailshift)/DISTMAP;
-	    
-	    if (level < 0)
-		level = 0;
+        startmap = ((LIGHTLEVELS-LIGHTBRIGHT-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
+        for (j=0 ; j<MAXLIGHTSCALE ; j++)
+        {
+            level = startmap - j*NONWIDEWIDTH/(viewwidth_nonwide<<detailshift)/DISTMAP;
+            
+            if (level < 0)
+            level = 0;
 
-	    if (level >= NUMCOLORMAPS)
-		level = NUMCOLORMAPS-1;
+            if (level >= NUMCOLORMAPS)
+            level = NUMCOLORMAPS-1;
 
-	    scalelight[i][j] = colormaps + level*256;
-	}
+            scalelight[i][j] = colormaps + level*256;
+        }
     }
 
     pspr_interp = false; // [crispy] interpolate weapon bobbing

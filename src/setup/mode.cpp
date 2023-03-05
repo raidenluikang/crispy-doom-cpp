@@ -62,7 +62,7 @@ static mission_config_t mission_configs[] =
 {
     {
         "Doom",
-        doom,
+        GameMission_t::doom,
         IWAD_MASK_DOOM,
         "doom",
         "default.cfg",
@@ -71,7 +71,7 @@ static mission_config_t mission_configs[] =
     },
     {
         "Heretic",
-        heretic,
+       GameMission_t:: heretic,
         IWAD_MASK_HERETIC,
         "heretic",
         "heretic.cfg",
@@ -80,7 +80,7 @@ static mission_config_t mission_configs[] =
     },
     {
         "Hexen",
-        hexen,
+        GameMission_t::hexen,
         IWAD_MASK_HEXEN,
         "hexen",
         "hexen.cfg",
@@ -89,7 +89,7 @@ static mission_config_t mission_configs[] =
     },
     {
         "Strife",
-        strife,
+        GameMission_t::strife,
         IWAD_MASK_STRIFE,
         "strife",
         "strife.cfg",
@@ -105,22 +105,22 @@ static GameSelectCallback game_selected_callback;
 static int showMessages = 1;
 static int screenblocks = 10;
 static int detailLevel = 0;
-static char *savedir = nullptr;
+static const char *savedir = nullptr;
 static char *executable = nullptr;
 static const char *game_title = "Doom";
-static char *back_flat = "F_PAVE01";
+static const char *back_flat = "F_PAVE01";
 static int comport = 0;
-static char *nickname = nullptr;
+static const char *nickname = nullptr;
 
 static void BindMiscVariables(void)
 {
-    if (gamemission == doom)
+    if (gamemission == GameMission_t::doom)
     {
         M_BindIntVariable("detaillevel",   &detailLevel);
         M_BindIntVariable("show_messages", &showMessages);
     }
 
-    if (gamemission == hexen)
+    if (gamemission ==GameMission_t:: hexen)
     {
         M_BindStringVariable("savedir", &savedir);
         M_BindIntVariable("messageson", &showMessages);
@@ -134,12 +134,12 @@ static void BindMiscVariables(void)
 
         if (!strcmp(savedir, ""))
         {
-            free(savedir);
+            //free((void*)savedir); //--> frees incorrect
             savedir = "hexndata" DIR_SEPARATOR_S;
         }
     }
 
-    if (gamemission == strife)
+    if (gamemission == GameMission_t::strife)
     {
         // Strife has a different default value than the other games
         screenblocks = 10;
@@ -172,17 +172,17 @@ void InitBindings(void)
     M_BindMapControls();
     M_BindMenuControls();
 
-    if (gamemission == heretic || gamemission == hexen)
+    if (gamemission == GameMission_t::heretic || gamemission == GameMission_t::hexen)
     {
         M_BindHereticControls();
     }
 
-    if (gamemission == hexen)
+    if (gamemission == GameMission_t::hexen)
     {
         M_BindHexenControls();
     }
 
-    if (gamemission == strife)
+    if (gamemission == GameMission_t::strife)
     {
         M_BindStrifeControls();
     }
@@ -204,7 +204,7 @@ void InitBindings(void)
 
 static void SetExecutable(mission_config_t *config)
 {
-    char *extension;
+    const char *extension;
 
     free(executable);
 

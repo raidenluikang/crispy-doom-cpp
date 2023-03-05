@@ -28,8 +28,10 @@
 // and transmitted to other peers (multiplayer).
 // Mainly movements/button commands per game tick,
 // plus a checksum for internal state consistency.
+enum artitype_t: int;
 
-typedef struct
+
+struct ticcmd_t
 {
     signed char	forwardmove;	// *2048 for move
     signed char	sidemove;	// *2048 for move
@@ -48,10 +50,10 @@ typedef struct
     // Heretic/Hexen specific:
 
     byte lookfly;               // look/fly up/down/centering
-    byte arti;                  // artitype_t to use
+    artitype_t arti;                  // artitype_t to use
 
     int lookdir;
-} ticcmd_t;
+} ;
 
 
 

@@ -460,7 +460,7 @@ void P_PlayerThink (player_t* player)
         // The actual changing of the weapon is done
         //  when the weapon psprite can do it
         //  (read: not in the middle of an attack).
-        newweapon = (cmd->buttons & BT_WEAPONMASK) >> BT_WEAPONSHIFT;
+        newweapon = weapontype_t{ ( (int)(cmd->buttons) & BT_WEAPONMASK) >> BT_WEAPONSHIFT };
 
         // villsa [STRIFE] select poison bow
         if(newweapon == wp_elecbow)
@@ -632,7 +632,7 @@ const char* P_RemoveInventoryItem(player_t *player, int slot, int amount)
     player->inventory[slot].amount -= amount;
     player->st_update = true;
 
-    type = player->inventory[slot].type;
+    type = mobjtype_t{ player->inventory[slot].type };
 
     if(!player->inventory[slot].amount)
     {
@@ -681,7 +681,7 @@ void P_DropInventoryItem(player_t* player, int sprite)
         invslot++;
 
     item = &(player->inventory[invslot]);
-    type = item->type;
+    type = mobjtype_t{ item->type };
 
     if(item->amount)
     {

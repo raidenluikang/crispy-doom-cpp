@@ -163,7 +163,7 @@ boolean P_GiveMana(player_t * player, manatype_t mana, int count)
     {
         return (false);
     }
-    if (gameskill == sk_baby || gameskill == sk_nightmare
+    if (gameskill == skill_t::sk_baby || gameskill == skill_t::sk_nightmare
                              || critical->moreammo)
     {                           // extra mana in baby mode and nightmare mode
         count += count >> 1;
@@ -175,7 +175,7 @@ boolean P_GiveMana(player_t * player, manatype_t mana, int count)
     {
         player->mana[mana] = MAX_MANA;
     }
-    if (player->class == PCLASS_FIGHTER && player->readyweapon == WP_SECOND
+    if (player->mclass == PCLASS_FIGHTER && player->readyweapon == WP_SECOND
         && mana == MANA_1 && prevMana <= 0)
     {
         P_SetPsprite(player, ps_weapon, S_FAXEREADY_G);
@@ -198,7 +198,7 @@ static void TryPickupWeapon(player_t * player, pclass_t weaponClass,
     boolean gaveWeapon;
 
     remove = true;
-    if (player->class != weaponClass)
+    if (player->mclass != weaponClass)
     {                           // Wrong class, but try to pick up for mana
         if (netgame && !deathmatch)
         {                       // Can't pick up weapons for other classes in coop netplay
@@ -308,7 +308,7 @@ boolean P_GiveWeapon(player_t *player, pclass_t class, weapontype_t weapon)
 	boolean gaveMana;
 	boolean gaveWeapon;
 
-	if(player->class != class)
+	if(player->mclass != class)
 	{ // player cannot use this weapon, take it anyway, and get mana
 		if(netgame && !deathmatch)
 		{ // Can't pick up weapons for other classes in coop netplay
@@ -382,7 +382,7 @@ boolean P_GiveWeaponPiece(player_t *player, pclass_t class, int piece)
 {
 	P_GiveMana(player, MANA_1, 20);
 	P_GiveMana(player, MANA_2, 20);
-	if(player->class != class)
+	if(player->mclass != class)
 	{
 		return true;
 	}
@@ -434,7 +434,7 @@ static void TryPickupWeaponPiece(player_t * player, pclass_t matchClass,
     remove = true;
     checkAssembled = true;
     gaveWeapon = false;
-    if (player->class != matchClass)
+    if (player->mclass != matchClass)
     {                           // Wrong class, but try to pick up for mana
         if (netgame && !deathmatch)
         {                       // Can't pick up wrong-class weapons in coop netplay
@@ -570,7 +570,7 @@ boolean P_GiveArmor(player_t * player, armortype_t armortype, int amount)
 
     if (amount == -1)
     {
-        hits = ArmorIncrement[player->class][armortype];
+        hits = ArmorIncrement[player->mclass][armortype];
         if (player->armorpoints[armortype] >= hits)
         {
             return false;
@@ -587,8 +587,8 @@ boolean P_GiveArmor(player_t * player, armortype_t armortype, int amount)
             + player->armorpoints[ARMOR_SHIELD]
             + player->armorpoints[ARMOR_HELMET]
             + player->armorpoints[ARMOR_AMULET]
-            + AutoArmorSave[player->class];
-        if (totalArmor < ArmorMax[player->class] * 5 * FRACUNIT)
+            + AutoArmorSave[player->mclass];
+        if (totalArmor < ArmorMax[player->mclass] * 5 * FRACUNIT)
         {
             player->armorpoints[armortype] += hits;
         }
@@ -635,7 +635,7 @@ boolean P_GivePower(player_t * player, powertype_t power)
         }
         player->powers[power] = INVULNTICS;
         player->mo->flags2 |= MF2_INVULNERABLE;
-        if (player->class == PCLASS_MAGE)
+        if (player->mclass == PCLASS_MAGE)
         {
             player->mo->flags2 |= MF2_REFLECTIVE;
         }
@@ -746,7 +746,7 @@ static void TryPickupArtifact(player_t * player, artitype_t artifactType,
         TXT_ARTIPUZZGEAR
     };
 
-    if (gamemode == shareware)
+    if (gamemode == GameMode_t::shareware)
     {
         artifactMessages[arti_blastradius] = TXT_ARTITELEPORT;
         artifactMessages[arti_teleport] = TXT_ARTIBLASTRADIUS;
@@ -1002,7 +1002,7 @@ void P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
         case SPR_KEY9:
         case SPR_KEYA:
         case SPR_KEYB:
-            if (!P_GiveKey(player, special->sprite - SPR_KEY1))
+            if (!P_GiveKey(player, (keytype_t)(special->sprite - SPR_KEY1) ))
             {
                 return;
             }
@@ -1347,7 +1347,7 @@ void P_KillMobj(mobj_t * source, mobj_t * target)
         P_DropWeapon(target->player);
         if (target->flags2 & MF2_FIREDAMAGE)
         {                       // Player flame death
-            switch (target->player->class)
+            switch (target->player->mclass)
             {
                 case PCLASS_FIGHTER:
                     S_StartSound(target, SFX_PLAYER_FIGHTER_BURN_DEATH);
@@ -1369,7 +1369,7 @@ void P_KillMobj(mobj_t * source, mobj_t * target)
         {                       // Player ice death
             target->flags &= ~(7 << MF_TRANSSHIFT);     //no translation
             target->flags |= MF_ICECORPSE;
-            switch (target->player->class)
+            switch (target->player->mclass)
             {
                 case PCLASS_FIGHTER:
                     P_SetMobjState(target, S_FPLAY_ICE);
@@ -1573,7 +1573,7 @@ boolean P_MorphPlayer(player_t * player)
     player->health = beastMo->health = MAXMORPHHEALTH;
     player->mo = beastMo;
     memset(&player->armorpoints[0], 0, NUMARMOR * sizeof(int));
-    player->class = PCLASS_PIG;
+    player->mclass = PCLASS_PIG;
     if (oldFlags2 & MF2_FLY)
     {
         beastMo->flags2 |= MF2_FLY;
@@ -1680,7 +1680,7 @@ void P_AutoUseHealth(player_t * player, int saveHealth)
             superCount = player->inventory[i].count;
         }
     }
-    if ((gameskill == sk_baby || critical->autohealth) && (normalCount * 25 >= saveHealth))
+    if ((gameskill == skill_t::sk_baby || critical->autohealth) && (normalCount * 25 >= saveHealth))
     {                           // Use quartz flasks
         count = (saveHealth + 24) / 25;
         for (i = 0; i < count; i++)
@@ -1698,7 +1698,7 @@ void P_AutoUseHealth(player_t * player, int saveHealth)
             P_PlayerRemoveArtifact(player, superSlot);
         }
     }
-    else if ((gameskill == sk_baby || critical->autohealth)
+    else if ((gameskill == skill_t::sk_baby || critical->autohealth)
              && (superCount * 100 + normalCount * 25 >= saveHealth))
     {                           // Use mystic urns and quartz flasks
         count = (saveHealth + 24) / 25;
@@ -1803,7 +1803,7 @@ void P_DamageMobj
         return;
     }
     player = target->player;
-    if (player && gameskill == sk_baby)
+    if (player && gameskill == skill_t::sk_baby)
     {
         // Take half damage in trainer mode
         damage >>= 1;
@@ -1932,7 +1932,7 @@ void P_DamageMobj
     //
     if (player)
     {
-        savedPercent = AutoArmorSave[player->class]
+        savedPercent = AutoArmorSave[player->mclass]
             + player->armorpoints[ARMOR_ARMOR] +
             player->armorpoints[ARMOR_SHIELD] +
             player->armorpoints[ARMOR_HELMET] +
@@ -1949,7 +1949,7 @@ void P_DamageMobj
                 {
                     player->armorpoints[i] -=
                         FixedDiv(FixedMul(damage << FRACBITS,
-                                          ArmorIncrement[player->class][i]),
+                                          ArmorIncrement[player->mclass][i]),
                                  300 * FRACUNIT);
                     if (player->armorpoints[i] < 2 * FRACUNIT)
                     {
@@ -1966,7 +1966,7 @@ void P_DamageMobj
             damage -= saved >> FRACBITS;
         }
         if (damage >= player->health
-            && ((gameskill == sk_baby) || deathmatch) && !player->morphTics)
+            && ((gameskill == skill_t::sk_baby) || deathmatch) && !player->morphTics)
         {                       // Try to use some inventory health
             P_AutoUseHealth(player, damage - player->health + 1);
         }
@@ -2173,7 +2173,7 @@ void P_PoisonDamage(player_t * player, mobj_t * source, int damage,
     {                           // mobj is invulnerable
         return;
     }
-    if (gameskill == sk_baby)
+    if (gameskill == skill_t::sk_baby)
     {
         // Take half damage in trainer mode
         damage >>= 1;
@@ -2184,7 +2184,7 @@ void P_PoisonDamage(player_t * player, mobj_t * source, int damage,
         return;
     }
     if (damage >= player->health
-        && ((gameskill == sk_baby) || deathmatch || critical->autohealth) && !player->morphTics)
+        && ((gameskill == skill_t::sk_baby) || deathmatch || critical->autohealth) && !player->morphTics)
     {                           // Try to use some inventory health
         P_AutoUseHealth(player, damage - player->health + 1);
     }

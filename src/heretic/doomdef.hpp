@@ -86,15 +86,15 @@
 #define	BTS_SAVEGAME	2       // save the game at each console
 // savegame slot numbers occupy the second byte of buttons
 
-typedef enum
+enum gamestate_t
 {
     GS_LEVEL,
     GS_INTERMISSION,
     GS_FINALE,
     GS_DEMOSCREEN
-} gamestate_t;
+} ;
 
-typedef enum
+enum gameaction_t
 {
     ga_nothing,
     ga_loadlevel,
@@ -106,9 +106,9 @@ typedef enum
     ga_victory,
     ga_worlddone,
     ga_screenshot
-} gameaction_t;
+} ;
 
-typedef enum
+enum wipe_t
 {
     wipe_0,
     wipe_1,
@@ -117,7 +117,7 @@ typedef enum
     wipe_4,
     NUMWIPES,
     wipe_random
-} wipe_t;
+} ;
 
 /*
 ===============================================================================
@@ -128,38 +128,40 @@ typedef enum
 */
 
 
-struct thinker_s;
+struct thinker_t;
 
 // think_t is a function pointer to a routine to handle an actor
-typedef void (*think_t) (struct thinker_s *);
+typedef void (*think_t) (struct thinker_t *);
 
-typedef struct thinker_s
+struct thinker_t
 {
-    struct thinker_s *prev, *next;
+    struct thinker_t *prev, *next;
     think_t function;
-} thinker_t;
+} ;
 
-typedef union
+union specialval_t
 {
     int i;
-    struct mobj_s *m;
-} specialval_t;
+    struct mobj_t *m;
+} ;
 
 struct player_t;
+enum dirtype_t : int;
 
-typedef struct mobj_s
+
+struct mobj_t
 {
     thinker_t thinker;          // thinker links
 
 // info for drawing
     fixed_t x, y, z;
-    struct mobj_s *snext, *sprev;       // links in sector (if needed)
+    struct mobj_t *snext, *sprev;       // links in sector (if needed)
     angle_t angle;
     spritenum_t sprite;         // used to find patch_t and flip value
     int frame;                  // might be ord with FF_FULLBRIGHT
 
 // interaction info
-    struct mobj_s *bnext, *bprev;       // links in blocks (if needed)
+    struct mobj_t *bnext, *bprev;       // links in blocks (if needed)
     struct subsector_s *subsector;
     fixed_t floorz, ceilingz;   // closest together of contacted secs
     fixed_t radius, height;     // for movement checking
@@ -177,9 +179,9 @@ typedef struct mobj_s
     specialval_t special1;      // Special info
     specialval_t special2;      // Special info
     int health;
-    int movedir;                // 0-7
+    dirtype_t movedir;                // 0-7
     int movecount;              // when 0, select a new dir
-    struct mobj_s *target;      // thing being chased/attacked (or nullptr)
+    struct mobj_t *target;      // thing being chased/attacked (or nullptr)
     // also the originator for missiles
     int reactiontime;           // if non 0, don't attack yet
     // used by player to freeze a bit after
@@ -200,14 +202,14 @@ typedef struct mobj_s
     fixed_t		oldy;
     fixed_t		oldz;
     angle_t		oldangle;
-} mobj_t;
+} ;
 
 // each sector has a degenmobj_t in it's center for sound origin purposes
-typedef struct
+struct degenmobj_t
 {
     thinker_t thinker;          // not used for anything
     fixed_t x, y, z;
-} degenmobj_t;
+} ;
 
 //
 // frame flags
@@ -287,38 +289,38 @@ typedef struct
 #define MF2_DONTDRAW		0X00100000  // don't generate a vissprite
 
 //=============================================================================
-typedef enum
+enum playerstate_t
 {
     PST_LIVE,                   // playing
     PST_DEAD,                   // dead on the ground
     PST_REBORN                  // ready to restart
-} playerstate_t;
+} ;
 
 // psprites are scaled shapes directly on the view screen
 // coordinates are given for a 320*200 view screen
-typedef enum
+enum psprnum_t
 {
     ps_weapon,
     ps_flash,
     NUMPSPRITES
-} psprnum_t;
+} ;
 
-typedef struct pspdef_s
+struct pspdef_t
 {
     state_t *state;             // a nullptr state means not active
     int tics;
     fixed_t sx, sy;
-} pspdef_t;
+} ;
 
-typedef enum
+enum keytype_t
 {
     key_yellow,
     key_green,
     key_blue,
     NUM_KEY_TYPES
-} keytype_t;
+} ;
 
-typedef enum
+enum weapontype_t : int
 {
     wp_staff,
     wp_goldwand,
@@ -331,7 +333,7 @@ typedef enum
     wp_beak,
     NUMWEAPONS,
     wp_nochange
-} weapontype_t;
+} ;
 
 #define AMMO_GWND_WIMPY 10
 #define AMMO_GWND_HEFTY 50
@@ -346,7 +348,7 @@ typedef enum
 #define AMMO_MACE_WIMPY 20
 #define AMMO_MACE_HEFTY 100
 
-typedef enum
+enum ammotype_t
 {
     am_goldwand,
     am_crossbow,
@@ -356,23 +358,23 @@ typedef enum
     am_mace,
     NUMAMMO,
     am_noammo                   // staff, gauntlets
-} ammotype_t;
+} ;
 
-typedef struct
+struct weaponinfo_t
 {
     ammotype_t ammo;
-    int upstate;
-    int downstate;
-    int readystate;
-    int atkstate;
-    int holdatkstate;
-    int flashstate;
-} weaponinfo_t;
+    statenum_t upstate;
+    statenum_t downstate;
+    statenum_t readystate;
+    statenum_t atkstate;
+    statenum_t holdatkstate;
+    statenum_t flashstate;
+} ;
 
 extern weaponinfo_t wpnlev1info[NUMWEAPONS];
 extern weaponinfo_t wpnlev2info[NUMWEAPONS];
 
-typedef enum
+enum artitype_t: int
 {
     arti_none,
     arti_invulnerability,
@@ -386,9 +388,9 @@ typedef enum
     arti_fly,
     arti_teleport,
     NUMARTIFACTS
-} artitype_t;
+} ;
 
-typedef enum
+enum powertype_t
 {
     pw_None,
     pw_invulnerability,
@@ -400,7 +402,7 @@ typedef enum
     pw_shield,
     pw_health2,
     NUMPOWERS
-} powertype_t;
+} ;
 
 #define	INVULNTICS (30*35)
 #define	INVISTICS (60*35)
@@ -415,11 +417,11 @@ typedef enum
 #define BLINKTHRESHOLD (4*32)
 
 #define NUMINVENTORYSLOTS	14
-typedef struct
+struct inventory_t
 {
-    int type;
+    artitype_t type;
     int count;
-} inventory_t;
+} ;
 
 /*
 ================
@@ -429,7 +431,7 @@ typedef struct
 ================
 */
 
-typedef struct player_t
+struct player_t
 {
     mobj_t *mo;
     playerstate_t playerstate;
@@ -488,7 +490,7 @@ typedef struct player_t
     // [AM] Previous position of viewz before think.
     //      Used to interpolate between camera positions.
     fixed_t		oldviewz;
-} player_t;
+};
 
 #define CF_NOCLIP		1
 #define	CF_GODMODE		2

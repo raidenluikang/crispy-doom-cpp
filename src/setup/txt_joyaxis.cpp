@@ -226,8 +226,7 @@ static void IdentifyBadAxes(txt_joystick_axis_t *joystick_axis)
 
     free(joystick_axis->bad_axis);
 
-    joystick_axis->bad_axis
-        = calloc(SDL_JoystickNumAxes(joystick_axis->joystick),
+    joystick_axis->bad_axis = (boolean*)calloc(SDL_JoystickNumAxes(joystick_axis->joystick),
                                      sizeof(boolean));
 
     // Look for uncentered axes.
@@ -319,7 +318,7 @@ static int EventCallback(SDL_Event *event, TXT_UNCAST_ARG(joystick_axis))
 
         if (advance)
         {
-            joystick_axis->config_stage = NextCalibrateStage(joystick_axis);
+            joystick_axis->config_stage = (txt_joystick_axis_stage_t)NextCalibrateStage(joystick_axis);
             SetCalibrationLabel(joystick_axis);
 
             // Finished?

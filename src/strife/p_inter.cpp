@@ -82,8 +82,8 @@ boolean P_GiveAmmo(player_t* player, ammotype_t ammo, int num)
     else
         num = clipammo[ammo]/2;
 
-    if(gameskill == sk_baby
-        || gameskill == sk_nightmare
+    if(gameskill == skill_t::sk_baby
+        || gameskill == skill_t::sk_nightmare
         || critical->moreammo)
     {
         // give double ammo in trainer mode,
@@ -624,7 +624,7 @@ void P_TouchSpecialThing(mobj_t* special, mobj_t* toucher)
             player->backpack = true;
         }
         for(i = 0; i < NUMAMMO; i++)
-            P_GiveAmmo(player, i, 1);
+            P_GiveAmmo(player, ammotype_t{ i } , 1);
         break;
 
     // 1 Gold
@@ -704,7 +704,7 @@ void P_TouchSpecialThing(mobj_t* special, mobj_t* toucher)
         {
             // haleyjd 09/21/10: Strife player still picks up keys that
             // he has already found. (break, not return)
-            if(!P_GiveCard(player, special->type - MT_KEY_BASE))
+            if(!P_GiveCard(player, card_t{ (int)special->type - (int)MT_KEY_BASE } ))
                 break; 
         }
         else
@@ -840,7 +840,7 @@ void P_KillMobj(mobj_t* source, mobj_t* target)
                 if(target->player->inventory[0].amount <= 0)
                     break;
 
-                item = target->player->inventory[0].type;
+                item = mobjtype_t{ target->player->inventory[0].type };
                 if(item == MT_MONY_1)
                 {
                     loot = P_SpawnMobj(target->x, target->y, 
@@ -902,7 +902,10 @@ void P_KillMobj(mobj_t* source, mobj_t* target)
 
     // Drop stuff.
     // villsa [STRIFE] get item from dialog target
-    item = P_DialogFind(target->type, target->miscdata)->dropitem;
+    {
+        auto *dialog = P_DialogFind(target->type, target->miscdata);
+        item = mobjtype_t{ dialog->dropitem };
+    }
 
     if(!item)
     {
@@ -1218,7 +1221,7 @@ void P_DamageMobj(mobj_t* target, mobj_t* inflictor, mobj_t* source, int damage)
         damage = target->health;
     }
 
-    if(player && gameskill == sk_baby)
+    if(player && gameskill == skill_t::sk_baby)
         damage >>= 1;   // take half damage in trainer mode
 
 
@@ -1368,7 +1371,7 @@ void P_DamageMobj(mobj_t* target, mobj_t* inflictor, mobj_t* source, int damage)
             {
                 target->player->cheats |= CF_ONFIRE;
                 target->player->powers[pw_invisibility] = false;
-                target->player->readyweapon = 0;
+                target->player->readyweapon = weapontype_t{0};
                 P_SetPsprite(target->player, ps_weapon, S_WAVE_00); // 02
                 P_SetPsprite(target->player, ps_flash, S_NULL);
             }
